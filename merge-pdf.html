@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Merge PDF Online Free — Combine Multiple PDFs Into One | FixPilot</title>
+<meta name="description" content="Merge PDF files online for free. Combine multiple PDFs into one document. Drag to reorder. No signup, no watermark. 100% browser-based.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%238b5cf6'/><path d='M16 6L8 18h7l-1 8 9-12h-7l1-8z' fill='white'/></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Plus Jakarta Sans',sans-serif;background:#fefefe;color:#111;-webkit-font-smoothing:antialiased}a{text-decoration:none;color:inherit}
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.04)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;max-width:800px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800}.logo-m{width:32px;height:32px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(124,58,237,.25)}.logo em{font-style:normal;background:linear-gradient(135deg,#7c3aed,#c026d3);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.back{font-size:13px;color:#999;font-weight:600}.back:hover{color:#7c3aed}
+.page{max-width:800px;margin:0 auto;padding:0 32px 80px}
+.header{text-align:center;padding:48px 0 32px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:20px;border:1px solid #fed7aa;background:#fff7ed;font-size:11px;font-weight:700;color:#ea580c;text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
+.header h1{font-size:32px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}.header h1 em{font-style:normal;background:linear-gradient(135deg,#7c3aed,#c026d3);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.header p{font-size:15px;color:#999}
+.drop{border:2px dashed #e5e7eb;border-radius:20px;padding:56px 24px;text-align:center;cursor:pointer;transition:all .3s;background:#fafafa;margin:16px 0 20px}
+.drop:hover,.drop.over{border-color:#fdba74;background:#fff7ed}
+.drop-icon{width:72px;height:72px;margin:0 auto 16px;border-radius:18px;background:linear-gradient(135deg,#fff7ed,#ffedd5);display:flex;align-items:center;justify-content:center;border:1px solid #fed7aa}.drop-icon svg{width:32px;height:32px}
+.drop h3{font-size:17px;font-weight:700;margin-bottom:4px}.drop p{font-size:13px;color:#bbb}
+.file-list{margin:16px 0}.file-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#fafafa;border:1px solid #f0f0f0;border-radius:12px;margin-bottom:8px;font-size:13px}
+.file-item .num{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.file-item .name{flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.file-item .size{color:#999;font-size:12px}
+.file-item .del{width:28px;height:28px;border-radius:8px;border:none;background:#fef2f2;color:#ef4444;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;font-size:15px;font-weight:700;border:none;border-radius:12px;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-go{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;box-shadow:0 4px 20px rgba(124,58,237,.2)}.btn-go:hover{transform:translateY(-1px)}.btn-go:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-dl{background:#ecfdf5;color:#059669;border:1.5px solid #d1fae5;display:none;margin-top:10px}.btn-dl.show{display:flex}.btn-dl:hover{background:#d1fae5}
+.prog{width:100%;height:6px;background:#f1f1f1;border-radius:3px;margin:16px 0;display:none;overflow:hidden}.prog-bar{height:100%;background:linear-gradient(90deg,#7c3aed,#c026d3);border-radius:3px;width:0;transition:width .4s}
+.seo{margin-top:48px;padding-top:36px;border-top:1px solid #f5f5f5}.seo h2{font-size:22px;font-weight:800;margin-bottom:14px}.seo h3{font-size:15px;font-weight:700;margin:18px 0 6px;color:#333}.seo p{font-size:14px;color:#999;line-height:1.7;margin-bottom:8px}
+.foot{text-align:center;padding:40px 32px;font-size:13px;color:#ccc;border-top:1px solid #f5f5f5}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-in"><a href="/" class="logo"><div class="logo-m"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>Fix<em>Pilot</em></a><a href="/" class="back">← All tools</a></div></nav>
+<div class="page">
+<div class="header">
+<div class="chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="8" height="10" rx="1"/><rect x="12" y="12" width="8" height="10" rx="1"/></svg> PDF Tool</div>
+<h1>Merge <em>PDF</em> files online free</h1>
+<p>Combine multiple PDF files into one document — 100% in your browser</p>
+</div>
+<div class="drop" id="dz" onclick="document.getElementById('fi').click()">
+<div class="drop-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg></div>
+<h3>Drop PDF files here or click to browse</h3>
+<p>Select 2 or more PDFs • Up to 50MB each</p>
+<input type="file" id="fi" accept=".pdf" multiple style="display:none">
+</div>
+<div class="file-list" id="fl"></div>
+<div class="prog" id="pg"><div class="prog-bar" id="pb"></div></div>
+<button class="btn btn-go" id="cb" disabled onclick="merge()">Select PDFs to merge</button>
+<button class="btn btn-dl" id="db" onclick="dl()">⬇ Download merged PDF</button>
+<div class="seo">
+<h2>How to merge PDF files online</h2>
+<p>Select multiple PDF files, arrange them in order, and merge into a single document. FixPilot processes everything in your browser — files never leave your device.</p>
+<h3>Is there a limit?</h3><p>You can merge up to 20 PDF files at once, each up to 50MB. Since processing happens locally, larger files may take a few seconds longer.</p>
+<h3>Can I reorder pages?</h3><p>Yes — files are merged in the order shown. Remove any file by clicking the X button and re-add in your preferred order.</p>
+</div>
+</div>
+<footer class="foot">© 2026 FixPilot — Free online tools. Your files never leave your device.</footer>
+<script>
+let pdfs=[],merged=null;const fmt=b=>b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':(b/1048576).toFixed(2)+' MB';
+const fi=document.getElementById('fi'),fl=document.getElementById('fl'),dz=document.getElementById('dz');
+dz.ondragover=e=>{e.preventDefault();dz.classList.add('over')};dz.ondragleave=()=>dz.classList.remove('over');
+dz.ondrop=e=>{e.preventDefault();dz.classList.remove('over');addFiles(e.dataTransfer.files)};
+fi.onchange=e=>addFiles(e.target.files);
+function addFiles(f){Array.from(f).forEach(x=>{if(x.type==='application/pdf'&&x.size<=52428800)pdfs.push(x)});render()}
+function render(){
+fl.innerHTML=pdfs.map((f,i)=>`<div class="file-item"><span class="num">${i+1}</span><span class="name">${f.name}</span><span class="size">${fmt(f.size)}</span><button class="del" onclick="rem(${i})">×</button></div>`).join('');
+const cb=document.getElementById('cb');
+if(pdfs.length>=2){cb.disabled=false;cb.textContent='⚡ Merge '+pdfs.length+' PDFs'}
+else{cb.disabled=true;cb.textContent=pdfs.length===1?'Add 1 more PDF':'Select PDFs to merge'}
+}
+function rem(i){pdfs.splice(i,1);render()}
+async function merge(){
+const cb=document.getElementById('cb');cb.disabled=true;cb.textContent='Merging...';
+const pg=document.getElementById('pg');pg.style.display='block';
+try{
+const doc=await PDFLib.PDFDocument.create();
+for(let i=0;i<pdfs.length;i++){
+document.getElementById('pb').style.width=((i+1)/pdfs.length*90)+'%';
+const ab=await pdfs[i].arrayBuffer();
+const src=await PDFLib.PDFDocument.load(ab,{ignoreEncryption:true});
+const pages=await doc.copyPages(src,src.getPageIndices());
+pages.forEach(p=>doc.addPage(p));
+}
+document.getElementById('pb').style.width='100%';
+const bytes=await doc.save();
+merged=new Blob([bytes],{type:'application/pdf'});
+cb.textContent='✓ Merged '+pdfs.length+' PDFs ('+fmt(merged.size)+')';
+document.getElementById('db').classList.add('show');
+}catch(e){cb.textContent='Error — try again';cb.disabled=false;pg.style.display='none'}
+}
+function dl(){if(!merged)return;const u=URL.createObjectURL(merged),a=document.createElement('a');a.href=u;a.download='merged_fixpilot.pdf';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u)}
+</script>
+</body>
+</html>
