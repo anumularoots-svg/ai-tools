@@ -7,4 +7,7 @@
   <url><loc>https://ai-tools-mauve-six.vercel.app/merge-pdf</loc><priority>0.9</priority></url>
   <url><loc>https://ai-tools-mauve-six.vercel.app/split-pdf</loc><priority>0.9</priority></url>
   <url><loc>https://ai-tools-mauve-six.vercel.app/image-to-text</loc><priority>0.9</priority></url>
+  <url><loc>https://ai-tools-mauve-six.vercel.app/ai-paraphraser</loc><priority>0.9</priority></url>
+  <url><loc>https://ai-tools-mauve-six.vercel.app/privacy</loc><priority>0.3</priority></url>
+  <url><loc>https://ai-tools-mauve-six.vercel.app/about</loc><priority>0.5</priority></url>
 </urlset>
