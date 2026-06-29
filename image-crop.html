@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Crop Images Online Free — No Upload | FixPilot</title>
+<meta name="description" content="Crop images online for free. Select exact crop area, use preset ratios. Browser-based, no upload to server.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M18 6l-6 10h5l-1 10 7-12h-5.5z' fill='white'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e}.nw{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid #f0eef5}.nav{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:21px;color:#1a1a2e}.logo span{color:#7C3AED}.logo svg{width:34px;height:34px}.nl{display:flex;gap:20px}.nl a{text-decoration:none;color:#64748b;font-size:14px;font-weight:500}.hero{text-align:center;padding:48px 24px 32px;max-width:680px;margin:0 auto}.hero h1{font-size:36px;font-weight:900;letter-spacing:-1.2px;margin-bottom:12px;background:linear-gradient(135deg,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.hero p{color:#64748b;font-size:16px;line-height:1.6}.tool{max-width:800px;margin:0 auto;padding:0 24px 60px}.card{background:#fff;border:1.5px solid #f0eef5;border-radius:18px;padding:32px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(124,58,237,.04)}.upload{border:2px dashed #e2e8f0;border-radius:12px;padding:48px 24px;text-align:center;cursor:pointer;transition:.3s}.upload:hover{border-color:#7C3AED}.upload p{color:#64748b;font-size:14px;margin-top:8px}.ubtn{margin-top:16px;padding:10px 28px;background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}input[type=file]{display:none}
+.crop-area{position:relative;margin:20px auto;max-width:100%;display:inline-block;cursor:crosshair;user-select:none}
+.crop-area canvas{display:block;max-width:100%;border-radius:8px}
+.crop-box{position:absolute;border:2px solid #7C3AED;box-shadow:0 0 0 9999px rgba(0,0,0,.4);pointer-events:none}
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0}.preset{padding:6px 14px;border:1.5px solid #e5e7eb;border-radius:6px;background:#fff;font-size:12px;font-weight:600;cursor:pointer;color:#64748b;transition:.2s}.preset:hover,.preset.on{border-color:#7C3AED;color:#7C3AED}
+.dims{display:flex;gap:16px;margin:12px 0;flex-wrap:wrap;align-items:center}.dims span{font-size:13px;color:#64748b}.dims strong{color:#7C3AED}
+.br{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}.btn{padding:12px 28px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:.2s}.bp{background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff}.bp:hover{transform:translateY(-1px)}.bs{background:#f1f5f9;color:#374151}
+.seo{max-width:800px;margin:0 auto;padding:0 24px 60px}.seo h2{font-size:22px;font-weight:700;margin-bottom:12px}.seo p{color:#64748b;line-height:1.7;font-size:14px}.foot{text-align:center;padding:32px;border-top:1px solid #f0eef5;color:#94a3b8;font-size:13px}.foot a{color:#7C3AED;text-decoration:none}@media(max-width:600px){.hero h1{font-size:26px}.nl{display:none}}</style>
+</head><body>
+<div class="nw"><nav class="nav"><a href="/" class="logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="url(#g)"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/><defs><linearGradient id="g" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs></svg><div>Fix<span>Pilot</span></div></a><div class="nl"><a href="/">All Tools</a><a href="/about">About</a><a href="/privacy">Privacy</a></div></nav></div>
+<div class="hero"><h1>Crop Images Online</h1><p>Select and crop any area of your image. Use preset aspect ratios or free-form cropping. 100% browser-based.</p></div>
+<div class="tool"><div class="card">
+<div class="upload" id="uploadZone" onclick="document.getElementById('fi').click()">
+<p><strong>Drop an image here</strong> or click to browse</p><p>Supports JPEG, PNG, WebP</p>
+<button class="ubtn">Choose Image</button><input type="file" id="fi" accept="image/*">
+</div>
+<div id="editor" style="display:none">
+<div class="presets">
+<button class="preset on" onclick="setRatio(0,this)">Free</button>
+<button class="preset" onclick="setRatio(1,this)">1:1</button>
+<button class="preset" onclick="setRatio(16/9,this)">16:9</button>
+<button class="preset" onclick="setRatio(4/3,this)">4:3</button>
+<button class="preset" onclick="setRatio(3/2,this)">3:2</button>
+<button class="preset" onclick="setRatio(9/16,this)">9:16</button>
+</div>
+<div class="crop-area" id="cropArea" style="text-align:center">
+<canvas id="canvas"></canvas>
+<div class="crop-box" id="cropBox" style="display:none"></div>
+</div>
+<div class="dims" id="dims"><span>Select area to crop</span></div>
+<div class="br">
+<button class="btn bp" onclick="cropAndDownload()">Crop & Download</button>
+<button class="btn bs" onclick="location.reload()">New Image</button>
+</div>
+</div></div></div>
+<div class="seo"><h2>Free online image cropping tool</h2><p>FixPilot Image Crop lets you select any rectangular area of your image and crop it precisely. Choose from preset aspect ratios (1:1 for profile photos, 16:9 for YouTube thumbnails, 4:3 for presentations) or use free-form cropping. All processing happens in your browser — your images never leave your device.</p></div>
+<footer class="foot"><p>FixPilot — Free online tools. Your files never leave your device.</p><p style="margin-top:8px"><a href="/">All Tools</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p></footer>
+<script>
+let img=null,ratio=0,sx=0,sy=0,ex=0,ey=0,dragging=false,scale=1;
+const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d'),cropBox=document.getElementById('cropBox'),cropArea=document.getElementById('cropArea');
+document.getElementById('fi').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;img=new Image();img.onload=()=>{const maxW=740;scale=img.naturalWidth>maxW?maxW/img.naturalWidth:1;canvas.width=img.naturalWidth*scale;canvas.height=img.naturalHeight*scale;ctx.drawImage(img,0,0,canvas.width,canvas.height);document.getElementById('uploadZone').style.display='none';document.getElementById('editor').style.display='block'};img.src=URL.createObjectURL(f)});
+cropArea.addEventListener('mousedown',e=>{const r=canvas.getBoundingClientRect();sx=e.clientX-r.left;sy=e.clientY-r.top;dragging=true;cropBox.style.display='block'});
+cropArea.addEventListener('mousemove',e=>{if(!dragging)return;const r=canvas.getBoundingClientRect();ex=Math.max(0,Math.min(e.clientX-r.left,canvas.width));ey=Math.max(0,Math.min(e.clientY-r.top,canvas.height));
+if(ratio>0){const w=ex-sx;ey=sy+w/ratio}
+updateCropBox()});
+cropArea.addEventListener('mouseup',()=>dragging=false);
+cropArea.addEventListener('touchstart',e=>{const t=e.touches[0],r=canvas.getBoundingClientRect();sx=t.clientX-r.left;sy=t.clientY-r.top;dragging=true;cropBox.style.display='block';e.preventDefault()},{passive:false});
+cropArea.addEventListener('touchmove',e=>{if(!dragging)return;const t=e.touches[0],r=canvas.getBoundingClientRect();ex=Math.max(0,Math.min(t.clientX-r.left,canvas.width));ey=Math.max(0,Math.min(t.clientY-r.top,canvas.height));if(ratio>0){const w=ex-sx;ey=sy+w/ratio}updateCropBox();e.preventDefault()},{passive:false});
+cropArea.addEventListener('touchend',()=>dragging=false);
+function updateCropBox(){const x=Math.min(sx,ex),y=Math.min(sy,ey),w=Math.abs(ex-sx),h=Math.abs(ey-sy);cropBox.style.left=x+'px';cropBox.style.top=y+'px';cropBox.style.width=w+'px';cropBox.style.height=h+'px';
+const rw=Math.round(w/scale),rh=Math.round(h/scale);document.getElementById('dims').innerHTML=`<span>Crop: <strong>${rw} × ${rh}</strong> px</span>`}
+function setRatio(r,btn){ratio=r;document.querySelectorAll('.preset').forEach(p=>p.classList.remove('on'));btn.classList.add('on')}
+function cropAndDownload(){const x=Math.min(sx,ex)/scale,y=Math.min(sy,ey)/scale,w=Math.abs(ex-sx)/scale,h=Math.abs(ey-sy)/scale;if(w<5||h<5){alert('Please select a crop area first');return}
+const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,x,y,w,h,0,0,w,h);
+c.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='cropped-image.png';a.click()},'image/png')}
+</script></body></html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CSV to JSON Converter Free — Online | FixPilot</title>
+<meta name="description" content="Convert CSV data to JSON format online. Upload CSV files or paste data. Pretty printed output. Free, browser-based.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M18 6l-6 10h5l-1 10 7-12h-5.5z' fill='white'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e}.nw{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid #f0eef5}.nav{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:21px;color:#1a1a2e}.logo span{color:#7C3AED}.logo svg{width:34px;height:34px}.nl{display:flex;gap:20px}.nl a{text-decoration:none;color:#64748b;font-size:14px;font-weight:500}.hero{text-align:center;padding:48px 24px 32px;max-width:680px;margin:0 auto}.hero h1{font-size:36px;font-weight:900;letter-spacing:-1.2px;margin-bottom:12px;background:linear-gradient(135deg,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.hero p{color:#64748b;font-size:16px;line-height:1.6}.tool{max-width:900px;margin:0 auto;padding:0 24px 60px}.card{background:#fff;border:1.5px solid #f0eef5;border-radius:18px;padding:32px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(124,58,237,.04)}textarea{width:100%;min-height:180px;padding:14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:13px;font-family:'Courier New',monospace;line-height:1.5;resize:vertical;outline:none}textarea:focus{border-color:#7C3AED}.lbl{font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:6px}.br{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}.btn{padding:10px 20px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit}.bp{background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff}.bp:hover{transform:translateY(-1px)}.bs{background:#f1f5f9;color:#374151}.status{margin:8px 0;font-size:13px;font-weight:600}.status.ok{color:#16a34a}.status.err{color:#ef4444}.ctrl{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:end}.cg{display:flex;flex-direction:column;gap:4px}.cg label{font-size:12px;font-weight:600;color:#374151}.cg select{padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:6px;font-size:13px;outline:none}.seo{max-width:800px;margin:0 auto;padding:0 24px 60px}.seo h2{font-size:22px;font-weight:700;margin-bottom:12px}.seo p{color:#64748b;line-height:1.7;font-size:14px}.foot{text-align:center;padding:32px;border-top:1px solid #f0eef5;color:#94a3b8;font-size:13px}.foot a{color:#7C3AED;text-decoration:none}@media(max-width:600px){.hero h1{font-size:26px}.nl{display:none}}</style>
+</head><body>
+<div class="nw"><nav class="nav"><a href="/" class="logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="url(#g)"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/><defs><linearGradient id="g" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs></svg><div>Fix<span>Pilot</span></div></a><div class="nl"><a href="/">All Tools</a><a href="/about">About</a><a href="/privacy">Privacy</a></div></nav></div>
+<div class="hero"><h1>CSV to JSON Converter</h1><p>Convert CSV data to JSON format. Paste CSV or upload a file. Get formatted, ready-to-use JSON output.</p></div>
+<div class="tool"><div class="card">
+<div class="ctrl">
+<div class="cg"><label>Delimiter</label><select id="delim"><option value=",">Comma (,)</option><option value=";">Semicolon (;)</option><option value="\t">Tab</option><option value="|">Pipe (|)</option></select></div>
+<div class="cg"><label>Upload CSV</label><input type="file" id="fileIn" accept=".csv,.tsv,.txt" onchange="loadFile()" style="font-size:12px"></div>
+</div>
+<label class="lbl">CSV Input</label>
+<textarea id="input" placeholder="name,age,city&#10;John,30,New York&#10;Jane,25,London&#10;Bob,35,Tokyo"></textarea>
+<div class="br">
+<button class="btn bp" onclick="convert()">Convert to JSON</button>
+<button class="btn bs" onclick="navigator.clipboard.writeText(document.getElementById('output').value)">Copy JSON</button>
+<button class="btn bs" onclick="download()">Download .json</button>
+<button class="btn bs" onclick="document.getElementById('input').value='';document.getElementById('output').value=''">Clear</button>
+</div>
+<div class="status" id="status"></div>
+<label class="lbl">JSON Output</label>
+<textarea id="output" readonly style="background:#f9fafb"></textarea>
+</div></div>
+<div class="seo"><h2>Free CSV to JSON converter</h2><p>FixPilot converts CSV (comma-separated values) data to JSON format instantly in your browser. The first row is used as field names/keys. Supports custom delimiters including comma, semicolon, tab, and pipe. Upload a CSV file or paste data directly. Perfect for developers, data analysts, and anyone working with data transformation.</p></div>
+<footer class="foot"><p>FixPilot — Free online tools. Your files never leave your device.</p><p style="margin-top:8px"><a href="/">All Tools</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p></footer>
+<script>
+function loadFile(){const f=document.getElementById('fileIn').files[0];if(!f)return;const r=new FileReader();r.onload=e=>document.getElementById('input').value=e.target.result;r.readAsText(f)}
+function convert(){try{const csv=document.getElementById('input').value.trim();if(!csv){setS('err','Please enter CSV data');return}
+const delim=document.getElementById('delim').value==='\\t'?'\t':document.getElementById('delim').value;
+const lines=csv.split('\n').map(l=>l.trim()).filter(l=>l);const headers=parseLine(lines[0],delim);
+const result=[];for(let i=1;i<lines.length;i++){const vals=parseLine(lines[i],delim);const obj={};headers.forEach((h,j)=>{let v=vals[j]||'';if(!isNaN(v)&&v!=='')v=Number(v);else if(v==='true')v=true;else if(v==='false')v=false;obj[h]=v});result.push(obj)}
+document.getElementById('output').value=JSON.stringify(result,null,2);
+setS('ok',`Converted ${result.length} rows with ${headers.length} fields`)}catch(e){setS('err','Error: '+e.message)}}
+function parseLine(line,d){const result=[];let current='',inQuotes=false;for(let i=0;i<line.length;i++){const c=line[i];if(c==='"'){inQuotes=!inQuotes}else if(c===d&&!inQuotes){result.push(current.trim());current=''}else{current+=c}}result.push(current.trim());return result}
+function setS(t,m){const s=document.getElementById('status');s.className='status '+t;s.textContent=(t==='ok'?'✓ ':'✗ ')+m}
+function download(){const json=document.getElementById('output').value;if(!json)return;const b=new Blob([json],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='data.json';a.click()}
+</script></body></html>
