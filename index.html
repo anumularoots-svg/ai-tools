@@ -7,110 +7,149 @@
 <meta name="description" content="Free online tools — compress PDF, resize images, convert PDF to JPG, generate QR codes, extract text from images (OCR), and more. 100% browser-based. No upload to server.">
 <meta name="keywords" content="free online tools, compress pdf, image compressor, qr code generator, pdf to jpg, image to pdf, word counter, case converter, ocr, paraphraser, browser based tools, no upload">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M18 6l-6 10h5l-1 10 7-12h-5.5z' fill='white'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#FAFAFE;color:#1a1a2e;min-height:100vh}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#0f0a1a;color:#fff;min-height:100vh;overflow-x:hidden}
+
+/* Animated BG */
+.bg-glow{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.bg-glow .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.15;animation:float 20s ease-in-out infinite}
+.bg-glow .orb1{width:600px;height:600px;background:#7C3AED;top:-200px;left:-100px;animation-delay:0s}
+.bg-glow .orb2{width:500px;height:500px;background:#EC4899;bottom:-200px;right:-100px;animation-delay:-7s}
+.bg-glow .orb3{width:400px;height:400px;background:#3B82F6;top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-14s}
+@keyframes float{0%,100%{transform:translate(0,0)}25%{transform:translate(30px,-30px)}50%{transform:translate(-20px,20px)}75%{transform:translate(20px,10px)}}
+
+.content{position:relative;z-index:1}
 
 /* Nav */
-.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(124,58,237,0.08);padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#1a1a2e;font-weight:700;font-size:20px}
-.logo svg{width:32px;height:32px}
-.logo span{background:linear-gradient(135deg,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav-links{display:flex;gap:20px}
-.nav-links a{text-decoration:none;color:#64748b;font-size:14px;font-weight:500;transition:color .2s}
-.nav-links a:hover{color:#7C3AED}
-.nav-wrap{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(124,58,237,0.08)}
+.nav-wrap{position:sticky;top:0;z-index:100;background:rgba(15,10,26,0.7);backdrop-filter:blur(20px);border-bottom:1px solid rgba(124,58,237,0.15)}
+.nav{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:22px}
+.logo svg{width:34px;height:34px}
+.logo-text{background:linear-gradient(135deg,#A78BFA,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:24px}
+.nav-links a{text-decoration:none;color:rgba(255,255,255,0.55);font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:#fff}
 
 /* Hero */
-.hero{text-align:center;padding:56px 24px 40px;max-width:720px;margin:0 auto}
-.hero h1{font-size:42px;font-weight:800;line-height:1.15;margin-bottom:16px}
-.hero h1 .grad{background:linear-gradient(135deg,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{color:#64748b;font-size:17px;line-height:1.6;max-width:540px;margin:0 auto}
-.hero-badges{display:flex;justify-content:center;gap:10px;margin-top:20px;flex-wrap:wrap}
-.hero-badge{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px}
-.hero-badge.green{background:#dcfce7;color:#16a34a}
-.hero-badge.blue{background:#dbeafe;color:#2563eb}
-.hero-badge.purple{background:#f3e8ff;color:#7C3AED}
+.hero{text-align:center;padding:72px 24px 48px;max-width:760px;margin:0 auto}
+.hero-label{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.25);border-radius:20px;font-size:12px;font-weight:600;color:#A78BFA;margin-bottom:24px}
+.hero-label .dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.hero h1{font-size:48px;font-weight:900;line-height:1.1;letter-spacing:-1.5px;margin-bottom:20px}
+.hero h1 .line1{color:#fff}
+.hero h1 .line2{background:linear-gradient(135deg,#A78BFA 0%,#EC4899 50%,#F97316 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:rgba(255,255,255,0.5);font-size:17px;line-height:1.7;max-width:560px;margin:0 auto}
+.hero-badges{display:flex;justify-content:center;gap:12px;margin-top:28px;flex-wrap:wrap}
+.h-badge{padding:6px 16px;border-radius:8px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;backdrop-filter:blur(10px)}
+.h-badge.g{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#4ade80}
+.h-badge.b{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);color:#60a5fa}
+.h-badge.p{background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2);color:#c084fc}
 
 /* Filter */
-.filter-wrap{display:flex;justify-content:center;gap:8px;padding:0 24px;flex-wrap:wrap;margin-bottom:32px}
-.filter-pill{padding:8px 18px;border:1.5px solid #e5e7eb;border-radius:20px;background:#fff;font-size:13px;font-weight:600;cursor:pointer;color:#64748b;transition:all .2s}
-.filter-pill:hover{border-color:#7C3AED;color:#7C3AED}
-.filter-pill.active{background:#7C3AED;color:#fff;border-color:#7C3AED}
+.filter-wrap{display:flex;justify-content:center;gap:8px;padding:0 24px;flex-wrap:wrap;margin-bottom:40px}
+.fpill{padding:8px 20px;border:1px solid rgba(255,255,255,0.08);border-radius:10px;background:rgba(255,255,255,0.03);font-size:13px;font-weight:600;cursor:pointer;color:rgba(255,255,255,0.45);transition:all .25s;font-family:inherit}
+.fpill:hover{border-color:rgba(124,58,237,0.3);color:rgba(255,255,255,0.7)}
+.fpill.active{background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;border-color:transparent;box-shadow:0 4px 20px rgba(124,58,237,0.3)}
 
-/* Tools Grid */
-.tools-section{max-width:1100px;margin:0 auto;padding:0 24px 60px}
-.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-.tool-card{background:#fff;border-radius:14px;padding:24px;border:1px solid #f1f5f9;cursor:pointer;transition:all .25s;text-decoration:none;color:inherit;display:flex;flex-direction:column;position:relative}
-.tool-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,58,237,0.1);border-color:rgba(124,58,237,0.15)}
-.tool-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:22px}
-.tool-card h3{font-size:15px;font-weight:700;margin-bottom:6px;color:#1a1a2e}
-.tool-card p{font-size:13px;color:#64748b;line-height:1.5;flex:1}
-.tool-badge{position:absolute;top:12px;right:12px;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
-.tool-badge.popular{background:#fef3c7;color:#d97706}
-.tool-badge.new{background:#dcfce7;color:#16a34a}
-.tool-badge.ai{background:#f3e8ff;color:#7C3AED}
+/* Tools */
+.tools-section{max-width:1140px;margin:0 auto;padding:0 24px 64px}
+.tools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.tool-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:28px 24px;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),transparent);opacity:0;transition:opacity .3s}
+.tool-card:hover{transform:translateY(-4px);background:rgba(255,255,255,0.07);border-color:rgba(124,58,237,0.2);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+.tool-card:hover::before{opacity:1}
+
+/* Tool Icon */
+.tool-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative}
+.tool-icon svg{width:28px;height:28px}
+.tool-icon::after{content:'';position:absolute;inset:0;border-radius:14px;background:inherit;filter:blur(16px);opacity:0.4;z-index:-1}
+
+.tool-card h3{font-size:16px;font-weight:700;margin-bottom:8px;color:#fff;letter-spacing:-0.3px}
+.tool-card p{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.55;flex:1}
+.tool-tag{position:absolute;top:14px;right:14px;padding:3px 9px;border-radius:5px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px}
+.tool-tag.pop{background:rgba(249,115,22,0.15);color:#fb923c;border:1px solid rgba(249,115,22,0.2)}
+.tool-tag.new{background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.2)}
+.tool-tag.ai{background:rgba(168,85,247,0.15);color:#c084fc;border:1px solid rgba(168,85,247,0.2)}
 
 /* Icon Colors */
-.icon-red{background:linear-gradient(135deg,#fee2e2,#fecaca)}
-.icon-orange{background:linear-gradient(135deg,#ffedd5,#fed7aa)}
-.icon-green{background:linear-gradient(135deg,#dcfce7,#bbf7d0)}
-.icon-blue{background:linear-gradient(135deg,#dbeafe,#bfdbfe)}
-.icon-purple{background:linear-gradient(135deg,#f3e8ff,#e9d5ff)}
-.icon-pink{background:linear-gradient(135deg,#fce7f3,#fbcfe8)}
-.icon-teal{background:linear-gradient(135deg,#ccfbf1,#99f6e4)}
-.icon-amber{background:linear-gradient(135deg,#fef3c7,#fde68a)}
-.icon-sky{background:linear-gradient(135deg,#e0f2fe,#bae6fd)}
-.icon-rose{background:linear-gradient(135deg,#ffe4e6,#fecdd3)}
-.icon-lime{background:linear-gradient(135deg,#ecfccb,#d9f99d)}
-.icon-indigo{background:linear-gradient(135deg,#e0e7ff,#c7d2fe)}
+.ic-red{background:linear-gradient(135deg,#dc2626,#ef4444)}
+.ic-orange{background:linear-gradient(135deg,#ea580c,#f97316)}
+.ic-amber{background:linear-gradient(135deg,#d97706,#f59e0b)}
+.ic-rose{background:linear-gradient(135deg,#e11d48,#f43f5e)}
+.ic-sky{background:linear-gradient(135deg,#0284c7,#38bdf8)}
+.ic-green{background:linear-gradient(135deg,#16a34a,#4ade80)}
+.ic-teal{background:linear-gradient(135deg,#0d9488,#2dd4bf)}
+.ic-blue{background:linear-gradient(135deg,#2563eb,#60a5fa)}
+.ic-purple{background:linear-gradient(135deg,#7c3aed,#a78bfa)}
+.ic-pink{background:linear-gradient(135deg,#db2777,#f472b6)}
+.ic-lime{background:linear-gradient(135deg,#65a30d,#a3e635)}
+.ic-indigo{background:linear-gradient(135deg,#4f46e5,#818cf8)}
 
 /* Stats */
-.stats-bar{background:linear-gradient(135deg,#7C3AED,#EC4899);padding:40px 24px;margin:20px 0 48px}
-.stats-inner{max-width:900px;margin:0 auto;display:flex;justify-content:space-around;flex-wrap:wrap;gap:24px}
-.stat-item{text-align:center;color:#fff}
-.stat-item .num{font-size:32px;font-weight:800}
-.stat-item .label{font-size:13px;opacity:0.85;margin-top:4px}
+.stats-bar{padding:56px 24px;position:relative}
+.stats-bar::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(236,72,153,0.05));border-top:1px solid rgba(124,58,237,0.1);border-bottom:1px solid rgba(124,58,237,0.1)}
+.stats-inner{max-width:900px;margin:0 auto;display:flex;justify-content:space-around;flex-wrap:wrap;gap:32px;position:relative}
+.stat-item{text-align:center}
+.stat-item .num{font-size:40px;font-weight:900;background:linear-gradient(135deg,#A78BFA,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-item .label{font-size:13px;color:rgba(255,255,255,0.4);margin-top:4px;font-weight:500}
 
 /* Features */
-.features{max-width:1100px;margin:0 auto;padding:0 24px 60px}
-.features h2{text-align:center;font-size:28px;font-weight:800;margin-bottom:32px}
-.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
-.feature-card{padding:24px;border-radius:12px;background:#fff;border:1px solid #f1f5f9}
-.feature-card h4{font-size:15px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
-.feature-card p{font-size:13px;color:#64748b;line-height:1.6}
+.features{max-width:1140px;margin:0 auto;padding:64px 24px}
+.features h2{text-align:center;font-size:32px;font-weight:800;margin-bottom:12px;letter-spacing:-0.5px}
+.features .sub{text-align:center;color:rgba(255,255,255,0.4);font-size:15px;margin-bottom:40px}
+.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.feat-card{padding:24px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);transition:all .25s}
+.feat-card:hover{background:rgba(255,255,255,0.05);border-color:rgba(124,58,237,0.15)}
+.feat-card .feat-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:20px;background:rgba(124,58,237,0.1)}
+.feat-card h4{font-size:14px;font-weight:700;margin-bottom:6px;color:#fff}
+.feat-card p{font-size:12px;color:rgba(255,255,255,0.35);line-height:1.6}
 
 /* CTA */
-.cta{text-align:center;padding:48px 24px;background:linear-gradient(135deg,rgba(124,58,237,0.04),rgba(236,72,153,0.04));margin-bottom:0}
-.cta h2{font-size:24px;font-weight:800;margin-bottom:12px}
-.cta p{color:#64748b;font-size:15px;margin-bottom:20px}
-.cta a{display:inline-block;padding:12px 32px;background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px;transition:all .2s}
-.cta a:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(124,58,237,0.3)}
+.cta{text-align:center;padding:64px 24px}
+.cta h2{font-size:28px;font-weight:800;margin-bottom:12px;letter-spacing:-0.5px}
+.cta p{color:rgba(255,255,255,0.4);font-size:15px;margin-bottom:24px}
+.cta-btn{display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#7C3AED,#EC4899);color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;transition:all .25s;box-shadow:0 4px 20px rgba(124,58,237,0.3)}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(124,58,237,0.4)}
 
 /* Footer */
-.footer{text-align:center;padding:32px;border-top:1px solid #f1f5f9;color:#94a3b8;font-size:13px}
-.footer a{color:#7C3AED;text-decoration:none}
+.footer{text-align:center;padding:32px 24px;border-top:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.3);font-size:13px}
+.footer a{color:rgba(255,255,255,0.5);text-decoration:none;transition:color .2s}
+.footer a:hover{color:#A78BFA}
 
+@media(max-width:900px){.tools-grid,.features-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){
-  .hero h1{font-size:28px}
+  .hero h1{font-size:30px;letter-spacing:-0.5px}
   .tools-grid{grid-template-columns:1fr 1fr;gap:10px}
-  .tool-card{padding:16px}
-  .tool-icon{width:40px;height:40px;font-size:18px}
+  .tool-card{padding:18px 16px}
+  .tool-icon{width:44px;height:44px;border-radius:10px;margin-bottom:12px}
+  .tool-icon svg{width:22px;height:22px}
   .tool-card h3{font-size:13px}
   .tool-card p{font-size:11px}
-  .stat-item .num{font-size:24px}
+  .stat-item .num{font-size:28px}
   .nav-links{display:none}
   .features-grid{grid-template-columns:1fr}
+  .hero{padding:48px 20px 32px}
 }
 </style>
 </head>
 <body>
 
+<div class="bg-glow">
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+</div>
+
+<div class="content">
+
 <div class="nav-wrap">
 <nav class="nav">
 <a href="/" class="logo">
-<svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#7C3AED"/><path d="M18 6l-6 10h5l-1 10 7-12h-5.5z" fill="white"/></svg>
-<span>FixPilot</span>
+<svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="url(#lg)"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="white" fill-opacity="0.95"/><defs><linearGradient id="lg" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#EC4899"/></linearGradient></defs></svg>
+<span class="logo-text">FixPilot</span>
 </a>
 <div class="nav-links">
 <a href="/about">About</a>
@@ -120,105 +159,145 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 
 <div class="hero">
-<h1>Free Online Tools.<br><span class="grad">Your files never leave your device.</span></h1>
-<p>12 powerful tools — compress PDF, resize images, convert files, generate QR codes, extract text, and more. Everything runs in your browser. No server upload. No signup. No limits.</p>
+<div class="hero-label"><span class="dot"></span> 12 Free Tools — All Browser-Based</div>
+<h1>
+<span class="line1">Free Online Tools.</span><br>
+<span class="line2">Files never leave your device.</span>
+</h1>
+<p>Compress PDF, resize images, convert files, generate QR codes, extract text — everything processes in your browser. No upload. No signup. No limits.</p>
 <div class="hero-badges">
-<span class="hero-badge green">✓ 100% Free</span>
-<span class="hero-badge blue">✓ No File Upload</span>
-<span class="hero-badge purple">✓ 12 Tools</span>
+<span class="h-badge g"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l3 3 7-7"/></svg> 100% Free</span>
+<span class="h-badge b"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="10" height="8" rx="1"/><path d="M5 4V3a2 2 0 014 0v1"/></svg> Private &amp; Secure</span>
+<span class="h-badge p"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="5"/><path d="M7 4v3h3"/></svg> Instant Results</span>
 </div>
 </div>
 
 <div class="filter-wrap">
-<button class="filter-pill active" onclick="filterTools('all')">All Tools</button>
-<button class="filter-pill" onclick="filterTools('pdf')">PDF Tools</button>
-<button class="filter-pill" onclick="filterTools('image')">Image Tools</button>
-<button class="filter-pill" onclick="filterTools('text')">Text Tools</button>
-<button class="filter-pill" onclick="filterTools('ai')">AI Tools</button>
+<button class="fpill active" onclick="filterTools('all')">All Tools</button>
+<button class="fpill" onclick="filterTools('pdf')">PDF Tools</button>
+<button class="fpill" onclick="filterTools('image')">Image Tools</button>
+<button class="fpill" onclick="filterTools('text')">Text Tools</button>
+<button class="fpill" onclick="filterTools('ai')">AI Powered</button>
 </div>
 
 <div class="tools-section">
 <div class="tools-grid" id="toolsGrid">
 
-<a href="/compress-pdf" class="tool-card" data-cat="pdf">
-<span class="tool-badge popular">Popular</span>
-<div class="tool-icon icon-red">📄</div>
+<!-- Compress PDF -->
+<a href="/compress-pdf" class="tool-card" data-cat="pdf" style="--accent:#ef4444">
+<span class="tool-tag pop">Popular</span>
+<div class="tool-icon ic-red">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2-2 2 2"/><path d="M11 13v5"/></svg>
+</div>
 <h3>Compress PDF</h3>
-<p>Reduce PDF file size while maintaining quality. No upload to server.</p>
+<p>Reduce PDF file size while keeping quality. Browser-based — your document never leaves your device.</p>
 </a>
 
-<a href="/merge-pdf" class="tool-card" data-cat="pdf">
-<div class="tool-icon icon-orange">📎</div>
+<!-- Merge PDF -->
+<a href="/merge-pdf" class="tool-card" data-cat="pdf" style="--accent:#f97316">
+<div class="tool-icon ic-orange">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/><path d="M8 12h8"/><path d="M12 9l3 3-3 3"/></svg>
+</div>
 <h3>Merge PDF</h3>
-<p>Combine multiple PDF files into one document. Drag to reorder.</p>
+<p>Combine multiple PDF files into one document. Drag to reorder pages before merging.</p>
 </a>
 
-<a href="/split-pdf" class="tool-card" data-cat="pdf">
-<div class="tool-icon icon-amber">✂️</div>
+<!-- Split PDF -->
+<a href="/split-pdf" class="tool-card" data-cat="pdf" style="--accent:#f59e0b">
+<div class="tool-icon ic-amber">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 3v18"/><path d="M8 8l-3 4 3 4"/><path d="M16 8l3 4-3 4"/></svg>
+</div>
 <h3>Split PDF</h3>
-<p>Extract specific pages from a PDF. Split by page numbers or ranges.</p>
+<p>Extract specific pages or split PDF by page numbers and ranges. Keep what you need.</p>
 </a>
 
-<a href="/pdf-to-jpg" class="tool-card" data-cat="pdf">
-<span class="tool-badge new">New</span>
-<div class="tool-icon icon-rose">🖼️</div>
+<!-- PDF to JPG -->
+<a href="/pdf-to-jpg" class="tool-card" data-cat="pdf" style="--accent:#f43f5e">
+<span class="tool-tag new">New</span>
+<div class="tool-icon ic-rose">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><circle cx="10" cy="14" r="2"/><path d="M20 17l-3-3-5 5"/></svg>
+</div>
 <h3>PDF to JPG</h3>
-<p>Convert each PDF page into high-quality JPG or PNG images.</p>
+<p>Convert every PDF page into high-quality JPG or PNG images. Adjustable DPI from 72 to 216.</p>
 </a>
 
-<a href="/image-to-pdf" class="tool-card" data-cat="image">
-<span class="tool-badge new">New</span>
-<div class="tool-icon icon-sky">📑</div>
+<!-- Image to PDF -->
+<a href="/image-to-pdf" class="tool-card" data-cat="image" style="--accent:#38bdf8">
+<span class="tool-tag new">New</span>
+<div class="tool-icon ic-sky">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/><path d="M16 3v6h6"/></svg>
+</div>
 <h3>Image to PDF</h3>
-<p>Convert JPG, PNG images to PDF. Combine multiple images into one PDF.</p>
+<p>Convert JPG, PNG images to PDF. Combine multiple photos into one document with custom page sizes.</p>
 </a>
 
-<a href="/image-compress" class="tool-card" data-cat="image">
-<span class="tool-badge popular">Popular</span>
-<div class="tool-icon icon-green">🗜️</div>
+<!-- Image Compressor -->
+<a href="/image-compress" class="tool-card" data-cat="image" style="--accent:#4ade80">
+<span class="tool-tag pop">Popular</span>
+<div class="tool-icon ic-green">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 3v18"/><path d="M16 3v18"/><path d="M3 8h18"/><path d="M3 16h18"/></svg>
+</div>
 <h3>Image Compressor</h3>
-<p>Compress JPEG, PNG, WebP images. Set target file size. Batch support.</p>
+<p>Compress JPEG, PNG, WebP images. Set target file size in KB. Batch processing with quality control.</p>
 </a>
 
-<a href="/image-resize" class="tool-card" data-cat="image">
-<span class="tool-badge new">New</span>
-<div class="tool-icon icon-teal">📐</div>
+<!-- Image Resize -->
+<a href="/image-resize" class="tool-card" data-cat="image" style="--accent:#2dd4bf">
+<span class="tool-tag new">New</span>
+<div class="tool-icon ic-teal">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>
+</div>
 <h3>Image Resize</h3>
-<p>Resize images to exact dimensions. Presets for HD, social media, icons.</p>
+<p>Resize to exact pixels or percentage. Presets for HD, social media, icons. Aspect ratio lock.</p>
 </a>
 
-<a href="/qr-generator" class="tool-card" data-cat="image">
-<div class="tool-icon icon-blue">📱</div>
+<!-- QR Generator -->
+<a href="/qr-generator" class="tool-card" data-cat="image" style="--accent:#60a5fa">
+<div class="tool-icon ic-blue">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M18 18h3v3h-3z"/><path d="M14 18h.01"/><path d="M18 14h.01"/></svg>
+</div>
 <h3>QR Code Generator</h3>
-<p>Generate QR codes for URLs, WiFi, UPI payments, email, and text.</p>
+<p>Generate QR codes for URLs, WiFi networks, UPI payments, email, and plain text. Download as PNG.</p>
 </a>
 
-<a href="/image-to-text" class="tool-card" data-cat="ai">
-<span class="tool-badge ai">AI</span>
-<div class="tool-icon icon-purple">👁️</div>
+<!-- OCR -->
+<a href="/image-to-text" class="tool-card" data-cat="ai" style="--accent:#a78bfa">
+<span class="tool-tag ai">AI</span>
+<div class="tool-icon ic-purple">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+</div>
 <h3>Image to Text (OCR)</h3>
-<p>Extract text from images. Supports Telugu, Hindi, Tamil + 12 languages.</p>
+<p>AI-powered text extraction from images. Supports Telugu, Hindi, Tamil, Arabic + 12 languages.</p>
 </a>
 
-<a href="/ai-paraphraser" class="tool-card" data-cat="ai">
-<span class="tool-badge ai">AI</span>
-<div class="tool-icon icon-pink">✍️</div>
+<!-- Paraphraser -->
+<a href="/ai-paraphraser" class="tool-card" data-cat="ai" style="--accent:#f472b6">
+<span class="tool-tag ai">AI</span>
+<div class="tool-icon ic-pink">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+</div>
 <h3>AI Paraphraser</h3>
-<p>Rewrite text in different styles — formal, casual, shorter, creative.</p>
+<p>Rewrite text in 5 styles — formal, casual, shorter, creative, or standard. AI-powered rephrasing.</p>
 </a>
 
-<a href="/word-counter" class="tool-card" data-cat="text">
-<span class="tool-badge new">New</span>
-<div class="tool-icon icon-lime">🔢</div>
+<!-- Word Counter -->
+<a href="/word-counter" class="tool-card" data-cat="text" style="--accent:#a3e635">
+<span class="tool-tag new">New</span>
+<div class="tool-icon ic-lime">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M4 7h16"/><path d="M4 12h10"/><path d="M4 17h12"/><circle cx="20" cy="17" r="2"/><path d="M20 7v8"/></svg>
+</div>
 <h3>Word Counter</h3>
-<p>Count words, characters, sentences. Track Twitter/LinkedIn limits.</p>
+<p>Count words, characters, sentences, paragraphs. Track Twitter, Instagram, LinkedIn character limits.</p>
 </a>
 
-<a href="/case-converter" class="tool-card" data-cat="text">
-<span class="tool-badge new">New</span>
-<div class="tool-icon icon-indigo">Aa</div>
+<!-- Case Converter -->
+<a href="/case-converter" class="tool-card" data-cat="text" style="--accent:#818cf8">
+<span class="tool-tag new">New</span>
+<div class="tool-icon ic-indigo">
+<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 18h6l2-12h2l2 12h6"/><path d="M4 12h5"/><path d="M15 12h5"/></svg>
+</div>
 <h3>Case Converter</h3>
-<p>Convert text to UPPERCASE, lowercase, Title Case, camelCase, and more.</p>
+<p>12 text transformations — UPPER, lower, Title, Sentence, camelCase, snake_case, kebab-case + more.</p>
 </a>
 
 </div>
@@ -227,53 +306,59 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="stats-bar">
 <div class="stats-inner">
 <div class="stat-item"><div class="num">12</div><div class="label">Free Tools</div></div>
-<div class="stat-item"><div class="num">0</div><div class="label">Files Uploaded</div></div>
-<div class="stat-item"><div class="num">100%</div><div class="label">Browser-Based</div></div>
+<div class="stat-item"><div class="num">0</div><div class="label">Files Uploaded to Server</div></div>
+<div class="stat-item"><div class="num">100%</div><div class="label">Browser Processing</div></div>
 <div class="stat-item"><div class="num">∞</div><div class="label">No Daily Limits</div></div>
 </div>
 </div>
 
 <div class="features">
-<h2>Why FixPilot?</h2>
+<h2>Built Different.</h2>
+<p class="sub">Every other tool uploads your files. We don't.</p>
 <div class="features-grid">
-<div class="feature-card">
-<h4>🔒 Complete Privacy</h4>
-<p>Your files never leave your device. Every tool processes data in your browser using client-side JavaScript. No server, no upload, no risk.</p>
+<div class="feat-card">
+<div class="feat-icon">🔒</div>
+<h4>Zero Server Upload</h4>
+<p>Files process in your browser using JavaScript. Nothing touches our servers. Your bank statements, contracts, photos — all stay on YOUR device.</p>
 </div>
-<div class="feature-card">
-<h4>⚡ Instant Processing</h4>
-<p>No upload + download wait. Your device does the processing, so results are instant. Even works offline after first load.</p>
+<div class="feat-card">
+<div class="feat-icon">⚡</div>
+<h4>Instant Processing</h4>
+<p>No upload wait, no download wait. Your device does the work. Results appear in milliseconds. Works offline after first visit.</p>
 </div>
-<div class="feature-card">
-<h4>♾️ No Limits</h4>
-<p>No daily file limits, no account needed, no watermarks. Use every tool as many times as you want, completely free.</p>
+<div class="feat-card">
+<div class="feat-icon">🌍</div>
+<h4>14 Languages</h4>
+<p>OCR supports Telugu, Hindi, Tamil, Kannada, Bengali, Urdu, Arabic, Japanese, Chinese, Korean, French, German, Spanish, Portuguese.</p>
 </div>
-<div class="feature-card">
-<h4>🌍 Works Everywhere</h4>
-<p>Desktop, tablet, phone — any browser, any OS. OCR supports 14 languages including Telugu, Hindi, Tamil, Arabic, and Japanese.</p>
+<div class="feat-card">
+<div class="feat-icon">♾️</div>
+<h4>Truly Unlimited</h4>
+<p>No "2 free files per day" tricks. No signup wall. No watermarks. Every tool is 100% free with zero restrictions. Forever.</p>
 </div>
 </div>
 </div>
 
 <div class="cta">
-<h2>Need a tool we don't have yet?</h2>
-<p>We're adding new tools every week. Let us know what you need.</p>
-<a href="mailto:fixpilot.tools@gmail.com">Request a Tool</a>
+<h2>Missing a tool you need?</h2>
+<p>We add new tools every week. Tell us what would help you.</p>
+<a href="mailto:fixpilot.tools@gmail.com" class="cta-btn">Request a Tool →</a>
 </div>
 
 <footer class="footer">
 <p>FixPilot — Free online tools. Your files never leave your device.</p>
-<p style="margin-top:8px"><a href="/about">About</a> · <a href="/privacy">Privacy Policy</a> · <a href="mailto:fixpilot.tools@gmail.com">Contact</a></p>
-<p style="margin-top:8px">© 2026 FixPilot. All tools are free to use.</p>
+<p style="margin-top:10px"><a href="/about">About</a> &nbsp;·&nbsp; <a href="/privacy">Privacy</a> &nbsp;·&nbsp; <a href="mailto:fixpilot.tools@gmail.com">Contact</a></p>
+<p style="margin-top:10px">© 2026 FixPilot. All tools free to use.</p>
 </footer>
+
+</div>
 
 <script>
 function filterTools(cat) {
-  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.fpill').forEach(p => p.classList.remove('active'));
   event.target.classList.add('active');
   document.querySelectorAll('.tool-card').forEach(card => {
-    if (cat === 'all') { card.style.display = 'flex'; return; }
-    card.style.display = card.dataset.cat === cat ? 'flex' : 'none';
+    card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'flex' : 'none';
   });
 }
 </script>
