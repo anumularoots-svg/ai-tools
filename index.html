@@ -3,17 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FixPilot — Free Online Tools | Compress PDF, Image Tools, QR Generator, OCR</title>
-<meta name="description" content="Free online tools — compress PDF, resize images, convert PDF to JPG, generate QR codes, extract text from images. 100% browser-based. Your files never leave your device.">
+<title>FixPilot — 25 Free Online Tools | PDF, Image, AI, Developer Tools</title>
+<meta name="description" content="25 free online tools — compress PDF, resize images, convert files, generate QR codes, check grammar, translate text, and more. 100% browser-based. Your files never leave your device.">
+<meta name="keywords" content="free online tools, compress pdf, image compressor, qr code generator, pdf to jpg, grammar checker, translator, password generator, json formatter, base64, word counter, case converter, fixpilot">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M18 6l-6 10h5l-1 10 7-12h-5.5z' fill='white'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e;-webkit-font-smoothing:antialiased}
-
-/* NAV */
-.nav-wrap{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.95);backdrop-filter:blur(16px);border-bottom:1px solid #f0eef5}
+.nw{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid #f0eef5}
 .nav{max-width:1260px;margin:0 auto;padding:0 32px;height:68px;display:flex;align-items:center;justify-content:space-between}
 .logo{display:flex;align-items:center;gap:11px;text-decoration:none}
 .logo svg{width:38px;height:38px}
@@ -22,8 +21,6 @@ body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e;-web
 .nav-r{display:flex;gap:28px}
 .nav-r a{text-decoration:none;color:#64748b;font-size:14px;font-weight:500;transition:.2s}
 .nav-r a:hover{color:#7C3AED}
-
-/* HERO */
 .hero{text-align:center;padding:56px 24px 44px;max-width:700px;margin:0 auto}
 .chip{display:inline-flex;align-items:center;gap:7px;padding:7px 18px;background:#F3F0FF;border-radius:24px;font-size:13px;font-weight:600;color:#7C3AED;margin-bottom:22px}
 .chip .dot{width:7px;height:7px;border-radius:50%;background:#22C55E;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
@@ -33,89 +30,70 @@ body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e;-web
 .trust{display:flex;justify-content:center;gap:32px;flex-wrap:wrap}
 .trust-i{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:600;color:#1a1a2e}
 .trust-i svg{color:#7C3AED;flex-shrink:0}
-
-/* FILTER */
 .filter{display:flex;justify-content:center;gap:8px;padding:0 24px;margin-bottom:40px;flex-wrap:wrap}
 .fp{padding:10px 24px;border:1.5px solid #e8e6f0;border-radius:10px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;color:#64748b;transition:.2s;font-family:inherit}
 .fp:hover{border-color:#c4b5fd;color:#7C3AED}
 .fp.on{background:#7C3AED;color:#fff;border-color:#7C3AED;box-shadow:0 2px 12px rgba(124,58,237,.22)}
-
-/* GRID */
-.grid-wrap{max-width:1260px;margin:0 auto;padding:0 32px 80px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-
-/* CARD */
-.card{background:#fff;border:1.5px solid #f0eef5;border-radius:20px;padding:32px 28px;text-decoration:none;color:inherit;display:flex;flex-direction:column;position:relative;transition:all .3s cubic-bezier(.25,.46,.45,.94)}
-.card:hover{transform:translateY(-5px);border-color:#ddd6fe;box-shadow:0 12px 40px rgba(124,58,237,.08),0 2px 8px rgba(0,0,0,.03)}
-
-/* ICON */
-.ic{width:68px;height:68px;border-radius:18px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;position:relative}
-.ic svg{width:36px;height:36px}
-
-/* TAG */
-.tag{position:absolute;top:18px;right:18px;padding:4px 11px;border-radius:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px}
-.tag.pop{background:#FFF7ED;color:#EA580C}
-.tag.new{background:#F0FDF4;color:#16A34A}
-.tag.ai{background:#F3F0FF;color:#7C3AED}
-
-.card h3{font-size:19px;font-weight:800;margin-bottom:8px;color:#1a1a2e;letter-spacing:-.4px}
-.card p{font-size:14px;color:#64748b;line-height:1.6;flex:1}
-
-/* STATS */
-.stats{padding:56px 24px;background:#FAFAFF;border-top:1px solid #f0eef5;border-bottom:1px solid #f0eef5}
+.grid-wrap{max-width:1260px;margin:0 auto;padding:0 32px 48px}
+.cat-title{font-size:14px;font-weight:700;color:#7C3AED;text-transform:uppercase;letter-spacing:1px;margin:32px 0 16px;padding-left:4px}
+.cat-title:first-child{margin-top:0}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.card{background:#fff;border:1.5px solid #f0eef5;border-radius:18px;padding:28px 22px;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;transition:all .3s cubic-bezier(.25,.46,.45,.94)}
+.card:hover{transform:translateY(-4px);border-color:#ddd6fe;box-shadow:0 10px 32px rgba(124,58,237,.08)}
+.ic{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.ic svg{width:32px;height:32px}
+.tag{position:absolute;top:12px;right:12px;padding:3px 8px;border-radius:5px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+.tag.pop{background:#FFF7ED;color:#EA580C}.tag.new{background:#F0FDF4;color:#16A34A}.tag.ai{background:#F3F0FF;color:#7C3AED}
+.card h3{font-size:15px;font-weight:800;margin-bottom:6px;color:#1a1a2e;letter-spacing:-.3px}
+.card p{font-size:12px;color:#64748b;line-height:1.5}
+.ic-red{background:#FEE2E2}.ic-org{background:#FFEDD5}.ic-amb{background:#FEF3C7}.ic-ros{background:#FCE7F3}
+.ic-sky{background:#E0F2FE}.ic-grn{background:#DCFCE7}.ic-tea{background:#CCFBF1}.ic-blu{background:#DBEAFE}
+.ic-pur{background:#EDE9FE}.ic-pnk{background:#FAE8FF}.ic-lim{background:#ECFCCB}.ic-ind{background:#E0E7FF}
+.ic-cya{background:#CFFAFE}.ic-eme{background:#D1FAE5}.ic-vio{background:#F5F3FF}.ic-fuc{background:#FDF4FF}
+.stats{padding:48px 24px;background:#FAFAFF;border-top:1px solid #f0eef5;border-bottom:1px solid #f0eef5}
 .stats-in{max-width:900px;margin:0 auto;display:flex;justify-content:space-between;text-align:center;flex-wrap:wrap;gap:20px}
 .si .n{font-size:44px;font-weight:900;letter-spacing:-1px;background:linear-gradient(135deg,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .si .l{font-size:13px;color:#64748b;margin-top:4px;font-weight:500}
-
-/* WHY */
-.why{max-width:1260px;margin:0 auto;padding:72px 32px}
+.why{max-width:1260px;margin:0 auto;padding:64px 32px}
 .why h2{text-align:center;font-size:34px;font-weight:900;letter-spacing:-.8px;margin-bottom:8px}
-.why .sub{text-align:center;color:#64748b;font-size:16px;margin-bottom:44px}
-.wg{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-.wc{padding:28px;border-radius:18px;border:1.5px solid #f0eef5;background:#fff;transition:.25s}
+.why .sub{text-align:center;color:#64748b;font-size:16px;margin-bottom:40px}
+.wg{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.wc{padding:24px;border-radius:16px;border:1.5px solid #f0eef5;background:#fff;transition:.25s}
 .wc:hover{border-color:#ddd6fe;box-shadow:0 8px 24px rgba(124,58,237,.06)}
-.wc .wi{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;background:#F3F0FF;font-size:24px}
-.wc h4{font-size:16px;font-weight:700;margin-bottom:6px;letter-spacing:-.2px}
+.wc .wi{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;background:#F3F0FF;font-size:22px}
+.wc h4{font-size:15px;font-weight:700;margin-bottom:6px}
 .wc p{font-size:13px;color:#64748b;line-height:1.6}
-
-/* CTA */
 .cta{text-align:center;padding:56px 24px;background:linear-gradient(135deg,#FAFAFF,#FDF2F8)}
 .cta h2{font-size:28px;font-weight:800;margin-bottom:10px}
 .cta p{color:#64748b;font-size:15px;margin-bottom:24px}
 .cta-b{display:inline-flex;align-items:center;gap:8px;padding:14px 34px;background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;border-radius:12px;text-decoration:none;font-weight:700;font-size:15px;transition:.25s;box-shadow:0 4px 16px rgba(124,58,237,.22)}
 .cta-b:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(124,58,237,.3)}
-
-/* FOOTER */
 .foot{text-align:center;padding:32px 24px;border-top:1px solid #f0eef5;color:#94a3b8;font-size:13px}
 .foot a{color:#7C3AED;text-decoration:none;font-weight:500}
-
-@media(max-width:1000px){.grid,.wg{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1100px){.grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:900px){.grid,.wg{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:640px){
-  .hero h1{font-size:30px;letter-spacing:-1px}
-  .grid{grid-template-columns:1fr 1fr;gap:12px}
-  .card{padding:20px 16px}
-  .ic{width:52px;height:52px;border-radius:14px;margin-bottom:14px}
-  .ic svg{width:28px;height:28px}
-  .card h3{font-size:15px}
-  .card p{font-size:12px}
-  .si .n{font-size:28px}
-  .wg{grid-template-columns:1fr}
-  .nav-r{gap:16px}.nav-r a{font-size:13px}
-  .trust{gap:16px}.trust-i{font-size:12px}
+.hero h1{font-size:30px;letter-spacing:-1px}
+.grid{grid-template-columns:repeat(2,1fr);gap:10px}
+.card{padding:18px 14px}
+.ic{width:48px;height:48px;border-radius:12px;margin-bottom:10px}.ic svg{width:24px;height:24px}
+.card h3{font-size:13px}.card p{font-size:11px}
+.si .n{font-size:28px}.wg{grid-template-columns:1fr}
+.nav-r{gap:16px}.nav-r a{font-size:13px}.trust{gap:16px}.trust-i{font-size:12px}
+.cat-title{font-size:12px}
 }
 </style>
 </head>
 <body>
-
-<div class="nav-wrap"><nav class="nav">
+<div class="nw"><nav class="nav">
 <a href="/" class="logo"><svg viewBox="0 0 38 38" fill="none"><rect width="38" height="38" rx="10" fill="url(#ng)"/><path d="M21 5l-8 13h7l-1 14 9-16h-7.5z" fill="#fff"/><defs><linearGradient id="ng" x1="0" y1="0" x2="38" y2="38"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs></svg><div class="logo-t">Fix<span>Pilot</span></div></a>
 <div class="nav-r"><a href="/about">About</a><a href="/privacy">Privacy</a><a href="mailto:fixpilot.tools@gmail.com">Contact</a></div>
 </nav></div>
 
 <section class="hero">
-<div class="chip"><span class="dot"></span> 12 Free Tools — All Browser-Based</div>
+<div class="chip"><span class="dot"></span> 25 Free Tools — All Browser-Based</div>
 <h1>Free Online Tools.<br><em>Files never leave your device.</em></h1>
-<p>Compress PDF, resize images, convert files, generate QR codes, extract text — all in your browser. No upload. No signup. No limits.</p>
+<p>25 powerful tools — PDF, image, text, AI, and developer tools. Everything runs in your browser. No upload. No signup. No limits.</p>
 <div class="trust">
 <div class="trust-i"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 10l4 4 8-8"/></svg>100% Free</div>
 <div class="trust-i"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="7" width="12" height="10" rx="2"/><path d="M7 7V5a3 3 0 016 0v2"/></svg>Files Stay Private</div>
@@ -124,254 +102,158 @@ body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e;-web
 </section>
 
 <div class="filter">
-<button class="fp on" onclick="f('all')">All Tools</button>
+<button class="fp on" onclick="f('all')">All Tools (25)</button>
 <button class="fp" onclick="f('pdf')">PDF Tools</button>
 <button class="fp" onclick="f('img')">Image Tools</button>
-<button class="fp" onclick="f('txt')">Text &amp; Writing</button>
 <button class="fp" onclick="f('ai')">AI Powered</button>
+<button class="fp" onclick="f('txt')">Text Tools</button>
+<button class="fp" onclick="f('dev')">Developer</button>
 </div>
 
-<div class="grid-wrap"><div class="grid" id="g">
+<div class="grid-wrap">
 
-<!-- 1 COMPRESS PDF -->
-<a href="/compress-pdf" class="card" data-c="pdf">
-<span class="tag pop">Popular</span>
-<div class="ic" style="background:#FEE2E2">
-<svg viewBox="0 0 36 36" fill="none">
-<rect x="6" y="2" width="20" height="28" rx="3" fill="#EF4444" opacity=".15"/>
-<rect x="8" y="4" width="20" height="28" rx="3" fill="#fff" stroke="#EF4444" stroke-width="1.5"/>
-<path d="M15 18l3-3 3 3" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M18 15v8" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/>
-<text x="13" y="13" font-size="6" font-weight="800" fill="#EF4444" font-family="Inter,sans-serif">PDF</text>
-</svg>
-</div>
-<h3>Compress PDF</h3>
-<p>Reduce PDF file size while keeping quality high. Your document never touches any server.</p>
-</a>
+<div class="cat-title" id="cat-pdf">PDF Tools</div>
+<div class="grid" id="g">
 
-<!-- 2 MERGE PDF -->
+<a href="/compress-pdf" class="card" data-c="pdf"><span class="tag pop">Popular</span>
+<div class="ic ic-red"><svg viewBox="0 0 36 36" fill="none"><rect x="8" y="4" width="20" height="28" rx="3" fill="#fff" stroke="#EF4444" stroke-width="1.5"/><path d="M15 18l3-3 3 3" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 15v8" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/><text x="13" y="13" font-size="6" font-weight="800" fill="#EF4444" font-family="sans-serif">PDF</text></svg></div>
+<h3>Compress PDF</h3><p>Reduce PDF file size while keeping quality</p></a>
+
 <a href="/merge-pdf" class="card" data-c="pdf">
-<div class="ic" style="background:#FFEDD5">
-<svg viewBox="0 0 36 36" fill="none">
-<rect x="4" y="6" width="14" height="20" rx="2" fill="#F97316" opacity=".15"/>
-<rect x="5" y="7" width="14" height="20" rx="2" fill="#fff" stroke="#F97316" stroke-width="1.5"/>
-<rect x="17" y="9" width="14" height="20" rx="2" fill="#fff" stroke="#F97316" stroke-width="1.5"/>
-<circle cx="18" cy="19" r="5" fill="#F97316" opacity=".12"/>
-<path d="M16 19h4M18 17v4" stroke="#F97316" stroke-width="1.8" stroke-linecap="round"/>
-</svg>
-</div>
-<h3>Merge PDF</h3>
-<p>Combine multiple PDF files into one document. Drag and drop to reorder pages before merging.</p>
-</a>
+<div class="ic ic-org"><svg viewBox="0 0 36 36" fill="none"><rect x="5" y="7" width="14" height="20" rx="2" fill="#fff" stroke="#F97316" stroke-width="1.5"/><rect x="17" y="9" width="14" height="20" rx="2" fill="#fff" stroke="#F97316" stroke-width="1.5"/><circle cx="18" cy="19" r="5" fill="#F97316" opacity=".12"/><path d="M16 19h4M18 17v4" stroke="#F97316" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+<h3>Merge PDF</h3><p>Combine multiple PDFs into one</p></a>
 
-<!-- 3 SPLIT PDF -->
 <a href="/split-pdf" class="card" data-c="pdf">
-<div class="ic" style="background:#FEF3C7">
-<svg viewBox="0 0 36 36" fill="none">
-<rect x="4" y="4" width="12" height="28" rx="2" fill="#EAB308" opacity=".12"/>
-<rect x="5" y="5" width="12" height="28" rx="2" fill="#fff" stroke="#CA8A04" stroke-width="1.5"/>
-<rect x="19" y="5" width="12" height="28" rx="2" fill="#fff" stroke="#CA8A04" stroke-width="1.5"/>
-<path d="M14 18h8" stroke="#CA8A04" stroke-width="1.5" stroke-dasharray="2 2"/>
-<path d="M9 13l-3 5 3 5" stroke="#CA8A04" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M27 13l3 5-3 5" stroke="#CA8A04" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-</div>
-<h3>Split PDF</h3>
-<p>Extract specific pages or split by ranges. Enter page numbers like 1,3,5-8 to get exactly what you need.</p>
-</a>
+<div class="ic ic-amb"><svg viewBox="0 0 36 36" fill="none"><rect x="5" y="5" width="12" height="28" rx="2" fill="#fff" stroke="#CA8A04" stroke-width="1.5"/><rect x="19" y="5" width="12" height="28" rx="2" fill="#fff" stroke="#CA8A04" stroke-width="1.5"/><path d="M9 13l-3 5 3 5" stroke="#CA8A04" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M27 13l3 5-3 5" stroke="#CA8A04" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<h3>Split PDF</h3><p>Extract specific pages from PDF</p></a>
 
-<!-- 4 PDF TO JPG -->
-<a href="/pdf-to-jpg" class="card" data-c="pdf">
-<span class="tag new">New</span>
-<div class="ic" style="background:#FCE7F3">
-<svg viewBox="0 0 36 36" fill="none">
-<rect x="4" y="4" width="16" height="22" rx="2" fill="#EC4899" opacity=".12"/>
-<rect x="5" y="5" width="16" height="22" rx="2" fill="#fff" stroke="#DB2777" stroke-width="1.5"/>
-<text x="8" y="14" font-size="5.5" font-weight="800" fill="#DB2777" font-family="Inter,sans-serif">PDF</text>
-<path d="M23 16l4 0" stroke="#DB2777" stroke-width="1.8" stroke-linecap="round"/>
-<path d="M24 14l2 2-2 2" stroke="#DB2777" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="20" y="10" width="12" height="16" rx="2" fill="#fff" stroke="#16A34A" stroke-width="1.5"/>
-<circle cx="24" cy="16" r="2" fill="#16A34A" opacity=".3"/>
-<path d="M20 22l4-4 3 3 2-2 3 3" stroke="#16A34A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="22" y="14" font-size="4.5" font-weight="700" fill="#16A34A" font-family="Inter,sans-serif">JPG</text>
-</svg>
-</div>
-<h3>PDF to JPG</h3>
-<p>Convert every PDF page into high-quality JPG or PNG images. Adjustable DPI from 72 to 216.</p>
-</a>
+<a href="/pdf-to-jpg" class="card" data-c="pdf"><span class="tag new">New</span>
+<div class="ic ic-ros"><svg viewBox="0 0 36 36" fill="none"><rect x="5" y="5" width="16" height="22" rx="2" fill="#fff" stroke="#DB2777" stroke-width="1.5"/><text x="8" y="14" font-size="5.5" font-weight="800" fill="#DB2777" font-family="sans-serif">PDF</text><path d="M23 16l3 0" stroke="#DB2777" stroke-width="1.8" stroke-linecap="round"/><rect x="20" y="10" width="12" height="16" rx="2" fill="#fff" stroke="#16A34A" stroke-width="1.5"/><text x="22" y="20" font-size="4.5" font-weight="700" fill="#16A34A" font-family="sans-serif">JPG</text></svg></div>
+<h3>PDF to JPG</h3><p>Convert PDF pages to images</p></a>
 
-<!-- 5 IMAGE TO PDF -->
-<a href="/image-to-pdf" class="card" data-c="img">
-<span class="tag new">New</span>
-<div class="ic" style="background:#E0F2FE">
-<svg viewBox="0 0 36 36" fill="none">
-<rect x="4" y="6" width="14" height="18" rx="2" fill="#0EA5E9" opacity=".1"/>
-<rect x="5" y="7" width="14" height="18" rx="2" fill="#fff" stroke="#0284C7" stroke-width="1.5"/>
-<circle cx="10" cy="13" r="2" fill="#0284C7" opacity=".3"/>
-<path d="M5 21l4-4 3 3 2-2 5 3" stroke="#0284C7" stroke-width="1.2" stroke-linecap="round"/>
-<path d="M21 16l4 0" stroke="#0284C7" stroke-width="1.8" stroke-linecap="round"/>
-<path d="M22 14l2 2-2 2" stroke="#0284C7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="18" y="8" width="14" height="20" rx="2" fill="#fff" stroke="#EF4444" stroke-width="1.5"/>
-<text x="21" y="17" font-size="5" font-weight="800" fill="#EF4444" font-family="Inter,sans-serif">PDF</text>
-</svg>
-</div>
-<h3>Image to PDF</h3>
-<p>Convert photos to PDF. Combine multiple images into one document with A4, Letter, or auto-fit pages.</p>
-</a>
+<a href="/image-to-pdf" class="card" data-c="img"><span class="tag new">New</span>
+<div class="ic ic-sky"><svg viewBox="0 0 36 36" fill="none"><rect x="5" y="7" width="14" height="18" rx="2" fill="#fff" stroke="#0284C7" stroke-width="1.5"/><circle cx="10" cy="13" r="2" fill="#0284C7" opacity=".3"/><path d="M21 16l3 0" stroke="#0284C7" stroke-width="1.8" stroke-linecap="round"/><rect x="18" y="8" width="14" height="20" rx="2" fill="#fff" stroke="#EF4444" stroke-width="1.5"/><text x="21" y="17" font-size="5" font-weight="800" fill="#EF4444" font-family="sans-serif">PDF</text></svg></div>
+<h3>Image to PDF</h3><p>Convert photos to PDF document</p></a>
 
-<!-- 6 IMAGE COMPRESSOR -->
-<a href="/image-compress" class="card" data-c="img">
-<span class="tag pop">Popular</span>
-<div class="ic" style="background:#DCFCE7">
-<svg viewBox="0 0 36 36" fill="none">
-<rect x="4" y="4" width="28" height="22" rx="3" fill="#22C55E" opacity=".1"/>
-<rect x="5" y="5" width="28" height="22" rx="3" fill="#fff" stroke="#16A34A" stroke-width="1.5"/>
-<circle cx="13" cy="13" r="3" fill="#16A34A" opacity=".25"/>
-<path d="M5 23l7-6 5 4 4-3 8 5" stroke="#16A34A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M24 8l-4 4" stroke="#16A34A" stroke-width="2" stroke-linecap="round"/>
-<path d="M26 8l-4 0M26 8l0 4" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
 </div>
-<h3>Image Compressor</h3>
-<p>Compress JPEG, PNG, WebP with quality slider or set exact target file size in KB. Batch processing.</p>
-</a>
 
-<!-- 7 IMAGE RESIZE -->
-<a href="/image-resize" class="card" data-c="img">
-<span class="tag new">New</span>
-<div class="ic" style="background:#CCFBF1">
-<svg viewBox="0 0 36 36" fill="none">
-<rect x="8" y="8" width="20" height="16" rx="2" fill="#0D9488" opacity=".1"/>
-<rect x="9" y="9" width="20" height="16" rx="2" fill="#fff" stroke="#0D9488" stroke-width="1.5"/>
-<path d="M4 4l6 6" stroke="#0D9488" stroke-width="2" stroke-linecap="round"/>
-<path d="M4 4h5M4 4v5" stroke="#0D9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M32 28l-6-6" stroke="#0D9488" stroke-width="2" stroke-linecap="round"/>
-<path d="M32 28h-5M32 28v-5" stroke="#0D9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="13" y="20" font-size="5" font-weight="700" fill="#0D9488" font-family="Inter,sans-serif">W×H</text>
-</svg>
-</div>
-<h3>Image Resize</h3>
-<p>Resize to exact pixels or percentage. Presets for HD, social media, icons. Aspect ratio lock built in.</p>
-</a>
+<div class="cat-title" id="cat-img">Image Tools</div>
+<div class="grid">
 
-<!-- 8 QR CODE -->
+<a href="/image-compress" class="card" data-c="img"><span class="tag pop">Popular</span>
+<div class="ic ic-grn"><svg viewBox="0 0 36 36" fill="none"><rect x="5" y="5" width="28" height="22" rx="3" fill="#fff" stroke="#16A34A" stroke-width="1.5"/><circle cx="13" cy="13" r="3" fill="#16A34A" opacity=".25"/><path d="M5 23l7-6 5 4 4-3 8 5" stroke="#16A34A" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+<h3>Image Compressor</h3><p>Compress JPEG, PNG, WebP with target size</p></a>
+
+<a href="/image-resize" class="card" data-c="img"><span class="tag new">New</span>
+<div class="ic ic-tea"><svg viewBox="0 0 36 36" fill="none"><rect x="9" y="9" width="20" height="16" rx="2" fill="#fff" stroke="#0D9488" stroke-width="1.5"/><path d="M4 4l6 6M32 28l-6-6" stroke="#0D9488" stroke-width="2" stroke-linecap="round"/><path d="M4 4h5M4 4v5M32 28h-5M32 28v-5" stroke="#0D9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<h3>Image Resize</h3><p>Resize to exact pixels or presets</p></a>
+
+<a href="/image-crop" class="card" data-c="img"><span class="tag new">New</span>
+<div class="ic ic-eme"><svg viewBox="0 0 36 36" fill="none"><path d="M10 4v22h22" stroke="#059669" stroke-width="2" stroke-linecap="round"/><path d="M4 10h22v22" stroke="#059669" stroke-width="2" stroke-linecap="round"/><rect x="10" y="10" width="16" height="16" fill="#059669" opacity=".08" rx="1"/></svg></div>
+<h3>Image Crop</h3><p>Crop with free-form or preset ratios</p></a>
+
+<a href="/png-to-jpg" class="card" data-c="img"><span class="tag new">New</span>
+<div class="ic ic-ros"><svg viewBox="0 0 36 36" fill="none"><rect x="4" y="6" width="14" height="18" rx="2" fill="#fff" stroke="#0EA5E9" stroke-width="1.5"/><text x="6" y="17" font-size="5" font-weight="800" fill="#0EA5E9" font-family="sans-serif">PNG</text><path d="M20 15l3 0" stroke="#64748b" stroke-width="1.5" stroke-linecap="round"/><rect x="18" y="6" width="14" height="18" rx="2" fill="#fff" stroke="#16A34A" stroke-width="1.5"/><text x="20" y="17" font-size="5" font-weight="800" fill="#16A34A" font-family="sans-serif">JPG</text></svg></div>
+<h3>PNG to JPG</h3><p>Convert PNG to JPG with quality control</p></a>
+
+<a href="/jpg-to-png" class="card" data-c="img"><span class="tag new">New</span>
+<div class="ic ic-sky"><svg viewBox="0 0 36 36" fill="none"><rect x="4" y="6" width="14" height="18" rx="2" fill="#fff" stroke="#16A34A" stroke-width="1.5"/><text x="6" y="17" font-size="5" font-weight="800" fill="#16A34A" font-family="sans-serif">JPG</text><path d="M20 15l3 0" stroke="#64748b" stroke-width="1.5" stroke-linecap="round"/><rect x="18" y="6" width="14" height="18" rx="2" fill="#fff" stroke="#0EA5E9" stroke-width="1.5"/><text x="20" y="17" font-size="5" font-weight="800" fill="#0EA5E9" font-family="sans-serif">PNG</text></svg></div>
+<h3>JPG to PNG</h3><p>Convert JPG to lossless PNG format</p></a>
+
 <a href="/qr-generator" class="card" data-c="img">
-<div class="ic" style="background:#DBEAFE">
-<svg viewBox="0 0 36 36" fill="none">
-<rect x="4" y="4" width="12" height="12" rx="2" fill="#2563EB" opacity=".15"/>
-<rect x="5" y="5" width="12" height="12" rx="2" fill="#fff" stroke="#2563EB" stroke-width="1.5"/>
-<rect x="8" y="8" width="6" height="6" rx="1" fill="#2563EB"/>
-<rect x="20" y="4" width="12" height="12" rx="2" fill="#2563EB" opacity=".15"/>
-<rect x="21" y="5" width="12" height="12" rx="2" fill="#fff" stroke="#2563EB" stroke-width="1.5"/>
-<rect x="24" y="8" width="6" height="6" rx="1" fill="#2563EB"/>
-<rect x="4" y="20" width="12" height="12" rx="2" fill="#2563EB" opacity=".15"/>
-<rect x="5" y="21" width="12" height="12" rx="2" fill="#fff" stroke="#2563EB" stroke-width="1.5"/>
-<rect x="8" y="24" width="6" height="6" rx="1" fill="#2563EB"/>
-<rect x="21" y="21" width="5" height="5" rx="1" fill="#2563EB" opacity=".5"/>
-<rect x="28" y="28" width="5" height="5" rx="1" fill="#2563EB" opacity=".5"/>
-<rect x="21" y="28" width="5" height="5" rx="1" fill="#2563EB" opacity=".2"/>
-<rect x="28" y="21" width="5" height="5" rx="1" fill="#2563EB" opacity=".2"/>
-</svg>
-</div>
-<h3>QR Code Generator</h3>
-<p>Create QR codes for URLs, WiFi networks, UPI payments, email, and plain text. Download as PNG.</p>
-</a>
+<div class="ic ic-blu"><svg viewBox="0 0 36 36" fill="none"><rect x="5" y="5" width="10" height="10" rx="2" fill="#fff" stroke="#2563EB" stroke-width="1.5"/><rect x="8" y="8" width="4" height="4" rx="1" fill="#2563EB"/><rect x="21" y="5" width="10" height="10" rx="2" fill="#fff" stroke="#2563EB" stroke-width="1.5"/><rect x="24" y="8" width="4" height="4" rx="1" fill="#2563EB"/><rect x="5" y="21" width="10" height="10" rx="2" fill="#fff" stroke="#2563EB" stroke-width="1.5"/><rect x="8" y="24" width="4" height="4" rx="1" fill="#2563EB"/><rect x="22" y="22" width="4" height="4" rx="1" fill="#2563EB" opacity=".5"/><rect x="28" y="28" width="4" height="4" rx="1" fill="#2563EB" opacity=".5"/></svg></div>
+<h3>QR Code Generator</h3><p>QR for URLs, WiFi, UPI, email</p></a>
 
-<!-- 9 OCR -->
-<a href="/image-to-text" class="card" data-c="ai">
-<span class="tag ai">AI</span>
-<div class="ic" style="background:#EDE9FE">
-<svg viewBox="0 0 36 36" fill="none">
-<rect x="4" y="6" width="20" height="24" rx="2" fill="#7C3AED" opacity=".08"/>
-<rect x="5" y="7" width="20" height="24" rx="2" fill="#fff" stroke="#7C3AED" stroke-width="1.5"/>
-<circle cx="15" cy="16" r="6" fill="#7C3AED" opacity=".1" stroke="#7C3AED" stroke-width="1.3"/>
-<circle cx="15" cy="16" r="2.5" fill="#7C3AED"/>
-<line x1="9" y1="26" x2="21" y2="26" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round"/>
-<line x1="9" y1="29" x2="17" y2="29" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round"/>
-<path d="M26 14l4 4-4 4" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<line x1="24" y1="18" x2="30" y2="18" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round"/>
-</svg>
 </div>
-<h3>Image to Text (OCR)</h3>
-<p>AI-powered text extraction from photos. Supports Telugu, Hindi, Tamil, Arabic, and 12+ languages.</p>
-</a>
 
-<!-- 10 PARAPHRASER -->
-<a href="/ai-paraphraser" class="card" data-c="ai">
-<span class="tag ai">AI</span>
-<div class="ic" style="background:#FAE8FF">
-<svg viewBox="0 0 36 36" fill="none">
-<rect x="6" y="4" width="22" height="28" rx="2" fill="#C026D3" opacity=".08"/>
-<rect x="7" y="5" width="22" height="28" rx="2" fill="#fff" stroke="#C026D3" stroke-width="1.5"/>
-<line x1="11" y1="12" x2="25" y2="12" stroke="#C026D3" stroke-width="1.5" stroke-linecap="round"/>
-<line x1="11" y1="16" x2="22" y2="16" stroke="#C026D3" stroke-width="1.5" stroke-linecap="round"/>
-<line x1="11" y1="20" x2="20" y2="20" stroke="#C026D3" stroke-width="1.5" stroke-linecap="round"/>
-<path d="M22 22l4.5-4.5" stroke="#C026D3" stroke-width="2" stroke-linecap="round"/>
-<circle cx="28" cy="16" r="3" fill="#C026D3" opacity=".15" stroke="#C026D3" stroke-width="1.2"/>
-<path d="M27 15l1 1 2-2" stroke="#C026D3" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+<div class="cat-title" id="cat-ai">AI Powered Tools</div>
+<div class="grid">
+
+<a href="/image-to-text" class="card" data-c="ai"><span class="tag ai">AI</span>
+<div class="ic ic-pur"><svg viewBox="0 0 36 36" fill="none"><rect x="5" y="7" width="20" height="24" rx="2" fill="#fff" stroke="#7C3AED" stroke-width="1.5"/><circle cx="15" cy="16" r="5" fill="#7C3AED" opacity=".1" stroke="#7C3AED" stroke-width="1.3"/><circle cx="15" cy="16" r="2" fill="#7C3AED"/><line x1="9" y1="26" x2="21" y2="26" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+<h3>Image to Text (OCR)</h3><p>Extract text from images — 14 languages</p></a>
+
+<a href="/ai-paraphraser" class="card" data-c="ai"><span class="tag ai">AI</span>
+<div class="ic ic-pnk"><svg viewBox="0 0 36 36" fill="none"><rect x="7" y="5" width="22" height="28" rx="2" fill="#fff" stroke="#C026D3" stroke-width="1.5"/><line x1="11" y1="12" x2="25" y2="12" stroke="#C026D3" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="16" x2="22" y2="16" stroke="#C026D3" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="20" x2="20" y2="20" stroke="#C026D3" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+<h3>AI Paraphraser</h3><p>Rewrite in 5 styles — formal to creative</p></a>
+
+<a href="/grammar-checker" class="card" data-c="ai"><span class="tag ai">AI</span>
+<div class="ic ic-vio"><svg viewBox="0 0 36 36" fill="none"><rect x="6" y="4" width="24" height="28" rx="2" fill="#fff" stroke="#7C3AED" stroke-width="1.5"/><line x1="10" y1="11" x2="26" y2="11" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round"/><line x1="10" y1="16" x2="22" y2="16" stroke="#22C55E" stroke-width="1.5" stroke-linecap="round"/><line x1="10" y1="21" x2="24" y2="21" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2"/><path d="M22 26l2 2 4-4" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<h3>Grammar Checker</h3><p>Check grammar, spelling, punctuation</p></a>
+
+<a href="/ai-translator" class="card" data-c="ai"><span class="tag ai">AI</span>
+<div class="ic ic-fuc"><svg viewBox="0 0 36 36" fill="none"><rect x="4" y="6" width="14" height="20" rx="2" fill="#fff" stroke="#9333EA" stroke-width="1.5"/><text x="7" y="18" font-size="6" font-weight="800" fill="#9333EA" font-family="sans-serif">A</text><path d="M20 16l4 0" stroke="#9333EA" stroke-width="1.5" stroke-linecap="round"/><path d="M22 14l2 2-2 2" stroke="#9333EA" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><rect x="18" y="6" width="14" height="20" rx="2" fill="#fff" stroke="#0EA5E9" stroke-width="1.5"/><text x="22" y="18" font-size="6" font-weight="800" fill="#0EA5E9" font-family="sans-serif">अ</text></svg></div>
+<h3>AI Translator</h3><p>Translate text — 20+ languages</p></a>
+
+<a href="/ai-summarizer" class="card" data-c="ai"><span class="tag ai">AI</span>
+<div class="ic ic-pur"><svg viewBox="0 0 36 36" fill="none"><rect x="5" y="4" width="26" height="28" rx="2" fill="#fff" stroke="#7C3AED" stroke-width="1.5"/><line x1="9" y1="10" x2="27" y2="10" stroke="#c4b5fd" stroke-width="1.5" stroke-linecap="round"/><line x1="9" y1="14" x2="24" y2="14" stroke="#c4b5fd" stroke-width="1.5" stroke-linecap="round"/><line x1="9" y1="18" x2="25" y2="18" stroke="#c4b5fd" stroke-width="1.5" stroke-linecap="round"/><line x1="9" y1="24" x2="20" y2="24" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/><line x1="9" y1="28" x2="16" y2="28" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg></div>
+<h3>AI Summarizer</h3><p>Summarize long text into key points</p></a>
+
 </div>
-<h3>AI Paraphraser</h3>
-<p>Rewrite text in 5 styles — formal, casual, shorter, creative, or standard. AI-powered rephrasing.</p>
-</a>
 
-<!-- 11 WORD COUNTER -->
+<div class="cat-title" id="cat-txt">Text & Writing Tools</div>
+<div class="grid">
+
 <a href="/word-counter" class="card" data-c="txt">
-<span class="tag new">New</span>
-<div class="ic" style="background:#ECFCCB">
-<svg viewBox="0 0 36 36" fill="none">
-<rect x="5" y="4" width="26" height="28" rx="3" fill="#65A30D" opacity=".08"/>
-<rect x="6" y="5" width="26" height="28" rx="3" fill="#fff" stroke="#65A30D" stroke-width="1.5"/>
-<line x1="10" y1="12" x2="26" y2="12" stroke="#65A30D" stroke-width="1.5" stroke-linecap="round"/>
-<line x1="10" y1="17" x2="22" y2="17" stroke="#65A30D" stroke-width="1.5" stroke-linecap="round"/>
-<line x1="10" y1="22" x2="24" y2="22" stroke="#65A30D" stroke-width="1.5" stroke-linecap="round"/>
-<line x1="10" y1="27" x2="18" y2="27" stroke="#65A30D" stroke-width="1.5" stroke-linecap="round"/>
-<circle cx="28" cy="26" r="5" fill="#65A30D" opacity=".12" stroke="#65A30D" stroke-width="1.3"/>
-<text x="25.5" y="29" font-size="7" font-weight="800" fill="#65A30D" font-family="Inter,sans-serif">#</text>
-</svg>
-</div>
-<h3>Word Counter</h3>
-<p>Count words, characters, sentences, paragraphs, and reading time. Track Twitter and LinkedIn limits.</p>
-</a>
+<div class="ic ic-lim"><svg viewBox="0 0 36 36" fill="none"><rect x="6" y="5" width="26" height="28" rx="3" fill="#fff" stroke="#65A30D" stroke-width="1.5"/><line x1="10" y1="12" x2="26" y2="12" stroke="#65A30D" stroke-width="1.5" stroke-linecap="round"/><line x1="10" y1="17" x2="22" y2="17" stroke="#65A30D" stroke-width="1.5" stroke-linecap="round"/><line x1="10" y1="22" x2="24" y2="22" stroke="#65A30D" stroke-width="1.5" stroke-linecap="round"/><circle cx="27" cy="26" r="5" fill="#65A30D" opacity=".12" stroke="#65A30D" stroke-width="1.3"/><text x="24.5" y="29" font-size="7" font-weight="800" fill="#65A30D" font-family="sans-serif">#</text></svg></div>
+<h3>Word Counter</h3><p>Words, characters, reading time</p></a>
 
-<!-- 12 CASE CONVERTER -->
 <a href="/case-converter" class="card" data-c="txt">
-<span class="tag new">New</span>
-<div class="ic" style="background:#E0E7FF">
-<svg viewBox="0 0 36 36" fill="none">
-<rect x="4" y="6" width="28" height="24" rx="3" fill="#4F46E5" opacity=".08"/>
-<rect x="5" y="7" width="28" height="24" rx="3" fill="#fff" stroke="#4F46E5" stroke-width="1.5"/>
-<text x="8" y="21" font-size="12" font-weight="900" fill="#4F46E5" font-family="Inter,sans-serif">Aa</text>
-<path d="M24 12v12" stroke="#4F46E5" stroke-width="1.5" stroke-linecap="round"/>
-<path d="M21 15l3-3 3 3" stroke="#4F46E5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M27 21l-3 3-3-3" stroke="#4F46E5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+<div class="ic ic-ind"><svg viewBox="0 0 36 36" fill="none"><rect x="5" y="7" width="28" height="24" rx="3" fill="#fff" stroke="#4F46E5" stroke-width="1.5"/><text x="8" y="22" font-size="13" font-weight="900" fill="#4F46E5" font-family="sans-serif">Aa</text><path d="M26 12v12M23 15l3-3 3 3M29 21l-3 3-3-3" stroke="#4F46E5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<h3>Case Converter</h3><p>12 text case transformations</p></a>
+
+<a href="/lorem-ipsum" class="card" data-c="txt">
+<div class="ic ic-amb"><svg viewBox="0 0 36 36" fill="none"><rect x="6" y="5" width="24" height="28" rx="2" fill="#fff" stroke="#D97706" stroke-width="1.5"/><line x1="10" y1="11" x2="26" y2="11" stroke="#D97706" stroke-width="1.3" stroke-linecap="round"/><line x1="10" y1="15" x2="22" y2="15" stroke="#D97706" stroke-width="1.3" stroke-linecap="round"/><line x1="10" y1="19" x2="24" y2="19" stroke="#D97706" stroke-width="1.3" stroke-linecap="round"/><line x1="10" y1="23" x2="18" y2="23" stroke="#D97706" stroke-width="1.3" stroke-linecap="round" stroke-dasharray="3 2"/><text x="10" y="30" font-size="5" font-weight="700" fill="#D97706" font-family="sans-serif">Lorem...</text></svg></div>
+<h3>Lorem Ipsum</h3><p>Generate placeholder text</p></a>
+
+<a href="/markdown-to-html" class="card" data-c="dev">
+<div class="ic ic-cya"><svg viewBox="0 0 36 36" fill="none"><rect x="4" y="6" width="28" height="24" rx="3" fill="#fff" stroke="#0891B2" stroke-width="1.5"/><text x="8" y="20" font-size="8" font-weight="900" fill="#0891B2" font-family="sans-serif">MD</text><path d="M24 14l3 4-3 4" stroke="#0891B2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<h3>Markdown → HTML</h3><p>Live Markdown to HTML converter</p></a>
+
 </div>
-<h3>Case Converter</h3>
-<p>12 text transformations — UPPER, lower, Title, Sentence, camelCase, snake_case, kebab-case, and more.</p>
-</a>
 
-</div></div>
+<div class="cat-title" id="cat-dev">Developer & Utility Tools</div>
+<div class="grid">
 
-<!-- STATS -->
+<a href="/password-generator" class="card" data-c="dev"><span class="tag pop">Popular</span>
+<div class="ic ic-red"><svg viewBox="0 0 36 36" fill="none"><rect x="6" y="14" width="24" height="18" rx="3" fill="#fff" stroke="#DC2626" stroke-width="1.5"/><path d="M12 14v-4a6 6 0 0112 0v4" stroke="#DC2626" stroke-width="1.5"/><circle cx="18" cy="23" r="2.5" fill="#DC2626"/><path d="M18 25.5v3" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+<h3>Password Generator</h3><p>Strong random passwords with crypto API</p></a>
+
+<a href="/color-picker" class="card" data-c="dev">
+<div class="ic" style="background:linear-gradient(135deg,#fca5a5,#fde68a,#86efac,#93c5fd,#c4b5fd)"><svg viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="10" fill="#fff" fill-opacity=".5" stroke="#fff" stroke-width="2"/><circle cx="18" cy="18" r="4" fill="#fff" stroke="#374151" stroke-width="1.5"/></svg></div>
+<h3>Color Picker</h3><p>HEX, RGB, HSL converter</p></a>
+
+<a href="/json-formatter" class="card" data-c="dev">
+<div class="ic ic-ind"><svg viewBox="0 0 36 36" fill="none"><text x="6" y="16" font-size="11" font-weight="900" fill="#4F46E5" font-family="monospace">{</text><text x="22" y="28" font-size="11" font-weight="900" fill="#4F46E5" font-family="monospace">}</text><line x1="14" y1="15" x2="22" y2="15" stroke="#4F46E5" stroke-width="1.5" stroke-linecap="round"/><line x1="14" y1="21" x2="24" y2="21" stroke="#4F46E5" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+<h3>JSON Formatter</h3><p>Format, validate, minify JSON</p></a>
+
+<a href="/base64" class="card" data-c="dev">
+<div class="ic ic-tea"><svg viewBox="0 0 36 36" fill="none"><rect x="4" y="8" width="28" height="20" rx="3" fill="#fff" stroke="#0D9488" stroke-width="1.5"/><text x="7" y="21" font-size="7" font-weight="800" fill="#0D9488" font-family="monospace">B64</text><path d="M23 14l4 4-4 4" stroke="#0D9488" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<h3>Base64 Encode/Decode</h3><p>Encode and decode Base64 text</p></a>
+
+<a href="/csv-to-json" class="card" data-c="dev">
+<div class="ic ic-grn"><svg viewBox="0 0 36 36" fill="none"><rect x="4" y="6" width="14" height="18" rx="2" fill="#fff" stroke="#16A34A" stroke-width="1.5"/><text x="6" y="17" font-size="5" font-weight="800" fill="#16A34A" font-family="sans-serif">CSV</text><path d="M20 15l3 0" stroke="#64748b" stroke-width="1.5" stroke-linecap="round"/><rect x="18" y="6" width="14" height="18" rx="2" fill="#fff" stroke="#4F46E5" stroke-width="1.5"/><text x="19.5" y="17" font-size="4.5" font-weight="800" fill="#4F46E5" font-family="monospace">{js}</text></svg></div>
+<h3>CSV to JSON</h3><p>Convert CSV data to JSON format</p></a>
+
+</div>
+</div>
+
 <section class="stats"><div class="stats-in">
-<div class="si"><div class="n">12</div><div class="l">Free Tools</div></div>
+<div class="si"><div class="n">25</div><div class="l">Free Tools</div></div>
 <div class="si"><div class="n">0</div><div class="l">Files Sent to Server</div></div>
 <div class="si"><div class="n">100%</div><div class="l">Browser Processing</div></div>
 <div class="si"><div class="n">∞</div><div class="l">No Daily Limits</div></div>
 </div></section>
 
-<!-- WHY -->
 <section class="why">
 <h2>Built Different.</h2>
 <p class="sub">Every other tool uploads your files. We don't.</p>
 <div class="wg">
-<div class="wc"><div class="wi">🔒</div><h4>Zero Server Upload</h4><p>Files process in your browser using JavaScript. Your bank statements, contracts, and photos never leave your device. Period.</p></div>
+<div class="wc"><div class="wi">🔒</div><h4>Zero Server Upload</h4><p>Files process in your browser using JavaScript. Your bank statements, contracts, and photos never leave your device.</p></div>
 <div class="wc"><div class="wi">⚡</div><h4>Instant Processing</h4><p>No upload or download wait. Your device does all the work — results appear in milliseconds. Works offline after first visit.</p></div>
-<div class="wc"><div class="wi">🌍</div><h4>14 Languages</h4><p>OCR supports Telugu, Hindi, Tamil, Kannada, Bengali, Urdu, Arabic, Japanese, Chinese, Korean, and 4 more languages.</p></div>
+<div class="wc"><div class="wi">🌍</div><h4>14 Languages</h4><p>OCR supports Telugu, Hindi, Tamil, Kannada, Bengali, Urdu, Arabic, Japanese, Chinese, Korean, and 4 more.</p></div>
 <div class="wc"><div class="wi">♾️</div><h4>Truly Unlimited</h4><p>No "2 files per day" tricks. No signup wall. No watermarks. Every tool is 100% free with zero restrictions.</p></div>
-</div>
-</section>
+</div></section>
 
 <section class="cta">
 <h2>Missing a tool you need?</h2>
@@ -385,7 +267,16 @@ body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e;-web
 </footer>
 
 <script>
-function f(c){document.querySelectorAll('.fp').forEach(p=>p.classList.remove('on'));event.target.classList.add('on');document.querySelectorAll('.card').forEach(d=>{d.style.display=(c==='all'||d.dataset.c===c)?'flex':'none'})}
+function f(c){
+document.querySelectorAll('.fp').forEach(p=>p.classList.remove('on'));
+event.target.classList.add('on');
+const show=c==='all';
+document.querySelectorAll('.card').forEach(d=>d.style.display=(show||d.dataset.c===c)?'flex':'none');
+document.querySelectorAll('.cat-title').forEach(t=>{
+const cats={pdf:'cat-pdf',img:'cat-img',ai:'cat-ai',txt:'cat-txt',dev:'cat-dev'};
+t.style.display=(show||t.id===cats[c])?'block':'none';
+});
+}
 </script>
 </body>
 </html>
