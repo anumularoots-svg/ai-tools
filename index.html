@@ -2,251 +2,279 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="google-site-verification" content="Afn-YNRLgeMGUZRIj7FeuVwCIxOamiTQsbVCuJ_6l8c" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FixPilot — Free Online Tools | Compress PDF, Remove Background, OCR & More</title>
-<meta name="description" content="FixPilot offers 20+ free online tools. Compress PDF, remove background, extract text, generate QR codes. No signup, no watermark.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%238b5cf6'/><path d='M16 6L8 18h7l-1 8 9-12h-7l1-8z' fill='white'/></svg>">
+<title>FixPilot — Free Online Tools | Compress PDF, Image Tools, QR Generator, OCR</title>
+<meta name="description" content="Free online tools — compress PDF, resize images, convert PDF to JPG, generate QR codes, extract text from images (OCR), and more. 100% browser-based. No upload to server.">
+<meta name="keywords" content="free online tools, compress pdf, image compressor, qr code generator, pdf to jpg, image to pdf, word counter, case converter, ocr, paraphraser, browser based tools, no upload">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M18 6l-6 10h5l-1 10 7-12h-5.5z' fill='white'/%3E%3C/svg%3E">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:#fefefe;color:#1a1a2e;-webkit-font-smoothing:antialiased}
-a{text-decoration:none;color:inherit}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#FAFAFE;color:#1a1a2e;min-height:100vh}
 
-.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.04)}
-.nav-in{display:flex;align-items:center;justify-content:space-between;padding:12px 40px;max-width:1260px;margin:0 auto}
-.logo{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800}
-.logo-m{width:38px;height:38px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(124,58,237,.25)}
-.logo-m svg{width:19px;height:19px}
-.logo em{font-style:normal;background:linear-gradient(135deg,#7c3aed,#c026d3);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav-links{display:flex;gap:32px;font-size:14px;font-weight:500;color:#888}
-.nav-links a:hover{color:#7c3aed}
-.nav-btn{padding:10px 24px;background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-radius:10px;font-size:13px;font-weight:700;box-shadow:0 3px 14px rgba(124,58,237,.2);transition:all .2s}
-.nav-btn:hover{transform:translateY(-1px);box-shadow:0 5px 20px rgba(124,58,237,.3)}
+/* Nav */
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(124,58,237,0.08);padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#1a1a2e;font-weight:700;font-size:20px}
+.logo svg{width:32px;height:32px}
+.logo span{background:linear-gradient(135deg,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:20px}
+.nav-links a{text-decoration:none;color:#64748b;font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:#7C3AED}
+.nav-wrap{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(124,58,237,0.08)}
 
-.hero{text-align:center;padding:64px 40px 40px;background:linear-gradient(180deg,#faf5ff 0%,#fefefe 100%);position:relative}
-.hero::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:400px;background:radial-gradient(ellipse,rgba(168,85,247,.06),transparent 70%);pointer-events:none}
-.chip{display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:99px;background:#f5f3ff;border:1px solid #e9d5ff;font-size:12px;font-weight:700;color:#7c3aed;margin-bottom:20px;position:relative}
-.chip i{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.hero h1{font-size:clamp(28px,4.5vw,48px);font-weight:800;line-height:1.15;letter-spacing:-1px;margin-bottom:14px;position:relative}
-.hero h1 b{font-weight:800;background:linear-gradient(135deg,#7c3aed,#c026d3,#e879f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{font-size:16px;color:#888;max-width:520px;margin:0 auto 28px;line-height:1.7;position:relative}
-.hero-acts{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;position:relative}
-.ha{padding:12px 28px;border-radius:11px;font-size:14px;font-weight:700;transition:all .2s}
-.ha1{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;box-shadow:0 4px 20px rgba(124,58,237,.2)}.ha1:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(124,58,237,.3)}
-.ha2{background:#f5f3ff;color:#7c3aed;border:1px solid #e9d5ff}.ha2:hover{background:#ede9fe}
+/* Hero */
+.hero{text-align:center;padding:56px 24px 40px;max-width:720px;margin:0 auto}
+.hero h1{font-size:42px;font-weight:800;line-height:1.15;margin-bottom:16px}
+.hero h1 .grad{background:linear-gradient(135deg,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:#64748b;font-size:17px;line-height:1.6;max-width:540px;margin:0 auto}
+.hero-badges{display:flex;justify-content:center;gap:10px;margin-top:20px;flex-wrap:wrap}
+.hero-badge{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px}
+.hero-badge.green{background:#dcfce7;color:#16a34a}
+.hero-badge.blue{background:#dbeafe;color:#2563eb}
+.hero-badge.purple{background:#f3e8ff;color:#7C3AED}
 
-.tabs{display:flex;justify-content:center;gap:6px;padding:8px 40px 36px;flex-wrap:wrap}
-.tab{padding:9px 22px;border-radius:99px;font-size:13px;font-weight:600;border:1.5px solid #e8e8e8;color:#777;cursor:pointer;transition:all .2s;background:#fff}
-.tab:hover{border-color:#d8b4fe;color:#7c3aed}
-.tab.on{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(124,58,237,.2)}
+/* Filter */
+.filter-wrap{display:flex;justify-content:center;gap:8px;padding:0 24px;flex-wrap:wrap;margin-bottom:32px}
+.filter-pill{padding:8px 18px;border:1.5px solid #e5e7eb;border-radius:20px;background:#fff;font-size:13px;font-weight:600;cursor:pointer;color:#64748b;transition:all .2s}
+.filter-pill:hover{border-color:#7C3AED;color:#7C3AED}
+.filter-pill.active{background:#7C3AED;color:#fff;border-color:#7C3AED}
 
-.grid{max-width:1260px;margin:0 auto;padding:0 40px 60px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+/* Tools Grid */
+.tools-section{max-width:1100px;margin:0 auto;padding:0 24px 60px}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.tool-card{background:#fff;border-radius:14px;padding:24px;border:1px solid #f1f5f9;cursor:pointer;transition:all .25s;text-decoration:none;color:inherit;display:flex;flex-direction:column;position:relative}
+.tool-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,58,237,0.1);border-color:rgba(124,58,237,0.15)}
+.tool-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:22px}
+.tool-card h3{font-size:15px;font-weight:700;margin-bottom:6px;color:#1a1a2e}
+.tool-card p{font-size:13px;color:#64748b;line-height:1.5;flex:1}
+.tool-badge{position:absolute;top:12px;right:12px;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+.tool-badge.popular{background:#fef3c7;color:#d97706}
+.tool-badge.new{background:#dcfce7;color:#16a34a}
+.tool-badge.ai{background:#f3e8ff;color:#7C3AED}
 
-.card{position:relative;padding:32px 20px 28px;border-radius:18px;border:1.5px solid #f0eeee;background:#fff;text-align:center;transition:all .35s;cursor:pointer}
-.card:hover{border-color:#e9d5ff;box-shadow:0 16px 48px rgba(124,58,237,.07);transform:translateY(-6px)}
-.card.dim{opacity:.35;pointer-events:none}
+/* Icon Colors */
+.icon-red{background:linear-gradient(135deg,#fee2e2,#fecaca)}
+.icon-orange{background:linear-gradient(135deg,#ffedd5,#fed7aa)}
+.icon-green{background:linear-gradient(135deg,#dcfce7,#bbf7d0)}
+.icon-blue{background:linear-gradient(135deg,#dbeafe,#bfdbfe)}
+.icon-purple{background:linear-gradient(135deg,#f3e8ff,#e9d5ff)}
+.icon-pink{background:linear-gradient(135deg,#fce7f3,#fbcfe8)}
+.icon-teal{background:linear-gradient(135deg,#ccfbf1,#99f6e4)}
+.icon-amber{background:linear-gradient(135deg,#fef3c7,#fde68a)}
+.icon-sky{background:linear-gradient(135deg,#e0f2fe,#bae6fd)}
+.icon-rose{background:linear-gradient(135deg,#ffe4e6,#fecdd3)}
+.icon-lime{background:linear-gradient(135deg,#ecfccb,#d9f99d)}
+.icon-indigo{background:linear-gradient(135deg,#e0e7ff,#c7d2fe)}
 
-.card-badge{position:absolute;top:14px;right:14px;font-size:8px;font-weight:800;padding:3px 9px;border-radius:6px;text-transform:uppercase;letter-spacing:.6px}
-.bg-hot{background:#fef3c7;color:#b45309}
-.bg-free{background:#dcfce7;color:#15803d}
-.bg-ai{background:#e0e7ff;color:#4338ca}
-.bg-new{background:#fce7f3;color:#be185d}
-.bg-soon{background:#f4f4f5;color:#a1a1aa}
+/* Stats */
+.stats-bar{background:linear-gradient(135deg,#7C3AED,#EC4899);padding:40px 24px;margin:20px 0 48px}
+.stats-inner{max-width:900px;margin:0 auto;display:flex;justify-content:space-around;flex-wrap:wrap;gap:24px}
+.stat-item{text-align:center;color:#fff}
+.stat-item .num{font-size:32px;font-weight:800}
+.stat-item .label{font-size:13px;opacity:0.85;margin-top:4px}
 
-/* TOOL ICONS — large, colorful, unique per tool */
-.ci{width:72px;height:72px;border-radius:18px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.ci svg{width:34px;height:34px;position:relative;z-index:1}
+/* Features */
+.features{max-width:1100px;margin:0 auto;padding:0 24px 60px}
+.features h2{text-align:center;font-size:28px;font-weight:800;margin-bottom:32px}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.feature-card{padding:24px;border-radius:12px;background:#fff;border:1px solid #f1f5f9}
+.feature-card h4{font-size:15px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.feature-card p{font-size:13px;color:#64748b;line-height:1.6}
 
-/* Unique icon backgrounds */
-.ci-compress{background:linear-gradient(135deg,#fee2e2,#fecaca)}
-.ci-merge{background:linear-gradient(135deg,#ffedd5,#fed7aa)}
-.ci-split{background:linear-gradient(135deg,#fef9c3,#fde68a)}
-.ci-imgcomp{background:linear-gradient(135deg,#dcfce7,#bbf7d0)}
-.ci-qr{background:linear-gradient(135deg,#dbeafe,#bfdbfe)}
-.ci-ocr{background:linear-gradient(135deg,#e0e7ff,#c7d2fe)}
-.ci-pdf2word{background:linear-gradient(135deg,#f3e8ff,#e9d5ff)}
-.ci-rmbg{background:linear-gradient(135deg,#fce7f3,#fbcfe8)}
-.ci-para{background:linear-gradient(135deg,#d1fae5,#a7f3d0)}
-.ci-trans{background:linear-gradient(135deg,#cffafe,#a5f3fc)}
-.ci-gram{background:linear-gradient(135deg,#fef3c7,#fde68a)}
-.ci-w2p{background:linear-gradient(135deg,#fee2e2,#fecdd3)}
+/* CTA */
+.cta{text-align:center;padding:48px 24px;background:linear-gradient(135deg,rgba(124,58,237,0.04),rgba(236,72,153,0.04));margin-bottom:0}
+.cta h2{font-size:24px;font-weight:800;margin-bottom:12px}
+.cta p{color:#64748b;font-size:15px;margin-bottom:20px}
+.cta a{display:inline-block;padding:12px 32px;background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px;transition:all .2s}
+.cta a:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(124,58,237,0.3)}
 
-.card h3{font-size:15px;font-weight:700;margin-bottom:5px;color:#1a1a2e}
-.card p{font-size:12px;color:#aaa;line-height:1.45}
+/* Footer */
+.footer{text-align:center;padding:32px;border-top:1px solid #f1f5f9;color:#94a3b8;font-size:13px}
+.footer a{color:#7C3AED;text-decoration:none}
 
-.stats{background:linear-gradient(135deg,#faf5ff,#f5f3ff);border-top:1px solid #f3e8ff;border-bottom:1px solid #f3e8ff;padding:48px 40px}
-.stats-in{max-width:900px;margin:0 auto;display:flex;justify-content:space-between;text-align:center}
-.st-n{font-size:42px;font-weight:800;background:linear-gradient(135deg,#7c3aed,#c026d3);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.st-l{font-size:11px;color:#aaa;font-weight:600;margin-top:2px;text-transform:uppercase;letter-spacing:1px}
-
-.why{max-width:1260px;margin:0 auto;padding:64px 40px}
-.why-t{text-align:center;margin-bottom:40px}
-.why-t span{font-size:12px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:1.5px}
-.why-t h2{font-size:28px;font-weight:800;margin-top:6px;letter-spacing:-.5px}
-.wg{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.wc{padding:32px 28px;border-radius:18px;background:#faf5ff;border:1px solid #f3e8ff;transition:all .2s}
-.wc:hover{box-shadow:0 8px 32px rgba(124,58,237,.05);border-color:#e9d5ff}
-.wc-e{font-size:32px;margin-bottom:14px}
-.wc h3{font-size:16px;font-weight:700;margin-bottom:6px}.wc p{font-size:13px;color:#888;line-height:1.65}
-
-.cta{text-align:center;padding:80px 40px;background:linear-gradient(135deg,#7c3aed,#9333ea,#a855f7);color:#fff;position:relative;overflow:hidden}
-.cta::before{content:'';position:absolute;top:-60%;right:-10%;width:500px;height:500px;background:rgba(255,255,255,.04);border-radius:50%}
-.cta::after{content:'';position:absolute;bottom:-40%;left:-10%;width:400px;height:400px;background:rgba(255,255,255,.03);border-radius:50%}
-.cta h2{font-size:32px;font-weight:800;margin-bottom:10px;position:relative}.cta p{font-size:15px;opacity:.8;margin-bottom:28px;position:relative}
-.cta-b{display:inline-flex;padding:15px 36px;background:#fff;color:#7c3aed;border-radius:13px;font-size:15px;font-weight:700;box-shadow:0 4px 24px rgba(0,0,0,.12);transition:all .2s;position:relative}
-.cta-b:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.18)}
-
-.foot{text-align:center;padding:36px 40px;border-top:1px solid #f5f5f5}
-.foot-logo{display:flex;align-items:center;justify-content:center;gap:8px;font-size:17px;font-weight:800;margin-bottom:8px}
-.foot-logo em{font-style:normal;background:linear-gradient(135deg,#7c3aed,#c026d3);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.foot-links{display:flex;justify-content:center;gap:24px;margin:8px 0;font-size:12px}.foot-links a{color:#aaa;transition:color .2s}.foot-links a:hover{color:#7c3aed}
-.foot p{font-size:12px;color:#ccc}
-
-@media(max-width:1000px){.grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:768px){.grid{grid-template-columns:repeat(2,1fr)}.wg{grid-template-columns:1fr}.stats-in{flex-wrap:wrap;gap:24px}.nav-links{display:none}.nav-in{padding:12px 20px}.grid{padding:0 20px 40px}.hero{padding:48px 20px 32px}}
-@media(max-width:480px){.grid{grid-template-columns:1fr}}
+@media(max-width:600px){
+  .hero h1{font-size:28px}
+  .tools-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .tool-card{padding:16px}
+  .tool-icon{width:40px;height:40px;font-size:18px}
+  .tool-card h3{font-size:13px}
+  .tool-card p{font-size:11px}
+  .stat-item .num{font-size:24px}
+  .nav-links{display:none}
+  .features-grid{grid-template-columns:1fr}
+}
 </style>
-<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 </head>
 <body>
 
-<nav class="nav"><div class="nav-in">
-<a href="/" class="logo"><div class="logo-m"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>Fix<em>Pilot</em></a>
-<div class="nav-links"><a href="#tools">All Tools</a><a href="#why">Why FixPilot</a><a href="#about">About</a></div>
-<a href="#tools" class="nav-btn">Get Started — Free</a>
-</div></nav>
-
-<header class="hero">
-<div class="chip"><i></i> All 20+ tools are completely free</div>
-<h1>Every tool you need to<br><b>fix any file, instantly.</b></h1>
-<p>Compress PDFs, remove backgrounds, extract text — powered by AI, processed in your browser. No signups ever.</p>
-<div class="hero-acts"><a href="#tools" class="ha ha1">Explore All Tools →</a><a href="/compress-pdf.html" class="ha ha2">Try PDF Compress</a></div>
-</header>
-
-<div class="tabs" id="tabs">
-<span class="tab on" onclick="filter('all')">All Tools</span>
-<span class="tab" onclick="filter('pdf')">PDF Tools</span>
-<span class="tab" onclick="filter('image')">Image Tools</span>
-<span class="tab" onclick="filter('ai')">AI Tools</span>
-<span class="tab" onclick="filter('convert')">Converters</span>
+<div class="nav-wrap">
+<nav class="nav">
+<a href="/" class="logo">
+<svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#7C3AED"/><path d="M18 6l-6 10h5l-1 10 7-12h-5.5z" fill="white"/></svg>
+<span>FixPilot</span>
+</a>
+<div class="nav-links">
+<a href="/about">About</a>
+<a href="/privacy">Privacy</a>
+</div>
+</nav>
 </div>
 
-<section class="grid" id="tools">
-
-<a href="/compress-pdf.html" class="card" data-cat="pdf">
-<span class="card-badge bg-hot">Popular</span>
-<div class="ci ci-compress"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-linecap="round"><path d="M7 21h10a2 2 0 002-2V9l-6-6H7a2 2 0 00-2 2v14a2 2 0 002 2z"/><path d="M13 3v6h6"/><path d="M10 12h4M10 15h4M10 18h4"/><path d="M8 12v6"/></svg></div>
-<h3>Compress PDF</h3><p>Reduce PDF size without losing quality</p>
-</a>
-
-<a href="/merge-pdf.html" class="card" data-cat="pdf">
-<span class="card-badge bg-free">Free</span>
-<div class="ci ci-merge"><svg viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="1.5" stroke-linecap="round"><rect x="4" y="2" width="8" height="10" rx="1"/><rect x="12" y="12" width="8" height="10" rx="1"/><path d="M12 7h5M7 17h5"/></svg></div>
-<h3>Merge PDF</h3><p>Combine multiple PDFs into one</p>
-</a>
-
-<a href="/split-pdf.html" class="card" data-cat="pdf">
-<span class="card-badge bg-free">Free</span>
-<div class="ci ci-split"><svg viewBox="0 0 24 24" fill="none" stroke="#ca8a04" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="4" y1="13" x2="20" y2="13" stroke-dasharray="3 3"/><path d="M9 9l-2 2 2 2M15 15l2 2-2 2"/></svg></div>
-<h3>Split PDF</h3><p>Extract or separate PDF pages</p>
-</a>
-
-<a href="/image-compress.html" class="card" data-cat="image">
-<span class="card-badge bg-hot">Popular</span>
-<div class="ci ci-imgcomp"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/><path d="M14 14l4-4"/></svg></div>
-<h3>Image Compressor</h3><p>Shrink JPEG, PNG, WebP up to 80%</p>
-</a>
-
-<a href="/qr-generator.html" class="card" data-cat="convert">
-<span class="card-badge bg-hot">Popular</span>
-<div class="ci ci-qr"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="3" y="15" width="6" height="6" rx="1"/><rect x="15" y="15" width="3" height="3"/><line x1="21" y1="15" x2="21" y2="15.01"/><line x1="21" y1="21" x2="21" y2="21.01"/><line x1="18" y1="21" x2="18" y2="21.01"/></svg></div>
-<h3>QR Code Generator</h3><p>Create QR for URLs, WiFi, UPI, text</p>
-</a>
-
-<a href="/image-to-text.html" class="card" data-cat="ai">
-<span class="card-badge bg-ai">AI Powered</span>
-<div class="ci ci-ocr"><svg viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/><path d="M14 19h4M14 16h6"/></svg></div>
-<h3>Image to Text (OCR)</h3><p>Extract text from any image or scan</p>
-</a>
-
-<a href="/pdf-to-word.html" class="card" data-cat="convert">
-<span class="card-badge bg-new">New</span>
-<div class="ci ci-pdf2word"><svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M8 15l2-4 2 4 2-4 2 4"/></svg></div>
-<h3>PDF to Word</h3><p>Convert PDF to editable DOCX file</p>
-</a>
-
-<div class="card dim" data-cat="image">
-<span class="card-badge bg-soon">Soon</span>
-<div class="ci ci-rmbg"><svg viewBox="0 0 24 24" fill="none" stroke="#db2777" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/><path d="M18 3l-15 18"/></svg></div>
-<h3>Remove Background</h3><p>AI-powered background removal</p>
+<div class="hero">
+<h1>Free Online Tools.<br><span class="grad">Your files never leave your device.</span></h1>
+<p>12 powerful tools — compress PDF, resize images, convert files, generate QR codes, extract text, and more. Everything runs in your browser. No server upload. No signup. No limits.</p>
+<div class="hero-badges">
+<span class="hero-badge green">✓ 100% Free</span>
+<span class="hero-badge blue">✓ No File Upload</span>
+<span class="hero-badge purple">✓ 12 Tools</span>
+</div>
 </div>
 
-<div class="card dim" data-cat="ai">
-<span class="card-badge bg-soon">Soon</span>
-<div class="ci ci-para"><svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.5" stroke-linecap="round"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4z"/></svg></div>
-<h3>AI Paraphraser</h3><p>Rewrite text in different styles</p>
+<div class="filter-wrap">
+<button class="filter-pill active" onclick="filterTools('all')">All Tools</button>
+<button class="filter-pill" onclick="filterTools('pdf')">PDF Tools</button>
+<button class="filter-pill" onclick="filterTools('image')">Image Tools</button>
+<button class="filter-pill" onclick="filterTools('text')">Text Tools</button>
+<button class="filter-pill" onclick="filterTools('ai')">AI Tools</button>
 </div>
 
-<div class="card dim" data-cat="ai">
-<span class="card-badge bg-soon">Soon</span>
-<div class="ci ci-trans"><svg viewBox="0 0 24 24" fill="none" stroke="#0891b2" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg></div>
-<h3>AI Translator</h3><p>50+ languages including Telugu</p>
+<div class="tools-section">
+<div class="tools-grid" id="toolsGrid">
+
+<a href="/compress-pdf" class="tool-card" data-cat="pdf">
+<span class="tool-badge popular">Popular</span>
+<div class="tool-icon icon-red">📄</div>
+<h3>Compress PDF</h3>
+<p>Reduce PDF file size while maintaining quality. No upload to server.</p>
+</a>
+
+<a href="/merge-pdf" class="tool-card" data-cat="pdf">
+<div class="tool-icon icon-orange">📎</div>
+<h3>Merge PDF</h3>
+<p>Combine multiple PDF files into one document. Drag to reorder.</p>
+</a>
+
+<a href="/split-pdf" class="tool-card" data-cat="pdf">
+<div class="tool-icon icon-amber">✂️</div>
+<h3>Split PDF</h3>
+<p>Extract specific pages from a PDF. Split by page numbers or ranges.</p>
+</a>
+
+<a href="/pdf-to-jpg" class="tool-card" data-cat="pdf">
+<span class="tool-badge new">New</span>
+<div class="tool-icon icon-rose">🖼️</div>
+<h3>PDF to JPG</h3>
+<p>Convert each PDF page into high-quality JPG or PNG images.</p>
+</a>
+
+<a href="/image-to-pdf" class="tool-card" data-cat="image">
+<span class="tool-badge new">New</span>
+<div class="tool-icon icon-sky">📑</div>
+<h3>Image to PDF</h3>
+<p>Convert JPG, PNG images to PDF. Combine multiple images into one PDF.</p>
+</a>
+
+<a href="/image-compress" class="tool-card" data-cat="image">
+<span class="tool-badge popular">Popular</span>
+<div class="tool-icon icon-green">🗜️</div>
+<h3>Image Compressor</h3>
+<p>Compress JPEG, PNG, WebP images. Set target file size. Batch support.</p>
+</a>
+
+<a href="/image-resize" class="tool-card" data-cat="image">
+<span class="tool-badge new">New</span>
+<div class="tool-icon icon-teal">📐</div>
+<h3>Image Resize</h3>
+<p>Resize images to exact dimensions. Presets for HD, social media, icons.</p>
+</a>
+
+<a href="/qr-generator" class="tool-card" data-cat="image">
+<div class="tool-icon icon-blue">📱</div>
+<h3>QR Code Generator</h3>
+<p>Generate QR codes for URLs, WiFi, UPI payments, email, and text.</p>
+</a>
+
+<a href="/image-to-text" class="tool-card" data-cat="ai">
+<span class="tool-badge ai">AI</span>
+<div class="tool-icon icon-purple">👁️</div>
+<h3>Image to Text (OCR)</h3>
+<p>Extract text from images. Supports Telugu, Hindi, Tamil + 12 languages.</p>
+</a>
+
+<a href="/ai-paraphraser" class="tool-card" data-cat="ai">
+<span class="tool-badge ai">AI</span>
+<div class="tool-icon icon-pink">✍️</div>
+<h3>AI Paraphraser</h3>
+<p>Rewrite text in different styles — formal, casual, shorter, creative.</p>
+</a>
+
+<a href="/word-counter" class="tool-card" data-cat="text">
+<span class="tool-badge new">New</span>
+<div class="tool-icon icon-lime">🔢</div>
+<h3>Word Counter</h3>
+<p>Count words, characters, sentences. Track Twitter/LinkedIn limits.</p>
+</a>
+
+<a href="/case-converter" class="tool-card" data-cat="text">
+<span class="tool-badge new">New</span>
+<div class="tool-icon icon-indigo">Aa</div>
+<h3>Case Converter</h3>
+<p>Convert text to UPPERCASE, lowercase, Title Case, camelCase, and more.</p>
+</a>
+
+</div>
 </div>
 
-<div class="card dim" data-cat="ai">
-<span class="card-badge bg-soon">Soon</span>
-<div class="ci ci-gram"><svg viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="1.5" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-<h3>Grammar Checker</h3><p>Fix grammar and spelling errors</p>
+<div class="stats-bar">
+<div class="stats-inner">
+<div class="stat-item"><div class="num">12</div><div class="label">Free Tools</div></div>
+<div class="stat-item"><div class="num">0</div><div class="label">Files Uploaded</div></div>
+<div class="stat-item"><div class="num">100%</div><div class="label">Browser-Based</div></div>
+<div class="stat-item"><div class="num">∞</div><div class="label">No Daily Limits</div></div>
+</div>
 </div>
 
-<div class="card dim" data-cat="convert">
-<span class="card-badge bg-soon">Soon</span>
-<div class="ci ci-w2p"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6M9 15l3 3 3-3"/></svg></div>
-<h3>Word to PDF</h3><p>Convert DOCX to PDF format</p>
+<div class="features">
+<h2>Why FixPilot?</h2>
+<div class="features-grid">
+<div class="feature-card">
+<h4>🔒 Complete Privacy</h4>
+<p>Your files never leave your device. Every tool processes data in your browser using client-side JavaScript. No server, no upload, no risk.</p>
+</div>
+<div class="feature-card">
+<h4>⚡ Instant Processing</h4>
+<p>No upload + download wait. Your device does the processing, so results are instant. Even works offline after first load.</p>
+</div>
+<div class="feature-card">
+<h4>♾️ No Limits</h4>
+<p>No daily file limits, no account needed, no watermarks. Use every tool as many times as you want, completely free.</p>
+</div>
+<div class="feature-card">
+<h4>🌍 Works Everywhere</h4>
+<p>Desktop, tablet, phone — any browser, any OS. OCR supports 14 languages including Telugu, Hindi, Tamil, Arabic, and Japanese.</p>
+</div>
+</div>
 </div>
 
-</section>
-
-<section class="stats"><div class="stats-in">
-<div><div class="st-n">20+</div><div class="st-l">Free Tools</div></div>
-<div><div class="st-n">Zero</div><div class="st-l">Server Uploads</div></div>
-<div><div class="st-n">100%</div><div class="st-l">Private & Secure</div></div>
-<div><div class="st-n">Free</div><div class="st-l">Forever</div></div>
-</div></section>
-
-<section class="why" id="why">
-<div class="why-t"><span>Why FixPilot</span><h2>Not just another tools website</h2></div>
-<div class="wg">
-<div class="wc"><div class="wc-e">🔒</div><h3>100% private</h3><p>Your files never leave your device. Unlike iLovePDF or SmallPDF, we process everything locally in your browser. Zero server uploads.</p></div>
-<div class="wc"><div class="wc-e">⚡</div><h3>Instant results</h3><p>No upload progress bars. No waiting for servers. Your device handles the processing — get results in seconds, not minutes.</p></div>
-<div class="wc"><div class="wc-e">🎯</div><h3>No BS, truly free</h3><p>No "create account to download" traps. No watermarks on output. No daily limits. Tools that work every time, for everyone.</p></div>
+<div class="cta">
+<h2>Need a tool we don't have yet?</h2>
+<p>We're adding new tools every week. Let us know what you need.</p>
+<a href="mailto:fixpilot.tools@gmail.com">Request a Tool</a>
 </div>
-</section>
 
-<section class="cta">
-<h2>Ready to fix your files?</h2>
-<p>Pick any tool and start — zero signup required</p>
-<a href="#tools" class="cta-b">Browse All Tools →</a>
-</section>
-
-<footer class="foot" id="about">
-<div class="foot-logo"><div class="logo-m" style="width:28px;height:28px"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>Fix<em>Pilot</em></div>
-<div class="foot-links"><a href="#tools">Tools</a><a href="#why">Why FixPilot</a><a href="#about">About</a></div>
-<p>© 2026 FixPilot — Free online tools for everyone worldwide</p>
+<footer class="footer">
+<p>FixPilot — Free online tools. Your files never leave your device.</p>
+<p style="margin-top:8px"><a href="/about">About</a> · <a href="/privacy">Privacy Policy</a> · <a href="mailto:fixpilot.tools@gmail.com">Contact</a></p>
+<p style="margin-top:8px">© 2026 FixPilot. All tools are free to use.</p>
 </footer>
 
 <script>
-function filter(cat){
-document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-event.target.classList.add('on');
-document.querySelectorAll('.card').forEach(c=>{
-if(cat==='all'){c.style.display=''}
-else{c.style.display=c.dataset.cat===cat?'':'none'}
-});
+function filterTools(cat) {
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.tool-card').forEach(card => {
+    if (cat === 'all') { card.style.display = 'flex'; return; }
+    card.style.display = card.dataset.cat === cat ? 'flex' : 'none';
+  });
 }
 </script>
 </body>
