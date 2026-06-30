@@ -36,19 +36,18 @@
 <div class="seo"><h2>Free AI text summarizer</h2><p>FixPilot Text Summarizer uses extractive summarization algorithms to identify the most important sentences in your text. It scores each sentence based on word frequency, position, and relevance, then selects the top sentences to form a coherent summary. Choose short (2-3 sentences), medium (4-5 sentences), or long (6-8 sentences) summaries. All processing happens in your browser — your text is never sent to any server.</p></div>
 <footer class="fp-footer"><p>© 2026 FixPilot — Free online tools. Your files never leave your device.</p><p style="margin-top:8px"><a href="/">All Tools</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p></footer>
 <script>
-function summarize(){const text=document.getElementById('input').value.trim();if(!text){alert('Please enter text to summarize');return}
-const lengths={short:3,medium:5,long:8};const numSentences=lengths[document.getElementById('length').value];
-const sentences=text.match(/[^.!?]+[.!?]+/g)||[text];if(sentences.length<=numSentences){document.getElementById('output').value=text;updateStats(text,text);return}
-const words={};const stopWords=new Set(['the','a','an','is','are','was','were','be','been','being','have','has','had','do','does','did','will','would','shall','should','may','might','can','could','of','in','to','for','with','on','at','by','from','as','into','through','during','and','but','or','nor','not','so','yet','this','that','these','those','i','me','my','we','our','you','your','he','him','his','she','her','it','its','they','them','their','what','which','who','when','where','why','how','if','then','than','very','just','about','also','more','some','such','no','only','other','new','like','just','about']);
-sentences.forEach(s=>{s.toLowerCase().replace(/[^a-z\s]/g,'').split(/\s+/).forEach(w=>{if(w.length>2&&!stopWords.has(w))words[w]=(words[w]||0)+1})});
-const scored=sentences.map((s,i)=>{let score=0;const ws=s.toLowerCase().replace(/[^a-z\s]/g,'').split(/\s+/);ws.forEach(w=>{if(words[w])score+=words[w]});
-if(i===0)score*=1.5;
-if(i<sentences.length*0.2)score*=1.2;
-score/=Math.max(ws.length,1);
-return{sentence:s.trim(),score,index:i}});
-scored.sort((a,b)=>b.score-a.score);
-const selected=scored.slice(0,numSentences).sort((a,b)=>a.index-b.index);
-const summary=selected.map(s=>s.sentence).join(' ');
-document.getElementById('output').value=summary;updateStats(text,summary)}
+async function summarize(){const text=document.getElementById('input').value.trim();if(!text){alert('Please enter text to summarize');return}
+const length=document.getElementById('length').value;
+const lengthGuide={short:'2-3 sentences',medium:'4-5 sentences',long:'6-8 sentences'};
+const btn=document.querySelector('.bp');btn.disabled=true;btn.textContent='Summarizing with AI...';
+try{
+const res=await fetch('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},
+body:JSON.stringify({prompt:'Summarize the following text in '+lengthGuide[length]+'. Keep the key points and main ideas. Write a clear, concise summary:\n\n'+text,
+system:'You are an expert summarizer. Create clear, accurate summaries that capture the essential information. Output only the summary, no preamble.',max_tokens:500})});
+const data=await res.json();
+if(data.result){document.getElementById('output').value=data.result;updateStats(text,data.result)}
+else{document.getElementById('output').value='Error: '+(data.error||'Please try again.')}
+}catch(e){document.getElementById('output').value='Connection error. Please try again.'}
+btn.disabled=false;btn.textContent='Summarize'}
 function updateStats(orig,sum){const ow=orig.split(/\s+/).length,sw=sum.split(/\s+/).length;const pct=Math.round((1-sw/ow)*100);document.getElementById('origWords').textContent=ow;document.getElementById('sumWords').textContent=sw;document.getElementById('reduction').textContent=pct+'%';document.getElementById('stats').style.display='flex'}
 </script></body></html>
