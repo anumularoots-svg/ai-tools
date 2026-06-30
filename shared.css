@@ -1,0 +1,23 @@
+/* FixPilot — Shared styles for all pages */
+/* Single source of truth: change here = all 25+ pages update */
+
+/* Nav */
+.fp-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid #f0eef5}
+.fp-nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.fp-logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:21px;color:#1a1a2e}
+.fp-logo svg{width:34px;height:34px}
+.fp-logo span{color:#7C3AED}
+.fp-nav-links{display:flex;gap:20px}
+.fp-nav-links a{text-decoration:none;color:#64748b;font-size:14px;font-weight:500;transition:color .2s}
+.fp-nav-links a:hover{color:#7C3AED}
+
+/* Footer */
+.fp-footer{text-align:center;padding:40px 24px;border-top:1px solid #f0eef5;color:#94a3b8;font-size:13px;margin-top:40px}
+.fp-footer a{color:#7C3AED;text-decoration:none;font-weight:500}
+.fp-footer a:hover{text-decoration:underline}
+
+/* Mobile */
+@media(max-width:600px){
+  .fp-nav-links{display:none}
+  .fp-nav-inner{padding:0 16px}
+}

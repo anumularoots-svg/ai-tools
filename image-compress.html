@@ -9,7 +9,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M18 6l-6 10h5l-1 10 7-12h-5.5z' fill='white'/%3E%3C/svg%3E">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#FAFAFE;color:#1a1a2e;min-height:100vh}
+body{font-family:'Inter',system-ui,sans-serif;background:#FAFAFE;color:#1a1a2e;min-height:100vh}
 .nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(124,58,237,0.1);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#1a1a2e;font-weight:700;font-size:20px}
 .logo svg{width:32px;height:32px}
@@ -78,19 +78,16 @@ input[type=file]{display:none}
 .footer a{color:#7C3AED;text-decoration:none}
 @media(max-width:600px){.hero h1{font-size:24px}.controls{grid-template-columns:1fr}.nav-links{display:none}.total-stats{gap:12px}}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M18 6l-6 10h5l-1 10 7-12h-5.5z' fill='white'/%3E%3C/svg%3E">
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 </head>
 <body>
-<nav class="nav">
-<a href="/" class="logo">
-<svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#7C3AED"/><path d="M18 6l-6 10h5l-1 10 7-12h-5.5z" fill="white"/></svg>
-<span>FixPilot</span>
-</a>
-<div class="nav-links">
-<a href="/">All Tools</a>
-<a href="/about">About</a>
-<a href="/privacy">Privacy</a>
-</div>
-</nav>
+<nav class="fp-nav"><div class="fp-nav-inner">
+<a href="/" class="fp-logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="url(#fpg)"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/><defs><linearGradient id="fpg" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs></svg><div>Fix<span>Pilot</span></div></a>
+<div class="fp-nav-links"><a href="/">All Tools</a><a href="/about">About</a><a href="/privacy">Privacy</a></div>
+</div></nav>
 
 <div class="hero">
 <h1>Compress Images Online</h1>
@@ -186,10 +183,7 @@ Download All
 </div>
 </div>
 
-<footer class="footer">
-<p>FixPilot — Free online tools. Your files never leave your device.</p>
-<p style="margin-top:8px"><a href="/">All Tools</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
-</footer>
+<footer class="fp-footer"><p>© 2026 FixPilot — Free online tools. Your files never leave your device.</p><p style="margin-top:8px"><a href="/">All Tools</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p></footer>
 
 <script>
 let files = [];

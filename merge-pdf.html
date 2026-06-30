@@ -4,11 +4,11 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Merge PDF Online Free — Combine Multiple PDFs Into One | FixPilot</title>
 <meta name="description" content="Merge PDF files online for free. Combine multiple PDFs into one document. Drag to reorder. No signup, no watermark. 100% browser-based.">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%238b5cf6'/><path d='M16 6L8 18h7l-1 8 9-12h-7l1-8z' fill='white'/></svg>">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Plus Jakarta Sans',sans-serif;background:#fefefe;color:#111;-webkit-font-smoothing:antialiased}a{text-decoration:none;color:inherit}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',system-ui,sans-serif;background:#fefefe;color:#111;-webkit-font-smoothing:antialiased}a{text-decoration:none;color:inherit}
 .nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.04)}
 .nav-in{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;max-width:800px;margin:0 auto}
 .logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800}.logo-m{width:32px;height:32px;background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(124,58,237,.25)}.logo em{font-style:normal;background:linear-gradient(135deg,#7c3aed,#c026d3);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.back{font-size:13px;color:#999;font-weight:600}.back:hover{color:#7c3aed}
@@ -32,9 +32,16 @@
 .foot{text-align:center;padding:40px 32px;font-size:13px;color:#ccc;border-top:1px solid #f5f5f5}
 </style>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M18 6l-6 10h5l-1 10 7-12h-5.5z' fill='white'/%3E%3C/svg%3E">
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 </head>
 <body>
-<nav class="nav"><div class="nav-in"><a href="/" class="logo"><div class="logo-m"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>Fix<em>Pilot</em></a><a href="/" class="back">← All tools</a></div></nav>
+<nav class="fp-nav"><div class="fp-nav-inner">
+<a href="/" class="fp-logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="url(#fpg)"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/><defs><linearGradient id="fpg" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs></svg><div>Fix<span>Pilot</span></div></a>
+<div class="fp-nav-links"><a href="/">All Tools</a><a href="/about">About</a><a href="/privacy">Privacy</a></div>
+</div></nav>
 <div class="page">
 <div class="header">
 <div class="chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="8" height="10" rx="1"/><rect x="12" y="12" width="8" height="10" rx="1"/></svg> PDF Tool</div>
@@ -58,7 +65,7 @@
 <h3>Can I reorder pages?</h3><p>Yes — files are merged in the order shown. Remove any file by clicking the X button and re-add in your preferred order.</p>
 </div>
 </div>
-<footer class="foot">© 2026 FixPilot — Free online tools. Your files never leave your device.</footer>
+<footer class="fp-footer"><p>© 2026 FixPilot — Free online tools. Your files never leave your device.</p><p style="margin-top:8px"><a href="/">All Tools</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p></footer>
 <script>
 let pdfs=[],merged=null;const fmt=b=>b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':(b/1048576).toFixed(2)+' MB';
 const fi=document.getElementById('fi'),fl=document.getElementById('fl'),dz=document.getElementById('dz');

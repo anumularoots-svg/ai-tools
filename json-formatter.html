@@ -3,15 +3,22 @@
 <title>JSON Formatter & Validator Free — Pretty Print JSON | FixPilot</title>
 <meta name="description" content="Format, validate, and beautify JSON online. Pretty print with syntax highlighting. Minify JSON. Free, browser-based.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M18 6l-6 10h5l-1 10 7-12h-5.5z' fill='white'/%3E%3C/svg%3E">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e}.nw{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid #f0eef5}.nav{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:21px;color:#1a1a2e}.logo span{color:#7C3AED}.logo svg{width:34px;height:34px}.nl{display:flex;gap:20px}.nl a{text-decoration:none;color:#64748b;font-size:14px;font-weight:500}.hero{text-align:center;padding:48px 24px 32px;max-width:680px;margin:0 auto}.hero h1{font-size:36px;font-weight:900;letter-spacing:-1.2px;margin-bottom:12px;background:linear-gradient(135deg,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.hero p{color:#64748b;font-size:16px;line-height:1.6}.tool{max-width:900px;margin:0 auto;padding:0 24px 60px}.card{background:#fff;border:1.5px solid #f0eef5;border-radius:18px;padding:32px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(124,58,237,.04)}
 textarea{width:100%;min-height:200px;padding:16px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:13px;font-family:'Courier New',monospace;line-height:1.5;resize:vertical;outline:none;transition:.2s;tab-size:2}textarea:focus{border-color:#7C3AED}
 .status{margin-top:8px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
 .status.ok{color:#16a34a}.status.err{color:#ef4444}
 .br{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}.btn{padding:10px 20px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit}.bp{background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff}.bp:hover{transform:translateY(-1px)}.bs{background:#f1f5f9;color:#374151}.bs:hover{background:#e2e8f0}
 .seo{max-width:800px;margin:0 auto;padding:0 24px 60px}.seo h2{font-size:22px;font-weight:700;margin-bottom:12px}.seo p{color:#64748b;line-height:1.7;font-size:14px}.foot{text-align:center;padding:32px;border-top:1px solid #f0eef5;color:#94a3b8;font-size:13px}.foot a{color:#7C3AED;text-decoration:none}@media(max-width:600px){.hero h1{font-size:26px}.nl{display:none}}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M18 6l-6 10h5l-1 10 7-12h-5.5z' fill='white'/%3E%3C/svg%3E">
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 </head><body>
-<div class="nw"><nav class="nav"><a href="/" class="logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="url(#g)"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/><defs><linearGradient id="g" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs></svg><div>Fix<span>Pilot</span></div></a><div class="nl"><a href="/">All Tools</a><a href="/about">About</a><a href="/privacy">Privacy</a></div></nav></div>
+<nav class="fp-nav"><div class="fp-nav-inner">
+<a href="/" class="fp-logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="url(#fpg)"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/><defs><linearGradient id="fpg" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs></svg><div>Fix<span>Pilot</span></div></a>
+<div class="fp-nav-links"><a href="/">All Tools</a><a href="/about">About</a><a href="/privacy">Privacy</a></div>
+</div></nav>
 <div class="hero"><h1>JSON Formatter & Validator</h1><p>Paste your JSON to format, validate, and beautify it. Minify for production. Instant syntax validation.</p></div>
 <div class="tool"><div class="card">
 <label style="font-size:13px;font-weight:600;color:#374151;display:block;margin-bottom:6px">Input JSON</label>
@@ -29,7 +36,7 @@ textarea{width:100%;min-height:200px;padding:16px;border:1.5px solid #e5e7eb;bor
 <textarea id="output" readonly style="background:#f9fafb"></textarea>
 </div></div>
 <div class="seo"><h2>Free JSON formatter and validator</h2><p>FixPilot JSON Formatter validates and beautifies your JSON data instantly. Paste messy, minified, or unformatted JSON and get clean, indented output with proper formatting. The validator catches syntax errors and shows exactly where the problem is. Also includes a minify function to compress JSON for production use. Everything runs in your browser — your data stays private.</p></div>
-<footer class="foot"><p>FixPilot — Free online tools. Your files never leave your device.</p><p style="margin-top:8px"><a href="/">All Tools</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p></footer>
+<footer class="fp-footer"><p>© 2026 FixPilot — Free online tools. Your files never leave your device.</p><p style="margin-top:8px"><a href="/">All Tools</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p></footer>
 <script>
 function format(){try{const o=JSON.parse(document.getElementById('input').value);document.getElementById('output').value=JSON.stringify(o,null,2);setStatus('ok','Valid JSON — formatted with 2-space indent')}catch(e){setStatus('err','Invalid JSON: '+e.message)}}
 function minify(){try{const o=JSON.parse(document.getElementById('input').value);document.getElementById('output').value=JSON.stringify(o);setStatus('ok','Minified successfully')}catch(e){setStatus('err','Invalid JSON: '+e.message)}}
