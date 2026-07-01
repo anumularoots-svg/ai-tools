@@ -38,8 +38,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e;-web
 .cat-title{font-size:14px;font-weight:700;color:#7C3AED;text-transform:uppercase;letter-spacing:1px;margin:32px 0 16px;padding-left:4px}
 .cat-title:first-child{margin-top:0}
 .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
-.card{background:#fff;border:1.5px solid #f0eef5;border-radius:18px;padding:28px 22px;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;transition:all .3s cubic-bezier(.25,.46,.45,.94)}
-.card:hover{transform:translateY(-4px);border-color:#ddd6fe;box-shadow:0 10px 32px rgba(124,58,237,.08)}
+.card{background:rgba(255,255,255,.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1.5px solid rgba(124,58,237,.1);border-radius:18px;padding:28px 22px;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;transition:all .3s cubic-bezier(.25,.46,.45,.94);box-shadow:0 2px 12px rgba(124,58,237,.04)}
+.card:hover{border-color:rgba(124,58,237,.25);box-shadow:0 8px 30px rgba(124,58,237,.1);transform:translateY(-3px)}
 .ic{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
 .ic svg{width:32px;height:32px}
 .tag{position:absolute;top:12px;right:12px;padding:3px 8px;border-radius:5px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px}
