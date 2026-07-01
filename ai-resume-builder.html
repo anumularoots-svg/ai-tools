@@ -6,6 +6,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M18 6l-6 10h5l-1 10 7-12h-5.5z' fill='white'/%3E%3C/svg%3E">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+<script>
+// Fallback if CDN fails
+if(typeof window.jspdf==='undefined'){
+  var s=document.createElement('script');
+  s.src='https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js';
+  document.head.appendChild(s);
+}
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e}
@@ -285,6 +293,7 @@ You'll fill in your details in the next steps. AI will write professional bullet
 • Student chapter president — organized 10+ tech events
 
 AI will format these as professional experience entries."></textarea>
+<div style="margin-top:6px"><button class="add-btn" onclick="aiRewriteFresher()">🤖 AI: Convert projects into professional resume entries</button></div>
 </div>
 </div>
 
@@ -312,6 +321,7 @@ AI will format these as professional experience entries."></textarea>
 • Team of 5 engineers
 
 AI converts these into powerful STAR-format bullets with action verbs."></textarea>
+<div style="margin-top:6px"><button class="add-btn" onclick="aiRewriteExp(this)">🤖 AI: Rewrite with STAR framework & power verbs</button></div>
 </div>
 </div>
 </div>
@@ -338,6 +348,7 @@ e.g. AWS (EC2, EKS, S3, Lambda, CloudFormation), Docker, Kubernetes, Terraform, 
 
 <div class="field"><label>Soft Skills / Management Skills</label>
 <textarea id="softSkills" rows="2" placeholder="e.g. Team Leadership, Cross-functional Collaboration, Agile/Scrum, Stakeholder Communication, Mentoring, Incident Management, Technical Writing"></textarea>
+<div style="margin-top:6px"><button class="add-btn" onclick="autoSuggestSoftSkills()" id="suggestSoftBtn">🤖 AI: Auto-suggest soft skills from my experience</button></div>
 </div>
 
 <div class="field"><label>Key Achievements / Awards (separate from work experience)</label>
@@ -594,7 +605,8 @@ function addExp() {
 <div class="row3"><div class="field"><label>Start Date</label><input type="text" class="exp-start" placeholder="e.g. Jun 2018"></div>
 <div class="field"><label>End Date</label><input type="text" class="exp-end" placeholder="e.g. Dec 2021"></div>
 <div class="field"><label>Location</label><input type="text" class="exp-location" placeholder="e.g. Hyderabad"></div></div>
-<div class="field"><label>Key Projects & Achievements</label><textarea class="exp-details" rows="4" placeholder="What did you do? Include numbers, projects, tools, and results."></textarea></div>`;
+<div class="field"><label>Key Projects & Achievements</label><textarea class="exp-details" rows="4" placeholder="What did you do? Include numbers, projects, tools, and results."></textarea>
+<div style="margin-top:6px"><button class="add-btn" onclick="aiRewriteExp(this)">🤖 AI: Rewrite with STAR framework</button></div></div>`;
   c.appendChild(b);
 }
 
@@ -940,7 +952,12 @@ function downloadTxt() {
 function downloadPDF() {
   try {
     if (typeof window.jspdf === 'undefined') {
-      alert('PDF library is loading. Please wait a moment and try again.');
+      // Try loading again
+      var s = document.createElement('script');
+      s.src = 'https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js';
+      s.onload = function() { downloadPDF(); };
+      s.onerror = function() { alert('PDF library failed to load. Please try "Download .txt" and convert to PDF using Google Docs.'); };
+      document.head.appendChild(s);
       return;
     }
     const { jsPDF } = window.jspdf;
@@ -1079,6 +1096,93 @@ async function autoSuggestSkills() {
   } catch (e) {}
   
   btn.textContent = '🤖 AI: Auto-suggest skills from my experience';
+  btn.disabled = false;
+}
+
+async function aiRewriteExp(btnEl) {
+  const block = btnEl.closest('.exp-block') || btnEl.closest('.field').parentElement;
+  const textarea = block.querySelector('.exp-details');
+  const titleEl = block.querySelector('.exp-title');
+  const compEl = block.querySelector('.exp-company');
+  const text = textarea.value.trim();
+  if (!text) { alert('Write your responsibilities/achievements first, then click AI rewrite.'); return; }
+  
+  btnEl.textContent = '⏳ AI rewriting...';
+  btnEl.disabled = true;
+  
+  const title = titleEl ? titleEl.value.trim() : '';
+  const company = compEl ? compEl.value.trim() : '';
+  
+  try {
+    const res = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: `Rewrite these job responsibilities/achievements into powerful STAR-format resume bullet points.
+
+Role: ${title || 'Not specified'} at ${company || 'Not specified'}
+
+Original:
+${text}
+
+Rules:
+- Start each bullet with a UNIQUE power verb (Architected, Spearheaded, Delivered, Reduced, Automated, Designed, Led, Implemented, Optimized, Orchestrated, Streamlined, Championed, Engineered, Accelerated, Pioneered)
+- Use STAR format: include the action AND the measurable result
+- Include specific numbers/metrics (%, $, time, team size, scale)
+- If no numbers provided, add realistic estimates
+- Each bullet should be 1-2 lines
+- Output 6-10 bullet points using • character
+- Output ONLY the bullet points, nothing else`,
+        system: 'Expert resume writer. Rewrite bullets with STAR framework. Output only • bullet points.',
+        max_tokens: 800
+      })
+    });
+    const data = await res.json();
+    if (data.result) { textarea.value = data.result; }
+  } catch (e) {}
+  
+  btnEl.textContent = '🤖 AI: Rewrite with STAR framework & power verbs';
+  btnEl.disabled = false;
+}
+
+async function autoSuggestSoftSkills() {
+  const btn = document.getElementById('suggestSoftBtn');
+  btn.textContent = '⏳ AI analyzing...';
+  btn.disabled = true;
+  
+  let context = '';
+  const totalExp = document.getElementById('totalExp').value.trim();
+  const careerLevel = document.getElementById('careerLevel').value;
+  document.querySelectorAll('.exp-details').forEach(ta => { if (ta.value.trim()) context += ta.value.trim() + '\n'; });
+  const existingResume = document.getElementById('existingResume').value.trim();
+  if (existingResume) context += existingResume;
+  const jobDesc = document.getElementById('jobDesc').value.trim();
+  
+  try {
+    const res = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: `Based on this professional's background (${totalExp || '?'} years, ${careerLevel} level), suggest the most relevant soft skills and management skills as a comma-separated list.
+
+Background: ${context || 'General professional'}
+${jobDesc ? 'Target Job: ' + jobDesc : ''}
+
+Include skills like: Team Leadership, Cross-functional Collaboration, Agile/Scrum, Stakeholder Management, Mentoring, Incident Management, Technical Writing, Strategic Planning, Vendor Management, Risk Assessment, etc.
+
+Output ONLY a comma-separated list of 10-15 soft skills. No explanations.`,
+        system: 'Career expert. Suggest relevant soft skills. Output only comma-separated list.',
+        max_tokens: 200
+      })
+    });
+    const data = await res.json();
+    if (data.result) {
+      const existing = document.getElementById('softSkills').value.trim();
+      document.getElementById('softSkills').value = existing ? existing + ', ' + data.result : data.result;
+    }
+  } catch (e) {}
+  
+  btn.textContent = '🤖 AI: Auto-suggest soft skills from my experience';
   btn.disabled = false;
 }
 
@@ -1274,6 +1378,40 @@ Output ONLY the improved resume text. No commentary. No markdown. Same structure
 
   btn.disabled = false;
   loading.classList.remove('show');
+}
+
+async function aiRewriteFresher() {
+  const ta = document.getElementById('fresherProjects');
+  const text = ta.value.trim();
+  if (!text) { alert('Add your projects/internships first.'); return; }
+  const btn = event.target;
+  btn.textContent = '⏳ AI converting...';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: `Convert these student/fresher projects and activities into professional resume entries. Use STAR format with action verbs. Make them sound impressive and professional while staying honest.
+
+Projects/Activities:
+${text}
+
+Output format for each entry:
+PROJECT/INTERNSHIP TITLE | Organization | Duration
+• Bullet point 1 with action verb and result
+• Bullet point 2 with action verb and result
+
+Output ONLY the formatted entries. No explanations.`,
+        system: 'Expert resume writer specializing in entry-level resumes. Convert student projects into impressive professional entries.',
+        max_tokens: 800
+      })
+    });
+    const data = await res.json();
+    if (data.result) ta.value = data.result;
+  } catch(e) {}
+  btn.textContent = '🤖 AI: Convert projects into professional resume entries';
+  btn.disabled = false;
 }
 </script>
 </body></html>
