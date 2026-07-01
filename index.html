@@ -5,7 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FixPilot — AI Resume Builder, Interview Prep & 30+ Free Online Tools</title>
 <meta name="description" content="AI-powered writing tools — email writer, cover letter generator, resume bullets, LinkedIn posts. Plus 25+ free PDF, image, and developer tools. Powered by Llama 3.3 AI.">
-<meta name="keywords" content="free online tools, compress pdf, image compressor, qr code generator, pdf to jpg, grammar checker, translator, password generator, json formatter, base64, word counter, case converter, fixpilot">
+<meta name="keywords" content="free online tools, compress pdf, image compressor, qr code generator, pdf to jpg, grammar checker, translator, password generator, json formatter, base64, word counter, case converter, fixpilot, ai resume builder, free resume builder, ats resume">
+<link rel="canonical" href="https://ai-tools-mauve-six.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FixPilot — AI Resume Builder, Interview Prep & 32 Free Online Tools">
+<meta property="og:description" content="AI-powered resume builder with ATS scoring, 25 languages, 10 templates, 50 interview questions — plus 30+ free PDF, image, and developer tools. 100% free, no signup.">
+<meta property="og:url" content="https://ai-tools-mauve-six.vercel.app/">
+<meta property="og:site_name" content="FixPilot">
+<meta property="og:image" content="https://ai-tools-mauve-six.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FixPilot — AI Resume Builder & 32 Free Online Tools">
+<meta name="twitter:description" content="AI resume builder with ATS scoring, 25 languages, 50 interview Q&A. Plus 30+ free PDF, image & dev tools. No signup.">
+<meta name="twitter:image" content="https://ai-tools-mauve-six.vercel.app/og-image.png">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M18 6l-6 10h5l-1 10 7-12h-5.5z' fill='white'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -73,7 +86,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:#FAFAFE;color:#1a1a2e;-
 .foot a{color:#7C3AED;text-decoration:none;font-weight:500}
 @media(max-width:1100px){.grid{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:900px){.grid,.wg{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:641px){.nav-r{display:flex!important;position:static;background:none;backdrop-filter:none;flex-direction:row;padding:0;border:none;box-shadow:none;gap:28px}.nav-r a{padding:0;width:auto;border:none;font-size:14px}.ham{display:none!important}}
 @media(max-width:640px){
+.ham{display:flex!important}
 .hero h1{font-size:30px;letter-spacing:-1px}
 .grid{grid-template-columns:repeat(2,1fr);gap:10px}
 .card{padding:18px 14px}
@@ -82,14 +97,27 @@ body{font-family:'Inter',system-ui,sans-serif;background:#FAFAFE;color:#1a1a2e;-
 .si .n{font-size:28px}.wg{grid-template-columns:1fr}
 .nav-r{gap:16px}.nav-r a{font-size:13px}.trust{gap:16px}.trust-i{font-size:12px}
 .cat-title{font-size:12px}
+.nav-r{display:none;position:fixed;top:68px;left:0;right:0;background:rgba(255,255,255,.98);backdrop-filter:blur(16px);flex-direction:column;align-items:center;gap:0;padding:8px 0;border-bottom:1px solid #f0eef5;box-shadow:0 4px 24px rgba(0,0,0,.08);z-index:99}
+.nav-r.open{display:flex}
+.nav-r a{padding:14px 0;width:100%;text-align:center;border-bottom:1px solid #f5f3ff;font-size:15px}
+.nav-r a:last-child{border-bottom:none}
+.ham{display:flex;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border:none;background:none;z-index:101}
+.ham span{width:22px;height:2px;background:#1a1a2e;border-radius:2px;transition:.3s}
+.ham.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
 }
 </style>
 <link rel="stylesheet" href="/shared.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"FixPilot","url":"https://ai-tools-mauve-six.vercel.app","description":"AI-powered resume builder with ATS scoring, 25 languages, 10 templates, 50 interview questions — plus 30+ free PDF, image, and developer tools.","applicationCategory":"Utility","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"creator":{"@type":"Person","name":"Anil Kumar"}}
+</script>
 </head>
 <body>
 <div class="nw"><nav class="nav">
 <a href="/" class="logo"><svg viewBox="0 0 38 38" fill="none"><rect width="38" height="38" rx="10" fill="url(#ng)"/><path d="M21 5l-8 13h7l-1 14 9-16h-7.5z" fill="#fff"/><defs><linearGradient id="ng" x1="0" y1="0" x2="38" y2="38"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs></svg><div class="logo-t">Fix<span>Pilot</span></div></a>
-<div class="nav-r"><a href="/blog" style="color:#7C3AED;font-weight:600">Blog</a><a href="/about">About</a><a href="/privacy">Privacy</a><a href="mailto:fixpilot.tools@gmail.com">Contact</a></div>
+<div class="nav-r" id="navMenu"><a href="/blog" style="color:#7C3AED;font-weight:600">Blog</a><a href="/about">About</a><a href="/privacy">Privacy</a><a href="mailto:fixpilot.tools@gmail.com">Contact</a></div>
+<button class="ham" id="hamBtn" onclick="document.getElementById('navMenu').classList.toggle('open');this.classList.toggle('open')" aria-label="Menu" style="display:none"><span></span><span></span><span></span></button>
 </nav></div>
 
 <section class="hero">
@@ -242,14 +270,15 @@ body{font-family:'Inter',system-ui,sans-serif;background:#FAFAFE;color:#1a1a2e;-
 <div class="ic ic-amb"><svg viewBox="0 0 36 36" fill="none"><rect x="6" y="5" width="24" height="28" rx="2" fill="#fff" stroke="#D97706" stroke-width="1.5"/><line x1="10" y1="11" x2="26" y2="11" stroke="#D97706" stroke-width="1.3" stroke-linecap="round"/><line x1="10" y1="15" x2="22" y2="15" stroke="#D97706" stroke-width="1.3" stroke-linecap="round"/><line x1="10" y1="19" x2="24" y2="19" stroke="#D97706" stroke-width="1.3" stroke-linecap="round"/><line x1="10" y1="23" x2="18" y2="23" stroke="#D97706" stroke-width="1.3" stroke-linecap="round" stroke-dasharray="3 2"/><text x="10" y="30" font-size="5" font-weight="700" fill="#D97706" font-family="sans-serif">Lorem...</text></svg></div>
 <h3>Lorem Ipsum</h3><p>Generate placeholder text</p></a>
 
-<a href="/markdown-to-html" class="card" data-c="dev">
-<div class="ic ic-cya"><svg viewBox="0 0 36 36" fill="none"><rect x="4" y="6" width="28" height="24" rx="3" fill="#fff" stroke="#0891B2" stroke-width="1.5"/><text x="8" y="20" font-size="8" font-weight="900" fill="#0891B2" font-family="sans-serif">MD</text><path d="M24 14l3 4-3 4" stroke="#0891B2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-<h3>Markdown → HTML</h3><p>Live Markdown to HTML converter</p></a>
 
 </div>
 
 <div class="cat-title" id="cat-dev">Developer & Utility Tools</div>
 <div class="grid">
+
+<a href="/markdown-to-html" class="card" data-c="dev">
+<div class="ic ic-cya"><svg viewBox="0 0 36 36" fill="none"><rect x="4" y="6" width="28" height="24" rx="3" fill="#fff" stroke="#0891B2" stroke-width="1.5"/><text x="8" y="20" font-size="8" font-weight="900" fill="#0891B2" font-family="sans-serif">MD</text><path d="M24 14l3 4-3 4" stroke="#0891B2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<h3>Markdown → HTML</h3><p>Live Markdown to HTML converter</p></a>
 
 <a href="/password-generator" class="card" data-c="dev"><span class="tag pop">Popular</span>
 <div class="ic ic-red"><svg viewBox="0 0 36 36" fill="none"><rect x="6" y="14" width="24" height="18" rx="3" fill="#fff" stroke="#DC2626" stroke-width="1.5"/><path d="M12 14v-4a6 6 0 0112 0v4" stroke="#DC2626" stroke-width="1.5"/><circle cx="18" cy="23" r="2.5" fill="#DC2626"/><path d="M18 25.5v3" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round"/></svg></div>
