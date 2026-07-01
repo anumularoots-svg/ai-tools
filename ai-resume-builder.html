@@ -280,8 +280,40 @@ You'll fill in your details in the next steps. AI will write professional bullet
 <div id="fresherSection" style="display:none;margin-bottom:16px">
 <div style="background:#DBEAFE;border:1px solid #93C5FD;border-radius:10px;padding:14px;margin-bottom:14px">
 <div style="font-size:13px;font-weight:700;color:#2563EB;margin-bottom:4px">Fresher / Student Mode</div>
-<div style="font-size:12px;color:#374151;line-height:1.5">No work experience? No problem! Add internships, academic projects, hackathons, volunteer work, or freelance projects. AI will structure these professionally.</div>
+<div style="font-size:12px;color:#374151;line-height:1.5">No work experience? No problem! Select target companies and add your projects, internships, hackathons, or volunteer work.</div>
 </div>
+
+<div class="field"><label>Target Companies (select companies you're applying to)</label>
+<select id="fresherCompany" multiple size="6" style="width:100%;padding:8px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:13px;font-family:inherit">
+<optgroup label="Top IT / Product Companies">
+<option value="Google">Google</option><option value="Microsoft">Microsoft</option><option value="Amazon">Amazon (AWS)</option>
+<option value="Apple">Apple</option><option value="Meta">Meta (Facebook)</option><option value="Netflix">Netflix</option>
+<option value="Salesforce">Salesforce</option><option value="Adobe">Adobe</option><option value="Oracle">Oracle</option>
+<option value="IBM">IBM</option><option value="SAP">SAP</option><option value="ServiceNow">ServiceNow</option>
+</optgroup>
+<optgroup label="Indian IT / Services">
+<option value="TCS">TCS</option><option value="Infosys">Infosys</option><option value="Wipro">Wipro</option>
+<option value="HCL">HCL Technologies</option><option value="Tech Mahindra">Tech Mahindra</option>
+<option value="Cognizant">Cognizant</option><option value="Capgemini">Capgemini</option>
+<option value="Accenture">Accenture</option><option value="LTIMindtree">LTIMindtree</option>
+<option value="Persistent">Persistent Systems</option><option value="Mphasis">Mphasis</option>
+</optgroup>
+<optgroup label="Startups / Unicorns">
+<option value="Flipkart">Flipkart</option><option value="Swiggy">Swiggy</option><option value="Zomato">Zomato</option>
+<option value="Razorpay">Razorpay</option><option value="PhonePe">PhonePe</option><option value="CRED">CRED</option>
+<option value="Zerodha">Zerodha</option><option value="Ola">Ola</option><option value="Paytm">Paytm</option>
+</optgroup>
+<optgroup label="Consulting / Big 4">
+<option value="Deloitte">Deloitte</option><option value="PwC">PwC</option><option value="EY">EY</option>
+<option value="KPMG">KPMG</option><option value="McKinsey">McKinsey</option>
+</optgroup>
+<optgroup label="Other">
+<option value="Other">Other (specify in projects below)</option>
+</optgroup>
+</select>
+<div class="hint">Hold Ctrl/Cmd to select multiple companies. AI tailors resume for these company cultures.</div>
+</div>
+
 <div class="field"><label>Internships / Projects / Hackathons</label>
 <textarea id="fresherProjects" rows="5" placeholder="List your projects, internships, and activities:
 
@@ -952,96 +984,74 @@ function downloadTxt() {
 function downloadPDF() {
   try {
     if (typeof window.jspdf === 'undefined') {
-      // Try loading again
       var s = document.createElement('script');
       s.src = 'https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js';
       s.onload = function() { downloadPDF(); };
-      s.onerror = function() { alert('PDF library failed to load. Please try "Download .txt" and convert to PDF using Google Docs.'); };
-      document.head.appendChild(s);
-      return;
+      s.onerror = function() { alert('PDF library failed. Try Download .txt instead.'); };
+      document.head.appendChild(s); return;
     }
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: 'mm', format: 'a4' });
     const name = document.getElementById('fullName').value.trim() || 'Resume';
-    
-    const pageW = 210, pageH = 297, mL = 18, mR = 18, mT = 18, mB = 18;
-    const uW = pageW - mL - mR;
-    let y = mT;
-    let isFirstLine = true;
-    
-    function np(needed) { if (y + needed > pageH - mB) { doc.addPage(); y = mT; } }
-
-    const lines = resumeText.split('\n');
-    
-    for (let li = 0; li < lines.length; li++) {
-      const trimmed = lines[li].trim();
-      
-      // Section headers
-      if (/^[A-Z][A-Z &\/\-]+$/.test(trimmed) && trimmed.length > 3 && trimmed.length < 60) {
-        np(14); y += 3;
-        doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(124, 58, 237);
-        doc.text(trimmed, mL, y);
-        y += 1.5; doc.setDrawColor(124, 58, 237); doc.setLineWidth(0.4);
-        doc.line(mL, y, pageW - mR, y); y += 5;
-        isFirstLine = false; continue;
+    // 10 UNIQUE TEMPLATES — auto-rotate per download
+    const T = [
+      {n:'Classic',    h:[124,58,237], ns:20, ss:11, b:[124,58,237], lw:0.5, na:'center'},
+      {n:'Executive',  h:[15,23,42],   ns:22, ss:12, b:[15,23,42],   lw:0.8, na:'left'},
+      {n:'Modern',     h:[37,99,235],  ns:18, ss:10, b:[37,99,235],  lw:0.3, na:'center'},
+      {n:'Minimal',    h:[55,65,81],   ns:16, ss:10, b:[107,114,128],lw:0.2, na:'left'},
+      {n:'Bold',       h:[220,38,38],  ns:22, ss:12, b:[220,38,38],  lw:0.6, na:'center'},
+      {n:'Corporate',  h:[5,150,105],  ns:20, ss:11, b:[5,150,105],  lw:0.5, na:'left'},
+      {n:'Tech',       h:[99,102,241], ns:18, ss:11, b:[99,102,241], lw:0.4, na:'center'},
+      {n:'Professional',h:[161,98,7],  ns:20, ss:11, b:[161,98,7],   lw:0.5, na:'left'},
+      {n:'Elegant',    h:[109,40,217], ns:19, ss:11, b:[109,40,217], lw:0.4, na:'center'},
+      {n:'Creative',   h:[219,39,119], ns:20, ss:11, b:[219,39,119], lw:0.5, na:'center'}
+    ];
+    if(!window._tIdx) window._tIdx = Math.floor(Date.now()/1000)%10;
+    const t = T[window._tIdx % 10]; window._tIdx++;
+    const pw=210,ph=297,ml=18,mr=18,mt=18,mb=16,uw=pw-ml-mr;
+    let y=mt, fl=true;
+    function np(n){if(y+n>ph-mb){doc.addPage();y=mt;}}
+    resumeText.split('\n').forEach(line=>{
+      const r=line.trim();
+      if(/^[A-Z][A-Z &\/\-]+$/.test(r)&&r.length>3&&r.length<60){
+        np(14);y+=4;doc.setFont('helvetica','bold');doc.setFontSize(t.ss);
+        doc.setTextColor(t.h[0],t.h[1],t.h[2]);doc.text(r,ml,y);
+        y+=1.5;doc.setDrawColor(t.h[0],t.h[1],t.h[2]);doc.setLineWidth(t.lw);
+        doc.line(ml,y,pw-mr,y);y+=5;fl=false;return;
       }
-      
-      // Name (first non-empty)
-      if (isFirstLine && trimmed.length > 0 && trimmed.length < 50 && !/[@|•]/.test(trimmed)) {
-        doc.setFont('helvetica', 'bold'); doc.setFontSize(18); doc.setTextColor(26, 26, 46);
-        doc.text(trimmed, pageW / 2, y, { align: 'center' }); y += 8;
-        isFirstLine = false; continue;
+      if(fl&&r.length>0&&r.length<50&&!/[@|•]/.test(r)){
+        doc.setFont('helvetica','bold');doc.setFontSize(t.ns);
+        doc.setTextColor(t.h[0],t.h[1],t.h[2]);
+        t.na==='center'?doc.text(r,pw/2,y,{align:'center'}):doc.text(r,ml,y);
+        y+=8;fl=false;return;
       }
-      if (trimmed.length > 0) isFirstLine = false;
-      
-      // Contact (| and @)
-      if ((/\|/.test(trimmed) && /@/.test(trimmed)) || (/\|/.test(trimmed) && y < mT + 16)) {
-        doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(100, 116, 139);
-        const cw = doc.splitTextToSize(trimmed, uW);
-        cw.forEach(cl => { np(4); doc.text(cl, pageW / 2, y, { align: 'center' }); y += 3.5; });
-        y += 2; continue;
+      if(r.length>0)fl=false;
+      if((/\|/.test(r)&&/@/.test(r))||(/\|/.test(r)&&y<mt+16)){
+        doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(100,116,139);
+        doc.splitTextToSize(r,uw).forEach(cl=>{np(4);
+          t.na==='center'?doc.text(cl,pw/2,y,{align:'center'}):doc.text(cl,ml,y);y+=3.5;});
+        y+=2;return;
       }
-      
-      // Bullets
-      if (/^[•▪►●\-]\s/.test(trimmed)) {
-        np(6);
-        doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(30, 30, 50);
-        const bt = trimmed.replace(/^[•▪►●\-]\s*/, '');
-        const bw = doc.splitTextToSize(bt, uW - 7);
-        bw.forEach((wl, i) => {
-          np(4);
-          if (i === 0) { doc.setTextColor(124, 58, 237); doc.text('•', mL, y); doc.setTextColor(30, 30, 50); }
-          doc.text(wl, mL + 5, y); y += 4;
-        });
-        y += 0.5; continue;
+      if(/^[•▪►●\-]\s/.test(r)){
+        np(6);doc.setFont('helvetica','normal');doc.setFontSize(9.5);doc.setTextColor(30,30,50);
+        const bt=r.replace(/^[•▪►●\-]\s*/,'');
+        doc.splitTextToSize(bt,uw-7).forEach((wl,i)=>{np(4);
+          if(i===0){doc.setTextColor(t.b[0],t.b[1],t.b[2]);doc.text('•',ml,y);doc.setTextColor(30,30,50);}
+          doc.text(wl,ml+5,y);y+=4;});y+=0.5;return;
       }
-      
-      // Company/Role (dates + |)
-      if (/\d{4}|present|current/i.test(trimmed) && /\|/.test(trimmed)) {
-        np(6); doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(26, 26, 46);
-        const rw = doc.splitTextToSize(trimmed, uW);
-        rw.forEach(wl => { np(5); doc.text(wl, mL, y); y += 4.5; }); continue;
+      if(/\d{4}|present|current/i.test(r)&&/\|/.test(r)){
+        np(6);doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(26,26,46);
+        doc.splitTextToSize(r,uw).forEach(wl=>{np(5);doc.text(wl,ml,y);y+=4.5;});return;
       }
-      
-      // Empty
-      if (trimmed === '') { y += 2; continue; }
-      
-      // Normal
-      np(5); doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(30, 30, 50);
-      const nw = doc.splitTextToSize(trimmed, uW);
-      nw.forEach(wl => { np(4); doc.text(wl, mL, y); y += 4; });
-    }
-
-    const tp = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= tp; i++) {
-      doc.setPage(i); doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(148, 163, 184);
-      doc.text('Page ' + i + ' of ' + tp, pageW / 2, pageH - 10, { align: 'center' });
-    }
-    doc.save(name.replace(/\s+/g, '_') + '_Resume_ATS.pdf');
-  } catch (err) {
-    console.error('PDF Error:', err);
-    alert('PDF generation failed. Try "Download .txt" instead, then convert to PDF using Google Docs or Word.\n\nError: ' + err.message);
-  }
+      if(r===''){y+=2;return;}
+      np(5);doc.setFont('helvetica','normal');doc.setFontSize(9.5);doc.setTextColor(30,30,50);
+      doc.splitTextToSize(r,uw).forEach(wl=>{np(4);doc.text(wl,ml,y);y+=4;});
+    });
+    const tp=doc.internal.getNumberOfPages();
+    for(let i=1;i<=tp;i++){doc.setPage(i);doc.setFont('helvetica','normal');doc.setFontSize(8);
+      doc.setTextColor(180,180,180);doc.text('Page '+i+'/'+tp,pw/2,ph-10,{align:'center'});}
+    doc.save(name.replace(/\s+/g,'_')+'_Resume_'+t.n+'.pdf');
+  } catch(err){alert('PDF error: '+err.message+'. Try Download .txt instead.');}
 }
 
 function toggleFresher() {
@@ -1191,73 +1201,90 @@ async function generateInterviewPrep() {
   if (!resumeText) { alert('Generate your resume first, then click Interview Prep.'); return; }
   const jobDesc = document.getElementById('jobDesc').value.trim();
   const targetTitle = document.getElementById('targetTitle').value.trim();
+  const careerLevel = document.getElementById('careerLevel').value;
+  const isFresher = careerLevel === 'fresher' || careerLevel === 'entry';
   
   const prepBtn = document.getElementById('prepBtn');
   const prepLoading = document.getElementById('prepLoading');
   prepBtn.disabled = true;
   prepLoading.style.display = 'block';
+  document.getElementById('prepLoading').innerHTML = '<span class="spinner"></span>Generating Part 1/2 — Scenario & Coding questions... (20 sec)';
+
+  const resumeShort = resumeText.substring(0, 2500);
+  const sys = 'You are a senior technical interviewer at a Fortune 500 company. Generate interview prep based on the candidate resume. Include current 2025-2026 market trends and real-world scenarios. Output plain text only. No markdown.';
   
-  const prompt = `You are a senior technical interviewer at a top company. Based on the resume and job description below, generate a COMPLETE interview preparation guide.
+  const fresherNote = isFresher ? '\nNOTE: This is a FRESHER/ENTRY-LEVEL candidate. Ask questions appropriate for 0-2 years experience. Focus on fundamentals, projects, internships, and learning ability rather than production experience.' : '';
 
-RESUME:
-"""
-${resumeText}
-"""
+  // CALL 1: Sections 1-3 (30 questions)
+  const p1 = `Based on this resume, generate interview questions with detailed answers.${fresherNote}
 
-${jobDesc ? 'JOB DESCRIPTION:\n"""\n' + jobDesc + '\n"""' : ''}
+RESUME: """${resumeShort}"""
+TARGET: ${targetTitle || 'Based on resume'}
 
-TARGET ROLE: ${targetTitle || 'Based on resume'}
-
-Generate EXACTLY this structure with real, detailed Q&A:
+Generate EXACTLY:
 
 SECTION 1: REAL-TIME SCENARIO QUESTIONS (10 questions)
-Questions that test how the candidate handles real production situations. Based on the specific technologies and experience in their resume. Include detailed answers with specific technical steps.
+Production scenarios based on their tech stack. Include specific kubectl/aws/terraform commands in answers. Consider 2026 market trends (AI/ML integration, platform engineering, FinOps).
+Format: Q1: [question]\nANSWER: [4-6 sentence detailed answer with specific steps]
 
-SECTION 2: CODING & TECHNICAL QUESTIONS (10 questions)  
-Hands-on coding/scripting questions based on the tools mentioned in the resume (e.g., Python scripts, Terraform configs, Dockerfile, YAML, Bash). Include the actual code/solution in the answer.
+SECTION 2: CODING & TECHNICAL QUESTIONS (10 questions)
+Actual code questions — Python scripts, Terraform configs, Dockerfiles, K8s YAML, Bash scripts, CI/CD pipeline configs. Include the COMPLETE code solution in the answer.
+Format: Q1: [question]\nANSWER: [code solution with explanation]
 
 SECTION 3: CROSS-SCENARIO QUESTIONS (10 questions)
-Questions that span multiple technologies/domains. E.g., "Your CI/CD pipeline deploys to Kubernetes but the pods keep crashing — walk through your debugging process from pipeline to pod." Include comprehensive debugging steps in answers.
+Multi-technology debugging scenarios. E.g. "CI/CD deploys to K8s but pods crash — debug from pipeline to pod." Include step-by-step debugging with actual commands.
+Format: Q1: [question]\nANSWER: [comprehensive debugging steps]`;
 
-SECTION 4: EXPERIENCE-BASED QUESTIONS (10 questions)
-"Tell me about a time when..." questions based on the SPECIFIC projects and achievements in the resume. Answers should reference the actual experience with STAR format (Situation-Task-Action-Result).
-
-SECTION 5: TOPIC DEEP-DIVE QUESTIONS (10 questions)
-Deep technical questions on the core topics in the resume (e.g., Kubernetes internals, AWS networking, CI/CD best practices, security compliance). Include detailed answers with real-world examples and best practices.
-
-FORMAT RULES:
-- Number each question: Q1, Q2, etc.
-- Each question followed by "ANSWER:" with a detailed, interview-winning response
-- Answers should be 4-8 sentences, specific and technical
-- For coding questions, include the actual code
-- Make answers based on the candidate's ACTUAL experience from the resume
-- Output plain text — no markdown, no code fences`;
-
+  let part1 = '', part2 = '';
+  
   try {
-    const res = await fetch('/api/ai', {
+    const res1 = await fetch('/api/ai', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prompt,
-        system: 'You are a senior technical interviewer. Generate comprehensive interview prep with specific, actionable Q&A based on the candidate\'s real resume. Every answer should help them WIN the interview. Be specific to their experience and target role. Output clean plain text only.',
-        max_tokens: 4096
-      })
+      body: JSON.stringify({ prompt: p1, system: sys, max_tokens: 4096 })
     });
-    const data = await res.json();
-    if (data.result) {
-      document.getElementById('prepContent').textContent = data.result;
-      document.getElementById('prepOutput').style.display = 'block';
-      document.getElementById('prepOutput').scrollIntoView({ behavior: 'smooth' });
-      window._interviewText = data.result;
-    } else {
-      alert('Error: ' + (data.error || 'Failed to generate. Try again.'));
-    }
-  } catch (e) {
-    alert('Connection error. Check internet and retry.');
-  }
+    const d1 = await res1.json();
+    if (d1.result) part1 = d1.result;
+    else { alert('Error generating Part 1: ' + (d1.error || 'Failed')); prepBtn.disabled = false; prepLoading.style.display = 'none'; return; }
+  } catch(e) { alert('Connection error on Part 1.'); prepBtn.disabled = false; prepLoading.style.display = 'none'; return; }
+
+  // CALL 2: Sections 4-5 (20 questions)
+  document.getElementById('prepLoading').innerHTML = '<span class="spinner"></span>Generating Part 2/2 — Experience & Deep-dive questions... (20 sec)';
+  
+  const p2 = `Based on this resume, generate interview questions with detailed answers.${fresherNote}
+
+RESUME: """${resumeShort}"""
+TARGET: ${targetTitle || 'Based on resume'}
+
+Generate EXACTLY:
+
+SECTION 4: EXPERIENCE-BASED QUESTIONS (10 questions)
+"Tell me about a time when..." questions based on SPECIFIC projects and achievements from the resume. Answers must use STAR format (Situation-Task-Action-Result) referencing actual experience.
+Format: Q1: [question]\nANSWER: [STAR format answer from their resume experience]
+
+SECTION 5: TOPIC DEEP-DIVE QUESTIONS (10 questions)
+Deep technical questions on core resume topics (K8s internals, AWS networking, CI/CD best practices, security, FinOps, GitOps). Include real-world examples, best practices, and current 2026 trends.
+Format: Q1: [question]\nANSWER: [detailed technical answer with examples]`;
+
+  try {
+    const res2 = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: p2, system: sys, max_tokens: 4096 })
+    });
+    const d2 = await res2.json();
+    if (d2.result) part2 = d2.result;
+  } catch(e) {}
+
+  const fullPrep = part1 + '\n\n' + part2;
+  document.getElementById('prepContent').textContent = fullPrep;
+  document.getElementById('prepOutput').style.display = 'block';
+  document.getElementById('prepOutput').scrollIntoView({ behavior: 'smooth' });
+  window._interviewText = fullPrep;
   
   prepBtn.disabled = false;
   prepLoading.style.display = 'none';
+  document.getElementById('prepLoading').innerHTML = '<span class="spinner"></span>AI is preparing your interview guide...';
 }
 
 function copyInterviewPrep() {
