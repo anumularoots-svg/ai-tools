@@ -52,6 +52,10 @@ export default async function handler(req, res) {
     const { prompt, system, max_tokens } = req.body;
     if (!prompt) return res.status(400).json({ error: 'Prompt required' });
 
+    // Cap prompt length to prevent token abuse
+    const safePrompt = typeof prompt === 'string' ? prompt.slice(0, 6000) : String(prompt).slice(0, 6000);
+    const safeSystem = system ? String(system).slice(0, 1000) : 'You are a helpful writing assistant. Provide clear, professional output.';
+
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -61,8 +65,8 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
         messages: [
-          { role: 'system', content: system || 'You are a helpful writing assistant. Provide clear, professional output.' },
-          { role: 'user', content: prompt }
+          { role: 'system', content: safeSystem },
+          { role: 'user', content: safePrompt }
         ],
         max_tokens: max_tokens || 1024,
         temperature: 0.7
