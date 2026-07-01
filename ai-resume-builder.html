@@ -276,15 +276,30 @@ You'll fill in your details in the next steps. AI will write professional bullet
 <!-- STEP 3: Work Experience -->
 <div class="section" id="step3">
 <div class="stitle">Step 3 — Work Experience</div>
-<div class="sdesc">Add your roles. Include achievements with numbers where possible. AI rewrites everything with STAR framework and power verbs. Add previous companies, projects, and key results.</div>
+<div class="sdesc">Add your professional experience, or switch to Fresher mode if you're a student or have no work experience yet.</div>
 
+<!-- Experience Type Toggle — ALWAYS VISIBLE -->
+<div class="source-toggle" style="margin-bottom:18px">
+<div class="stoggle active" onclick="setExpType('experienced',this)">
+<div class="st-icon" style="font-size:20px;color:#7C3AED;font-weight:900">EXP</div>
+<div class="st-title">I Have Work Experience</div>
+<div class="st-desc">Add companies, roles, and achievements</div>
+</div>
+<div class="stoggle" onclick="setExpType('fresher',this)">
+<div class="st-icon" style="font-size:20px;color:#2563EB;font-weight:900">NEW</div>
+<div class="st-title">Fresher / Student</div>
+<div class="st-desc">No work experience — add projects, internships, hackathons</div>
+</div>
+</div>
+
+<!-- FRESHER SECTION -->
 <div id="fresherSection" style="display:none;margin-bottom:16px">
 <div style="background:#DBEAFE;border:1px solid #93C5FD;border-radius:10px;padding:14px;margin-bottom:14px">
 <div style="font-size:13px;font-weight:700;color:#2563EB;margin-bottom:4px">Fresher / Student Mode</div>
-<div style="font-size:12px;color:#374151;line-height:1.5">No work experience? No problem! Select target companies and add your projects, internships, hackathons, or volunteer work.</div>
+<div style="font-size:12px;color:#374151;line-height:1.5">Select target companies and add your projects, internships, hackathons, or volunteer work. AI will structure these as professional resume entries.</div>
 </div>
 
-<div class="field"><label>Target Companies (select companies you're applying to)</label>
+<div class="field"><label>Target Companies (select companies you are applying to)</label>
 <select id="fresherCompany" multiple size="6" style="width:100%;padding:8px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:13px;font-family:inherit">
 <optgroup label="Top IT / Product Companies">
 <option value="Google">Google</option><option value="Microsoft">Microsoft</option><option value="Amazon">Amazon (AWS)</option>
@@ -318,18 +333,19 @@ You'll fill in your details in the next steps. AI will write professional bullet
 <div class="field"><label>Internships / Projects / Hackathons</label>
 <textarea id="fresherProjects" rows="5" placeholder="List your projects, internships, and activities:
 
-• Built an e-commerce website using React + Node.js (college project)
-• 3-month internship at TCS — worked on AWS deployment automation
-• Won first place at college hackathon — built a chatbot with Python
-• Freelance: Created 5 websites for local businesses
-• Contributed to open-source project on GitHub (50+ stars)
-• Student chapter president — organized 10+ tech events
+- Built an e-commerce website using React + Node.js (college project)
+- 3-month internship at TCS — worked on AWS deployment automation
+- Won first place at college hackathon — built a chatbot with Python
+- Freelance: Created 5 websites for local businesses
+- Contributed to open-source project on GitHub (50+ stars)
+- Student chapter president — organized 10+ tech events
 
 AI will format these as professional experience entries."></textarea>
 <div style="margin-top:6px"><button class="add-btn" onclick="aiRewriteFresher()">AI: Convert projects into professional resume entries</button></div>
 </div>
 </div>
 
+<!-- EXPERIENCED SECTION -->
 <div id="expSection">
 <div id="expContainer">
 <div class="exp-block" data-idx="0">
@@ -343,24 +359,24 @@ AI will format these as professional experience entries."></textarea>
 <div class="field"><label>End Date</label><input type="text" class="exp-end" placeholder="e.g. Present"></div>
 <div class="field"><label>Location</label><input type="text" class="exp-location" placeholder="e.g. Hyderabad"></div>
 </div>
-<div class="field"><label>Key Projects & Achievements (AI rewrites with STAR framework)</label>
+<div class="field"><label>Key Projects and Achievements (AI rewrites with STAR framework)</label>
 <textarea class="exp-details" rows="5" placeholder="Write about what you did — be specific with numbers:
 
-• Designed CI/CD pipelines using Jenkins and GitHub Actions
-• Managed EKS clusters for 15 microservices
-• Reduced deployment time by 60%
-• Led migration of on-prem to AWS — zero downtime
-• Cut infrastructure costs by $4,200/month
-• Team of 5 engineers
+- Designed CI/CD pipelines using Jenkins and GitHub Actions
+- Managed EKS clusters for 15 microservices
+- Reduced deployment time by 60%
+- Led migration of on-prem to AWS — zero downtime
+- Cut infrastructure costs by $4,200/month
+- Team of 5 engineers
 
 AI converts these into powerful STAR-format bullets with action verbs."></textarea>
-<div style="margin-top:6px"><button class="add-btn" onclick="aiRewriteExp(this)">AI: Rewrite with STAR framework & power verbs</button></div>
+<div style="margin-top:6px"><button class="add-btn" onclick="aiRewriteExp(this)">AI: Rewrite with STAR framework and power verbs</button></div>
 </div>
 </div>
 </div>
 
 <button class="add-btn" onclick="addExp()">+ Add Another Role</button>
-<div class="hint" style="margin-top:8px">Add ALL previous companies — more experience = stronger resume. Include internships for entry-level.</div>
+<div class="hint" style="margin-top:8px">Add ALL previous companies — more experience = stronger resume.</div>
 </div><!-- end expSection -->
 
 <div class="nav-btns"><button class="btn btn-back" onclick="goStep(2)">← Back</button><button class="btn btn-next" onclick="goStep(4)">Next — Skills & Education →</button></div>
@@ -1124,11 +1140,20 @@ function downloadPDF() {
 
 function toggleFresher() {
   const level = document.getElementById('careerLevel').value;
+  if (level === 'fresher') {
+    setExpType('fresher', document.querySelectorAll('#step3 .stoggle')[1]);
+  }
+}
+
+function setExpType(type, el) {
+  document.querySelectorAll('#step3 .stoggle').forEach(s => s.classList.remove('active'));
+  if (el) el.classList.add('active');
   const fresherSec = document.getElementById('fresherSection');
   const expSec = document.getElementById('expSection');
-  if (level === 'fresher') {
+  if (type === 'fresher') {
     fresherSec.style.display = 'block';
     expSec.style.display = 'none';
+    document.getElementById('careerLevel').value = 'fresher';
   } else {
     fresherSec.style.display = 'none';
     expSec.style.display = 'block';
