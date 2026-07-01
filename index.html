@@ -112,6 +112,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#FAFAFE;color:#1a1a2e;-
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"FixPilot","url":"https://ai-tools-mauve-six.vercel.app","description":"AI-powered resume builder with ATS scoring, 25 languages, 10 templates, 50 interview questions — plus 30+ free PDF, image, and developer tools.","applicationCategory":"Utility","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"creator":{"@type":"Person","name":"Anil Kumar"}}
 </script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 </head>
 <body>
 <div class="nw"><nav class="nav">
@@ -132,13 +133,13 @@ body{font-family:'Inter',system-ui,sans-serif;background:#FAFAFE;color:#1a1a2e;-
 </section>
 
 <div class="filter">
-<button class="fp on" onclick="f('all')">All Tools (32)</button>
-<button class="fp" onclick="f('aiw')">AI Writing</button>
-<button class="fp" onclick="f('pdf')">PDF Tools</button>
-<button class="fp" onclick="f('img')">Image Tools</button>
-<button class="fp" onclick="f('ai')">AI Powered</button>
-<button class="fp" onclick="f('txt')">Text Tools</button>
-<button class="fp" onclick="f('dev')">Developer</button>
+<button class="fp on" onclick="f('all',event)">All Tools (32)</button>
+<button class="fp" onclick="f('aiw',event)">AI Writing</button>
+<button class="fp" onclick="f('pdf',event)">PDF Tools</button>
+<button class="fp" onclick="f('img',event)">Image Tools</button>
+<button class="fp" onclick="f('ai',event)">AI Powered</button>
+<button class="fp" onclick="f('txt',event)">Text Tools</button>
+<button class="fp" onclick="f('dev',event)">Developer</button>
 </div>
 
 <div class="grid-wrap">
@@ -332,9 +333,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:#FAFAFE;color:#1a1a2e;-
 </footer>
 
 <script>
-function f(c){
+function f(c,e){
 document.querySelectorAll('.fp').forEach(p=>p.classList.remove('on'));
-event.target.classList.add('on');
+e.target.classList.add('on');
 const show=c==='all';
 document.querySelectorAll('.card').forEach(d=>d.style.display=(show||d.dataset.c===c)?'flex':'none');
 document.querySelectorAll('.cat-title').forEach(t=>{
