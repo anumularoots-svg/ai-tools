@@ -164,7 +164,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e}
 </div>
 
 <div class="tool"><div class="card">
-<div class="ai-badge">⚡ AI Resume Builder — Powered by Llama 3.3 70B</div>
+<div class="ai-badge">AI Resume Builder — Powered by Llama 3.3 70B</div>
 
 <!-- Step Indicator -->
 <div class="steps">
@@ -184,17 +184,17 @@ body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e}
 
 <div class="source-toggle">
 <div class="stoggle active" onclick="setSource('paste',this)">
-<div class="st-icon">📄</div>
+<div class="st-icon" style="font-size:20px;color:#7C3AED;font-weight:900">DOC</div>
 <div class="st-title">Paste Existing Resume</div>
 <div class="st-desc">Copy-paste your current resume or a sample resume text</div>
 </div>
 <div class="stoggle" onclick="setSource('describe',this)">
-<div class="st-icon">💬</div>
+<div class="st-icon" style="font-size:20px;color:#7C3AED;font-weight:900">TXT</div>
 <div class="st-title">Describe Your Background</div>
 <div class="st-desc">Tell AI about your experience in your own words</div>
 </div>
 <div class="stoggle" onclick="setSource('fresh',this)">
-<div class="st-icon">✨</div>
+<div class="st-icon" style="font-size:20px;color:#7C3AED;font-weight:900">NEW</div>
 <div class="st-title">Start Fresh</div>
 <div class="st-desc">Fill in details step by step — AI writes everything</div>
 </div>
@@ -243,7 +243,7 @@ You'll fill in your details in the next steps. AI will write professional bullet
 <div class="row2">
 <div class="field"><label>Phone</label>
 <div style="display:flex;gap:6px"><select id="countryCode" style="width:120px;padding:11px 8px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:13px;font-family:inherit">
-<option value="+91">🇮🇳 +91</option><option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+971">🇦🇪 +971</option><option value="+65">🇸🇬 +65</option><option value="+49">🇩🇪 +49</option><option value="+33">🇫🇷 +33</option><option value="+81">🇯🇵 +81</option><option value="+86">🇨🇳 +86</option><option value="+82">🇰🇷 +82</option><option value="+55">🇧🇷 +55</option><option value="+27">🇿🇦 +27</option><option value="+234">🇳🇬 +234</option><option value="+254">🇰🇪 +254</option><option value="+60">🇲🇾 +60</option><option value="+63">🇵🇭 +63</option><option value="+966">🇸🇦 +966</option><option value="+7">🇷🇺 +7</option><option value="+52">🇲🇽 +52</option><option value="+39">🇮🇹 +39</option><option value="+34">🇪🇸 +34</option><option value="+31">🇳🇱 +31</option><option value="+46">🇸🇪 +46</option><option value="+41">🇨🇭 +41</option><option value="+353">🇮🇪 +353</option><option value="+64">🇳🇿 +64</option><option value="+48">🇵🇱 +48</option><option value="+90">🇹🇷 +90</option><option value="+92">🇵🇰 +92</option><option value="+880">🇧🇩 +880</option><option value="+94">🇱🇰 +94</option><option value="+977">🇳🇵 +977</option>
+<option value="+91">IN +91</option><option value="+1">US +1</option><option value="+44">UK +44</option><option value="+61">AU +61</option><option value="+971">AE +971</option><option value="+65">SG +65</option><option value="+49">DE +49</option><option value="+33">FR +33</option><option value="+81">JP +81</option><option value="+86">CN +86</option><option value="+82">KR +82</option><option value="+55">BR +55</option><option value="+27">ZA +27</option><option value="+234">NG +234</option><option value="+254">KE +254</option><option value="+60">MY +60</option><option value="+63">PH +63</option><option value="+966">SA +966</option><option value="+7">RU +7</option><option value="+52">MX +52</option><option value="+39">IT +39</option><option value="+34">ES +34</option><option value="+31">NL +31</option><option value="+46">SE +46</option><option value="+41">CH +41</option><option value="+353">IE +353</option><option value="+64">NZ +64</option><option value="+48">PL +48</option><option value="+90">TR +90</option><option value="+92">PK +92</option><option value="+880">BD +880</option><option value="+94">LK +94</option><option value="+977">NP +977</option>
 </select><input type="tel" id="phone" placeholder="9876543210" style="flex:1"></div></div>
 <div class="field"><label>Location</label><input type="text" id="location" placeholder="e.g. Hyderabad, India"></div>
 </div>
@@ -326,7 +326,7 @@ You'll fill in your details in the next steps. AI will write professional bullet
 • Student chapter president — organized 10+ tech events
 
 AI will format these as professional experience entries."></textarea>
-<div style="margin-top:6px"><button class="add-btn" onclick="aiRewriteFresher()">🤖 AI: Convert projects into professional resume entries</button></div>
+<div style="margin-top:6px"><button class="add-btn" onclick="aiRewriteFresher()">AI: Convert projects into professional resume entries</button></div>
 </div>
 </div>
 
@@ -354,7 +354,7 @@ AI will format these as professional experience entries."></textarea>
 • Team of 5 engineers
 
 AI converts these into powerful STAR-format bullets with action verbs."></textarea>
-<div style="margin-top:6px"><button class="add-btn" onclick="aiRewriteExp(this)">🤖 AI: Rewrite with STAR framework & power verbs</button></div>
+<div style="margin-top:6px"><button class="add-btn" onclick="aiRewriteExp(this)">AI: Rewrite with STAR framework & power verbs</button></div>
 </div>
 </div>
 </div>
@@ -375,13 +375,13 @@ AI converts these into powerful STAR-format bullets with action verbs."></textar
 <textarea id="techSkills" rows="3" placeholder="List all tools, platforms, languages, frameworks. Separate with commas.
 
 e.g. AWS (EC2, EKS, S3, Lambda, CloudFormation), Docker, Kubernetes, Terraform, Jenkins, GitHub Actions, Python, Ansible, Prometheus, Grafana, SonarQube, ArgoCD, Linux, Bash"></textarea>
-<div style="margin-top:6px"><button class="add-btn" onclick="autoSuggestSkills()" id="suggestBtn">🤖 AI: Auto-suggest skills from my experience</button></div>
+<div style="margin-top:6px"><button class="add-btn" onclick="autoSuggestSkills()" id="suggestBtn">AI: Auto-suggest skills from my experience</button></div>
 <div class="hint">Click the button above — AI reads your experience from previous steps and suggests relevant skills. You can also type manually.</div>
 </div>
 
 <div class="field"><label>Soft Skills / Management Skills</label>
 <textarea id="softSkills" rows="2" placeholder="e.g. Team Leadership, Cross-functional Collaboration, Agile/Scrum, Stakeholder Communication, Mentoring, Incident Management, Technical Writing"></textarea>
-<div style="margin-top:6px"><button class="add-btn" onclick="autoSuggestSoftSkills()" id="suggestSoftBtn">🤖 AI: Auto-suggest soft skills from my experience</button></div>
+<div style="margin-top:6px"><button class="add-btn" onclick="autoSuggestSoftSkills()" id="suggestSoftBtn">AI: Auto-suggest soft skills from my experience</button></div>
 </div>
 
 <div class="field"><label>Key Achievements / Awards (separate from work experience)</label>
@@ -458,12 +458,12 @@ The MORE detail you paste, the BETTER the ATS match. AI reads every word and ens
 <div class="sdesc">Review settings and generate. AI builds a complete, ATS-optimized resume with all your details.</div>
 
 <div class="feat-grid">
-<div class="feat"><div class="ficon">🎯</div><div class="ftitle">ATS Keyword Match</div><div class="fdesc">Extracts & integrates JD keywords</div></div>
-<div class="feat"><div class="ficon">⭐</div><div class="ftitle">STAR Framework</div><div class="fdesc">Situation-Task-Action-Result bullets</div></div>
-<div class="feat"><div class="ficon">📊</div><div class="ftitle">20-Point ATS Check</div><div class="fdesc">Comprehensive scoring</div></div>
-<div class="feat"><div class="ficon">📄</div><div class="ftitle">PDF Download</div><div class="fdesc">Professional PDF export</div></div>
-<div class="feat"><div class="ficon">💪</div><div class="ftitle">Power Verbs</div><div class="fdesc">Architected, Spearheaded...</div></div>
-<div class="feat"><div class="ficon">📐</div><div class="ftitle">2-3 Pages</div><div class="fdesc">Optimal length for your level</div></div>
+<div class="feat"><div class="ficon" style="color:#7C3AED;font-weight:900;font-size:18px">ATS</div><div class="ftitle">ATS Keyword Match</div><div class="fdesc">Extracts & integrates JD keywords</div></div>
+<div class="feat"><div class="ficon" style="color:#D97706;font-weight:900;font-size:18px">STAR</div><div class="ftitle">STAR Framework</div><div class="fdesc">Situation-Task-Action-Result bullets</div></div>
+<div class="feat"><div class="ficon" style="color:#2563EB;font-weight:900;font-size:18px">20pt</div><div class="ftitle">20-Point ATS Check</div><div class="fdesc">Comprehensive scoring</div></div>
+<div class="feat"><div class="ficon" style="color:#7C3AED;font-weight:900;font-size:18px">PDF</div><div class="ftitle">PDF Download</div><div class="fdesc">Professional PDF export</div></div>
+<div class="feat"><div class="ficon" style="color:#059669;font-weight:900;font-size:18px">ACT</div><div class="ftitle">Power Verbs</div><div class="fdesc">Architected, Spearheaded...</div></div>
+<div class="feat"><div class="ficon" style="color:#DC2626;font-weight:900;font-size:18px">2-3p</div><div class="ftitle">2-3 Pages</div><div class="fdesc">Optimal length for your level</div></div>
 </div>
 
 <div class="row2">
@@ -495,7 +495,7 @@ The MORE detail you paste, the BETTER the ATS match. AI reads every word and ens
 </div>
 
 <div class="row2">
-<div class="field"><label>🌍 Resume Language</label>
+<div class="field"><label>Resume Language</label>
 <select id="resumeLang">
 <option value="English">English</option>
 <option value="Hindi">हिन्दी (Hindi)</option>
@@ -523,29 +523,29 @@ The MORE detail you paste, the BETTER the ATS match. AI reads every word and ens
 <option value="Indonesian">Bahasa Indonesia</option>
 <option value="Malay">Bahasa Melay (Malay)</option>
 </select></div>
-<div class="field"><label>🎯 Target Country</label>
+<div class="field"><label>Target Country</label>
 <select id="targetCountry">
 <option value="Global">Global (International)</option>
-<option value="USA">🇺🇸 USA</option>
-<option value="UK">🇬🇧 United Kingdom</option>
-<option value="Canada">🇨🇦 Canada</option>
-<option value="Australia">🇦🇺 Australia</option>
-<option value="India">🇮🇳 India</option>
-<option value="Germany">🇩🇪 Germany</option>
-<option value="UAE">🇦🇪 UAE / Dubai</option>
-<option value="Singapore">🇸🇬 Singapore</option>
-<option value="Netherlands">🇳🇱 Netherlands</option>
-<option value="France">🇫🇷 France</option>
-<option value="Japan">🇯🇵 Japan</option>
-<option value="South Korea">🇰🇷 South Korea</option>
-<option value="Brazil">🇧🇷 Brazil</option>
-<option value="Saudi Arabia">🇸🇦 Saudi Arabia</option>
-<option value="Ireland">🇮🇪 Ireland</option>
-<option value="Sweden">🇸🇪 Sweden</option>
-<option value="Switzerland">🇨🇭 Switzerland</option>
-<option value="New Zealand">🇳🇿 New Zealand</option>
-<option value="Malaysia">🇲🇾 Malaysia</option>
-<option value="South Africa">🇿🇦 South Africa</option>
+<option value="USA">USA</option>
+<option value="UK">United Kingdom</option>
+<option value="Canada">Canada</option>
+<option value="Australia">Australia</option>
+<option value="India">India</option>
+<option value="Germany">Germany</option>
+<option value="UAE">UAE / Dubai</option>
+<option value="Singapore">Singapore</option>
+<option value="Netherlands">Netherlands</option>
+<option value="France">France</option>
+<option value="Japan">Japan</option>
+<option value="South Korea">South Korea</option>
+<option value="Brazil">Brazil</option>
+<option value="Saudi Arabia">Saudi Arabia</option>
+<option value="Ireland">Ireland</option>
+<option value="Sweden">Sweden</option>
+<option value="Switzerland">Switzerland</option>
+<option value="New Zealand">New Zealand</option>
+<option value="Malaysia">Malaysia</option>
+<option value="South Africa">South Africa</option>
 </select></div>
 </div>
 <strong style="color:#7C3AED">AI will:</strong><br>
@@ -564,7 +564,7 @@ The MORE detail you paste, the BETTER the ATS match. AI reads every word and ens
 <div class="nav-btns" style="margin-top:0"><button class="btn btn-back" onclick="goStep(5)">← Back</button></div>
 
 <div style="margin-top:14px">
-<button class="btn btn-go" id="genBtn" onclick="generateResume()">⚡ Generate ATS-Optimized Resume with AI</button>
+<button class="btn btn-go" id="genBtn" onclick="generateResume()">Generate ATS-Optimized Resume with AI</button>
 </div>
 
 <div class="loading" id="loading">
@@ -575,18 +575,18 @@ The MORE detail you paste, the BETTER the ATS match. AI reads every word and ens
 <div class="output" id="output">
 <div class="resume-box">
 <div class="rbar">
-<span>📄 Your AI-Generated Resume</span>
+<span>Your AI-Generated Resume</span>
 <span class="ats-pill" id="atsScorePill">ATS Score: --</span>
 </div>
 <div class="rcontent" id="resumeContent"></div>
 </div>
 
 <div class="act-bar">
-<button class="abtn primary" onclick="downloadPDF()">📥 Download PDF</button>
-<button class="abtn" onclick="copyResume()">📋 Copy Text</button>
-<button class="abtn" onclick="downloadTxt()">💾 Download .txt</button>
-<button class="abtn" onclick="generateResume()">🔄 Regenerate</button>
-<button class="abtn" onclick="optimizeMore()">🎯 Boost ATS Score</button>
+<button class="abtn primary" onclick="downloadPDF()">Download PDF</button>
+<button class="abtn" onclick="copyResume()">Copy Text</button>
+<button class="abtn" onclick="downloadTxt()">Download .txt</button>
+<button class="abtn" onclick="generateResume()">Regenerate</button>
+<button class="abtn" onclick="optimizeMore()">Boost ATS Score</button>
 </div>
 
 <div class="ats-panel" id="atsPanel"></div>
@@ -596,30 +596,30 @@ The MORE detail you paste, the BETTER the ATS match. AI reads every word and ens
 <!-- INTERVIEW PREP SECTION -->
 <div id="interviewSection" style="margin-top:20px;display:none">
 <div style="background:linear-gradient(135deg,#F3F0FF,#DBEAFE);border:2px solid #C4B5FD;border-radius:14px;padding:20px">
-<div style="font-size:18px;font-weight:800;color:#1a1a2e;margin-bottom:4px">🎯 Interview Preparation</div>
+<div style="font-size:18px;font-weight:800;color:#1a1a2e;margin-bottom:4px">Interview Preparation</div>
 <div style="font-size:13px;color:#64748b;margin-bottom:14px">AI generates 50 interview questions with detailed answers — based on YOUR resume and the target job. Includes real-time scenarios, coding questions, cross-domain scenarios, experience-based STAR answers, and deep-dive technical questions.</div>
 
 <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px;text-align:center">
-<div style="background:#fff;border-radius:8px;padding:8px 4px;border:1px solid #E2E8F0"><div style="font-size:16px">🔥</div><div style="font-size:10px;font-weight:600;color:#374151">10 Scenario</div></div>
-<div style="background:#fff;border-radius:8px;padding:8px 4px;border:1px solid #E2E8F0"><div style="font-size:16px">💻</div><div style="font-size:10px;font-weight:600;color:#374151">10 Coding</div></div>
-<div style="background:#fff;border-radius:8px;padding:8px 4px;border:1px solid #E2E8F0"><div style="font-size:16px">🔀</div><div style="font-size:10px;font-weight:600;color:#374151">10 Cross</div></div>
-<div style="background:#fff;border-radius:8px;padding:8px 4px;border:1px solid #E2E8F0"><div style="font-size:16px">📖</div><div style="font-size:10px;font-weight:600;color:#374151">10 Experience</div></div>
-<div style="background:#fff;border-radius:8px;padding:8px 4px;border:1px solid #E2E8F0"><div style="font-size:16px">🎓</div><div style="font-size:10px;font-weight:600;color:#374151">10 Deep-dive</div></div>
+<div style="background:#fff;border-radius:8px;padding:8px 4px;border:1px solid #E2E8F0"><div style="font-size:14px;font-weight:800;color:#DC2626">SCN</div><div style="font-size:10px;font-weight:600;color:#374151">10 Scenario</div></div>
+<div style="background:#fff;border-radius:8px;padding:8px 4px;border:1px solid #E2E8F0"><div style="font-size:14px;font-weight:800;color:#2563EB">COD</div><div style="font-size:10px;font-weight:600;color:#374151">10 Coding</div></div>
+<div style="background:#fff;border-radius:8px;padding:8px 4px;border:1px solid #E2E8F0"><div style="font-size:14px;font-weight:800;color:#7C3AED">CRS</div><div style="font-size:10px;font-weight:600;color:#374151">10 Cross</div></div>
+<div style="background:#fff;border-radius:8px;padding:8px 4px;border:1px solid #E2E8F0"><div style="font-size:14px;font-weight:800;color:#059669">EXP</div><div style="font-size:10px;font-weight:600;color:#374151">10 Experience</div></div>
+<div style="background:#fff;border-radius:8px;padding:8px 4px;border:1px solid #E2E8F0"><div style="font-size:14px;font-weight:800;color:#D97706">DEP</div><div style="font-size:10px;font-weight:600;color:#374151">10 Deep-dive</div></div>
 </div>
 
-<button class="btn btn-go" id="prepBtn" onclick="generateInterviewPrep()" style="font-size:15px">🎯 Generate 50 Interview Questions with Answers</button>
+<button class="btn btn-go" id="prepBtn" onclick="generateInterviewPrep()" style="font-size:15px">Generate 50 Interview Questions with Answers</button>
 <div id="prepLoading" style="display:none;text-align:center;padding:16px;color:#7C3AED;font-weight:600"><span class="spinner"></span>AI is preparing your interview guide... (20-30 seconds)</div>
 </div>
 
 <div id="prepOutput" style="display:none;margin-top:14px">
 <div class="resume-box">
-<div class="rbar"><span>🎯 Interview Preparation — 50 Questions & Answers</span></div>
+<div class="rbar"><span>Interview Preparation — 50 Questions & Answers</span></div>
 <div class="rcontent" id="prepContent" style="max-height:500px;font-size:13px;line-height:1.7"></div>
 </div>
 <div class="act-bar" style="margin-top:10px">
-<button class="abtn primary" onclick="downloadInterviewPDF()">📥 Download Interview Prep PDF</button>
-<button class="abtn" onclick="copyInterviewPrep()">📋 Copy All</button>
-<button class="abtn" onclick="generateInterviewPrep()">🔄 Regenerate</button>
+<button class="abtn primary" onclick="downloadInterviewPDF()">Download Interview Prep PDF</button>
+<button class="abtn" onclick="copyInterviewPrep()">Copy All</button>
+<button class="abtn" onclick="generateInterviewPrep()">Regenerate</button>
 </div>
 </div>
 </div>
@@ -695,7 +695,7 @@ function addExp() {
 <div class="field"><label>End Date</label><input type="text" class="exp-end" placeholder="e.g. Dec 2021"></div>
 <div class="field"><label>Location</label><input type="text" class="exp-location" placeholder="e.g. Hyderabad"></div></div>
 <div class="field"><label>Key Projects & Achievements</label><textarea class="exp-details" rows="4" placeholder="What did you do? Include numbers, projects, tools, and results."></textarea>
-<div style="margin-top:6px"><button class="add-btn" onclick="aiRewriteExp(this)">🤖 AI: Rewrite with STAR framework</button></div></div>`;
+<div style="margin-top:6px"><button class="add-btn" onclick="aiRewriteExp(this)">AI: Rewrite with STAR framework</button></div></div>`;
   c.appendChild(b);
 }
 
@@ -1031,7 +1031,7 @@ function renderResume(text, jobDesc, skills) {
 function copyResume() {
   navigator.clipboard.writeText(resumeText);
   event.target.textContent = '✓ Copied!';
-  setTimeout(() => event.target.textContent = '📋 Copy Text', 1500);
+  setTimeout(() => event.target.textContent = 'Copy Text', 1500);
 }
 
 function downloadTxt() {
@@ -1068,7 +1068,13 @@ function downloadPDF() {
       {n:'Elegant',    h:[109,40,217], ns:19, ss:11, b:[109,40,217], lw:0.4, na:'center'},
       {n:'Creative',   h:[219,39,119], ns:20, ss:11, b:[219,39,119], lw:0.5, na:'center'}
     ];
-    if(!window._tIdx) window._tIdx = Math.floor(Date.now()/1000)%10;
+    // Auto-rotate: hash from user name + timestamp seed = unique per person, loops every 10
+    if(!window._tIdx) {
+      const userName = document.getElementById('fullName').value.trim() || '';
+      let hash = 0;
+      for(let i=0;i<userName.length;i++) hash = ((hash<<5)-hash)+userName.charCodeAt(i);
+      window._tIdx = Math.abs(hash) % 10;
+    }
     const t = T[window._tIdx % 10]; window._tIdx++;
     const pw=210,ph=297,ml=18,mr=18,mt=18,mb=16,uw=pw-ml-mr;
     let y=mt, fl=true;
@@ -1145,7 +1151,7 @@ async function autoSuggestSkills() {
   
   if (!context && !jobDesc) {
     alert('Please fill in your experience (Step 3) or paste a resume (Step 1) first — AI needs something to analyze.');
-    btn.textContent = '🤖 AI: Auto-suggest skills from my experience';
+    btn.textContent = 'AI: Auto-suggest skills from my experience';
     btn.disabled = false;
     return;
   }
@@ -1167,7 +1173,7 @@ async function autoSuggestSkills() {
     }
   } catch (e) {}
   
-  btn.textContent = '🤖 AI: Auto-suggest skills from my experience';
+  btn.textContent = 'AI: Auto-suggest skills from my experience';
   btn.disabled = false;
 }
 
@@ -1213,7 +1219,7 @@ Rules:
     if (data.result) { textarea.value = data.result; }
   } catch (e) {}
   
-  btnEl.textContent = '🤖 AI: Rewrite with STAR framework & power verbs';
+  btnEl.textContent = 'AI: Rewrite with STAR framework & power verbs';
   btnEl.disabled = false;
 }
 
@@ -1254,7 +1260,7 @@ Output ONLY a comma-separated list of 10-15 soft skills. No explanations.`,
     }
   } catch (e) {}
   
-  btn.textContent = '🤖 AI: Auto-suggest soft skills from my experience';
+  btn.textContent = 'AI: Auto-suggest soft skills from my experience';
   btn.disabled = false;
 }
 
@@ -1354,7 +1360,7 @@ Format: Q1: [question]\nANSWER: [detailed technical answer with examples]`;
 function copyInterviewPrep() {
   navigator.clipboard.writeText(window._interviewText || '');
   event.target.textContent = '✓ Copied!';
-  setTimeout(() => event.target.textContent = '📋 Copy All', 1500);
+  setTimeout(() => event.target.textContent = 'Copy All', 1500);
 }
 
 function downloadInterviewPDF() {
@@ -1501,7 +1507,7 @@ Output ONLY the formatted entries. No explanations.`,
     const data = await res.json();
     if (data.result) ta.value = data.result;
   } catch(e) {}
-  btn.textContent = '🤖 AI: Convert projects into professional resume entries';
+  btn.textContent = 'AI: Convert projects into professional resume entries';
   btn.disabled = false;
 }
 </script>
