@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI Resume Builder Free — ATS-Optimized Resume Generator | FixPilot</title>
+<meta name="description" content="Build ATS-optimized, professional resumes in seconds with AI. Paste a job description + your details — AI generates a tailored 2-page resume. Free, no signup. Powered by Llama 3.3 70B.">
+<meta name="keywords" content="AI resume builder, free resume generator, ATS resume, resume writer, AI resume maker, professional resume, job application">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M18 6l-6 10h5l-1 10 7-12h-5.5z' fill='white'/%3E%3C/svg%3E">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e}
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid #f0eef5}.nav-in{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:21px;color:#1a1a2e}.logo span{color:#7C3AED}.logo svg{width:34px;height:34px}.nl{display:flex;gap:20px}.nl a{text-decoration:none;color:#64748b;font-size:14px;font-weight:500}
+.hero{text-align:center;padding:48px 24px 32px;max-width:720px;margin:0 auto}.hero h1{font-size:36px;font-weight:900;letter-spacing:-1.2px;margin-bottom:12px;background:linear-gradient(135deg,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.hero p{color:#64748b;font-size:16px;line-height:1.6}
+.badge-row{display:flex;justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap}.badge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}.badge.ai{background:#F3F0FF;color:#7C3AED}.badge.green{background:#dcfce7;color:#16a34a}.badge.blue{background:#DBEAFE;color:#2563EB}
+.tool{max-width:860px;margin:0 auto;padding:0 24px 60px}.card{background:#fff;border:1.5px solid #f0eef5;border-radius:18px;padding:32px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(124,58,237,.04)}
+.ai-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#F3F0FF;border:1px solid #DDD6FE;border-radius:20px;font-size:11px;font-weight:700;color:#7C3AED;margin-bottom:16px}
+.step-indicator{display:flex;gap:0;margin-bottom:28px;position:relative}.step-item{flex:1;text-align:center;position:relative;cursor:pointer}.step-num{width:32px;height:32px;border-radius:50%;border:2px solid #e5e7eb;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#94a3b8;background:#fff;position:relative;z-index:2;transition:.3s}.step-label{font-size:11px;font-weight:600;color:#94a3b8;margin-top:6px;transition:.3s}.step-item.active .step-num{border-color:#7C3AED;background:#7C3AED;color:#fff}.step-item.active .step-label{color:#7C3AED}.step-item.done .step-num{border-color:#16a34a;background:#16a34a;color:#fff}.step-item.done .step-label{color:#16a34a}.step-line{position:absolute;top:15px;left:16%;right:16%;height:2px;background:#e5e7eb;z-index:1}
+.section{display:none}.section.active{display:block}
+.section-title{font-size:16px;font-weight:700;color:#1a1a2e;margin-bottom:4px}.section-desc{font-size:13px;color:#94a3b8;margin-bottom:16px}
+.field{margin-bottom:14px}.field label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:5px}.field .hint{font-size:11px;color:#94a3b8;margin-top:2px}.field input,.field select,.field textarea{width:100%;padding:11px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:.2s}.field input:focus,.field select:focus,.field textarea:focus{border-color:#7C3AED}.field textarea{min-height:90px;resize:vertical;line-height:1.6}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.exp-block{background:#F8F7FC;border:1px solid #EDE9FE;border-radius:12px;padding:16px;margin-bottom:12px;position:relative}.exp-block .remove-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:#EF4444;cursor:pointer;font-size:18px;font-weight:700;line-height:1}
+.add-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1.5px dashed #C4B5FD;border-radius:10px;background:transparent;color:#7C3AED;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s;margin-top:4px}.add-btn:hover{background:#F3F0FF;border-color:#7C3AED}
+.nav-btns{display:flex;gap:10px;margin-top:24px}.btn{flex:1;padding:14px;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-back{background:#f1f5f9;color:#475569}.btn-back:hover{background:#e2e8f0}
+.btn-next{background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;box-shadow:0 4px 20px rgba(124,58,237,.2)}.btn-next:hover{transform:translateY(-1px)}.btn-next:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-go{background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;box-shadow:0 4px 20px rgba(124,58,237,.2);width:100%}.btn-go:hover{transform:translateY(-1px)}.btn-go:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.loading{display:none;text-align:center;padding:24px;color:#7C3AED;font-weight:600}.loading.show{display:block}.spinner{width:24px;height:24px;border:3px solid #E9D5FF;border-top-color:#7C3AED;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;margin-right:8px}@keyframes spin{to{transform:rotate(360deg)}}
+.output{display:none;margin-top:24px}.output.show{display:block}
+.resume-preview{background:#fff;border:2px solid #E9D5FF;border-radius:14px;padding:0;overflow:hidden}
+.resume-header-bar{background:linear-gradient(135deg,#7C3AED,#A855F7);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}.resume-header-bar span{color:#fff;font-size:13px;font-weight:600}.ats-score{background:rgba(255,255,255,.2);padding:4px 12px;border-radius:16px;font-size:12px;font-weight:700;color:#fff}
+.resume-content{padding:24px;max-height:600px;overflow-y:auto;white-space:pre-wrap;font-family:'Inter',system-ui,sans-serif;font-size:13.5px;line-height:1.7;color:#1a1a2e}
+.resume-content h2{font-size:15px;font-weight:800;color:#7C3AED;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #EDE9FE;padding-bottom:4px;margin:18px 0 8px}
+.resume-content h3{font-size:14px;font-weight:700;color:#1a1a2e;margin:10px 0 2px}
+.resume-content .meta{font-size:12px;color:#64748b;margin-bottom:6px}
+.out-bar{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.out-btn{padding:8px 16px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#374151;transition:.2s;font-family:inherit}.out-btn:hover{border-color:#7C3AED;color:#7C3AED}
+.checklist{margin-top:16px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:16px}.checklist-title{font-size:14px;font-weight:700;color:#16a34a;margin-bottom:8px}.check-item{display:flex;align-items:center;gap:8px;font-size:13px;color:#374151;padding:3px 0}.check-item .icon{font-size:14px}
+.tips-box{margin-top:12px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:12px;padding:16px}.tips-box .tips-title{font-size:14px;font-weight:700;color:#EA580C;margin-bottom:8px}.tips-box p{font-size:13px;color:#374151;line-height:1.6}
+.seo{max-width:860px;margin:0 auto;padding:0 24px 60px}.seo h2{font-size:22px;font-weight:700;margin-bottom:12px}.seo p{color:#64748b;line-height:1.7;font-size:14px}.faq{margin-top:24px}.faq details{border:1px solid #f1f5f9;border-radius:8px;padding:14px 16px;margin-bottom:8px;background:#fff}.faq summary{font-weight:600;cursor:pointer;font-size:14px}.faq p{margin-top:8px;color:#64748b;font-size:14px}
+.foot{text-align:center;padding:32px;border-top:1px solid #f0eef5;color:#94a3b8;font-size:13px}.foot a{color:#7C3AED;text-decoration:none}
+@media(max-width:640px){.hero h1{font-size:26px}.nl{display:none}.row2{grid-template-columns:1fr}.card{padding:20px}.resume-content{font-size:12.5px;padding:16px}}
+</style>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</head><body>
+
+<nav class="nav"><div class="nav-in"><a href="/" class="logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="url(#g)"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/><defs><linearGradient id="g" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs></svg><div>Fix<span>Pilot</span></div></a><div class="nl"><a href="/">All Tools</a><a href="/blog">Blog</a><a href="/about">About</a><a href="/privacy">Privacy</a></div></div></nav>
+
+<div class="hero">
+<h1>AI Resume Builder</h1>
+<p>Paste a job description + your details — AI builds a tailored, ATS-optimized, 2-page professional resume in seconds. 100% shortlist-ready.</p>
+<div class="badge-row"><span class="badge ai">Powered by Llama 3.3 70B</span><span class="badge green">100% Free</span><span class="badge blue">ATS Optimized</span></div>
+</div>
+
+<div class="tool"><div class="card">
+<div class="ai-badge"><span class="spinner" style="width:12px;height:12px;border-width:2px;animation:none;border-color:#7C3AED"></span> AI Resume Builder — Powered by Llama 3.3 70B</div>
+
+<!-- Step Indicator -->
+<div class="step-indicator">
+<div class="step-line"></div>
+<div class="step-item active" onclick="goStep(1)"><div class="step-num">1</div><div class="step-label">Target Job</div></div>
+<div class="step-item" onclick="goStep(2)"><div class="step-num">2</div><div class="step-label">Your Info</div></div>
+<div class="step-item" onclick="goStep(3)"><div class="step-num">3</div><div class="step-label">Experience</div></div>
+<div class="step-item" onclick="goStep(4)"><div class="step-num">4</div><div class="step-label">Generate</div></div>
+</div>
+
+<!-- STEP 1: Target Job -->
+<div class="section active" id="step1">
+<div class="section-title">Step 1 — Target Job Description</div>
+<div class="section-desc">Paste the job posting. AI will tailor your resume to match exactly what they're looking for.</div>
+
+<div class="field">
+<label>Job Description *</label>
+<textarea id="jobDesc" rows="6" placeholder="Paste the full job description here. Include responsibilities, requirements, qualifications — the more detail, the better the match.
+
+Example: We are looking for a Senior DevOps Engineer to manage AWS infrastructure, CI/CD pipelines, Docker/Kubernetes..."></textarea>
+<div class="hint">AI extracts keywords, required skills, and qualifications from this to tailor your resume.</div>
+</div>
+
+<div class="row2">
+<div class="field"><label>Target Job Title *</label><input type="text" id="targetTitle" placeholder="e.g. Senior DevOps Engineer"></div>
+<div class="field"><label>Company Name (optional)</label><input type="text" id="targetCompany" placeholder="e.g. Amazon, Google, Microsoft"></div>
+</div>
+
+<div class="field"><label>Industry</label>
+<select id="industry">
+<option value="tech">Technology / Software</option>
+<option value="finance">Finance / Banking</option>
+<option value="healthcare">Healthcare</option>
+<option value="ecommerce">E-Commerce / Retail</option>
+<option value="consulting">Consulting</option>
+<option value="manufacturing">Manufacturing</option>
+<option value="education">Education</option>
+<option value="government">Government</option>
+<option value="other">Other</option>
+</select></div>
+
+<div class="nav-btns"><div style="flex:1"></div><button class="btn btn-next" onclick="goStep(2)">Next — Your Info →</button></div>
+</div>
+
+<!-- STEP 2: Personal Info -->
+<div class="section" id="step2">
+<div class="section-title">Step 2 — Your Information</div>
+<div class="section-desc">Basic details for the resume header and professional summary.</div>
+
+<div class="row2">
+<div class="field"><label>Full Name *</label><input type="text" id="fullName" placeholder="e.g. Anil Kumar"></div>
+<div class="field"><label>Email *</label><input type="email" id="email" placeholder="e.g. anil@example.com"></div>
+</div>
+<div class="row2">
+<div class="field"><label>Phone</label><input type="tel" id="phone" placeholder="e.g. +91 9876543210"></div>
+<div class="field"><label>Location</label><input type="text" id="location" placeholder="e.g. Hyderabad, India"></div>
+</div>
+<div class="row2">
+<div class="field"><label>LinkedIn URL (optional)</label><input type="url" id="linkedin" placeholder="e.g. linkedin.com/in/anilkumar"></div>
+<div class="field"><label>Portfolio / GitHub (optional)</label><input type="url" id="portfolio" placeholder="e.g. github.com/anilkumar"></div>
+</div>
+
+<div class="field"><label>Professional Summary (optional — AI writes one if blank)</label>
+<textarea id="summary" rows="3" placeholder="Leave blank for AI to auto-generate based on your experience and the job description. Or write your own 2-3 sentence summary."></textarea>
+<div class="hint">Tip: Let AI write this — it will optimize for ATS keywords from the job description.</div>
+</div>
+
+<div class="field"><label>Total Years of Experience *</label><input type="text" id="totalExp" placeholder="e.g. 13"></div>
+
+<div class="row2">
+<div class="field"><label>Education — Degree *</label><input type="text" id="degree" placeholder="e.g. B.E. Computer Science"></div>
+<div class="field"><label>University / College</label><input type="text" id="university" placeholder="e.g. JNTU Kakinada"></div>
+</div>
+<div class="row2">
+<div class="field"><label>Graduation Year</label><input type="text" id="gradYear" placeholder="e.g. 2011"></div>
+<div class="field"><label>Certifications (comma separated)</label><input type="text" id="certs" placeholder="e.g. AWS SAA, CKA, FinOps Certified"></div>
+</div>
+
+<div class="field"><label>Key Technical Skills *</label>
+<textarea id="skills" rows="3" placeholder="List your core skills, tools, and technologies. Separate with commas.
+
+e.g. AWS (EC2, EKS, S3, Lambda, CloudFormation), Docker, Kubernetes, Terraform, Jenkins, GitHub Actions, Python, Ansible, Prometheus, Grafana, SonarQube, ArgoCD"></textarea>
+<div class="hint">Include tools, platforms, languages, frameworks. AI will match these against the job description.</div>
+</div>
+
+<div class="nav-btns"><button class="btn btn-back" onclick="goStep(1)">← Back</button><button class="btn btn-next" onclick="goStep(3)">Next — Experience →</button></div>
+</div>
+
+<!-- STEP 3: Work Experience -->
+<div class="section" id="step3">
+<div class="section-title">Step 3 — Work Experience</div>
+<div class="section-desc">Add your roles. AI will rewrite bullet points to match the job description with quantified achievements.</div>
+
+<div id="expContainer">
+<div class="exp-block" data-idx="0">
+<button class="remove-btn" onclick="removeExp(this)" title="Remove">&times;</button>
+<div class="row2">
+<div class="field"><label>Job Title *</label><input type="text" class="exp-title" placeholder="e.g. Senior DevSecOps Engineer"></div>
+<div class="field"><label>Company *</label><input type="text" class="exp-company" placeholder="e.g. Anthem Inc."></div>
+</div>
+<div class="row2">
+<div class="field"><label>Duration</label><input type="text" class="exp-duration" placeholder="e.g. Jan 2022 — Present"></div>
+<div class="field"><label>Location</label><input type="text" class="exp-location" placeholder="e.g. Hyderabad, India"></div>
+</div>
+<div class="field"><label>Key Responsibilities & Achievements</label>
+<textarea class="exp-details" rows="4" placeholder="Describe what you did. Don't worry about perfect wording — AI will rewrite with action verbs and quantified results.
+
+e.g. Managed CI/CD pipelines, deployed Kubernetes clusters, reduced costs by 40%, led team of 5 engineers..."></textarea>
+<div class="hint">Include numbers/metrics where possible. AI amplifies these into ATS-friendly bullet points.</div>
+</div>
+</div>
+</div>
+
+<button class="add-btn" onclick="addExp()">+ Add Another Role</button>
+
+<div class="nav-btns"><button class="btn btn-back" onclick="goStep(2)">← Back</button><button class="btn btn-next" onclick="goStep(4)">Next — Review & Generate →</button></div>
+</div>
+
+<!-- STEP 4: Generate -->
+<div class="section" id="step4">
+<div class="section-title">Step 4 — Generate Your Resume</div>
+<div class="section-desc">Review your settings, then hit Generate. AI creates a tailored, ATS-optimized resume.</div>
+
+<div class="row2">
+<div class="field"><label>Resume Format</label>
+<select id="resumeFormat">
+<option value="chronological">Chronological (most common)</option>
+<option value="functional">Functional (skills-focused)</option>
+<option value="combination">Combination (skills + chronological)</option>
+</select></div>
+<div class="field"><label>Resume Length</label>
+<select id="resumeLength">
+<option value="2">2 Pages (recommended for 5+ years)</option>
+<option value="1">1 Page (for 0-5 years experience)</option>
+</select></div>
+</div>
+
+<div class="row2">
+<div class="field"><label>Tone</label>
+<select id="resumeTone">
+<option value="professional">Professional</option>
+<option value="executive">Executive / Senior</option>
+<option value="technical">Technical / Detailed</option>
+<option value="creative">Creative / Modern</option>
+</select></div>
+<div class="field"><label>ATS Optimization Level</label>
+<select id="atsLevel">
+<option value="maximum">Maximum (match all job keywords)</option>
+<option value="balanced">Balanced (natural + optimized)</option>
+<option value="natural">Natural (minimal keyword stuffing)</option>
+</select></div>
+</div>
+
+<div style="background:#F3F0FF;border:1px solid #DDD6FE;border-radius:12px;padding:16px;margin-bottom:20px">
+<div style="font-size:13px;font-weight:700;color:#7C3AED;margin-bottom:8px">What AI will do:</div>
+<div style="font-size:13px;color:#374151;line-height:1.8">
+✦ Extract keywords from the job description and weave them naturally into your resume<br>
+✦ Rewrite your experience bullets with strong action verbs + quantified results<br>
+✦ Generate an ATS-optimized professional summary tailored to the target role<br>
+✦ Order skills by relevance to the job description (most relevant first)<br>
+✦ Format for ATS parsers — clean structure, no tables/columns/graphics that break ATS<br>
+✦ Target 2 pages with optimal content density
+</div>
+</div>
+
+<div class="nav-btns" style="margin-top:0"><button class="btn btn-back" onclick="goStep(3)">← Back</button></div>
+<div style="margin-top:12px">
+<button class="btn btn-go" id="genBtn" onclick="generateResume()">⚡ Generate ATS-Optimized Resume with AI</button>
+</div>
+
+<div class="loading" id="loading"><span class="spinner"></span>AI is building your tailored resume... This takes 15-30 seconds for best quality.</div>
+
+<div class="output" id="output">
+<div class="resume-preview">
+<div class="resume-header-bar">
+<span>📄 Your AI-Generated Resume</span>
+<span class="ats-score" id="atsScore">ATS Score: Calculating...</span>
+</div>
+<div class="resume-content" id="resumeContent"></div>
+</div>
+
+<div class="out-bar">
+<button class="out-btn" onclick="copyResume()">📋 Copy as Text</button>
+<button class="out-btn" onclick="downloadTxt()">💾 Download .txt</button>
+<button class="out-btn" onclick="generateResume()">🔄 Regenerate</button>
+<button class="out-btn" onclick="optimizeMore()">🎯 Optimize More for ATS</button>
+</div>
+
+<div class="checklist" id="checklist"></div>
+<div class="tips-box" id="tipsBox" style="display:none"></div>
+</div>
+</div>
+
+</div></div>
+
+<div class="seo">
+<h2>Free AI Resume Builder — ATS-Optimized, Powered by Real AI</h2>
+<p>FixPilot AI Resume Builder uses Llama 3.3 70B to generate professional, ATS-optimized resumes tailored to specific job descriptions. Unlike template-based resume builders, our AI reads the actual job posting, extracts required keywords and qualifications, and weaves them naturally throughout your resume — maximizing your chances of passing ATS screening.</p>
+<p>The AI rewrites your experience with strong action verbs, quantified achievements, and industry-specific terminology. Every resume is unique — generated fresh based on YOUR experience and THEIR job requirements. No templates, no generic bullets, no cookie-cutter formatting.</p>
+<div class="faq">
+<details><summary>How does ATS optimization work?</summary><p>ATS (Applicant Tracking System) is software that scans resumes before a human sees them. Our AI extracts the exact keywords, skills, and qualifications from the job description and naturally integrates them into your resume — matching the language the ATS is programmed to look for. This significantly increases your chances of passing the automated screen.</p></details>
+<details><summary>Is this real AI or templates?</summary><p>This is real AI — Llama 3.3 70B, same class as ChatGPT. Every resume is generated fresh based on your specific experience and the target job description. No pre-written templates, no generic bullet points. Each resume is unique.</p></details>
+<details><summary>Should I use a 1-page or 2-page resume?</summary><p>If you have 5+ years of experience, use 2 pages. For entry-level to 5 years, 1 page is ideal. Our AI optimizes content density based on your selection — ensuring every line adds value without padding.</p></details>
+<details><summary>Can I edit the generated resume?</summary><p>Yes. Copy the generated resume and paste it into Google Docs, Word, or any editor. We recommend adding specific numbers/metrics that you know but didn't include in the input — the more specific, the stronger the resume.</p></details>
+<details><summary>Is my data private?</summary><p>Your information is sent to the AI model for generation but is never stored or logged by FixPilot. Nothing is saved after your session.</p></details>
+</div>
+</div>
+
+<footer class="foot"><p>FixPilot — Free AI-powered writing tools.</p><p style="margin-top:8px"><a href="/">All Tools</a> · <a href="/blog">Blog</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p></footer>
+
+<script>
+let currentStep = 1;
+let resumeText = '';
+
+function goStep(n) {
+  // Validate before moving forward
+  if (n > currentStep) {
+    if (currentStep === 1 && !document.getElementById('jobDesc').value.trim()) {
+      alert('Please paste the job description first — this is the most important input for ATS optimization.');
+      return;
+    }
+    if (currentStep === 2) {
+      if (!document.getElementById('fullName').value.trim()) { alert('Please enter your full name.'); return; }
+      if (!document.getElementById('email').value.trim()) { alert('Please enter your email.'); return; }
+      if (!document.getElementById('skills').value.trim()) { alert('Please enter your key skills.'); return; }
+    }
+  }
+
+  // Update step states
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+  
+  document.querySelectorAll('.step-item').forEach((item, i) => {
+    item.classList.remove('active', 'done');
+    if (i + 1 === n) item.classList.add('active');
+    else if (i + 1 < n) item.classList.add('done');
+  });
+
+  currentStep = n;
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+let expCount = 1;
+
+function addExp() {
+  const container = document.getElementById('expContainer');
+  const idx = expCount++;
+  const block = document.createElement('div');
+  block.className = 'exp-block';
+  block.dataset.idx = idx;
+  block.innerHTML = `
+    <button class="remove-btn" onclick="removeExp(this)" title="Remove">&times;</button>
+    <div class="row2">
+      <div class="field"><label>Job Title</label><input type="text" class="exp-title" placeholder="e.g. DevOps Engineer"></div>
+      <div class="field"><label>Company</label><input type="text" class="exp-company" placeholder="e.g. TCS"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>Duration</label><input type="text" class="exp-duration" placeholder="e.g. Jun 2018 — Dec 2021"></div>
+      <div class="field"><label>Location</label><input type="text" class="exp-location" placeholder="e.g. Hyderabad, India"></div>
+    </div>
+    <div class="field"><label>Key Responsibilities & Achievements</label>
+      <textarea class="exp-details" rows="4" placeholder="Describe what you did — AI will rewrite with action verbs and metrics."></textarea>
+    </div>`;
+  container.appendChild(block);
+}
+
+function removeExp(btn) {
+  const blocks = document.querySelectorAll('.exp-block');
+  if (blocks.length <= 1) { alert('At least one work experience is needed.'); return; }
+  btn.closest('.exp-block').remove();
+}
+
+function collectExperiences() {
+  const blocks = document.querySelectorAll('.exp-block');
+  const exps = [];
+  blocks.forEach(block => {
+    const title = block.querySelector('.exp-title')?.value.trim();
+    const company = block.querySelector('.exp-company')?.value.trim();
+    const duration = block.querySelector('.exp-duration')?.value.trim();
+    const location = block.querySelector('.exp-location')?.value.trim();
+    const details = block.querySelector('.exp-details')?.value.trim();
+    if (title || company || details) {
+      exps.push({ title: title || 'Not specified', company: company || 'Not specified', duration: duration || '', location: location || '', details: details || '' });
+    }
+  });
+  return exps;
+}
+
+async function generateResume() {
+  const jobDesc = document.getElementById('jobDesc').value.trim();
+  const targetTitle = document.getElementById('targetTitle').value.trim();
+  const targetCompany = document.getElementById('targetCompany').value.trim();
+  const industry = document.getElementById('industry').value;
+  const fullName = document.getElementById('fullName').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const location = document.getElementById('location').value.trim();
+  const linkedinUrl = document.getElementById('linkedin').value.trim();
+  const portfolioUrl = document.getElementById('portfolio').value.trim();
+  const summary = document.getElementById('summary').value.trim();
+  const totalExp = document.getElementById('totalExp').value.trim();
+  const degree = document.getElementById('degree').value.trim();
+  const university = document.getElementById('university').value.trim();
+  const gradYear = document.getElementById('gradYear').value.trim();
+  const certs = document.getElementById('certs').value.trim();
+  const skills = document.getElementById('skills').value.trim();
+  const format = document.getElementById('resumeFormat').value;
+  const length = document.getElementById('resumeLength').value;
+  const tone = document.getElementById('resumeTone').value;
+  const atsLevel = document.getElementById('atsLevel').value;
+  const experiences = collectExperiences();
+
+  if (!jobDesc) { alert('Please go back to Step 1 and paste the job description.'); return; }
+  if (!fullName || !email) { alert('Please go back to Step 2 and enter your name and email.'); return; }
+  if (!skills) { alert('Please go back to Step 2 and enter your skills.'); return; }
+
+  const btn = document.getElementById('genBtn');
+  const loading = document.getElementById('loading');
+  btn.disabled = true;
+  loading.classList.add('show');
+  document.getElementById('output').classList.remove('show');
+
+  let expText = experiences.map((e, i) =>
+    `Role ${i+1}: ${e.title} at ${e.company} (${e.duration})${e.location ? ' — ' + e.location : ''}\nResponsibilities/Achievements: ${e.details}`
+  ).join('\n\n');
+
+  const contactLine = [email, phone, location, linkedinUrl, portfolioUrl].filter(Boolean).join(' | ');
+
+  const prompt = `You are an expert resume writer and ATS optimization specialist. Generate a professional, ATS-optimized resume based on the following information.
+
+TARGET JOB DESCRIPTION:
+"""
+${jobDesc}
+"""
+
+TARGET ROLE: ${targetTitle || 'Not specified'}
+TARGET COMPANY: ${targetCompany || 'Not specified'}
+INDUSTRY: ${industry}
+
+CANDIDATE INFORMATION:
+Name: ${fullName}
+Contact: ${contactLine}
+Total Experience: ${totalExp || 'Not specified'} years
+${summary ? 'Candidate Summary: ' + summary : 'Generate an optimized professional summary.'}
+
+EDUCATION:
+${degree || 'Not specified'}${university ? ' — ' + university : ''}${gradYear ? ' — ' + gradYear : ''}
+${certs ? 'Certifications: ' + certs : ''}
+
+TECHNICAL SKILLS:
+${skills}
+
+WORK EXPERIENCE:
+${expText || 'Not provided — generate based on skills and target role.'}
+
+INSTRUCTIONS — FOLLOW EXACTLY:
+1. TARGET LENGTH: ${length === '2' ? 'Exactly 2 pages worth of content. Be thorough — include 6-8 bullet points per recent role, 4-5 for older roles.' : '1 page — concise and impactful, 4-5 bullets per role.'}
+2. FORMAT: ${format} format.
+3. TONE: ${tone}.
+4. ATS OPTIMIZATION (${atsLevel}): Extract EVERY keyword, skill, and qualification from the job description. Integrate them naturally into the summary, skills, and experience bullets. Do NOT keyword stuff — weave them into achievement-based sentences.
+5. RESUME STRUCTURE — use these exact section headers:
+   - PROFESSIONAL SUMMARY (3-4 powerful sentences matching the job description)
+   - CORE COMPETENCIES (skills grouped by category, matching job requirements)
+   - KEY ACHIEVEMENTS (4-5 quantified achievement bullets — the biggest wins)
+   - PROFESSIONAL EXPERIENCE (each role with company, title, dates, location, bullet points)
+   - TECHNICAL SKILLS (tools/platforms/languages organized by category)
+   - EDUCATION & CERTIFICATIONS
+6. BULLET POINTS: Start EVERY bullet with a strong action verb (Architected, Spearheaded, Delivered, Reduced, Automated, Designed, Led, Implemented, Optimized). Include specific NUMBERS and METRICS in at least 70% of bullets (%, $, time saved, team size, scale).
+7. PROFESSIONAL SUMMARY must mention: years of experience, key domain expertise matching the job, 2-3 most relevant technologies from the job description, and one quantified achievement.
+8. CORE COMPETENCIES: Extract the top 12-15 skills from the job description that match the candidate's skills. List them in a clean format.
+9. DO NOT include: objective statement, references, photo, personal details (age, gender), or "References available upon request."
+10. Output ONLY the resume text — no commentary, no "Here's your resume", no markdown backticks. Just the clean resume content ready to copy-paste.`;
+
+  const systemPrompt = `You are a senior resume writer who has helped 10,000+ professionals get hired at top companies. You specialize in ATS-optimized resumes that pass automated screening AND impress human recruiters. Your resumes consistently achieve 85%+ ATS match scores. Write the resume directly — no introductions, no explanations, no markdown formatting like ** or ##. Use plain text with clear section headers in ALL CAPS. Use bullet points with • character. Every bullet starts with a power verb and includes metrics where possible.`;
+
+  try {
+    const res = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt,
+        system: systemPrompt,
+        max_tokens: 4000
+      })
+    });
+
+    const data = await res.json();
+    if (data.result) {
+      resumeText = data.result;
+      renderResume(data.result, jobDesc, skills);
+      document.getElementById('output').classList.add('show');
+    } else {
+      alert('Error: ' + (data.error || 'AI generation failed. Please try again.'));
+    }
+  } catch (e) {
+    alert('Connection error. Please check your internet and try again.');
+  }
+
+  btn.disabled = false;
+  loading.classList.remove('show');
+}
+
+function renderResume(text, jobDesc, skills) {
+  // Format resume content with styled headers
+  let html = text
+    .replace(/^(PROFESSIONAL SUMMARY|CORE COMPETENCIES|KEY ACHIEVEMENTS|PROFESSIONAL EXPERIENCE|TECHNICAL SKILLS|EDUCATION & CERTIFICATIONS|EDUCATION|CERTIFICATIONS|SKILLS|WORK EXPERIENCE|EXPERIENCE|SUMMARY|ACHIEVEMENTS)$/gm, '<h2>$1</h2>')
+    .replace(/\n/g, '<br>');
+  
+  document.getElementById('resumeContent').innerHTML = html;
+
+  // Calculate ATS score
+  const jobWords = jobDesc.toLowerCase().split(/\W+/).filter(w => w.length > 3);
+  const uniqueJobWords = [...new Set(jobWords)];
+  const resumeLower = text.toLowerCase();
+  let matched = 0;
+  const matchedWords = [];
+  const missedWords = [];
+
+  uniqueJobWords.forEach(w => {
+    if (resumeLower.includes(w)) { matched++; matchedWords.push(w); }
+    else { missedWords.push(w); }
+  });
+
+  const score = uniqueJobWords.length > 0 ? Math.min(Math.round((matched / uniqueJobWords.length) * 100), 98) : 85;
+  const scoreEl = document.getElementById('atsScore');
+  scoreEl.textContent = `ATS Score: ${score}%`;
+  scoreEl.style.background = score >= 80 ? 'rgba(22,163,74,.3)' : score >= 60 ? 'rgba(234,179,8,.3)' : 'rgba(239,68,68,.3)';
+
+  // ATS Checklist
+  const checks = [
+    { ok: text.includes('PROFESSIONAL SUMMARY') || text.includes('SUMMARY'), label: 'Professional Summary present' },
+    { ok: /\d+%|\$[\d,]+|\d+ /.test(text), label: 'Quantified achievements with metrics' },
+    { ok: text.split('•').length > 5 || text.split('- ').length > 5 || text.split('●').length > 5, label: 'Structured bullet points' },
+    { ok: /SKILLS|COMPETENCIES/.test(text), label: 'Skills section for ATS keyword matching' },
+    { ok: /EXPERIENCE|PROFESSIONAL EXPERIENCE/.test(text), label: 'Clear experience section' },
+    { ok: /EDUCATION|CERTIF/.test(text), label: 'Education section present' },
+    { ok: score >= 70, label: `${score}% keyword match with job description` },
+    { ok: !/objective|references available/i.test(text), label: 'No outdated sections (objective/references)' },
+  ];
+
+  document.getElementById('checklist').innerHTML = `
+    <div class="checklist-title">ATS Optimization Checklist</div>
+    ${checks.map(c => `<div class="check-item"><span class="icon">${c.ok ? '✅' : '⚠️'}</span>${c.label}</div>`).join('')}
+  `;
+
+  // Show tips if score < 85
+  const tipsBox = document.getElementById('tipsBox');
+  if (score < 85 && missedWords.length > 0) {
+    const topMissed = missedWords.slice(0, 8).join(', ');
+    tipsBox.style.display = 'block';
+    tipsBox.innerHTML = `
+      <div class="tips-title">💡 Tips to Improve ATS Score</div>
+      <p>Consider adding these keywords from the job description that are currently missing: <strong>${topMissed}</strong></p>
+      <p style="margin-top:8px">Click "Optimize More for ATS" to have AI naturally integrate these keywords into your resume.</p>
+    `;
+  } else {
+    tipsBox.style.display = 'none';
+  }
+}
+
+function copyResume() {
+  navigator.clipboard.writeText(resumeText);
+  event.target.textContent = '✓ Copied!';
+  setTimeout(() => event.target.textContent = '📋 Copy as Text', 1500);
+}
+
+function downloadTxt() {
+  const name = document.getElementById('fullName').value.trim().replace(/\s+/g, '_') || 'Resume';
+  const blob = new Blob([resumeText], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${name}_Resume_ATS.txt`;
+  a.click();
+}
+
+async function optimizeMore() {
+  if (!resumeText) return;
+  const jobDesc = document.getElementById('jobDesc').value.trim();
+  
+  const btn = document.getElementById('genBtn');
+  const loading = document.getElementById('loading');
+  btn.disabled = true;
+  loading.classList.add('show');
+  loading.innerHTML = '<span class="spinner"></span>AI is optimizing ATS keywords...';
+
+  try {
+    const res = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: `Here is a resume and a job description. Optimize the resume to better match the job description ATS keywords. Naturally integrate missing keywords without keyword stuffing. Keep the same structure and format. Improve bullet points with stronger action verbs and more metrics.
+
+JOB DESCRIPTION:
+"""
+${jobDesc}
+"""
+
+CURRENT RESUME:
+"""
+${resumeText}
+"""
+
+Output ONLY the improved resume text. No commentary. No markdown.`,
+        system: 'You are an ATS optimization specialist. Improve resumes to match job descriptions perfectly while keeping them natural and professional. Output only the resume text.',
+        max_tokens: 4000
+      })
+    });
+
+    const data = await res.json();
+    if (data.result) {
+      resumeText = data.result;
+      renderResume(data.result, jobDesc, document.getElementById('skills').value);
+    }
+  } catch (e) { }
+
+  btn.disabled = false;
+  loading.classList.remove('show');
+  loading.innerHTML = '<span class="spinner"></span>AI is building your tailored resume...';
+}
+</script>
+</body></html>
