@@ -232,7 +232,10 @@ You'll fill in your details in the next steps. AI will write professional bullet
 <div class="field"><label>Email *</label><input type="email" id="email" placeholder="e.g. anil@example.com"></div>
 </div>
 <div class="row2">
-<div class="field"><label>Phone</label><input type="tel" id="phone" placeholder="e.g. +91 9876543210"></div>
+<div class="field"><label>Phone</label>
+<div style="display:flex;gap:6px"><select id="countryCode" style="width:120px;padding:11px 8px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:13px;font-family:inherit">
+<option value="+91">🇮🇳 +91</option><option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option><option value="+61">🇦🇺 +61</option><option value="+971">🇦🇪 +971</option><option value="+65">🇸🇬 +65</option><option value="+49">🇩🇪 +49</option><option value="+33">🇫🇷 +33</option><option value="+81">🇯🇵 +81</option><option value="+86">🇨🇳 +86</option><option value="+82">🇰🇷 +82</option><option value="+55">🇧🇷 +55</option><option value="+27">🇿🇦 +27</option><option value="+234">🇳🇬 +234</option><option value="+254">🇰🇪 +254</option><option value="+60">🇲🇾 +60</option><option value="+63">🇵🇭 +63</option><option value="+966">🇸🇦 +966</option><option value="+7">🇷🇺 +7</option><option value="+52">🇲🇽 +52</option><option value="+39">🇮🇹 +39</option><option value="+34">🇪🇸 +34</option><option value="+31">🇳🇱 +31</option><option value="+46">🇸🇪 +46</option><option value="+41">🇨🇭 +41</option><option value="+353">🇮🇪 +353</option><option value="+64">🇳🇿 +64</option><option value="+48">🇵🇱 +48</option><option value="+90">🇹🇷 +90</option><option value="+92">🇵🇰 +92</option><option value="+880">🇧🇩 +880</option><option value="+94">🇱🇰 +94</option><option value="+977">🇳🇵 +977</option>
+</select><input type="tel" id="phone" placeholder="9876543210" style="flex:1"></div></div>
 <div class="field"><label>Location</label><input type="text" id="location" placeholder="e.g. Hyderabad, India"></div>
 </div>
 <div class="row2">
@@ -248,7 +251,8 @@ You'll fill in your details in the next steps. AI will write professional bullet
 <div class="row2">
 <div class="field"><label>Total Years of Experience *</label><input type="text" id="totalExp" placeholder="e.g. 13"></div>
 <div class="field"><label>Career Level</label>
-<select id="careerLevel">
+<select id="careerLevel" onchange="toggleFresher()">
+<option value="fresher">Fresher / Student (no experience)</option>
 <option value="entry">Entry Level (0-2 years)</option>
 <option value="mid">Mid Level (3-6 years)</option>
 <option value="senior" selected>Senior (7-12 years)</option>
@@ -265,6 +269,26 @@ You'll fill in your details in the next steps. AI will write professional bullet
 <div class="stitle">Step 3 — Work Experience</div>
 <div class="sdesc">Add your roles. Include achievements with numbers where possible. AI rewrites everything with STAR framework and power verbs. Add previous companies, projects, and key results.</div>
 
+<div id="fresherSection" style="display:none;margin-bottom:16px">
+<div style="background:#DBEAFE;border:1px solid #93C5FD;border-radius:10px;padding:14px;margin-bottom:14px">
+<div style="font-size:13px;font-weight:700;color:#2563EB;margin-bottom:4px">Fresher / Student Mode</div>
+<div style="font-size:12px;color:#374151;line-height:1.5">No work experience? No problem! Add internships, academic projects, hackathons, volunteer work, or freelance projects. AI will structure these professionally.</div>
+</div>
+<div class="field"><label>Internships / Projects / Hackathons</label>
+<textarea id="fresherProjects" rows="5" placeholder="List your projects, internships, and activities:
+
+• Built an e-commerce website using React + Node.js (college project)
+• 3-month internship at TCS — worked on AWS deployment automation
+• Won first place at college hackathon — built a chatbot with Python
+• Freelance: Created 5 websites for local businesses
+• Contributed to open-source project on GitHub (50+ stars)
+• Student chapter president — organized 10+ tech events
+
+AI will format these as professional experience entries."></textarea>
+</div>
+</div>
+
+<div id="expSection">
 <div id="expContainer">
 <div class="exp-block" data-idx="0">
 <button class="remove-btn" onclick="removeExp(this)" title="Remove">&times;</button>
@@ -294,6 +318,7 @@ AI converts these into powerful STAR-format bullets with action verbs."></textar
 
 <button class="add-btn" onclick="addExp()">+ Add Another Role</button>
 <div class="hint" style="margin-top:8px">Add ALL previous companies — more experience = stronger resume. Include internships for entry-level.</div>
+</div><!-- end expSection -->
 
 <div class="nav-btns"><button class="btn btn-back" onclick="goStep(2)">← Back</button><button class="btn btn-next" onclick="goStep(4)">Next — Skills & Education →</button></div>
 </div>
@@ -307,6 +332,8 @@ AI converts these into powerful STAR-format bullets with action verbs."></textar
 <textarea id="techSkills" rows="3" placeholder="List all tools, platforms, languages, frameworks. Separate with commas.
 
 e.g. AWS (EC2, EKS, S3, Lambda, CloudFormation), Docker, Kubernetes, Terraform, Jenkins, GitHub Actions, Python, Ansible, Prometheus, Grafana, SonarQube, ArgoCD, Linux, Bash"></textarea>
+<div style="margin-top:6px"><button class="add-btn" onclick="autoSuggestSkills()" id="suggestBtn">🤖 AI: Auto-suggest skills from my experience</button></div>
+<div class="hint">Click the button above — AI reads your experience from previous steps and suggests relevant skills. You can also type manually.</div>
 </div>
 
 <div class="field"><label>Soft Skills / Management Skills</label>
@@ -465,6 +492,37 @@ The MORE detail you paste, the BETTER the ATS match. AI reads every word and ens
 <div class="ats-panel" id="atsPanel"></div>
 <div class="kw-panel" id="kwPanel" style="display:none"></div>
 <div class="tips-box" id="tipsBox" style="display:none"></div>
+
+<!-- INTERVIEW PREP SECTION -->
+<div id="interviewSection" style="margin-top:20px;display:none">
+<div style="background:linear-gradient(135deg,#F3F0FF,#DBEAFE);border:2px solid #C4B5FD;border-radius:14px;padding:20px">
+<div style="font-size:18px;font-weight:800;color:#1a1a2e;margin-bottom:4px">🎯 Interview Preparation</div>
+<div style="font-size:13px;color:#64748b;margin-bottom:14px">AI generates 50 interview questions with detailed answers — based on YOUR resume and the target job. Includes real-time scenarios, coding questions, cross-domain scenarios, experience-based STAR answers, and deep-dive technical questions.</div>
+
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px;text-align:center">
+<div style="background:#fff;border-radius:8px;padding:8px 4px;border:1px solid #E2E8F0"><div style="font-size:16px">🔥</div><div style="font-size:10px;font-weight:600;color:#374151">10 Scenario</div></div>
+<div style="background:#fff;border-radius:8px;padding:8px 4px;border:1px solid #E2E8F0"><div style="font-size:16px">💻</div><div style="font-size:10px;font-weight:600;color:#374151">10 Coding</div></div>
+<div style="background:#fff;border-radius:8px;padding:8px 4px;border:1px solid #E2E8F0"><div style="font-size:16px">🔀</div><div style="font-size:10px;font-weight:600;color:#374151">10 Cross</div></div>
+<div style="background:#fff;border-radius:8px;padding:8px 4px;border:1px solid #E2E8F0"><div style="font-size:16px">📖</div><div style="font-size:10px;font-weight:600;color:#374151">10 Experience</div></div>
+<div style="background:#fff;border-radius:8px;padding:8px 4px;border:1px solid #E2E8F0"><div style="font-size:16px">🎓</div><div style="font-size:10px;font-weight:600;color:#374151">10 Deep-dive</div></div>
+</div>
+
+<button class="btn btn-go" id="prepBtn" onclick="generateInterviewPrep()" style="font-size:15px">🎯 Generate 50 Interview Questions with Answers</button>
+<div id="prepLoading" style="display:none;text-align:center;padding:16px;color:#7C3AED;font-weight:600"><span class="spinner"></span>AI is preparing your interview guide... (20-30 seconds)</div>
+</div>
+
+<div id="prepOutput" style="display:none;margin-top:14px">
+<div class="resume-box">
+<div class="rbar"><span>🎯 Interview Preparation — 50 Questions & Answers</span></div>
+<div class="rcontent" id="prepContent" style="max-height:500px;font-size:13px;line-height:1.7"></div>
+</div>
+<div class="act-bar" style="margin-top:10px">
+<button class="abtn primary" onclick="downloadInterviewPDF()">📥 Download Interview Prep PDF</button>
+<button class="abtn" onclick="copyInterviewPrep()">📋 Copy All</button>
+<button class="abtn" onclick="generateInterviewPrep()">🔄 Regenerate</button>
+</div>
+</div>
+</div>
 </div>
 </div>
 
@@ -567,7 +625,7 @@ async function generateResume() {
   const jobDesc = document.getElementById('jobDesc').value.trim();
   const fullName = document.getElementById('fullName').value.trim();
   const emailVal = document.getElementById('email').value.trim();
-  const phoneVal = document.getElementById('phone').value.trim();
+  const phoneVal = document.getElementById('phone').value.trim() ? (document.getElementById('countryCode').value + ' ' + document.getElementById('phone').value.trim()) : '';
   const locationVal = document.getElementById('location').value.trim();
   const linkedinVal = document.getElementById('linkedin').value.trim();
   const portfolioVal = document.getElementById('portfolio').value.trim();
@@ -603,9 +661,13 @@ async function generateResume() {
   showLoadStep('Analyzing job description keywords...');
 
   const exps = collectExp();
+  const fresherProjects = document.getElementById('fresherProjects') ? document.getElementById('fresherProjects').value.trim() : '';
   let expText = exps.map((e, i) =>
     `ROLE ${i+1}: ${e.title} at ${e.company} (${e.start || '?'} — ${e.end || '?'})${e.location ? ', ' + e.location : ''}\nDetails: ${e.details}`
   ).join('\n\n');
+  if (careerLevel === 'fresher' && fresherProjects) {
+    expText = 'FRESHER — Projects/Internships:\n' + fresherProjects;
+  }
 
   const contactLine = [emailVal, phoneVal, locationVal, linkedinVal, portfolioVal].filter(Boolean).join(' | ');
 
@@ -712,6 +774,7 @@ INSTRUCTIONS — FOLLOW EXACTLY:
       resumeText = data.result;
       renderResume(data.result, jobDesc, techSkills);
       document.getElementById('output').classList.add('show');
+      document.getElementById('interviewSection').style.display = 'block';
       document.getElementById('output').scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
       alert('Error: ' + (data.error || 'AI generation failed. Try again.'));
@@ -875,142 +938,297 @@ function downloadTxt() {
 }
 
 function downloadPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-  const name = document.getElementById('fullName').value.trim() || 'Resume';
-  
-  const pageW = 210;
-  const pageH = 297;
-  const marginL = 18;
-  const marginR = 18;
-  const marginT = 20;
-  const marginB = 20;
-  const usableW = pageW - marginL - marginR;
-  
-  let y = marginT;
-  const lines = resumeText.split('\n');
-  
-  // Helper: check page break
-  function checkPage(needed) {
-    if (y + needed > pageH - marginB) {
-      doc.addPage();
-      y = marginT;
+  try {
+    if (typeof window.jspdf === 'undefined') {
+      alert('PDF library is loading. Please wait a moment and try again.');
+      return;
     }
-  }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    const name = document.getElementById('fullName').value.trim() || 'Resume';
+    
+    const pageW = 210, pageH = 297, mL = 18, mR = 18, mT = 18, mB = 18;
+    const uW = pageW - mL - mR;
+    let y = mT;
+    let isFirstLine = true;
+    
+    function np(needed) { if (y + needed > pageH - mB) { doc.addPage(); y = mT; } }
 
-  lines.forEach(line => {
-    const trimmed = line.trim();
+    const lines = resumeText.split('\n');
     
-    // Detect section headers (ALL CAPS lines)
-    if (/^[A-Z][A-Z &\/]+$/.test(trimmed) && trimmed.length > 3 && trimmed.length < 50) {
-      checkPage(14);
-      y += 4;
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(11);
-      doc.setTextColor(124, 58, 237); // Purple
-      doc.text(trimmed, marginL, y);
-      y += 1.5;
-      doc.setDrawColor(124, 58, 237);
-      doc.setLineWidth(0.5);
-      doc.line(marginL, y, pageW - marginR, y);
-      y += 5;
-      return;
+    for (let li = 0; li < lines.length; li++) {
+      const trimmed = lines[li].trim();
+      
+      // Section headers
+      if (/^[A-Z][A-Z &\/\-]+$/.test(trimmed) && trimmed.length > 3 && trimmed.length < 60) {
+        np(14); y += 3;
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(124, 58, 237);
+        doc.text(trimmed, mL, y);
+        y += 1.5; doc.setDrawColor(124, 58, 237); doc.setLineWidth(0.4);
+        doc.line(mL, y, pageW - mR, y); y += 5;
+        isFirstLine = false; continue;
+      }
+      
+      // Name (first non-empty)
+      if (isFirstLine && trimmed.length > 0 && trimmed.length < 50 && !/[@|•]/.test(trimmed)) {
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(18); doc.setTextColor(26, 26, 46);
+        doc.text(trimmed, pageW / 2, y, { align: 'center' }); y += 8;
+        isFirstLine = false; continue;
+      }
+      if (trimmed.length > 0) isFirstLine = false;
+      
+      // Contact (| and @)
+      if ((/\|/.test(trimmed) && /@/.test(trimmed)) || (/\|/.test(trimmed) && y < mT + 16)) {
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(100, 116, 139);
+        const cw = doc.splitTextToSize(trimmed, uW);
+        cw.forEach(cl => { np(4); doc.text(cl, pageW / 2, y, { align: 'center' }); y += 3.5; });
+        y += 2; continue;
+      }
+      
+      // Bullets
+      if (/^[•▪►●\-]\s/.test(trimmed)) {
+        np(6);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(30, 30, 50);
+        const bt = trimmed.replace(/^[•▪►●\-]\s*/, '');
+        const bw = doc.splitTextToSize(bt, uW - 7);
+        bw.forEach((wl, i) => {
+          np(4);
+          if (i === 0) { doc.setTextColor(124, 58, 237); doc.text('•', mL, y); doc.setTextColor(30, 30, 50); }
+          doc.text(wl, mL + 5, y); y += 4;
+        });
+        y += 0.5; continue;
+      }
+      
+      // Company/Role (dates + |)
+      if (/\d{4}|present|current/i.test(trimmed) && /\|/.test(trimmed)) {
+        np(6); doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(26, 26, 46);
+        const rw = doc.splitTextToSize(trimmed, uW);
+        rw.forEach(wl => { np(5); doc.text(wl, mL, y); y += 4.5; }); continue;
+      }
+      
+      // Empty
+      if (trimmed === '') { y += 2; continue; }
+      
+      // Normal
+      np(5); doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(30, 30, 50);
+      const nw = doc.splitTextToSize(trimmed, uW);
+      nw.forEach(wl => { np(4); doc.text(wl, mL, y); y += 4; });
     }
-    
-    // Name detection (first non-empty line, usually the name)
-    if (y === marginT && trimmed.length > 0 && trimmed.length < 40 && !/[@|•]/.test(trimmed)) {
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(18);
-      doc.setTextColor(26, 26, 46);
-      doc.text(trimmed, pageW / 2, y, { align: 'center' });
-      y += 8;
-      return;
+
+    const tp = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= tp; i++) {
+      doc.setPage(i); doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(148, 163, 184);
+      doc.text('Page ' + i + ' of ' + tp, pageW / 2, pageH - 10, { align: 'center' });
     }
-    
-    // Contact line (contains | or @)
-    if (/\|.*@|@.*\|/.test(trimmed) || (trimmed.includes('|') && y < marginT + 15)) {
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8.5);
-      doc.setTextColor(100, 116, 139);
-      const contactWrapped = doc.splitTextToSize(trimmed, usableW);
-      contactWrapped.forEach(cl => {
-        checkPage(4);
-        doc.text(cl, pageW / 2, y, { align: 'center' });
-        y += 3.5;
-      });
-      y += 2;
-      return;
-    }
-    
-    // Bullet points
-    if (trimmed.startsWith('•') || trimmed.startsWith('▪') || trimmed.startsWith('►')) {
-      checkPage(6);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9.5);
-      doc.setTextColor(30, 30, 50);
-      const bulletText = trimmed.replace(/^[•▪►]\s*/, '');
-      const wrapped = doc.splitTextToSize(bulletText, usableW - 8);
-      wrapped.forEach((wl, i) => {
-        checkPage(4);
-        if (i === 0) {
-          doc.setTextColor(124, 58, 237);
-          doc.text('•', marginL, y);
-          doc.setTextColor(30, 30, 50);
-          doc.text(wl, marginL + 5, y);
-        } else {
-          doc.text(wl, marginL + 5, y);
-        }
-        y += 4;
-      });
-      y += 0.5;
-      return;
-    }
-    
-    // Company/Role line (bold detection — lines with | or dates)
-    if (/\d{4}|present|current/i.test(trimmed) && /\|/.test(trimmed)) {
-      checkPage(6);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(26, 26, 46);
-      const wrapped = doc.splitTextToSize(trimmed, usableW);
-      wrapped.forEach(wl => {
-        checkPage(4);
-        doc.text(wl, marginL, y);
-        y += 4.5;
-      });
-      return;
-    }
-    
-    // Empty line
-    if (trimmed === '') {
-      y += 2;
-      return;
-    }
-    
-    // Normal text
-    checkPage(5);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9.5);
-    doc.setTextColor(30, 30, 50);
-    const wrapped = doc.splitTextToSize(trimmed, usableW);
-    wrapped.forEach(wl => {
-      checkPage(4);
-      doc.text(wl, marginL, y);
-      y += 4;
+    doc.save(name.replace(/\s+/g, '_') + '_Resume_ATS.pdf');
+  } catch (err) {
+    console.error('PDF Error:', err);
+    alert('PDF generation failed. Try "Download .txt" instead, then convert to PDF using Google Docs or Word.\n\nError: ' + err.message);
+  }
+}
+
+function toggleFresher() {
+  const level = document.getElementById('careerLevel').value;
+  const fresherSec = document.getElementById('fresherSection');
+  const expSec = document.getElementById('expSection');
+  if (level === 'fresher') {
+    fresherSec.style.display = 'block';
+    expSec.style.display = 'none';
+  } else {
+    fresherSec.style.display = 'none';
+    expSec.style.display = 'block';
+  }
+}
+
+async function autoSuggestSkills() {
+  const btn = document.getElementById('suggestBtn');
+  btn.textContent = '⏳ AI analyzing your experience...';
+  btn.disabled = true;
+  
+  let context = '';
+  const existingResume = document.getElementById('existingResume').value.trim();
+  const bgDescription = document.getElementById('bgDescription').value.trim();
+  const jobDesc = document.getElementById('jobDesc').value.trim();
+  
+  document.querySelectorAll('.exp-details').forEach(ta => { if (ta.value.trim()) context += ta.value.trim() + '\n'; });
+  if (existingResume) context += existingResume;
+  if (bgDescription) context += bgDescription;
+  
+  if (!context && !jobDesc) {
+    alert('Please fill in your experience (Step 3) or paste a resume (Step 1) first — AI needs something to analyze.');
+    btn.textContent = '🤖 AI: Auto-suggest skills from my experience';
+    btn.disabled = false;
+    return;
+  }
+  
+  try {
+    const res = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: 'Based on this professional background, list the most relevant technical skills as a comma-separated list. Include tools, platforms, languages, frameworks, and methodologies. Group by category (e.g. Cloud: AWS EC2, S3; DevOps: Docker, Kubernetes). Output ONLY the skills list, nothing else.\n\nBackground:\n' + context + (jobDesc ? '\n\nTarget Job:\n' + jobDesc : ''),
+        system: 'You are a career expert. Extract and suggest relevant technical skills. Output only a clean comma-separated skills list grouped by category. No explanations.',
+        max_tokens: 500
+      })
     });
-  });
+    const data = await res.json();
+    if (data.result) {
+      const existing = document.getElementById('techSkills').value.trim();
+      document.getElementById('techSkills').value = existing ? existing + ', ' + data.result : data.result;
+    }
+  } catch (e) {}
+  
+  btn.textContent = '🤖 AI: Auto-suggest skills from my experience';
+  btn.disabled = false;
+}
 
-  // Page numbers
-  const totalPages = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= totalPages; i++) {
-    doc.setPage(i);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8);
-    doc.setTextColor(148, 163, 184);
-    doc.text(`Page ${i} of ${totalPages}`, pageW / 2, pageH - 10, { align: 'center' });
+// Generate Interview Prep from resume
+async function generateInterviewPrep() {
+  if (!resumeText) { alert('Generate your resume first, then click Interview Prep.'); return; }
+  const jobDesc = document.getElementById('jobDesc').value.trim();
+  const targetTitle = document.getElementById('targetTitle').value.trim();
+  
+  const prepBtn = document.getElementById('prepBtn');
+  const prepLoading = document.getElementById('prepLoading');
+  prepBtn.disabled = true;
+  prepLoading.style.display = 'block';
+  
+  const prompt = `You are a senior technical interviewer at a top company. Based on the resume and job description below, generate a COMPLETE interview preparation guide.
+
+RESUME:
+"""
+${resumeText}
+"""
+
+${jobDesc ? 'JOB DESCRIPTION:\n"""\n' + jobDesc + '\n"""' : ''}
+
+TARGET ROLE: ${targetTitle || 'Based on resume'}
+
+Generate EXACTLY this structure with real, detailed Q&A:
+
+SECTION 1: REAL-TIME SCENARIO QUESTIONS (10 questions)
+Questions that test how the candidate handles real production situations. Based on the specific technologies and experience in their resume. Include detailed answers with specific technical steps.
+
+SECTION 2: CODING & TECHNICAL QUESTIONS (10 questions)  
+Hands-on coding/scripting questions based on the tools mentioned in the resume (e.g., Python scripts, Terraform configs, Dockerfile, YAML, Bash). Include the actual code/solution in the answer.
+
+SECTION 3: CROSS-SCENARIO QUESTIONS (10 questions)
+Questions that span multiple technologies/domains. E.g., "Your CI/CD pipeline deploys to Kubernetes but the pods keep crashing — walk through your debugging process from pipeline to pod." Include comprehensive debugging steps in answers.
+
+SECTION 4: EXPERIENCE-BASED QUESTIONS (10 questions)
+"Tell me about a time when..." questions based on the SPECIFIC projects and achievements in the resume. Answers should reference the actual experience with STAR format (Situation-Task-Action-Result).
+
+SECTION 5: TOPIC DEEP-DIVE QUESTIONS (10 questions)
+Deep technical questions on the core topics in the resume (e.g., Kubernetes internals, AWS networking, CI/CD best practices, security compliance). Include detailed answers with real-world examples and best practices.
+
+FORMAT RULES:
+- Number each question: Q1, Q2, etc.
+- Each question followed by "ANSWER:" with a detailed, interview-winning response
+- Answers should be 4-8 sentences, specific and technical
+- For coding questions, include the actual code
+- Make answers based on the candidate's ACTUAL experience from the resume
+- Output plain text — no markdown, no code fences`;
+
+  try {
+    const res = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt,
+        system: 'You are a senior technical interviewer. Generate comprehensive interview prep with specific, actionable Q&A based on the candidate\'s real resume. Every answer should help them WIN the interview. Be specific to their experience and target role. Output clean plain text only.',
+        max_tokens: 4096
+      })
+    });
+    const data = await res.json();
+    if (data.result) {
+      document.getElementById('prepContent').textContent = data.result;
+      document.getElementById('prepOutput').style.display = 'block';
+      document.getElementById('prepOutput').scrollIntoView({ behavior: 'smooth' });
+      window._interviewText = data.result;
+    } else {
+      alert('Error: ' + (data.error || 'Failed to generate. Try again.'));
+    }
+  } catch (e) {
+    alert('Connection error. Check internet and retry.');
   }
+  
+  prepBtn.disabled = false;
+  prepLoading.style.display = 'none';
+}
 
-  doc.save(`${name.replace(/\s+/g, '_')}_Resume_ATS.pdf`);
+function copyInterviewPrep() {
+  navigator.clipboard.writeText(window._interviewText || '');
+  event.target.textContent = '✓ Copied!';
+  setTimeout(() => event.target.textContent = '📋 Copy All', 1500);
+}
+
+function downloadInterviewPDF() {
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    const name = document.getElementById('fullName').value.trim() || 'Interview';
+    const text = window._interviewText || '';
+    const pageW = 210, pageH = 297, mL = 16, mR = 16, mT = 18, mB = 16;
+    const uW = pageW - mL - mR;
+    let y = mT;
+
+    // Title
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(16); doc.setTextColor(124, 58, 237);
+    doc.text('Interview Preparation Guide', pageW / 2, y, { align: 'center' }); y += 8;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(100, 116, 139);
+    doc.text('Generated by FixPilot AI — based on your resume', pageW / 2, y, { align: 'center' }); y += 8;
+
+    const lines = text.split('\n');
+    for (const line of lines) {
+      const t = line.trim();
+      if (!t) { y += 2; continue; }
+      
+      // Section headers
+      if (/^SECTION \d|^REAL-TIME|^CODING|^CROSS-SCENARIO|^EXPERIENCE|^TOPIC/i.test(t)) {
+        if (y + 12 > pageH - mB) { doc.addPage(); y = mT; }
+        y += 4; doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(124, 58, 237);
+        doc.text(t, mL, y); y += 2;
+        doc.setDrawColor(124, 58, 237); doc.setLineWidth(0.3); doc.line(mL, y, pageW - mR, y); y += 5;
+        continue;
+      }
+      
+      // Questions
+      if (/^Q\d+[:.]/i.test(t)) {
+        if (y + 8 > pageH - mB) { doc.addPage(); y = mT; }
+        y += 2; doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(26, 26, 46);
+        const qw = doc.splitTextToSize(t, uW);
+        qw.forEach(wl => { if (y + 4 > pageH - mB) { doc.addPage(); y = mT; } doc.text(wl, mL, y); y += 4.5; });
+        continue;
+      }
+      
+      // Answer label
+      if (/^ANSWER:/i.test(t)) {
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(9.5); doc.setTextColor(22, 163, 74);
+        doc.text('ANSWER:', mL, y); y += 4;
+        const answerText = t.replace(/^ANSWER:\s*/i, '');
+        if (answerText) {
+          doc.setFont('helvetica', 'normal'); doc.setTextColor(30, 30, 50);
+          const aw = doc.splitTextToSize(answerText, uW);
+          aw.forEach(wl => { if (y + 4 > pageH - mB) { doc.addPage(); y = mT; } doc.text(wl, mL, y); y += 3.8; });
+        }
+        continue;
+      }
+      
+      // Normal text
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(30, 30, 50);
+      const nw = doc.splitTextToSize(t, uW);
+      nw.forEach(wl => { if (y + 4 > pageH - mB) { doc.addPage(); y = mT; } doc.text(wl, mL, y); y += 3.8; });
+    }
+
+    const tp = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= tp; i++) {
+      doc.setPage(i); doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(148, 163, 184);
+      doc.text('Page ' + i + '/' + tp + ' — FixPilot Interview Prep', pageW / 2, pageH - 8, { align: 'center' });
+    }
+    doc.save(name.replace(/\s+/g, '_') + '_Interview_Prep.pdf');
+  } catch (err) {
+    alert('PDF error: ' + err.message);
+  }
 }
 
 async function optimizeMore() {
