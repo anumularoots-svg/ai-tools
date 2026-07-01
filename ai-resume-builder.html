@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>AI Resume Builder Free — ATS-Optimized, PDF Download | FixPilot</title>
-<meta name="description" content="Build ATS-optimized professional resumes with AI. Paste job description OR existing resume — AI generates tailored 2-3 page resume with PDF download. STAR framework, 20+ ATS checks. Free, no signup.">
-<meta name="keywords" content="AI resume builder, free resume generator, ATS resume, resume writer, AI resume maker, professional resume, PDF resume, job application, STAR framework">
+<title>AI Resume Builder Free — Multi-Language, 10 Templates, ATS-Optimized, PDF | FixPilot</title>
+<meta name="description" content="Build ATS-optimized professional resumes in 25 languages with AI. 10 unique templates, STAR framework, 50 interview Q&A, PDF download. Supports English, Hindi, Spanish, French, German, Arabic, Chinese, Japanese + 17 more. Free, no signup.">
+<meta name="keywords" content="AI resume builder, free resume generator, ATS resume, multilingual resume, resume builder Hindi, resume builder Spanish, resume builder Arabic, PDF resume, interview preparation, STAR framework">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M18 6l-6 10h5l-1 10 7-12h-5.5z' fill='white'/%3E%3C/svg%3E">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
@@ -147,7 +147,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e}
 
 <div class="hero">
 <h1>AI Resume Builder</h1>
-<p>Paste a job description + your details (or an existing resume) — AI builds a tailored, ATS-optimized professional resume with PDF download. Shortlist-ready in 30 seconds.</p>
+<p>Build ATS-optimized resumes in 25 languages with AI. 10 unique PDF templates, STAR framework bullets, 50 interview questions — all based on YOUR experience. Free, no signup, works worldwide.</p>
 <div class="badge-row">
 <span class="badge ai">Llama 3.3 70B AI</span>
 <span class="badge green">100% Free</span>
@@ -157,8 +157,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e}
 <div class="trust-bar">
 <div class="trust-i"><svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>20-Point ATS Analysis</div>
 <div class="trust-i"><svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>STAR Framework</div>
-<div class="trust-i"><svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>No Signup</div>
-<div class="trust-i"><svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>PDF Export</div>
+<div class="trust-i"><svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>25 Languages</div>
+<div class="trust-i"><svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>10 Templates</div>
+<div class="trust-i"><svg width="16" height="16" fill="none" stroke="#16a34a" stroke-width="2"><path d="M4 8l3 3 5-6"/></svg>50 Interview Q&A</div>
 </div>
 </div>
 
@@ -493,7 +494,60 @@ The MORE detail you paste, the BETTER the ATS match. AI reads every word and ens
 </select></div>
 </div>
 
-<div style="background:#F3F0FF;border:1px solid #DDD6FE;border-radius:12px;padding:14px;margin:16px 0;font-size:12px;color:#374151;line-height:1.8">
+<div class="row2">
+<div class="field"><label>🌍 Resume Language</label>
+<select id="resumeLang">
+<option value="English">English</option>
+<option value="Hindi">हिन्दी (Hindi)</option>
+<option value="Spanish">Español (Spanish)</option>
+<option value="French">Français (French)</option>
+<option value="German">Deutsch (German)</option>
+<option value="Portuguese">Português (Portuguese)</option>
+<option value="Arabic">العربية (Arabic)</option>
+<option value="Chinese">中文 (Chinese)</option>
+<option value="Japanese">日本語 (Japanese)</option>
+<option value="Korean">한국어 (Korean)</option>
+<option value="Dutch">Nederlands (Dutch)</option>
+<option value="Italian">Italiano (Italian)</option>
+<option value="Russian">Русский (Russian)</option>
+<option value="Turkish">Türkçe (Turkish)</option>
+<option value="Polish">Polski (Polish)</option>
+<option value="Swedish">Svenska (Swedish)</option>
+<option value="Telugu">తెలుగు (Telugu)</option>
+<option value="Tamil">தமிழ் (Tamil)</option>
+<option value="Bengali">বাংলা (Bengali)</option>
+<option value="Marathi">मराठी (Marathi)</option>
+<option value="Urdu">اردو (Urdu)</option>
+<option value="Thai">ไทย (Thai)</option>
+<option value="Vietnamese">Tiếng Việt (Vietnamese)</option>
+<option value="Indonesian">Bahasa Indonesia</option>
+<option value="Malay">Bahasa Melay (Malay)</option>
+</select></div>
+<div class="field"><label>🎯 Target Country</label>
+<select id="targetCountry">
+<option value="Global">Global (International)</option>
+<option value="USA">🇺🇸 USA</option>
+<option value="UK">🇬🇧 United Kingdom</option>
+<option value="Canada">🇨🇦 Canada</option>
+<option value="Australia">🇦🇺 Australia</option>
+<option value="India">🇮🇳 India</option>
+<option value="Germany">🇩🇪 Germany</option>
+<option value="UAE">🇦🇪 UAE / Dubai</option>
+<option value="Singapore">🇸🇬 Singapore</option>
+<option value="Netherlands">🇳🇱 Netherlands</option>
+<option value="France">🇫🇷 France</option>
+<option value="Japan">🇯🇵 Japan</option>
+<option value="South Korea">🇰🇷 South Korea</option>
+<option value="Brazil">🇧🇷 Brazil</option>
+<option value="Saudi Arabia">🇸🇦 Saudi Arabia</option>
+<option value="Ireland">🇮🇪 Ireland</option>
+<option value="Sweden">🇸🇪 Sweden</option>
+<option value="Switzerland">🇨🇭 Switzerland</option>
+<option value="New Zealand">🇳🇿 New Zealand</option>
+<option value="Malaysia">🇲🇾 Malaysia</option>
+<option value="South Africa">🇿🇦 South Africa</option>
+</select></div>
+</div>
 <strong style="color:#7C3AED">AI will:</strong><br>
 ✦ Extract ALL keywords from job description → weave naturally into resume<br>
 ✦ Rewrite bullet points using STAR framework (Situation-Task-Action-Result)<br>
@@ -501,7 +555,10 @@ The MORE detail you paste, the BETTER the ATS match. AI reads every word and ens
 ✦ Order skills by job relevance (most important first)<br>
 ✦ Add quantified metrics to 70%+ of bullet points<br>
 ✦ Use ATS-safe formatting (no tables, columns, or graphics)<br>
-✦ Structure: Summary → Key Achievements → Core Competencies → Experience → Skills → Education
+✦ Structure: Summary → Key Achievements → Core Competencies → Experience → Skills → Education<br>
+✦ Generate in selected language (technical terms stay in English)<br>
+✦ Follow target country's resume conventions<br>
+✦ Apply unique PDF template (10 designs auto-rotate)
 </div>
 
 <div class="nav-btns" style="margin-top:0"><button class="btn btn-back" onclick="goStep(5)">← Back</button></div>
@@ -691,6 +748,8 @@ async function generateResume() {
   const resumeFormat = document.getElementById('resumeFormat').value;
   const resumeTone = document.getElementById('resumeTone').value;
   const atsLevel = document.getElementById('atsLevel').value;
+  const resumeLang = document.getElementById('resumeLang').value;
+  const targetCountry = document.getElementById('targetCountry').value;
   const existingResume = document.getElementById('existingResume').value.trim();
   const bgDescription = document.getElementById('bgDescription').value.trim();
 
@@ -763,6 +822,9 @@ WORK EXPERIENCE:
 ${expText || 'Extract from existing resume/background description above.'}
 
 INSTRUCTIONS — FOLLOW EXACTLY:
+
+0. LANGUAGE: Write the ENTIRE resume in ${resumeLang}. ${resumeLang !== 'English' ? 'Translate all section headers, bullet points, summary, and skills into ' + resumeLang + '. Keep technical terms (AWS, Docker, Kubernetes, etc.) in English. Keep company names and certifications in English.' : ''}
+   TARGET COUNTRY: ${targetCountry}. ${targetCountry !== 'Global' ? 'Follow resume conventions for ' + targetCountry + ' (format, sections, expectations). For example: USA = no photo/age/gender, Germany = include photo section note, Japan = include personal details section, UAE = mention visa status section.' : 'Use international resume format.'}
 
 1. LENGTH: ${lengthGuide}
 
@@ -1203,6 +1265,8 @@ async function generateInterviewPrep() {
   const targetTitle = document.getElementById('targetTitle').value.trim();
   const careerLevel = document.getElementById('careerLevel').value;
   const isFresher = careerLevel === 'fresher' || careerLevel === 'entry';
+  const interviewLang = document.getElementById('resumeLang').value;
+  const langNote = interviewLang !== 'English' ? '\nIMPORTANT: Write ALL questions and answers in ' + interviewLang + '. Keep technical terms (AWS, Docker, kubectl, etc.) in English. Everything else in ' + interviewLang + '.' : '';
   
   const prepBtn = document.getElementById('prepBtn');
   const prepLoading = document.getElementById('prepLoading');
@@ -1216,7 +1280,7 @@ async function generateInterviewPrep() {
   const fresherNote = isFresher ? '\nNOTE: This is a FRESHER/ENTRY-LEVEL candidate. Ask questions appropriate for 0-2 years experience. Focus on fundamentals, projects, internships, and learning ability rather than production experience.' : '';
 
   // CALL 1: Sections 1-3 (30 questions)
-  const p1 = `Based on this resume, generate interview questions with detailed answers.${fresherNote}
+  const p1 = `Based on this resume, generate interview questions with detailed answers.${fresherNote}${langNote}
 
 RESUME: """${resumeShort}"""
 TARGET: ${targetTitle || 'Based on resume'}
@@ -1251,7 +1315,7 @@ Format: Q1: [question]\nANSWER: [comprehensive debugging steps]`;
   // CALL 2: Sections 4-5 (20 questions)
   document.getElementById('prepLoading').innerHTML = '<span class="spinner"></span>Generating Part 2/2 — Experience & Deep-dive questions... (20 sec)';
   
-  const p2 = `Based on this resume, generate interview questions with detailed answers.${fresherNote}
+  const p2 = `Based on this resume, generate interview questions with detailed answers.${fresherNote}${langNote}
 
 RESUME: """${resumeShort}"""
 TARGET: ${targetTitle || 'Based on resume'}
