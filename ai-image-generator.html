@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI Image Generator Free — Golden Prompt + Image Creation | FixPilot</title>
+<meta name="description" content="Describe any image idea, AI auto-generates a professional 15-layer Golden Prompt and creates the image. Multiple aspect ratios for YouTube, Instagram, LinkedIn. Free, no signup.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="canonical" href="https://ai-tools-mauve-six.vercel.app/ai-image-generator">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI Image Generator — Golden Prompt + Free Image Creation | FixPilot">
+<meta property="og:description" content="Describe any image. AI creates a professional 15-layer prompt and generates the image. YouTube, Instagram, LinkedIn ratios. Free.">
+<meta property="og:url" content="https://ai-tools-mauve-six.vercel.app/ai-image-generator">
+<meta property="og:site_name" content="FixPilot">
+<meta property="og:image" content="https://ai-tools-mauve-six.vercel.app/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI Image Generator — Golden Prompt + Free Image Creation | FixPilot">
+<meta name="twitter:description" content="Describe any image. AI generates a 15-layer Golden Prompt and creates the image. Free, no signup.">
+<meta name="twitter:image" content="https://ai-tools-mauve-six.vercel.app/og-image.png">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M18 6l-6 10h5l-1 10 7-12h-5.5z' fill='white'/%3E%3C/svg%3E">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1a1a2e}
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid #f0eef5}
+.nav-in{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:21px;color:#1a1a2e}
+.logo span{color:#7C3AED}
+.logo svg{width:34px;height:34px}
+.nl{display:flex;gap:20px}
+.nl a{text-decoration:none;color:#64748b;font-size:14px;font-weight:500}
+.hero{text-align:center;padding:48px 24px 32px;max-width:700px;margin:0 auto}
+.hero h1{font-size:36px;font-weight:900;letter-spacing:-1.2px;margin-bottom:12px;background:linear-gradient(135deg,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:#64748b;font-size:16px;line-height:1.6}
+.badge-row{display:flex;justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap}
+.badge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.badge.ai{background:#F3F0FF;color:#7C3AED}
+.badge.green{background:#dcfce7;color:#16a34a}
+.tool{max-width:900px;margin:0 auto;padding:0 24px 60px}
+.card{background:#fff;border:1.5px solid #f0eef5;border-radius:18px;padding:32px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(124,58,237,.04)}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;padding:12px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:.2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#7C3AED}
+.field textarea{min-height:100px;resize:vertical;line-height:1.6}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.pill{padding:8px 16px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;color:#64748b;background:#fff;transition:.2s}
+.pill:hover{border-color:#c4b5fd;color:#7C3AED}
+.pill.on{background:#7C3AED;color:#fff;border-color:#7C3AED}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-go{background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff}
+.btn-go:hover{transform:translateY(-1px)}
+.btn-go:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-sec{background:#fff;border:1.5px solid #e5e7eb;color:#374151;margin-top:10px}
+.btn-sec:hover{border-color:#7C3AED;color:#7C3AED}
+
+.output{margin-top:20px;display:none}.output.show{display:block}
+.prompt-box{width:100%;min-height:200px;padding:16px;border:1.5px solid #d1fae5;border-radius:12px;font-size:13px;font-family:inherit;line-height:1.7;background:#f0fdf4;outline:none;resize:vertical}
+.out-bar{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.out-btn{padding:8px 16px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#374151;font-family:inherit}
+.out-btn:hover{border-color:#7C3AED;color:#7C3AED}
+
+.loading{display:none;text-align:center;padding:24px;color:#7C3AED;font-weight:600}
+.loading.show{display:block}
+.spinner{width:24px;height:24px;border:3px solid #E9D5FF;border-top-color:#7C3AED;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.img-output{margin-top:24px;display:none;text-align:center}
+.img-output.show{display:block}
+.img-output img{max-width:100%;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.12)}
+.img-loading{display:none;text-align:center;padding:32px;color:#7C3AED;font-weight:600}
+.img-loading.show{display:block}
+.img-loading .spinner{width:32px;height:32px}
+
+.step-label{font-size:11px;font-weight:700;color:#7C3AED;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+
+.section-divider{border:none;border-top:1.5px solid #f0eef5;margin:24px 0}
+
+.ratio-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:16px}
+.ratio-card{padding:12px 10px;border:1.5px solid #e5e7eb;border-radius:10px;cursor:pointer;text-align:center;transition:.2s;background:#fff}
+.ratio-card:hover{border-color:#c4b5fd}
+.ratio-card.on{border-color:#7C3AED;background:#F3F0FF}
+.ratio-card .ratio-name{font-size:12px;font-weight:700;color:#374151;margin-bottom:2px}
+.ratio-card .ratio-size{font-size:11px;color:#94a3b8}
+.ratio-card .ratio-preview{width:100%;display:flex;justify-content:center;margin-bottom:6px}
+.ratio-card .ratio-preview div{background:#E9D5FF;border-radius:3px}
+
+.model-info{font-size:12px;color:#94a3b8;margin-top:4px}
+
+.prompt-tabs{display:flex;gap:0;margin-bottom:0;border-bottom:1.5px solid #f0eef5}
+.prompt-tab{padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;color:#94a3b8;border-bottom:2px solid transparent;transition:.2s}
+.prompt-tab:hover{color:#7C3AED}
+.prompt-tab.on{color:#7C3AED;border-bottom-color:#7C3AED}
+
+.img-actions{display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap}
+
+.seo{max-width:800px;margin:0 auto;padding:0 24px 60px}
+.seo h2{font-size:22px;font-weight:700;margin-bottom:12px}
+.seo p{color:#64748b;line-height:1.7;font-size:14px}
+.foot{text-align:center;padding:32px;border-top:1px solid #f0eef5;color:#94a3b8;font-size:13px}
+.foot a{color:#7C3AED;text-decoration:none}
+
+.checklist{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:12px 0;font-size:12px;color:#374151}
+.checklist span{display:flex;align-items:center;gap:4px}
+.checklist .ck{color:#22C55E;font-weight:700}
+.checklist .miss{color:#EF4444;font-weight:700}
+
+.puter-notice{font-size:11px;color:#94a3b8;text-align:center;margin-top:8px;line-height:1.5}
+
+@media(max-width:600px){
+  .hero h1{font-size:26px}
+  .nl{display:none}
+  .row,.row3{grid-template-columns:1fr}
+  .pills{gap:4px}
+  .pill{padding:6px 12px;font-size:12px}
+  .ratio-cards{grid-template-columns:repeat(3,1fr)}
+  .checklist{grid-template-columns:1fr}
+  .card{padding:20px}
+}
+</style>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+</head><body>
+
+<nav class="nav"><div class="nav-in"><a href="/" class="logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="url(#g)"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/><defs><linearGradient id="g" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs></svg><div>Fix<span>Pilot</span></div></a><div class="nl"><a href="/">All Tools</a><a href="/about">About</a><a href="/privacy">Privacy</a></div></div></nav>
+
+<div class="hero">
+<h1>AI Image Generator</h1>
+<p>Describe any image idea in simple words. AI auto-generates a professional 15-layer Golden Prompt and creates the image using top AI models. All aspect ratios supported.</p>
+<div class="badge-row">
+<span class="badge ai">Golden Prompt AI</span>
+<span class="badge ai">FLUX / Stable Diffusion / GPT Image</span>
+<span class="badge green">100% Free</span>
+</div>
+</div>
+
+<div class="tool"><div class="card">
+
+<!-- STEP 1: Description -->
+<div class="step-label">Step 1 — Describe Your Image</div>
+<div class="field">
+<label>What image do you want to create?</label>
+<textarea id="desc" placeholder="e.g. A professional woman in a modern office, smiling confidently, holding a laptop, bright natural lighting&#10;&#10;e.g. Lord Krishna playing flute in a sacred forest at sunset&#10;&#10;e.g. A futuristic city with flying cars at night, neon lights, cyberpunk style"></textarea>
+</div>
+
+<div class="row">
+<div class="field">
+<label>Art Style</label>
+<select id="artStyle">
+<option value="photorealistic">Photorealistic / Photography</option>
+<option value="cinematic">Cinematic Film Still</option>
+<option value="3d">3D Render (Pixar/Unreal)</option>
+<option value="anime">Anime / Manga</option>
+<option value="oil-painting">Oil Painting</option>
+<option value="watercolor">Watercolor</option>
+<option value="digital-art">Digital Art / Illustration</option>
+<option value="minimalist">Minimalist / Flat Design</option>
+<option value="fantasy">Fantasy Art</option>
+<option value="pop-art">Pop Art</option>
+</select>
+</div>
+<div class="field">
+<label>Mood / Atmosphere</label>
+<select id="mood">
+<option value="auto">Auto-detect from description</option>
+<option value="dramatic">Dramatic / Intense</option>
+<option value="serene">Serene / Peaceful</option>
+<option value="dark">Dark / Moody</option>
+<option value="vibrant">Vibrant / Colorful</option>
+<option value="ethereal">Ethereal / Dreamy</option>
+<option value="professional">Professional / Corporate</option>
+<option value="playful">Playful / Fun</option>
+<option value="luxurious">Luxurious / Grand</option>
+<option value="sacred">Sacred / Spiritual</option>
+</select>
+</div>
+</div>
+
+<hr class="section-divider">
+
+<!-- STEP 2: Aspect Ratio -->
+<div class="step-label">Step 2 — Choose Aspect Ratio</div>
+<div class="ratio-cards" id="ratioCards">
+<!-- Filled by JS -->
+</div>
+
+<hr class="section-divider">
+
+<!-- STEP 3: AI Model -->
+<div class="step-label">Step 3 — Choose AI Model</div>
+<div class="pills" id="modelPills">
+<span class="pill on" onclick="setModel('flux-schnell',this)" title="Fast, good quality">FLUX Schnell (Fast)</span>
+<span class="pill" onclick="setModel('sd3',this)" title="High detail, slower">Stable Diffusion 3</span>
+<span class="pill" onclick="setModel('sdxl',this)" title="Versatile, popular">SDXL</span>
+<span class="pill" onclick="setModel('flux-pro',this)" title="Best quality, slower">FLUX 1.1 Pro</span>
+<span class="pill" onclick="setModel('gpt-image',this)" title="OpenAI GPT Image">GPT Image</span>
+<span class="pill" onclick="setModel('ideogram',this)" title="Best for text in images">Ideogram 3.0</span>
+</div>
+<p class="model-info" id="modelInfo">FLUX Schnell — Fast generation (1-3 seconds), good quality. Best for quick iterations.</p>
+
+<hr class="section-divider">
+
+<!-- STEP 4: Generate -->
+<div class="step-label">Step 4 — Generate</div>
+<button class="btn btn-go" id="genPromptBtn" onclick="generatePrompt()">Step A: Generate Golden Prompt (AI analyzes your description)</button>
+
+<div class="loading" id="promptLoading"><span class="spinner"></span>AI is analyzing your description and building the 15-layer Golden Prompt...</div>
+
+<!-- Prompt Output -->
+<div class="output" id="promptOutput">
+<div class="prompt-tabs">
+<span class="prompt-tab on" onclick="showPromptTab('full',this)">Full Golden Prompt</span>
+<span class="prompt-tab" onclick="showPromptTab('layers',this)">15 Layers Breakdown</span>
+</div>
+<div id="fullPromptView">
+<textarea class="prompt-box" id="promptResult"></textarea>
+</div>
+<div id="layersView" style="display:none">
+<div class="checklist" id="layerChecklist"></div>
+</div>
+<div class="out-bar">
+<button class="out-btn" onclick="copyPrompt()">Copy Prompt</button>
+<button class="out-btn" onclick="generatePrompt()">Regenerate Prompt</button>
+</div>
+
+<div style="margin-top:16px">
+<button class="btn btn-go" id="genImageBtn" onclick="generateImage()">Step B: Generate Image from Golden Prompt</button>
+</div>
+</div>
+
+<!-- Image Loading -->
+<div class="img-loading" id="imgLoading">
+<span class="spinner"></span>
+<div id="imgLoadingText">Generating image with FLUX Schnell...</div>
+<p style="font-size:12px;color:#94a3b8;margin-top:8px">First-time users: Puter.js may ask you to sign in (free account). This is required for image generation.</p>
+</div>
+
+<!-- Image Output -->
+<div class="img-output" id="imgOutput">
+<div id="imgContainer"></div>
+<div class="img-actions">
+<button class="out-btn" onclick="downloadImage()">Download Image</button>
+<button class="out-btn" onclick="generateImage()">Regenerate</button>
+<button class="out-btn" onclick="generatePrompt()">New Prompt</button>
+</div>
+<p class="puter-notice">Image generation powered by Puter.js (free, open-source). Images are generated on-demand using the selected AI model.</p>
+</div>
+
+</div></div>
+
+<!-- SEO Content -->
+<div class="seo" style="margin-top:40px">
+<h2>Free AI Image Generator with Golden Prompt Technology</h2>
+<p>FixPilot AI Image Generator takes your simple description and transforms it into a professional 15-layer Golden Prompt covering subject identity, pose, expression, clothing, accessories, hair/skin, background, time/weather, lighting, camera/lens, composition, color palette, art style, quality tags, and negative prompts. Then it generates the actual image using top AI models like FLUX, Stable Diffusion, and GPT Image — completely free, no signup required.</p>
+<p style="margin-top:12px">Supports all major aspect ratios: YouTube thumbnails (16:9), Instagram posts (1:1, 4:5), Instagram stories (9:16), LinkedIn posts (1.91:1), Twitter/X headers (3:1), Facebook covers (820x312), Pinterest pins (2:3), and standard photography ratios. Perfect for content creators, social media managers, and designers.</p>
+</div>
+
+<footer class="foot">
+<p>FixPilot — Free AI-powered tools.</p>
+<p style="margin-top:8px"><a href="/">All Tools</a> &middot; <a href="/about">About</a> &middot; <a href="/privacy">Privacy</a></p>
+</footer>
+
+<!-- Puter.js for free image generation -->
+<script src="https://js.puter.com/v2/"></script>
+
+<script>
+// === ASPECT RATIO DATA ===
+const ratios = [
+  {id:'16:9',name:'YouTube Thumbnail',w:1280,h:720,pw:48,ph:27},
+  {id:'1:1',name:'Instagram Post',w:1024,h:1024,pw:36,ph:36},
+  {id:'4:5',name:'Instagram Feed',w:1024,h:1280,pw:32,ph:40},
+  {id:'9:16',name:'Instagram Story / Reels',w:720,h:1280,pw:24,ph:42},
+  {id:'1.91:1',name:'LinkedIn / Facebook Post',w:1200,h:628,pw:50,ph:26},
+  {id:'3:1',name:'Twitter / X Header',w:1500,h:500,pw:54,ph:18},
+  {id:'2:3',name:'Pinterest Pin',w:1024,h:1536,pw:28,ph:42},
+  {id:'4:3',name:'Standard Photo',w:1024,h:768,pw:44,ph:33},
+  {id:'21:9',name:'Ultra-wide / Cinema',w:1344,h:576,pw:56,ph:24}
+];
+
+let selectedRatio = '16:9';
+let selectedModel = 'flux-schnell';
+let generatedPrompt = '';
+let generatedImg = null;
+
+// Build ratio cards
+const ratioContainer = document.getElementById('ratioCards');
+ratios.forEach(r => {
+  const card = document.createElement('div');
+  card.className = 'ratio-card' + (r.id === selectedRatio ? ' on' : '');
+  card.onclick = () => selectRatio(r.id);
+  card.id = 'ratio-' + r.id.replace(/[:.]/g,'-');
+  card.innerHTML = `
+    <div class="ratio-preview"><div style="width:${r.pw}px;height:${r.ph}px"></div></div>
+    <div class="ratio-name">${r.id}</div>
+    <div class="ratio-size">${r.name}</div>
+  `;
+  ratioContainer.appendChild(card);
+});
+
+function selectRatio(id) {
+  selectedRatio = id;
+  document.querySelectorAll('.ratio-card').forEach(c => c.classList.remove('on'));
+  document.getElementById('ratio-' + id.replace(/[:.]/g,'-')).classList.add('on');
+}
+
+// === MODEL SELECTION ===
+const modelDescriptions = {
+  'flux-schnell': 'FLUX Schnell — Fast generation (1-3 seconds), good quality. Best for quick iterations.',
+  'sd3': 'Stable Diffusion 3 Medium — High detail, excellent prompt adherence. Takes 4-8 seconds.',
+  'sdxl': 'Stable Diffusion XL — Versatile, popular model. Good balance of speed and quality.',
+  'flux-pro': 'FLUX 1.1 Pro — Best quality output. Takes longer but produces professional results.',
+  'gpt-image': 'GPT Image — OpenAI model. Great at understanding complex prompts and compositions.',
+  'ideogram': 'Ideogram 3.0 — Best for images with text/typography. Posters, thumbnails, marketing visuals.'
+};
+
+const modelMap = {
+  'flux-schnell': 'black-forest-labs/flux.1-schnell',
+  'sd3': 'stabilityai/stable-diffusion-3-medium',
+  'sdxl': 'stabilityai/stable-diffusion-xl-base-1.0',
+  'flux-pro': 'black-forest-labs/flux-1.1-pro',
+  'gpt-image': 'gpt-image-2',
+  'ideogram': 'ideogram/ideogram-3.0'
+};
+
+function setModel(m, el) {
+  selectedModel = m;
+  document.querySelectorAll('#modelPills .pill').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('modelInfo').textContent = modelDescriptions[m];
+}
+
+// === PROMPT TABS ===
+function showPromptTab(tab, el) {
+  document.querySelectorAll('.prompt-tab').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('fullPromptView').style.display = tab === 'full' ? 'block' : 'none';
+  document.getElementById('layersView').style.display = tab === 'layers' ? 'block' : 'none';
+}
+
+function copyPrompt() {
+  const text = document.getElementById('promptResult').value;
+  navigator.clipboard.writeText(text);
+  event.target.textContent = 'Copied!';
+  setTimeout(() => event.target.textContent = 'Copy Prompt', 1500);
+}
+
+// === GENERATE GOLDEN PROMPT ===
+async function generatePrompt() {
+  const desc = document.getElementById('desc').value.trim();
+  if (!desc) { alert('Please describe the image you want to create'); return; }
+
+  const artStyle = document.getElementById('artStyle').value;
+  const mood = document.getElementById('mood').value;
+  const ratio = ratios.find(r => r.id === selectedRatio);
+
+  const btn = document.getElementById('genPromptBtn');
+  btn.disabled = true;
+  document.getElementById('promptLoading').classList.add('show');
+  document.getElementById('promptOutput').classList.remove('show');
+  document.getElementById('imgOutput').classList.remove('show');
+
+  const system = `You are an expert AI image prompt engineer. You create professional prompts using the 15-Layer Golden Formula for AI image generation. Your prompts produce photo-grade, cinematic-quality results across all major AI image generators (FLUX, Stable Diffusion, Midjourney, DALL-E).
+
+CRITICAL RULES:
+- Analyze the user's simple description and EXPAND it into a detailed 15-layer prompt
+- Be extremely specific — name actual materials, camera lenses, lighting techniques
+- Use cinematographer language for lighting (key light, rim light, bounce light, god rays)
+- Use photographer language for camera (focal length mm, aperture f-stop, DOF)
+- Include cultural authenticity terms when relevant
+- The prompt must be a flowing paragraph, NOT numbered layers
+- Include negative prompt at the end after "NEGATIVE:"
+- Include aspect ratio at the very end
+- Do NOT include any explanation — ONLY the prompt text itself`;
+
+  const artStyleGuide = {
+    'photorealistic': 'Hyperrealistic photograph, shot on Hasselblad H6D-100c, professional studio quality',
+    'cinematic': 'Cinematic film still, shot on ARRI Alexa with anamorphic lens, professional color grading',
+    '3d': 'Pixar-style 3D render, Octane render, Unreal Engine 5 cinematic quality, ZBrush detail',
+    'anime': 'Studio Ghibli anime style, hand-drawn cel-shaded, vibrant anime illustration',
+    'oil-painting': 'Classical oil painting on canvas, visible brushstrokes, rich pigments, gallery quality',
+    'watercolor': 'Delicate watercolor painting, soft color bleeds, wet-on-wet technique, paper texture visible',
+    'digital-art': 'Professional digital illustration, clean linework, vibrant colors, ArtStation trending',
+    'minimalist': 'Minimalist design, flat illustration, clean geometric shapes, limited color palette',
+    'fantasy': 'Epic fantasy art, detailed mythical scene, dramatic atmosphere, concept art quality',
+    'pop-art': 'Bold pop art style, Ben-Day dots, strong outlines, vivid contrasting colors, Warhol-inspired'
+  };
+
+  const prompt = `User's image description: "${desc}"
+Art style requested: ${artStyleGuide[artStyle]}
+Mood/atmosphere: ${mood === 'auto' ? 'Auto-detect the best mood from the description' : mood}
+Aspect ratio: ${selectedRatio} (${ratio.name}, ${ratio.w}x${ratio.h}px)
+
+Generate a professional Golden Prompt covering ALL 15 layers in a flowing paragraph format:
+1. SUBJECT IDENTITY (who/what — type, age, gender, ethnicity, body type, features)
+2. POSE & ACTION (body position, hand placement, what they are doing)
+3. FACIAL EXPRESSION & GAZE (emotion, eye state, gaze direction)
+4. CLOTHING/COSTUME (garment type, color, fabric, pattern, fit, cultural style)
+5. ACCESSORIES/JEWELRY/PROPS (crown, earrings, necklace, held items)
+6. HAIR/SKIN/APPEARANCE (hair style/color, skin tone, eye color, markings)
+7. BACKGROUND/ENVIRONMENT (foreground, midground, background details)
+8. TIME OF DAY/WEATHER (golden hour, sunset, night, atmospheric mood)
+9. LIGHTING SETUP (key light direction, rim light, fill, color temperature, volumetric)
+10. CAMERA/SHOT/LENS (shot type, focal length mm, aperture f-stop, DOF)
+11. COMPOSITION (rule of thirds, leading lines, symmetry, negative space)
+12. COLOR PALETTE/MOOD (dominant colors, accent colors, saturation)
+13. ART STYLE/MEDIUM (reinforce the style choice)
+14. TECHNICAL QUALITY TAGS (masterpiece, 8K, ultra-detailed, etc.)
+15. NEGATIVE PROMPT (deformed, extra fingers, blurry, etc.)
+
+IMPORTANT: Output ONLY the prompt text. Start with the art style, then subject, then flow through all layers naturally. End with "NEGATIVE:" line and "Aspect ratio:" line. No explanations, no layer numbers, no markdown.`;
+
+  try {
+    const response = await fetch('/api/ai', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        prompt: prompt,
+        system: system,
+        max_tokens: 2048
+      })
+    });
+    const data = await response.json();
+
+    if (data.result) {
+      generatedPrompt = data.result.trim();
+      document.getElementById('promptResult').value = generatedPrompt;
+
+      // Build layer checklist
+      buildLayerChecklist(generatedPrompt);
+
+      document.getElementById('promptOutput').classList.add('show');
+    } else {
+      alert('Generation failed: ' + (data.error || 'Unknown error'));
+    }
+  } catch (e) {
+    alert('Error: ' + e.message);
+  }
+
+  btn.disabled = false;
+  document.getElementById('promptLoading').classList.remove('show');
+}
+
+function buildLayerChecklist(prompt) {
+  const lowerPrompt = prompt.toLowerCase();
+  const layers = [
+    {name:'Subject Identity',keywords:['figure','person','man','woman','character','male','female','deity','animal','young','old']},
+    {name:'Pose & Action',keywords:['standing','sitting','walking','holding','playing','pose','leaning','reaching','running']},
+    {name:'Expression & Gaze',keywords:['expression','smile','eyes','gaze','serene','intense','looking','joyful','blissful']},
+    {name:'Clothing / Costume',keywords:['wearing','dress','suit','shirt','fabric','silk','cotton','garment','clothes','dhoti','robe']},
+    {name:'Accessories / Props',keywords:['crown','necklace','bracelet','earring','ring','holding','carrying','jewelry','hat','glasses']},
+    {name:'Hair / Skin',keywords:['hair','skin','complexion','curly','straight','dark','light','blonde','brown','blue skin']},
+    {name:'Background',keywords:['background','behind','foreground','midground','set in','surrounded','garden','forest','city','room']},
+    {name:'Time / Weather',keywords:['sunset','sunrise','golden hour','night','dawn','dusk','morning','twilight','overcast','rainy']},
+    {name:'Lighting',keywords:['light','lighting','rim light','key light','shadow','volumetric','rays','glow','illuminated','backlit']},
+    {name:'Camera / Lens',keywords:['shot','lens','mm','f/','aperture','close-up','wide','depth of field','bokeh','focus','camera']},
+    {name:'Composition',keywords:['composition','rule of thirds','centered','symmetr','leading lines','framing','negative space']},
+    {name:'Color Palette',keywords:['color','palette','warm','cool','vibrant','muted','saturated','tone','hue','contrast']},
+    {name:'Art Style',keywords:['realistic','cinematic','photograph','render','painting','illustration','anime','style','studio']},
+    {name:'Quality Tags',keywords:['masterpiece','8k','ultra','detailed','sharp','quality','resolution','professional','hyperdetail']},
+    {name:'Negative Prompt',keywords:['negative','deformed','distorted','blurry','bad anatomy','extra fingers']}
+  ];
+
+  const container = document.getElementById('layerChecklist');
+  container.innerHTML = '';
+  let hitCount = 0;
+  layers.forEach(layer => {
+    const found = layer.keywords.some(kw => lowerPrompt.includes(kw));
+    if (found) hitCount++;
+    const span = document.createElement('span');
+    span.innerHTML = `<span class="${found?'ck':'miss'}">${found?'[OK]':'[--]'}</span> ${layer.name}`;
+    container.appendChild(span);
+  });
+
+  // Add summary
+  const summary = document.createElement('span');
+  summary.style.gridColumn = '1 / -1';
+  summary.style.fontWeight = '700';
+  summary.style.color = hitCount >= 13 ? '#22C55E' : hitCount >= 10 ? '#F59E0B' : '#EF4444';
+  summary.textContent = `${hitCount}/15 layers detected — ${hitCount >= 13 ? 'Excellent prompt quality' : hitCount >= 10 ? 'Good, some layers could be stronger' : 'Consider regenerating for better coverage'}`;
+  container.appendChild(summary);
+}
+
+// === GENERATE IMAGE ===
+async function generateImage() {
+  const promptText = document.getElementById('promptResult').value.trim();
+  if (!promptText) { alert('Please generate a Golden Prompt first'); return; }
+
+  // Extract only the main prompt (before NEGATIVE:)
+  let cleanPrompt = promptText;
+  const negIdx = promptText.toUpperCase().indexOf('NEGATIVE:');
+  if (negIdx > -1) {
+    cleanPrompt = promptText.substring(0, negIdx).trim();
+  }
+
+  const ratio = ratios.find(r => r.id === selectedRatio);
+  const model = modelMap[selectedModel];
+
+  document.getElementById('imgOutput').classList.remove('show');
+  document.getElementById('imgLoading').classList.add('show');
+  document.getElementById('imgLoadingText').textContent = `Generating image with ${selectedModel.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}...`;
+
+  const genBtn = document.getElementById('genImageBtn');
+  genBtn.disabled = true;
+
+  try {
+    // Extract negative prompt if present
+    let negPrompt = '';
+    if (negIdx > -1) {
+      let negText = promptText.substring(negIdx + 9);
+      const aspectIdx = negText.toUpperCase().indexOf('ASPECT RATIO:');
+      if (aspectIdx > -1) negText = negText.substring(0, aspectIdx);
+      negPrompt = negText.trim();
+    }
+
+    const opts = { model: model };
+
+    // Add dimensions for models that support them
+    if (selectedModel === 'sd3' || selectedModel === 'sdxl') {
+      opts.width = Math.min(ratio.w, 1024);
+      opts.height = Math.min(ratio.h, 1024);
+      if (negPrompt) opts.negative_prompt = negPrompt;
+    }
+
+    const imgElement = await puter.ai.txt2img(cleanPrompt, opts);
+
+    // Display the image
+    const container = document.getElementById('imgContainer');
+    container.innerHTML = '';
+
+    // Store reference for download
+    if (imgElement instanceof HTMLImageElement) {
+      generatedImg = imgElement;
+      imgElement.style.maxWidth = '100%';
+      imgElement.style.borderRadius = '12px';
+      imgElement.style.boxShadow = '0 4px 24px rgba(0,0,0,.12)';
+      container.appendChild(imgElement);
+    } else if (imgElement instanceof Blob) {
+      const url = URL.createObjectURL(imgElement);
+      const img = document.createElement('img');
+      img.src = url;
+      img.style.maxWidth = '100%';
+      img.style.borderRadius = '12px';
+      img.style.boxShadow = '0 4px 24px rgba(0,0,0,.12)';
+      container.appendChild(img);
+      generatedImg = img;
+    } else {
+      container.appendChild(imgElement);
+      generatedImg = imgElement.querySelector ? imgElement.querySelector('img') : null;
+    }
+
+    document.getElementById('imgOutput').classList.add('show');
+
+  } catch (e) {
+    console.error('Image generation error:', e);
+    const container = document.getElementById('imgContainer');
+    container.innerHTML = `<div style="padding:24px;background:#FEF2F2;border-radius:12px;color:#991B1B;font-size:14px">
+      <p style="font-weight:700;margin-bottom:8px">Image generation failed</p>
+      <p>${e.message || 'Unknown error. Please try again or select a different AI model.'}</p>
+      <p style="margin-top:8px;font-size:12px;color:#94a3b8">Tip: Copy the Golden Prompt above and paste it into Midjourney, FLUX, or any AI image generator for best results.</p>
+    </div>`;
+    document.getElementById('imgOutput').classList.add('show');
+  }
+
+  genBtn.disabled = false;
+  document.getElementById('imgLoading').classList.remove('show');
+}
+
+// === DOWNLOAD IMAGE ===
+function downloadImage() {
+  if (!generatedImg || !generatedImg.src) {
+    alert('No image to download');
+    return;
+  }
+
+  try {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = generatedImg.naturalWidth || generatedImg.width;
+    canvas.height = generatedImg.naturalHeight || generatedImg.height;
+    ctx.drawImage(generatedImg, 0, 0);
+    const link = document.createElement('a');
+    link.download = `fixpilot-ai-image-${selectedRatio.replace(/[:/]/g,'x')}-${Date.now()}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  } catch (e) {
+    // CORS issue — try direct download
+    const link = document.createElement('a');
+    link.href = generatedImg.src;
+    link.download = `fixpilot-ai-image-${Date.now()}.png`;
+    link.target = '_blank';
+    link.click();
+  }
+}
+</script>
+</body></html>
