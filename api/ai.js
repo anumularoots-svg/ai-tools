@@ -119,41 +119,53 @@ export default async function handler(req, res) {
     // Cap max_tokens (4096 needed for full resume generation)
     const safeMaxTokens = Math.min(Math.max(parseInt(max_tokens) || 1024, 100), 4096);
 
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: 'qwen/qwen3.6-27b',
-        messages: [
-          { role: 'system', content: safeSystem },
-          { role: 'user', content: safePrompt }
-        ],
-        max_tokens: safeMaxTokens,
-        temperature: 0.7
-      })
-    });
+    const models = ['llama-3.3-70b-versatile', 'meta-llama/llama-4-scout-17b-16e-instruct', 'qwen/qwen3-32b'];
+    let lastError = '';
+    
+    for (const model of models) {
+      try {
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: model,
+            messages: [
+              { role: 'system', content: safeSystem },
+              { role: 'user', content: safePrompt }
+            ],
+            max_tokens: safeMaxTokens,
+            temperature: 0.7
+          })
+        });
 
-    if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
-      if (response.status === 429) {
-        return res.status(429).json({ error: 'AI service is busy. Please try again in a moment.' });
+        if (response.status === 429) {
+          lastError = 'AI service is busy. Please try again in a moment.';
+          continue;
+        }
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          lastError = errData?.error?.message || 'Model ' + model + ' failed';
+          continue;
+        }
+
+        const data = await response.json();
+        if (data.choices && data.choices[0]) {
+          return res.status(200).json({
+            result: data.choices[0].message.content,
+            model: model
+          });
+        }
+      } catch (fetchErr) {
+        lastError = fetchErr.message;
+        continue;
       }
-      return res.status(500).json({ error: errData?.error?.message || 'AI generation failed. Please try again.' });
     }
-
-    const data = await response.json();
-
-    if (data.choices && data.choices[0]) {
-      return res.status(200).json({
-        result: data.choices[0].message.content,
-        model: 'qwen3.6-27b'
-      });
-    } else {
-      return res.status(500).json({ error: 'AI generation failed. Please try again.' });
-    }
+    
+    return res.status(500).json({ error: lastError || 'All AI models failed. Please try again.' });
   } catch (e) {
     console.error('AI API Error:', e.message);
     return res.status(500).json({ error: 'Something went wrong. Please try again.' });
