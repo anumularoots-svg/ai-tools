@@ -126,7 +126,7 @@ function _getFormData() {
 // =====================================================
 // generateResume
 // =====================================================
-async function generateResume() {
+function generateResume() {
   var gv = function(id) {
     var el = document.getElementById(id);
     return el ? el.value.trim() : "";
@@ -246,8 +246,7 @@ async function generateResume() {
     + '\n\n6. CRITICAL: Use EXACT education, certifications, and company details provided. NEVER fabricate or change them.'
     + '\n\n7. Output ONLY the resume text. No commentary. No markdown. No code fences. Plain text with • bullets and ALL CAPS section headers.';
 
-  try {
-    var resp = await fetch("/api/ai", {
+  fetch("/api/ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -255,24 +254,22 @@ async function generateResume() {
         system: "You are an expert resume writer. STRICT RULES: 1) Output ONLY the resume — no thinking, no commentary, no introductions. 2) NEVER use markdown (**bold**, ## headers). Section headers in PLAIN ALL CAPS. 3) NEVER fabricate education, certifications, or experience. Use EXACT candidate data. 4) Bullets with the bullet character only. 5) Technical skills as inline comma-separated categories, one line each. 6) Do NOT output any <think> or reasoning blocks.",
         max_tokens: 4000
       })
+    }).then(function(resp) {
+      return resp.json();
+    }).then(function(data) {
+      if (!data.result) throw new Error(data.error || "AI returned no result");
+      var cleanText = _cleanAIOutput(data.result);
+      resumeText = cleanText;
+      renderResume(cleanText, e, d);
+      document.getElementById("output").classList.add("show");
+      document.getElementById("interviewSection").style.display = "block";
+      document.getElementById("output").scrollIntoView({ behavior: "smooth", block: "start" });
+    }).catch(function(err) {
+      alert("API Error: " + err.message + "\n\nCheck browser Console (F12) for details.");
+    }).finally(function() {
+      N.disabled = false;
+      R.classList.remove("show");
     });
-
-    var data = await resp.json();
-    if (!data.result) throw new Error(data.error || "AI returned no result");
-
-    // Clean the AI output
-    var cleanText = _cleanAIOutput(data.result);
-    resumeText = cleanText;
-    renderResume(cleanText, e, d);
-    document.getElementById("output").classList.add("show");
-    document.getElementById("interviewSection").style.display = "block";
-    document.getElementById("output").scrollIntoView({ behavior: "smooth", block: "start" });
-  } catch (err) {
-    alert("API Error: " + err.message + "\n\nCheck browser Console (F12) for details.");
-  }
-
-  N.disabled = false;
-  R.classList.remove("show");
 }
 
 // =====================================================
