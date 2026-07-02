@@ -117,7 +117,7 @@ export default async function handler(req, res) {
     }
 
     // Cap max_tokens (4096 needed for full resume generation)
-    const safeMaxTokens = Math.min(Math.max(parseInt(max_tokens) || 1024, 100), 4000);
+    const safeMaxTokens = Math.min(Math.max(parseInt(max_tokens) || 1024, 100), 6000);
 
     const models = ['llama-3.3-70b-versatile', 'qwen/qwen3-32b', 'openai/gpt-oss-120b'];
     let lastError = '';
@@ -154,8 +154,13 @@ export default async function handler(req, res) {
 
         const data = await response.json();
         if (data.choices && data.choices[0]) {
+          var rawContent = data.choices[0].message.content;
+          // Strip <think>...</think> blocks from AI reasoning models
+          rawContent = rawContent.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+          // Strip markdown artifacts
+          rawContent = rawContent.replace(/\*\*/g, '').replace(/^#+\s/gm, '');
           return res.status(200).json({
-            result: data.choices[0].message.content,
+            result: rawContent,
             model: model
           });
         }
