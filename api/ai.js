@@ -117,7 +117,7 @@ export default async function handler(req, res) {
     }
 
     // Cap max_tokens (4096 needed for full resume generation)
-    const safeMaxTokens = Math.min(Math.max(parseInt(max_tokens) || 1024, 100), 8192);
+    const safeMaxTokens = Math.min(Math.max(parseInt(max_tokens) || 1024, 100), 4000);
 
     const models = ['llama-3.3-70b-versatile', 'qwen/qwen3-32b', 'openai/gpt-oss-120b'];
     let lastError = '';
