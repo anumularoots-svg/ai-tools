@@ -17,8 +17,8 @@ function checkRate(ip) {
 export default async function handler(req, res) {
   // CORS — restrict to our domain only
   const allowedOrigins = [
-    'https://ai-tools-mauve-six.vercel.app',
-    'https://fixpilot.tools'
+    'https://zapkitt.com',
+    'https://www.zapkitt.com'
   ];
   const origin = req.headers.origin || '';
   if (allowedOrigins.includes(origin)) {
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
 
   // Block requests without valid Referer (basic abuse protection)
   const referer = req.headers.referer || req.headers.referrer || '';
-  const validReferers = ['ai-tools-mauve-six.vercel.app', 'fixpilot.tools', 'localhost'];
+  const validReferers = ['zapkitt.com', 'zapkitt.com', 'localhost'];
   const isValidReferer = validReferers.some(d => referer.includes(d));
   if (!isValidReferer && origin && !allowedOrigins.includes(origin)) {
     return res.status(403).json({ error: 'Unauthorized origin' });
