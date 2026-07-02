@@ -1,8 +1,8 @@
-# FixPilot — Free Online AI Tools
+# ZapKitt — Free Online AI Tools
 
 Your pilot to fix any file. 20+ free online tools powered by AI.
 
-## Live at: fixpilot.vercel.app
+## Live at: zapkitt.com
 
 ## Tools
 - Compress PDF
