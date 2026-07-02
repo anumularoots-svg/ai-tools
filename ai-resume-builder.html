@@ -136,10 +136,9 @@ function generateResume() {
   var t = gv("fullName");
   if (!t) return void alert("Please go to Step 2 and enter your full name.");
 
-  // Warn if no experience data provided
   var _hasExp = (O && O.length > 0) || A || k;
   if (!_hasExp) {
-    if (!confirm("WARNING: You have not provided any work experience details.\n\nPlease either:\n• Paste your existing resume in Step 1\n• OR fill in your experience in Step 3\n\nWithout experience data, AI may generate inaccurate content.\n\nClick OK to continue anyway, or Cancel to go back and add your experience.")) {
+    if (!confirm("WARNING: No work experience data provided.\n\nPlease either:\n- Paste your existing resume in Step 1\n- OR fill in experience in Step 3\n\nWithout this, AI may generate inaccurate content.\n\nClick OK to continue, Cancel to go back.")) {
       return;
     }
   }
@@ -246,7 +245,7 @@ function generateResume() {
     + '\n\nTECHNICAL SKILLS: ' + (d || "Extract from experience/resume")
     + '\n' + (u ? "SOFT SKILLS: " + u : "")
     + '\n\n' + (m ? "KEY ACHIEVEMENTS:\n" + m : "")
-    + '\n\nWORK EXPERIENCE (USE ONLY THIS DATA — NEVER INVENT COMPANIES OR ROLES):\n' + (L || "Extract ALL work experience from the EXISTING RESUME or BACKGROUND DESCRIPTION provided above. Do NOT invent any companies, roles, or achievements. If no experience data was provided, write [No experience data provided — please add your work history].")
+    + '\n\nWORK EXPERIENCE:\n' + (L || "Extract from existing resume/background description above.")
     + '\n\nINSTRUCTIONS — FOLLOW EXACTLY:'
     + '\n\n0. LANGUAGE: Write the ENTIRE resume in ' + x + '. ' + (x !== "English" ? 'Translate all section headers, bullet points, summary, and skills into ' + x + '. Keep technical terms in English.' : '')
     + '\n   TARGET COUNTRY: ' + C + '. ' + (C !== "Global" ? 'Follow resume conventions for ' + C + '.' : 'Use international resume format.')
@@ -266,7 +265,7 @@ function generateResume() {
     + '\n   TECHNICAL SKILLS (INLINE format: Category: skill1, skill2, skill3. ONE line per category.)'
     + '\n   EDUCATION & CERTIFICATIONS (use EXACT data from candidate — NEVER fabricate)'
     + '\n\n5. BULLET RULES: Start with power verbs. Include numbers in 70%+ of bullets. STAR format. Each bullet 1.5-2 lines.'
-    + '\n\n6. CRITICAL: Use EXACT experience, education, certifications, and company details provided. NEVER fabricate, invent, or change any work experience, company names, job titles, or achievements. Every detail must come from the candidate data above.'
+    + '\n\n6. CRITICAL: Use EXACT education, certifications, and company details provided. NEVER fabricate or change them.'
     + '\n\n7. Output ONLY the resume text. No commentary. No markdown. No code fences. Plain text with • bullets and ALL CAPS section headers.';
 
   fetch("/api/ai", {
@@ -274,7 +273,7 @@ function generateResume() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         prompt: prompt,
-        system: "You are the world best executive resume writer with 20+ years experience. STRICT RULES: 1) Output ONLY the resume text — no thinking, no commentary. 2) NEVER use markdown. Section headers in PLAIN ALL CAPS. 3) NEVER fabricate or invent work experience, job titles, companies, education, or certifications. Use ONLY the candidate data provided. If no experience details are given, use placeholders like [Company Name] instead of inventing. 4) Bullets with bullet character only. 5) Technical skills as inline comma-separated categories. 6) MUST include ALL sections: Summary, Achievements, Skills, Experience, Education, Certifications, Strengths. 7) NEVER stop before Education section — resume is INCOMPLETE without it. 8) Every role must have minimum 3 bullet points. 9) No <think> blocks.",
+        system: "You are the world best executive resume writer with 20+ years experience. STRICT RULES: 1) Output ONLY the resume text — no thinking, no commentary. 2) NEVER use markdown. Section headers in PLAIN ALL CAPS. 3) NEVER fabricate or invent work experience, job titles, companies, education, or certifications. Use ONLY the candidate data provided. 4) Bullets with bullet character only. 5) Technical skills as inline comma-separated categories. 6) MUST include ALL sections: Summary, Achievements, Skills, Experience, Education, Certifications, Strengths. 7) NEVER stop before Education section — resume is INCOMPLETE without it. 8) Every role must have minimum 3 bullet points. 9) No <think> blocks.",
         max_tokens: 5500
       })
     }).then(function(resp) {
@@ -490,243 +489,163 @@ function downloadTxt() {
 // downloadPDF — Complete clean rewrite
 // =====================================================
 function downloadPDF() {
-  try {
-    // Load jsPDF if not present
-    if (typeof window.jspdf === "undefined") {
-      var scr = document.createElement("script");
-      scr.src = "https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js";
-      scr.onload = function() { downloadPDF(); };
-      scr.onerror = function() { alert("PDF library failed to load."); };
-      document.head.appendChild(scr);
-      return;
-    }
+  var fd = _getFormData();
+  var allLines = resumeText.split("\n");
+  var bodyStart = _findBodyStart(allLines);
 
-    var jsPDF = window.jspdf.jsPDF;
-    var doc = new jsPDF({ unit: "mm", format: "a4" });
-    var W = 210, H = 297, ML = 16, MR = 16, MT = 14, MB = 11, CW = W - ML - MR;
-    var curY = MT;
-    var BLACK = [0, 0, 0], GRAY = [80, 80, 80], LTGRAY = [120, 120, 120];
-
-    // Form data
-    var fd = _getFormData();
-    var userName = fd.name || "Resume";
-
-    // Template selection
-    var TEMPLATES = [
-      { id: "Harvard Classic", nSz: 18, nAl: "center" },
-      { id: "Stanford Clean", nSz: 19, nAl: "center" },
-      { id: "Google XYZ", nSz: 20, nAl: "left" },
-      { id: "ATS Ultra-Safe", nSz: 17, nAl: "center" },
-      { id: "Executive Standard", nSz: 18, nAl: "left" },
-      { id: "Modern Minimal", nSz: 20, nAl: "center" },
-      { id: "Corporate Formal", nSz: 18, nAl: "left" },
-      { id: "MIT Technical", nSz: 18, nAl: "center" },
-      { id: "McKinsey Compact", nSz: 17, nAl: "center" },
-      { id: "FAANG Standard", nSz: 19, nAl: "left" }
-    ];
-
-    var sel = document.getElementById("templateSelect");
-    var tIdx = 0;
-    if (sel && sel.value !== "auto") {
-      tIdx = parseInt(sel.value);
-    } else {
-      var hash = 0;
-      for (var fi = 0; fi < userName.length; fi++) hash = (hash << 5) - hash + userName.charCodeAt(fi);
-      tIdx = Math.abs(hash) % 10;
-    }
-    var tmpl = TEMPLATES[tIdx];
-
-    // Helper: set text color
-    function setC(c) { doc.setTextColor(c[0], c[1], c[2]); }
-    // Helper: new page if needed
-    function needPage(n) { if (curY + n > H - MB) { doc.addPage(); curY = MT; } }
-
-    // Detect designation from AI text
-    var allLines = resumeText.split("\n");
-    var bodyStart = _findBodyStart(allLines);
-
-    var desig = "";
-    var fnNorm = fd.nameUpper.replace(/[^A-Z ]/g, "").trim();
-    for (var di = 0; di < Math.min(allLines.length, 8); di++) {
-      var dl = allLines[di].trim();
-      if (!dl || _isSectionHeader(dl)) continue;
-      var dlNorm = dl.toUpperCase().replace(/[^A-Z ]/g, "").trim();
-      if (dlNorm === fnNorm) continue;
-      if (/@/.test(dl) || /\+\d/.test(dl) || /\|/.test(dl)) continue;
-      if (/^[A-Z][A-Z ]+$/.test(dl) && dl.split(/\s+/).length >= 2) continue;
-      if (dl.length < 60 && !/\d{4}/.test(dl)) { desig = dl; break; }
-    }
-    if (!desig) desig = fd.targetTitle;
-
-    // ---- DRAW HEADER (from form fields) ----
-    setC(BLACK);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(tmpl.nSz);
-    if (tmpl.nAl === "center") doc.text(fd.nameUpper, W / 2, curY, { align: "center" });
-    else doc.text(fd.nameUpper, ML, curY);
-    curY += 6;
-
-    if (desig) {
-      setC(GRAY);
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(10.5);
-      if (tmpl.nAl === "center") doc.text(desig, W / 2, curY, { align: "center" });
-      else doc.text(desig, ML, curY);
-      curY += 4.5;
-    }
-
-    if (fd.contactLine) {
-      setC(GRAY);
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(8.5);
-      var cLines = doc.splitTextToSize(fd.contactLine, CW);
-      for (var ci = 0; ci < cLines.length; ci++) {
-        if (tmpl.nAl === "center") doc.text(cLines[ci], W / 2, curY, { align: "center" });
-        else doc.text(cLines[ci], ML, curY);
-        curY += 3.5;
-      }
-    }
-
-    curY += 1;
-    doc.setDrawColor(0, 0, 0);
-    doc.setLineWidth(0.4);
-    doc.line(ML, curY, W - MR, curY);
-    curY += 4;
-
-    // ---- DRAW BODY (from AI text, starting at bodyStart) ----
-    function drawSection(txt) {
-      needPage(9);
-      curY += 2;
-      setC(BLACK);
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(10);
-      doc.text(txt.toUpperCase(), ML, curY);
-      curY += 1.5;
-      doc.setDrawColor(0, 0, 0);
-      doc.setLineWidth(0.3);
-      doc.line(ML, curY, W - MR, curY);
-      curY += 3;
-    }
-
-    function drawBullet(txt) {
-      needPage(4);
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9.1);
-      setC(BLACK);
-      var bLines = doc.splitTextToSize(txt, CW - 5.5);
-      for (var bi2 = 0; bi2 < bLines.length; bi2++) {
-        needPage(3.5);
-        if (bi2 === 0) doc.text("\u2022", ML + 0.5, curY + 0.2);
-        doc.text(bLines[bi2], ML + 5, curY);
-        curY += 3.3;
-      }
-      curY += 0.2;
-    }
-
-    function drawJobLine(line) {
-      needPage(5);
-      var parts = line.split(/\s*\|\s*/);
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(9.8);
-      setC(BLACK);
-      if (parts.length >= 2) {
-        var role = parts.slice(0, -1).join(" | ");
-        var date = parts[parts.length - 1].trim();
-        doc.text(role, ML, curY);
-        var dateW = doc.getTextWidth(date);
-        doc.setFont("helvetica", "italic");
-        doc.setFontSize(9);
-        setC(GRAY);
-        doc.text(date, W - MR - dateW, curY);
-        setC(BLACK);
-      } else {
-        var jLines = doc.splitTextToSize(line, CW);
-        for (var ji = 0; ji < jLines.length; ji++) {
-          needPage(4);
-          doc.text(jLines[ji], ML, curY);
-          curY += 4;
-        }
-      }
-      curY += 4;
-    }
-
-    function drawCompany(txt) {
-      setC(GRAY);
-      doc.setFont("helvetica", "italic");
-      doc.setFontSize(9);
-      doc.text(txt, ML, curY);
-      setC(BLACK);
-      curY += 4;
-    }
-
-    function drawText(txt) {
-      needPage(3.5);
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9.1);
-      setC(BLACK);
-      var tLines = doc.splitTextToSize(txt, CW);
-      for (var ti = 0; ti < tLines.length; ti++) {
-        needPage(3.5);
-        doc.text(tLines[ti], ML, curY);
-        curY += 3.5;
-      }
-    }
-
-    var prevWasSection = false;
-    for (var mi = bodyStart; mi < allLines.length; mi++) {
-      var raw = allLines[mi].trim();
-      if (!raw) { curY += 0.8; continue; }
-      if (raw.toUpperCase() === "CONTACT INFORMATION") continue;
-
-      // Section headers: ONLY use the known list, NOT isAC
-      if (_isSectionHeader(raw)) {
-        drawSection(raw);
-        prevWasSection = true;
-        continue;
-      }
-
-      // Bullet points
-      if (/^[\u2022\u25AA\u25BA\u25CF\u2219\-]\s/.test(raw)) {
-        drawBullet(raw.replace(/^[\u2022\u25AA\u25BA\u25CF\u2219\-]\s*/, ""));
-        prevWasSection = false;
-        continue;
-      }
-
-      // Job title lines (contain dates and pipes)
-      if ((/\d{4}|present|current/i.test(raw)) && (/\|/.test(raw) || /\t/.test(raw)) && raw.length < 130) {
-        drawJobLine(raw.replace(/\t+/g, " | "));
-        prevWasSection = false;
-        continue;
-      }
-
-      // Company name (short line right after a section header)
-      if (prevWasSection && raw.length < 80 && !/[\u2022\u25AA\u25BA\u25CF|@]/.test(raw) && !/\d{4}/.test(raw)) {
-        drawCompany(raw);
-        prevWasSection = false;
-        continue;
-      }
-
-      drawText(raw);
-      prevWasSection = false;
-    }
-
-    // ---- PAGE FOOTERS ----
-    var totalPages = doc.internal.getNumberOfPages();
-    for (var pg = 1; pg <= totalPages; pg++) {
-      doc.setPage(pg);
-      doc.setDrawColor(180, 180, 180);
-      doc.setLineWidth(0.1);
-      doc.line(ML, H - 10, W - MR, H - 10);
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(7);
-      setC(LTGRAY);
-      doc.text(userName + " \u00B7 Page " + pg + "/" + totalPages, W / 2, H - 6.5, { align: "center" });
-    }
-
-    doc.save(userName.replace(/\s+/g, "_") + "_Resume_" + tmpl.id.replace(/\s+/g, "_") + ".pdf");
-  } catch (pdfErr) {
-    alert("PDF error: " + pdfErr.message);
+  // Detect designation
+  var desig = "";
+  var fnNorm = fd.nameUpper.replace(/[^A-Z ]/g, "").trim();
+  for (var j = 0; j < Math.min(allLines.length, 8); j++) {
+    var ln = allLines[j].trim();
+    if (!ln || _isSectionHeader(ln)) continue;
+    var lnNorm = ln.toUpperCase().replace(/[^A-Z ]/g, "").trim();
+    if (lnNorm === fnNorm) continue;
+    if (/@/.test(ln) || /\+\d/.test(ln) || /\|/.test(ln)) continue;
+    if (/^[A-Z][A-Z ]+$/.test(ln) && ln.split(/\s+/).length >= 2) continue;
+    if (ln.length < 60 && !/\d{4}/.test(ln)) { desig = ln; break; }
   }
+  if (!desig) desig = fd.targetTitle;
+
+  // Template
+  var TEMPLATES = [
+    {id:"Harvard_Classic",al:"center"},{id:"Stanford_Clean",al:"center"},
+    {id:"Google_XYZ",al:"left"},{id:"ATS_Ultra_Safe",al:"center"},
+    {id:"Executive_Standard",al:"left"},{id:"Modern_Minimal",al:"center"},
+    {id:"Corporate_Formal",al:"left"},{id:"MIT_Technical",al:"center"},
+    {id:"McKinsey_Compact",al:"center"},{id:"FAANG_Standard",al:"left"}
+  ];
+  var sel = document.getElementById("templateSelect");
+  var tIdx = 0;
+  if (sel && sel.value !== "auto") { tIdx = parseInt(sel.value); }
+  else { var h2 = 0; for (var fi = 0; fi < fd.name.length; fi++) h2 = (h2 << 5) - h2 + fd.name.charCodeAt(fi); tIdx = Math.abs(h2) % 10; }
+  var tmpl = TEMPLATES[tIdx];
+  var align = tmpl.al;
+
+  // Build clean resume HTML
+  var rh = '<div class="resume-container">';
+  rh += '<div class="header" style="text-align:' + align + '">';
+  rh += '<div class="name">' + fd.nameUpper + '</div>';
+  if (desig) rh += '<div class="title">' + desig + '</div>';
+  if (fd.contactLine) rh += '<div class="contact">' + fd.contactLine + '</div>';
+  rh += '</div>';
+
+  var prevSec = false;
+  for (var k = bodyStart; k < allLines.length; k++) {
+    var line = allLines[k].trim();
+    if (!line) continue;
+    if (line.toUpperCase() === "CONTACT INFORMATION") continue;
+
+    if (_isSectionHeader(line)) {
+      rh += '<div class="section-header">' + line + '</div>';
+      prevSec = true;
+      continue;
+    }
+    if (/^[\u2022\u25AA\u25BA\u25CF\u2219\-]\s/.test(line)) {
+      rh += '<div class="bullet">\u2022 ' + line.replace(/^[\u2022\u25AA\u25BA\u25CF\u2219\-]\s*/, "") + '</div>';
+      prevSec = false;
+      continue;
+    }
+    if ((/\d{4}|present|current/i.test(line)) && (/[\|\t\u2014]/.test(line)) && line.length < 130) {
+      var pts = line.replace(/\t+/g, " | ").split(/\s*[\|\u2014]\s*/);
+      if (pts.length >= 2) {
+        var rl = pts.slice(0, -1).join(" | ");
+        var dt = pts[pts.length - 1].trim();
+        rh += '<div class="job-header"><span class="job-title">' + rl + '</span><span class="job-date">' + dt + '</span></div>';
+      } else {
+        rh += '<div class="job-title" style="margin-top:8px">' + line + '</div>';
+      }
+      prevSec = false;
+      continue;
+    }
+    if (prevSec && line.length < 80 && !/[\u2022|@]/.test(line) && !/\d{4}/.test(line)) {
+      rh += '<div class="company">' + line + '</div>';
+      prevSec = false;
+      continue;
+    }
+    rh += '<div class="text">' + line + '</div>';
+    prevSec = false;
+  }
+  rh += '</div>';
+
+  // Show loading
+  var btn = document.querySelector(".dl-btn") || document.querySelector("[onclick*='downloadPDF']");
+  var origText = btn ? btn.textContent : "";
+  if (btn) { btn.textContent = "Generating PDF..."; btn.disabled = true; }
+
+  // Try Puppeteer API first (best quality), fallback to html2canvas
+  fetch("/api/pdf", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ html: rh, fileName: fd.name.replace(/\s+/g, "_") + "_Resume_" + tmpl.id })
+  }).then(function(resp) {
+    if (!resp.ok) throw new Error("API returned " + resp.status);
+    return resp.blob();
+  }).then(function(blob) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = fd.name.replace(/\s+/g, "_") + "_Resume_" + tmpl.id + ".pdf";
+    a.click();
+    URL.revokeObjectURL(url);
+    if (btn) { btn.textContent = origText; btn.disabled = false; }
+  }).catch(function(err) {
+    console.warn("Puppeteer API failed, using html2canvas fallback:", err.message);
+    // Fallback: html2canvas + jsPDF (client-side)
+    fallbackPDF(rh, fd, tmpl, btn, origText);
+  });
+}
+
+function fallbackPDF(resumeHtml, fd, tmpl, btn, origText) {
+  var container = document.createElement("div");
+  container.style.cssText = "position:fixed;top:-9999px;left:-9999px;width:700px;background:#fff;padding:36px 40px;box-sizing:border-box;font-family:Helvetica,Arial,sans-serif;color:#000;font-size:9.5pt;line-height:1.45;";
+  container.innerHTML = resumeHtml;
+  document.body.appendChild(container);
+
+  function doRender() {
+    html2canvas(container, { scale: 2.5, useCORS: true, backgroundColor: "#ffffff" }).then(function(canvas) {
+      document.body.removeChild(container);
+      var jsPDF = window.jspdf.jsPDF;
+      var doc = new jsPDF("p", "mm", "a4");
+      var pageW = 210, pageH = 297;
+      var imgW = pageW;
+      var imgH = (canvas.height * imgW) / canvas.width;
+      var remainH = imgH;
+      var srcY = 0;
+      var pageNum = 0;
+
+      while (remainH > 0) {
+        if (pageNum > 0) doc.addPage();
+        var drawH = Math.min(remainH, pageH);
+        var srcH = (drawH / imgH) * canvas.height;
+        var pc = document.createElement("canvas");
+        pc.width = canvas.width;
+        pc.height = Math.ceil(srcH);
+        var ctx = pc.getContext("2d");
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, pc.width, pc.height);
+        ctx.drawImage(canvas, 0, srcY, canvas.width, srcH, 0, 0, canvas.width, srcH);
+        doc.addImage(pc.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, imgW, drawH);
+        srcY += srcH;
+        remainH -= drawH;
+        pageNum++;
+      }
+      doc.save(fd.name.replace(/\s+/g, "_") + "_Resume_" + tmpl.id + ".pdf");
+      if (btn) { btn.textContent = origText; btn.disabled = false; }
+    }).catch(function(e) {
+      document.body.removeChild(container);
+      alert("PDF error: " + e.message);
+      if (btn) { btn.textContent = origText; btn.disabled = false; }
+    });
+  }
+
+  if (typeof html2canvas === "undefined") {
+    var s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+    s.onload = doRender;
+    s.onerror = function() { alert("PDF library failed."); document.body.removeChild(container); if (btn) { btn.textContent = origText; btn.disabled = false; } };
+    document.head.appendChild(s);
+  } else { doRender(); }
 }
 
 function toggleFresher(){"fresher"===document.getElementById("careerLevel").value&&setExpType("fresher",document.querySelectorAll("#step3 .stoggle")[1])}function setExpType(e,t){document.querySelectorAll("#step3 .stoggle").forEach(e=>e.classList.remove("active")),t&&t.classList.add("active");const n=document.getElementById("fresherSection"),o=document.getElementById("expSection");"fresher"===e?(n.style.display="block",o.style.display="none",document.getElementById("careerLevel").value="fresher"):(n.style.display="none",o.style.display="block")}async function autoSuggestSkills(){const e=document.getElementById("suggestBtn");e.textContent="⏳ AI analyzing your experience...",e.disabled=!0;let t="";const n=document.getElementById("existingResume").value.trim(),o=document.getElementById("bgDescription").value.trim(),s=document.getElementById("jobDesc").value.trim();if(document.querySelectorAll(".exp-details").forEach(e=>{e.value.trim()&&(t+=e.value.trim()+"\n")}),n&&(t+=n),o&&(t+=o),!t&&!s)return alert("Please fill in your experience (Step 3) or paste a resume (Step 1) first — AI needs something to analyze."),e.textContent="AI: Auto-suggest skills from my experience",void(e.disabled=!1);try{const e=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:"Based on this professional background, list the most relevant technical skills as a comma-separated list. Include tools, platforms, languages, frameworks, and methodologies. Group by category (e.g. Cloud: AWS EC2, S3; DevOps: Docker, Kubernetes). Output ONLY the skills list, nothing else.\n\nBackground:\n"+t+(s?"\n\nTarget Job:\n"+s:""),system:"You are a career expert. Extract and suggest relevant technical skills. Output only a clean comma-separated skills list grouped by category. No explanations.",max_tokens:500})}),n=await e.json();if(n.result){const e=document.getElementById("techSkills").value.trim();document.getElementById("techSkills").value=e?e+", "+n.result:n.result}}catch(e){}e.textContent="AI: Auto-suggest skills from my experience",e.disabled=!1}async function aiRewriteExp(e){const t=e.closest(".exp-block")||e.closest(".field").parentElement,n=t.querySelector(".exp-details"),o=t.querySelector(".exp-title"),s=t.querySelector(".exp-company"),i=n.value.trim();if(!i)return void alert("Write your responsibilities/achievements first, then click AI rewrite.");e.textContent="⏳ AI rewriting...",e.disabled=!0;const a=o?o.value.trim():"",r=s?s.value.trim():"";try{const e=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:`Rewrite these job responsibilities/achievements into powerful STAR-format resume bullet points.\n\nRole: ${a||"Not specified"} at ${r||"Not specified"}\n\nOriginal:\n${i}\n\nRules:\n- Start each bullet with a UNIQUE power verb (Architected, Spearheaded, Delivered, Reduced, Automated, Designed, Led, Implemented, Optimized, Orchestrated, Streamlined, Championed, Engineered, Accelerated, Pioneered)\n- Use STAR format: include the action AND the measurable result\n- Include specific numbers/metrics (%, $, time, team size, scale)\n- If no numbers provided, add realistic estimates\n- Each bullet should be 1-2 lines\n- Output 6-10 bullet points using • character\n- Output ONLY the bullet points, nothing else`,system:"Expert resume writer. Rewrite bullets with STAR framework. Output only • bullet points.",max_tokens:800})}),t=await e.json();t.result&&(n.value=t.result)}catch(e){}e.textContent="AI: Rewrite with STAR framework & power verbs",e.disabled=!1}async function autoSuggestSoftSkills(){const e=document.getElementById("suggestSoftBtn");e.textContent="⏳ AI analyzing...",e.disabled=!0;let t="";const n=document.getElementById("totalExp").value.trim(),o=document.getElementById("careerLevel").value;document.querySelectorAll(".exp-details").forEach(e=>{e.value.trim()&&(t+=e.value.trim()+"\n")});const s=document.getElementById("existingResume").value.trim();s&&(t+=s);const i=document.getElementById("jobDesc").value.trim();try{const e=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:`Based on this professional's background (${n||"?"} years, ${o} level), suggest the most relevant soft skills and management skills as a comma-separated list.\n\nBackground: ${t||"General professional"}\n${i?"Target Job: "+i:""}\n\nInclude skills like: Team Leadership, Cross-functional Collaboration, Agile/Scrum, Stakeholder Management, Mentoring, Incident Management, Technical Writing, Strategic Planning, Vendor Management, Risk Assessment, etc.\n\nOutput ONLY a comma-separated list of 10-15 soft skills. No explanations.`,system:"Career expert. Suggest relevant soft skills. Output only comma-separated list.",max_tokens:200})}),s=await e.json();if(s.result){const e=document.getElementById("softSkills").value.trim();document.getElementById("softSkills").value=e?e+", "+s.result:s.result}}catch(e){}e.textContent="AI: Auto-suggest soft skills from my experience",e.disabled=!1}async function generateInterviewPrep(){if(!resumeText)return void alert("Generate your resume first, then click Interview Prep.");document.getElementById("jobDesc").value.trim();const e=document.getElementById("targetTitle").value.trim(),t=document.getElementById("careerLevel").value,n="fresher"===t||"entry"===t,o=document.getElementById("resumeLang").value,s="English"!==o?"\nIMPORTANT: Write ALL questions and answers in "+o+". Keep technical terms (AWS, Docker, kubectl, etc.) in English. Everything else in "+o+".":"",i=document.getElementById("prepBtn"),a=document.getElementById("prepLoading");i.disabled=!0,a.style.display="block",document.getElementById("prepLoading").innerHTML='<span class="spinner"></span>Generating Part 1/2 — Scenario & Coding questions... (20 sec)';const r=resumeText.substring(0,2500),l="You are a senior technical interviewer at a Fortune 500 company. Generate interview prep based on the candidate resume. Include current 2025-2026 market trends and real-world scenarios. Output plain text only. No markdown.",c=n?"\nNOTE: This is a FRESHER/ENTRY-LEVEL candidate. Ask questions appropriate for 0-2 years experience. Focus on fundamentals, projects, internships, and learning ability rather than production experience.":"",d=`Based on this resume, generate interview questions with detailed answers.${c}${s}\n\nRESUME: """${r}"""\nTARGET: ${e||"Based on resume"}\n\nGenerate EXACTLY:\n\nSECTION 1: REAL-TIME SCENARIO QUESTIONS (10 questions)\nProduction scenarios based on their tech stack. Include specific kubectl/aws/terraform commands in answers. Consider 2026 market trends (AI/ML integration, platform engineering, FinOps).\nFormat: Q1: [question]\nANSWER: [4-6 sentence detailed answer with specific steps]\n\nSECTION 2: CODING & TECHNICAL QUESTIONS (10 questions)\nActual code questions — Python scripts, Terraform configs, Dockerfiles, K8s YAML, Bash scripts, CI/CD pipeline configs. Include the COMPLETE code solution in the answer.\nFormat: Q1: [question]\nANSWER: [code solution with explanation]\n\nSECTION 3: CROSS-SCENARIO QUESTIONS (10 questions)\nMulti-technology debugging scenarios. E.g. "CI/CD deploys to K8s but pods crash — debug from pipeline to pod." Include step-by-step debugging with actual commands.\nFormat: Q1: [question]\nANSWER: [comprehensive debugging steps]`;let u="",m="";try{const e=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:d,system:l,max_tokens:4096})}),t=await e.json();if(!t.result)return alert("Error generating Part 1: "+(t.error||"Failed")),i.disabled=!1,void(a.style.display="none");u=t.result}catch(e){return alert("Connection error on Part 1."),i.disabled=!1,void(a.style.display="none")}document.getElementById("prepLoading").innerHTML='<span class="spinner"></span>Generating Part 2/2 — Experience & Deep-dive questions... (20 sec)';const p=`Based on this resume, generate interview questions with detailed answers.${c}${s}\n\nRESUME: """${r}"""\nTARGET: ${e||"Based on resume"}\n\nGenerate EXACTLY:\n\nSECTION 4: EXPERIENCE-BASED QUESTIONS (10 questions)\n"Tell me about a time when..." questions based on SPECIFIC projects and achievements from the resume. Answers must use STAR format (Situation-Task-Action-Result) referencing actual experience.\nFormat: Q1: [question]\nANSWER: [STAR format answer from their resume experience]\n\nSECTION 5: TOPIC DEEP-DIVE QUESTIONS (10 questions)\nDeep technical questions on core resume topics (K8s internals, AWS networking, CI/CD best practices, security, FinOps, GitOps). Include real-world examples, best practices, and current 2026 trends.\nFormat: Q1: [question]\nANSWER: [detailed technical answer with examples]`;try{const e=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:p,system:l,max_tokens:4096})}),t=await e.json();t.result&&(m=t.result)}catch(e){}const h=u+"\n\n"+m;document.getElementById("prepContent").textContent=h,document.getElementById("prepOutput").style.display="block",document.getElementById("prepOutput").scrollIntoView({behavior:"smooth"}),window._interviewText=h,i.disabled=!1,a.style.display="none",document.getElementById("prepLoading").innerHTML='<span class="spinner"></span>AI is preparing your interview guide...'}function copyInterviewPrep(){navigator.clipboard.writeText(window._interviewText||""),event.target.textContent="✓ Copied!",setTimeout(()=>event.target.textContent="Copy All",1500)}function downloadInterviewPDF(){try{const{jsPDF:e}=window.jspdf,t=new e({unit:"mm",format:"a4"}),n=document.getElementById("fullName").value.trim()||"Interview",o=window._interviewText||"",s=210,i=297,a=16,r=16,l=18,c=16,d=s-a-r;let u=l;t.setFont("helvetica","bold"),t.setFontSize(16),t.setTextColor(124,58,237),t.text("Interview Preparation Guide",s/2,u,{align:"center"}),u+=8,t.setFont("helvetica","normal"),t.setFontSize(9),t.setTextColor(100,116,139),t.text("Generated by ZapKitt AI — based on your resume",s/2,u,{align:"center"}),u+=8;const m=o.split("\n");for(const e of m){const n=e.trim();if(!n){u+=2;continue}if(/^SECTION \d|^REAL-TIME|^CODING|^CROSS-SCENARIO|^EXPERIENCE|^TOPIC/i.test(n)){u+12>i-c&&(t.addPage(),u=l),u+=4,t.setFont("helvetica","bold"),t.setFontSize(11),t.setTextColor(124,58,237),t.text(n,a,u),u+=2,t.setDrawColor(124,58,237),t.setLineWidth(.3),t.line(a,u,s-r,u),u+=5;continue}if(/^Q\d+[:.]/i.test(n)){u+8>i-c&&(t.addPage(),u=l),u+=2,t.setFont("helvetica","bold"),t.setFontSize(10),t.setTextColor(26,26,46);t.splitTextToSize(n,d).forEach(e=>{u+4>i-c&&(t.addPage(),u=l),t.text(e,a,u),u+=4.5});continue}if(/^ANSWER:/i.test(n)){t.setFont("helvetica","bold"),t.setFontSize(9.5),t.setTextColor(22,163,74),t.text("ANSWER:",a,u),u+=4;const e=n.replace(/^ANSWER:\s*/i,"");if(e){t.setFont("helvetica","normal"),t.setTextColor(30,30,50);t.splitTextToSize(e,d).forEach(e=>{u+4>i-c&&(t.addPage(),u=l),t.text(e,a,u),u+=3.8})}continue}t.setFont("helvetica","normal"),t.setFontSize(9.5),t.setTextColor(30,30,50);t.splitTextToSize(n,d).forEach(e=>{u+4>i-c&&(t.addPage(),u=l),t.text(e,a,u),u+=3.8})}const p=t.internal.getNumberOfPages();for(let e=1;e<=p;e++)t.setPage(e),t.setFont("helvetica","normal"),t.setFontSize(8),t.setTextColor(148,163,184),t.text("Page "+e+"/"+p+" — ZapKitt Interview Prep",s/2,i-8,{align:"center"});t.save(n.replace(/\s+/g,"_")+"_Interview_Prep.pdf")}catch(e){alert("PDF error: "+e.message)}}async function optimizeMore(){if(!resumeText)return;const e=document.getElementById("jobDesc").value.trim();if(!e)return void alert("Paste a job description in Step 5 first — ATS optimization needs a target.");const t=document.getElementById("genBtn"),n=document.getElementById("loading");t.disabled=!0,n.classList.add("show"),showLoadStep("Analyzing keyword gaps and optimizing...");try{const t=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:`You are an ATS optimization specialist. Improve this resume to better match the job description. Naturally integrate missing keywords without keyword stuffing. Strengthen weak bullet points with more specific metrics. Ensure every section header is in ALL CAPS. Keep the exact same structure.\n\nJOB DESCRIPTION:\n"""\n${e}\n"""\n\nCURRENT RESUME:\n"""\n${resumeText}\n"""\n\nOutput ONLY the improved resume text. No commentary. No markdown. Same structure, better keywords and metrics.`,system:"ATS optimization expert. Improve keyword match while keeping natural writing. Output only the resume text with ALL CAPS section headers and • bullet points.",max_tokens:4096})}),n=await t.json();n.result&&(resumeText=n.result,renderResume(n.result,e,document.getElementById("techSkills").value),document.getElementById("output").scrollIntoView({behavior:"smooth"}))}catch(e){}t.disabled=!1,n.classList.remove("show")}async function aiRewriteFresher(){const e=document.getElementById("fresherProjects"),t=e.value.trim();if(!t)return void alert("Add your projects/internships first.");const n=event.target;n.textContent="⏳ AI converting...",n.disabled=!0;try{const n=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:`Convert these student/fresher projects and activities into professional resume entries. Use STAR format with action verbs. Make them sound impressive and professional while staying honest.\n\nProjects/Activities:\n${t}\n\nOutput format for each entry:\nPROJECT/INTERNSHIP TITLE | Organization | Duration\n• Bullet point 1 with action verb and result\n• Bullet point 2 with action verb and result\n\nOutput ONLY the formatted entries. No explanations.`,system:"Expert resume writer specializing in entry-level resumes. Convert student projects into impressive professional entries.",max_tokens:800})}),o=await n.json();o.result&&(e.value=o.result)}catch(e){}n.textContent="AI: Convert projects into professional resume entries",n.disabled=!1}function validatePhone(el){const cc=document.getElementById("countryCode").value;const maxLen={"+91":10,"+1":10,"+44":10,"+61":9,"+971":9,"+65":8,"+49":11,"+33":9,"+81":10,"+86":11,"+82":10,"+55":11,"+27":9,"+234":10,"+254":9,"+60":10,"+63":10,"+966":9,"+7":10,"+52":10,"+39":10,"+34":9,"+31":9,"+46":9,"+41":9,"+353":9,"+64":9,"+48":9,"+90":10,"+92":10,"+880":10,"+94":9,"+977":10};const ml=maxLen[cc]||15;el.value=el.value.replace(/[^0-9]/g,"").slice(0,ml);const hint=el.parentElement.parentElement.querySelector(".hint");if(!hint){const d=document.createElement("div");d.className="hint";d.id="phoneHint";d.textContent=ml+" digits for "+cc;el.parentElement.parentElement.appendChild(d)}else if(hint.id!=="phoneHint"){const d=document.createElement("div");d.className="hint";d.id="phoneHint";d.textContent=ml+" digits for "+cc;el.parentElement.parentElement.appendChild(d)}const ph=document.getElementById("phoneHint");if(ph)ph.textContent=el.value.length+"/"+ml+" digits";}</script></body></html>

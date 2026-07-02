@@ -1,0 +1,9 @@
+{
+  "name": "zapkitt-ai-tools",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@sparticuz/chromium-min": "^133.0.0",
+    "puppeteer-core": "^24.2.0"
+  }
+}
