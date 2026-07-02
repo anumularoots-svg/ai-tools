@@ -116,8 +116,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Prompt too short' });
     }
 
-    // Cap max_tokens
-    const safeMaxTokens = Math.min(Math.max(parseInt(max_tokens) || 1024, 100), 2048);
+    // Cap max_tokens (4096 needed for full resume generation)
+    const safeMaxTokens = Math.min(Math.max(parseInt(max_tokens) || 1024, 100), 4096);
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
