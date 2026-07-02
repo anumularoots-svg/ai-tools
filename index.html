@@ -83,7 +83,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#FAFAFE;color:#1a1a2e;-
 .cta p{color:#64748b;font-size:15px;margin-bottom:24px}
 .cta-b{display:inline-flex;align-items:center;gap:8px;padding:14px 34px;background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;border-radius:12px;text-decoration:none;font-weight:700;font-size:15px;transition:.25s;box-shadow:0 4px 16px rgba(124,58,237,.22)}
 .cta-b:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(124,58,237,.3)}
-.foot{text-align:center;padding:32px 24px;border-top:1px solid #f0eef5;color:#94a3b8;font-size:13px}
+.foot{text-align:center;padding:32px 24px;border-top:1px solid #f0eef5;color:#6b7280;font-size:13px}
 .foot a{color:#7C3AED;text-decoration:none;font-weight:500}
 @media(max-width:1100px){.grid{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:900px){.grid,.wg{grid-template-columns:repeat(3,1fr)}}
@@ -116,7 +116,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#FAFAFE;color:#1a1a2e;-
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 </head>
 <body>
-<div class="nw"><nav class="nav">
+<div class="nw"><nav class="nav" role="navigation" aria-label="Main navigation">
 <a href="/" class="logo"><svg viewBox="0 0 38 38" fill="none"><rect width="38" height="38" rx="10" fill="url(#ng)"/><path d="M21 5l-8 13h7l-1 14 9-16h-7.5z" fill="#fff"/><defs><linearGradient id="ng" x1="0" y1="0" x2="38" y2="38"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs></svg><div class="logo-t">Zap<span>Kitt</span></div></a>
 <div class="nav-r" id="navMenu"><a href="/blog" style="color:#7C3AED;font-weight:600">Blog</a><a href="/about">About</a><a href="/privacy">Privacy</a><a href="mailto:zapkitt.tools@gmail.com">Contact</a></div>
 <button class="ham" id="hamBtn" onclick="document.getElementById('navMenu').classList.toggle('open');this.classList.toggle('open')" aria-label="Menu" style="display:none"><span></span><span></span><span></span></button>
@@ -332,7 +332,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#FAFAFE;color:#1a1a2e;-
 <a href="mailto:zapkitt.tools@gmail.com" class="cta-b">Request a Tool →</a>
 </section>
 
-<footer class="foot">
+<footer class="foot" role="contentinfo">
 <p><a href="/">Home</a> · <a href="/blog">Blog</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a> · <a href="mailto:zapkitt.tools@gmail.com">Contact</a></p>
 <p style="margin-top:8px">© 2026 ZapKitt. Free online tools — your files never leave your device.</p>
 </footer>
