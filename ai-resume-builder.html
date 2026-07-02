@@ -136,6 +136,14 @@ function generateResume() {
   var t = gv("fullName");
   if (!t) return void alert("Please go to Step 2 and enter your full name.");
 
+  // Warn if no experience data provided
+  var _hasExp = (O && O.length > 0) || A || k;
+  if (!_hasExp) {
+    if (!confirm("WARNING: You have not provided any work experience details.\n\nPlease either:\n• Paste your existing resume in Step 1\n• OR fill in your experience in Step 3\n\nWithout experience data, AI may generate inaccurate content.\n\nClick OK to continue anyway, or Cancel to go back and add your experience.")) {
+      return;
+    }
+  }
+
   var e = gv("jobDesc");
   var n = gv("email");
   var phone = gv("phone");
@@ -238,7 +246,7 @@ function generateResume() {
     + '\n\nTECHNICAL SKILLS: ' + (d || "Extract from experience/resume")
     + '\n' + (u ? "SOFT SKILLS: " + u : "")
     + '\n\n' + (m ? "KEY ACHIEVEMENTS:\n" + m : "")
-    + '\n\nWORK EXPERIENCE:\n' + (L || "Extract from existing resume/background description above.")
+    + '\n\nWORK EXPERIENCE (USE ONLY THIS DATA — NEVER INVENT COMPANIES OR ROLES):\n' + (L || "Extract ALL work experience from the EXISTING RESUME or BACKGROUND DESCRIPTION provided above. Do NOT invent any companies, roles, or achievements. If no experience data was provided, write [No experience data provided — please add your work history].")
     + '\n\nINSTRUCTIONS — FOLLOW EXACTLY:'
     + '\n\n0. LANGUAGE: Write the ENTIRE resume in ' + x + '. ' + (x !== "English" ? 'Translate all section headers, bullet points, summary, and skills into ' + x + '. Keep technical terms in English.' : '')
     + '\n   TARGET COUNTRY: ' + C + '. ' + (C !== "Global" ? 'Follow resume conventions for ' + C + '.' : 'Use international resume format.')
@@ -258,7 +266,7 @@ function generateResume() {
     + '\n   TECHNICAL SKILLS (INLINE format: Category: skill1, skill2, skill3. ONE line per category.)'
     + '\n   EDUCATION & CERTIFICATIONS (use EXACT data from candidate — NEVER fabricate)'
     + '\n\n5. BULLET RULES: Start with power verbs. Include numbers in 70%+ of bullets. STAR format. Each bullet 1.5-2 lines.'
-    + '\n\n6. CRITICAL: Use EXACT education, certifications, and company details provided. NEVER fabricate or change them.'
+    + '\n\n6. CRITICAL: Use EXACT experience, education, certifications, and company details provided. NEVER fabricate, invent, or change any work experience, company names, job titles, or achievements. Every detail must come from the candidate data above.'
     + '\n\n7. Output ONLY the resume text. No commentary. No markdown. No code fences. Plain text with • bullets and ALL CAPS section headers.';
 
   fetch("/api/ai", {
@@ -266,7 +274,7 @@ function generateResume() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         prompt: prompt,
-        system: "You are the world best executive resume writer with 20+ years experience. STRICT RULES: 1) Output ONLY the resume text — no thinking, no commentary. 2) NEVER use markdown. Section headers in PLAIN ALL CAPS. 3) NEVER fabricate education or certifications. Use EXACT candidate data. 4) Bullets with bullet character only. 5) Technical skills as inline comma-separated categories. 6) MUST include ALL sections: Summary, Achievements, Skills, Experience, Education, Certifications, Strengths. 7) NEVER stop before Education section — resume is INCOMPLETE without it. 8) Every role must have minimum 3 bullet points. 9) No <think> blocks.",
+        system: "You are the world best executive resume writer with 20+ years experience. STRICT RULES: 1) Output ONLY the resume text — no thinking, no commentary. 2) NEVER use markdown. Section headers in PLAIN ALL CAPS. 3) NEVER fabricate or invent work experience, job titles, companies, education, or certifications. Use ONLY the candidate data provided. If no experience details are given, use placeholders like [Company Name] instead of inventing. 4) Bullets with bullet character only. 5) Technical skills as inline comma-separated categories. 6) MUST include ALL sections: Summary, Achievements, Skills, Experience, Education, Certifications, Strengths. 7) NEVER stop before Education section — resume is INCOMPLETE without it. 8) Every role must have minimum 3 bullet points. 9) No <think> blocks.",
         max_tokens: 5500
       })
     }).then(function(resp) {
