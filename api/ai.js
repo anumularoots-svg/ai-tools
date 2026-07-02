@@ -126,7 +126,7 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: 'qwen/qwen3.6-27b',
         messages: [
           { role: 'system', content: safeSystem },
           { role: 'user', content: safePrompt }
@@ -149,7 +149,7 @@ export default async function handler(req, res) {
     if (data.choices && data.choices[0]) {
       return res.status(200).json({
         result: data.choices[0].message.content,
-        model: 'llama-3.3-70b'
+        model: 'qwen3.6-27b'
       });
     } else {
       return res.status(500).json({ error: 'AI generation failed. Please try again.' });
