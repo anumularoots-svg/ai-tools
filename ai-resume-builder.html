@@ -194,9 +194,23 @@ function generateResume() {
   if (yrs <= 2) {
     pageInstr = "Write a CONCISE 1-page resume. 3-4 bullet points per role. Summary 2-3 sentences. Target: exactly 1 page.";
   } else if (yrs >= 10) {
-    pageInstr = "Write a COMPREHENSIVE 3-page resume. 8-10 DETAILED bullet points for the most recent role (each bullet MUST be 2 full lines with specific technologies, metrics, and business outcomes). 6-7 bullets for the second role. 4-5 for third. 3-4 for older roles. Summary MUST be 5-7 sentences. Include CORE COMPETENCIES section with 6 bullets. List ALL technical skills with full details. EVERY section must be thorough and detailed. Do NOT abbreviate. Fill all 3 pages completely with zero empty space.";
+    pageInstr = "Write a DETAILED and COMPLETE resume. MANDATORY — include ALL sections with MINIMUM content:\n" +
+    "1. PROFESSIONAL SUMMARY: 5-7 detailed sentences, minimum 100 words\n" +
+    "2. KEY ACHIEVEMENTS: 5-6 quantified bullets, each 2 lines\n" +
+    "3. TECHNICAL SKILLS: ALL categories with inline comma-separated skills\n" +
+    "4. PROFESSIONAL EXPERIENCE: Most recent role 7-8 bullets. Second role 5-6 bullets. Third role 4-5 bullets. Older roles 3-4 bullets each. NEVER less than 3 bullets for ANY role regardless of seniority.\n" +
+    "5. EDUCATION & CERTIFICATIONS: MANDATORY section. Include degree, university, year, and ALL certifications. Do NOT skip this.\n" +
+    "6. PROFESSIONAL STRENGTHS: 6-8 soft skills inline.\n" +
+    "CRITICAL: Do NOT stop after Professional Experience. You MUST write Education, Certifications, and Strengths. Resume is INCOMPLETE without these final sections.";
   } else {
-    pageInstr = "Write a DETAILED 2-page resume. 7-8 bullet points per recent role (each 1.5-2 lines with metrics). 5-6 for older roles. Summary 4-5 sentences. Include CORE COMPETENCIES. Fill 2 full pages.";
+    pageInstr = "Write a DETAILED 2-page resume. Include ALL sections:\n" +
+    "1. PROFESSIONAL SUMMARY: 4-5 sentences\n" +
+    "2. KEY ACHIEVEMENTS: 4-5 quantified bullets\n" +
+    "3. TECHNICAL SKILLS: All categories inline\n" +
+    "4. PROFESSIONAL EXPERIENCE: 6-7 bullets for recent role, 4-5 mid, 3-4 older. Every role minimum 3 bullets.\n" +
+    "5. EDUCATION & CERTIFICATIONS: MANDATORY — degree, university, year, all certs.\n" +
+    "6. PROFESSIONAL STRENGTHS: 6-8 soft skills.\n" +
+    "CRITICAL: Do NOT stop after Experience. Must include Education and Strengths sections.";
   }
 
   setTimeout(function() { showLoadStep("Matching skills to job requirements..."); }, 3000);
@@ -252,14 +266,28 @@ function generateResume() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         prompt: prompt,
-        system: "You are an expert resume writer. STRICT RULES: 1) Output ONLY the resume — no thinking, no commentary, no introductions. 2) NEVER use markdown (**bold**, ## headers). Section headers in PLAIN ALL CAPS. 3) NEVER fabricate education, certifications, or experience. Use EXACT candidate data. 4) Bullets with the bullet character only. 5) Technical skills as inline comma-separated categories, one line each. 6) Do NOT output any <think> or reasoning blocks.",
-        max_tokens: 4000
+        system: "You are the world best executive resume writer with 20+ years experience. STRICT RULES: 1) Output ONLY the resume text — no thinking, no commentary. 2) NEVER use markdown. Section headers in PLAIN ALL CAPS. 3) NEVER fabricate education or certifications. Use EXACT candidate data. 4) Bullets with bullet character only. 5) Technical skills as inline comma-separated categories. 6) MUST include ALL sections: Summary, Achievements, Skills, Experience, Education, Certifications, Strengths. 7) NEVER stop before Education section — resume is INCOMPLETE without it. 8) Every role must have minimum 3 bullet points. 9) No <think> blocks.",
+        max_tokens: 5500
       })
     }).then(function(resp) {
       return resp.json();
     }).then(function(data) {
       if (!data.result) throw new Error(data.error || "AI returned no result");
       var cleanText = _cleanAIOutput(data.result);
+      // Ensure Education section exists — if AI skipped it, append from form data
+      if (!/EDUCATION/i.test(cleanText)) {
+        var _deg = document.getElementById("degree") ? document.getElementById("degree").value.trim() : "";
+        var _uni = document.getElementById("university") ? document.getElementById("university").value.trim() : "";
+        var _yr = document.getElementById("gradYear") ? document.getElementById("gradYear").value.trim() : "";
+        var _certs = document.getElementById("certs") ? document.getElementById("certs").value.trim() : "";
+        var _addEdu = document.getElementById("addlEdu") ? document.getElementById("addlEdu").value.trim() : "";
+        if (_deg || _certs) {
+          cleanText += "\n\nEDUCATION & CERTIFICATIONS\n";
+          if (_deg) cleanText += _deg + (_uni ? " — " + _uni : "") + (_yr ? " (" + _yr + ")" : "") + "\n";
+          if (_addEdu) cleanText += _addEdu + "\n";
+          if (_certs) cleanText += "\nCertifications: " + _certs + "\n";
+        }
+      }
       resumeText = cleanText;
       renderResume(cleanText, e, d);
       document.getElementById("output").classList.add("show");
