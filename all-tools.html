@@ -123,7 +123,7 @@ async function loadTools() {
       html += '<div class="cat-title" style="color:' + (cats.find(function(c){return c.id===cat})||{}).color + '">' + (catIcons[cat]||"") + " " + (catNames[cat]||cat).toUpperCase() + ' (' + catTools.length + ')</div>';
       html += '<div class="grid">';
       catTools.forEach(function(t) {
-        html += '<a href="/tool?s=' + t.slug + '" class="card" data-cat="' + cat + '">';
+        html += '<a href="/t/' + t.slug + '" class="card" data-cat="' + cat + '">';
         html += '<div class="card-icon">' + (catIcons[cat]||"🔧") + '</div>';
         html += '<h3>' + t.title + '</h3>';
         html += '<p>' + t.tagline + '</p>';
