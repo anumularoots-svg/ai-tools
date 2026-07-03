@@ -1,4 +1,5 @@
-// ZapKitt AI Resume API v2 — JSON + Legacy support
+// ZapKitt AI Resume API v3 — JSON + Legacy support
+// Fixed: better models, error logging, qwen3 thinking mode
 const rateMap = new Map();
 function checkRate(ip) {
   const now = Date.now();
@@ -23,73 +24,120 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
   const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || "x";
-  if (!checkRate(ip)) return res.status(429).json({ error: "Rate limit" });
+  if (!checkRate(ip)) return res.status(429).json({ error: "Rate limit — try again in 1 minute" });
   const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) return res.status(500).json({ error: "API key missing" });
+  if (!apiKey) return res.status(500).json({ error: "API key missing — check Vercel env vars" });
   const { prompt, system, max_tokens, mode, userData } = req.body;
   if (mode === "json" && userData) return jsonMode(res, apiKey, userData);
   return legacyMode(res, apiKey, prompt, system, max_tokens);
 }
+
 async function callGroq(apiKey, system, prompt, maxTokens, temp) {
-  const models = ["llama-3.3-70b-versatile", "qwen/qwen3-32b"];
+  // Production models first, then preview fallback
+  const models = [
+    { id: "llama-3.3-70b-versatile", maxOut: 32768 },
+    { id: "openai/gpt-oss-120b", maxOut: 65536 },
+    { id: "qwen/qwen3-32b", maxOut: 40960 },
+    { id: "llama-3.1-8b-instant", maxOut: 131072 }
+  ];
+  const errors = [];
+
   for (const model of models) {
     try {
+      const mt = Math.min(maxTokens, model.maxOut);
+      const body = {
+        model: model.id,
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: prompt }
+        ],
+        max_tokens: mt,
+        temperature: temp
+      };
+
       const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + apiKey },
-        body: JSON.stringify({ model, messages: [{ role: "system", content: system }, { role: "user", content: prompt }], max_tokens: maxTokens, temperature: temp })
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + apiKey },
+        body: JSON.stringify(body)
       });
-      if (!r.ok) continue;
+
+      if (!r.ok) {
+        const errBody = await r.text().catch(() => "");
+        errors.push(`${model.id}: ${r.status} ${errBody.substring(0, 200)}`);
+        continue;
+      }
+
       const d = await r.json();
       const txt = d.choices?.[0]?.message?.content;
-      if (txt) return { text: txt, model };
-    } catch (e) { continue; }
+      if (txt) return { text: txt, model: model.id };
+      errors.push(`${model.id}: empty response`);
+    } catch (e) {
+      errors.push(`${model.id}: ${e.message}`);
+      continue;
+    }
   }
-  return null;
+
+  return { error: errors.join(" | ") };
 }
+
 async function jsonMode(res, apiKey, u) {
   const yrs = parseInt(u.totalExp) || 0;
-  const sys = `You are an expert resume writer producing premium, ATS-optimized resumes. Return ONLY valid JSON. No markdown, no code fences, no explanation.
-CRITICAL RULES:
+  const sys = `You are an expert resume writer. Return ONLY valid JSON. No markdown, no code fences, no explanation, no thinking tags.
+RULES:
 1. NEVER fabricate companies/titles/dates/education. Use ONLY provided data.
-2. Every bullet starts with a UNIQUE power verb (Architected, Spearheaded, Delivered, Reduced, Automated, Designed, Led, Implemented, Optimized, Orchestrated, Streamlined, Championed, Engineered, Accelerated, Pioneered).
-3. 70%+ bullets MUST include quantified metrics (%, $, time saved, team size, scale).
-4. Skills MUST be grouped by category (e.g. "Cloud — AWS", "CI/CD & GitOps", "Containers & Orchestration").
-5. Date format: ALWAYS "Mon YYYY" format (e.g. "Jan 2023", "Jun 2021"). For current role, endDate MUST be "Present" (not "current" or blank).
-6. Summary MUST be 5-7 sentences covering: years of experience, specialization, key technologies, notable achievements, and career focus.
-7. Achievements MUST have 4-5 items, each with a specific metric.
-8. Strengths MUST have 6-8 professional strengths (e.g. "CI/CD Pipeline Architecture", "Cloud Cost Optimization", "Security-First DevOps", "Cross-Team Collaboration").
-9. Education and certifications MUST never be empty if user provided them.
-${yrs <= 2 ? "Fresher: focus on projects, internships, academics." : yrs <= 12 ? "Professional: focus on achievements and impact." : "Executive: focus on strategic leadership and transformation."}`;
+2. Every bullet starts with a power verb. 70%+ bullets include metrics.
+3. Skills grouped by category.
+4. Dates MUST be "Mon YYYY" format. Current role endDate = "Present".
+5. Summary: 5-7 sentences. Achievements: 4-5 items with metrics. Strengths: 6-8 items.
+6. Education and certifications MUST never be empty if provided.
+${yrs <= 2 ? "Fresher: focus on projects, academics." : yrs <= 12 ? "Professional: achievements and impact." : "Executive: strategic leadership."}`;
 
   const bc = (u.experience || []).map((_, i) => yrs <= 2 ? (i===0?4:3) : yrs <= 12 ? ([7,5,4,3][i]||3) : ([8,6,5,4,3][i]||3));
+
+  // Build education string — include additional education
+  let eduStr = "";
+  if (u.degree) {
+    eduStr = u.degree;
+    if (u.university) eduStr += " — " + u.university;
+    if (u.gradYear) eduStr += " (" + u.gradYear + ")";
+  }
+  if (u.additionalEdu && u.additionalEdu.trim()) {
+    eduStr += (eduStr ? "\n" : "") + u.additionalEdu.trim();
+  }
+
   let p = `Generate resume JSON for:\nName: ${u.fullName}\nEmail: ${u.email||""}\nPhone: ${u.phone||""}\nLocation: ${u.location||""}\nLinkedIn: ${u.linkedin||""}\nGitHub: ${u.github||""}\nTitle: ${u.targetTitle||""}\nExperience: ${u.totalExp||"0"} years\n`;
-  p += `\nEDUCATION: ${u.degree||"[none]"} ${u.university?"— "+u.university:""} ${u.gradYear?"("+u.gradYear+")":""}\n${u.additionalEdu||""}`;
-  p += `\nCERTIFICATIONS: ${u.certifications||"[none]"}\nSKILLS: ${u.techSkills||"extract from experience"}`;
+  p += `\nEDUCATION:\n${eduStr || "[none provided]"}`;
+  p += `\nCERTIFICATIONS: ${u.certifications || "[none]"}\nSKILLS: ${u.techSkills || "extract from experience"}`;
+  if (u.softSkills) p += `\nSOFT SKILLS: ${u.softSkills}`;
   if (u.achievements) p += `\nACHIEVEMENTS: ${u.achievements}`;
   if (u.experience?.length) {
-    p += "\n\nWORK EXPERIENCE (use EXACTLY):";
+    p += "\n\nWORK EXPERIENCE (use EXACTLY these companies/titles/dates):";
     u.experience.forEach((e,i) => { p += `\n${e.title} at ${e.company} (${e.start} — ${e.end})${e.location?", "+e.location:""}. Write ${bc[i]} STAR bullets.${e.details?"\nDetails: "+e.details:""}`; });
   }
   if (u.existingResume) p += `\n\nEXISTING RESUME:\n"""\n${u.existingResume.substring(0,4000)}\n"""`;
   if (u.backgroundDesc) p += `\n\nBACKGROUND:\n"""\n${u.backgroundDesc.substring(0,3000)}\n"""`;
   if (u.jobDescription) p += `\n\nJOB DESCRIPTION:\n"""\n${u.jobDescription.substring(0,3000)}\n"""`;
-  p += `\n\nReturn ONLY this JSON:\n{"personal":{"fullName":"${u.fullName}","title":"","email":"","phone":"","location":"","linkedin":"","github":""},"summary":"5-7 sentence professional summary","achievements":[{"text":"Achievement with metric","metric":"60%"}],"skills":[{"category":"Category Name","items":["skill1","skill2"]}],"experience":[{"title":"","company":"","location":"","startDate":"Mon YYYY","endDate":"Mon YYYY or Present","bullets":[{"text":"Power verb + STAR bullet with metric"}]}],"education":[{"degree":"","institution":"","year":""}],"certifications":[{"name":"","status":"completed"}],"strengths":["Strength 1","Strength 2","at least 6 strengths"]}`;
-  p += `\nCRITICAL: fullName MUST be "${u.fullName}". Companies MUST match provided data. Dates MUST be "Mon YYYY" format (Jan 2023, not January 2023). Current role endDate MUST be "Present". Strengths array MUST have 6-8 items. JSON only.`;
+
+  p += `\n\nReturn ONLY this JSON (no other text):
+{"personal":{"fullName":"${u.fullName}","title":"","email":"","phone":"","location":"","linkedin":"","github":""},"summary":"5-7 sentences","achievements":[{"text":"","metric":""}],"skills":[{"category":"","items":[]}],"experience":[{"title":"","company":"","location":"","startDate":"Mon YYYY","endDate":"Mon YYYY or Present","bullets":[{"text":""}]}],"education":[{"degree":"","institution":"","year":""}],"certifications":[{"name":"","status":"completed"}],"strengths":["6-8 professional strengths"]}`;
+  p += `\nCRITICAL: Include ALL education entries (degree AND any additional education/post-graduation). Dates = "Mon YYYY". Current role = "Present". Strengths = 6-8 items. fullName = "${u.fullName}".`;
 
   const result = await callGroq(apiKey, sys, p, 6000, 0.3);
-  if (!result) return res.status(500).json({ error: "AI failed" });
+  if (result.error) return res.status(500).json({ error: "AI failed: " + result.error });
   try {
     const resume = JSON.parse(extractJSON(result.text));
     return res.status(200).json({ resume, model: result.model });
   } catch (e) {
+    // Return raw text so frontend can still try to use it
     return res.status(200).json({ result: result.text, model: result.model, jsonError: true });
   }
 }
+
 async function legacyMode(res, apiKey, prompt, system, maxTokens) {
   if (!prompt) return res.status(400).json({ error: "Prompt required" });
   const mt = Math.min(Math.max(parseInt(maxTokens)||1024, 100), 6000);
   const result = await callGroq(apiKey, system||"You are an expert resume writer.", prompt, mt, 0.5);
-  if (!result) return res.status(500).json({ error: "AI failed" });
+  if (result.error) return res.status(500).json({ error: "AI failed: " + result.error });
   let txt = result.text.replace(/<think>[\s\S]*?<\/think>/gi,"").replace(/\*\*/g,"").trim();
   return res.status(200).json({ result: txt, model: result.model });
 }

@@ -298,6 +298,14 @@ function generateResume() {
       if ((!resumeJSON.education || resumeJSON.education.length === 0) && userData.degree) {
         resumeJSON.education = [{ degree: userData.degree, institution: userData.university || "", year: userData.gradYear || "" }];
       }
+      // Add additional education (post-graduation) if user provided it
+      if (userData.additionalEdu && userData.additionalEdu.trim()) {
+        if (!resumeJSON.education) resumeJSON.education = [];
+        var addlParts = userData.additionalEdu.trim().split(/\s*[—\-]\s*/);
+        var addlEdu = { degree: addlParts[0] || userData.additionalEdu, institution: addlParts[1] || "", year: addlParts[2] || "" };
+        var alreadyHas = resumeJSON.education.some(function(e) { return e.degree && userData.additionalEdu.includes(e.degree); });
+        if (!alreadyHas) resumeJSON.education.push(addlEdu);
+      }
       // Fix certifications
       if ((!resumeJSON.certifications || resumeJSON.certifications.length === 0) && userData.certifications) {
         resumeJSON.certifications = userData.certifications.split(/[,;]/).map(function(c) { return { name: c.trim(), status: "completed" }; });
