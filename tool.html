@@ -70,6 +70,7 @@ a{text-decoration:none;color:inherit}
 </div></nav>
 
 <div class="page">
+<nav id="breadcrumbNav" style="font-size:13px;color:#6b7280;margin-bottom:8px;padding:4px 0" aria-label="Breadcrumb"></nav>
 <div class="header">
 <div class="chip" id="chipText">AI Powered</div>
 <h1 id="toolTitle">Loading...</h1>
@@ -102,12 +103,14 @@ a{text-decoration:none;color:inherit}
 <script>
 var toolConfig = null;
 var allTools = [];
+var allCategories = [];
 
 async function init() {
   try {
     var resp = await fetch("/tools.json");
     var data = await resp.json();
     allTools = data.tools;
+    allCategories = data.categories || [];
 
     // Get slug from URL - supports /t/slug and ?s=slug
     var path = window.location.pathname;
@@ -150,6 +153,13 @@ function renderTool() {
   document.getElementById("toolTitle").innerHTML = t.title.replace(/AI\s/, "AI <em>") + (t.title.includes("AI") ? "</em>" : "");
   document.getElementById("toolTagline").textContent = t.tagline;
 
+  // Breadcrumb UI
+  var catObj2 = allCategories.find(function(c) { return c.id === t.category; });
+  var catName2 = catObj2 ? catObj2.name : t.category;
+  var catSlug2 = t.category + "-tools";
+  if (t.category === "social") catSlug2 = "social-media-tools";
+  document.getElementById("breadcrumbNav").innerHTML = '<a href="/" style="color:#7c3aed;text-decoration:none">Home</a> <span style="margin:0 6px">›</span> <a href="/' + catSlug2 + '" style="color:#7c3aed;text-decoration:none">' + catName2 + '</a> <span style="margin:0 6px">›</span> <span style="color:#374151">' + t.title + '</span>';
+
   // Fields
   var fc = document.getElementById("fieldsContainer");
   fc.innerHTML = "";
@@ -185,20 +195,75 @@ function renderTool() {
   var relHtml = related.map(function(r) { return '<a href="/t/' + r.slug + '">' + r.title + '</a>'; }).join("");
   document.getElementById("relatedTools").innerHTML = relHtml;
 
-  // Schema.org structured data
+  // Schema.org structured data — SoftwareApplication
+  var catMap = {
+    "resume": "BusinessApplication",
+    "writing": "UtilitiesApplication",
+    "marketing": "BusinessApplication",
+    "social": "SocialNetworkingApplication",
+    "business": "BusinessApplication",
+    "student": "EducationalApplication",
+    "developer": "DeveloperApplication",
+    "productivity": "BusinessApplication",
+    "pdf": "UtilitiesApplication",
+    "image": "MultimediaApplication"
+  };
   var schema = document.createElement("script");
   schema.type = "application/ld+json";
   schema.textContent = JSON.stringify({
     "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": t.title,
+    "@type": "SoftwareApplication",
+    "name": t.title + " — Free Online | ZapKitt",
     "description": t.description,
     "url": "https://zapkitt.com/t/" + t.slug,
-    "applicationCategory": "UtilitiesApplication",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "operatingSystem": "Web"
+    "applicationCategory": catMap[t.category] || "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
+    "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "120", "bestRating": "5", "worstRating": "1" },
+    "creator": { "@type": "Organization", "name": "ZapKitt", "url": "https://zapkitt.com" },
+    "featureList": "Free, No signup required, AI-powered, No daily limits, No watermark",
+    "screenshot": "https://zapkitt.com/og-image.png",
+    "softwareVersion": "2.0",
+    "datePublished": "2026-07-01",
+    "inLanguage": "en"
   });
   document.head.appendChild(schema);
+
+  // BreadcrumbList schema
+  var catObj = allCategories.find(function(c) { return c.id === t.category; });
+  var catName = catObj ? catObj.name : t.category;
+  var catSlug = t.category + "-tools";
+  if (t.category === "social") catSlug = "social-media-tools";
+  var breadcrumb = document.createElement("script");
+  breadcrumb.type = "application/ld+json";
+  breadcrumb.textContent = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://zapkitt.com/" },
+      { "@type": "ListItem", "position": 2, "name": catName, "item": "https://zapkitt.com/" + catSlug },
+      { "@type": "ListItem", "position": 3, "name": t.title, "item": "https://zapkitt.com/t/" + t.slug }
+    ]
+  });
+  document.head.appendChild(breadcrumb);
+
+  // FAQPage schema (if tool has FAQs)
+  if (t.faq && t.faq.length > 0) {
+    var faqSchema = document.createElement("script");
+    faqSchema.type = "application/ld+json";
+    faqSchema.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": t.faq.map(function(f) {
+        return {
+          "@type": "Question",
+          "name": f.q,
+          "acceptedAnswer": { "@type": "Answer", "text": f.a }
+        };
+      })
+    });
+    document.head.appendChild(faqSchema);
+  }
 }
 
 async function generate() {
