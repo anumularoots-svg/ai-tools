@@ -1678,6 +1678,1020 @@
         "competitive analysis"
       ],
       "faq": []
+    },
+    {
+      "slug": "ai-notes",
+      "title": "AI Notes Generator",
+      "tagline": "Convert any topic into structured study notes",
+      "description": "Free AI notes generator. Turn any topic into well-organized study notes with key points, summaries, and examples.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Topic",
+          "type": "textarea",
+          "placeholder": "e.g. Photosynthesis, French Revolution, Machine Learning basics",
+          "required": true
+        },
+        {
+          "id": "level",
+          "label": "Academic level",
+          "type": "select",
+          "options": [
+            "High School",
+            "Undergraduate",
+            "Graduate",
+            "Professional"
+          ],
+          "required": true
+        },
+        {
+          "id": "style",
+          "label": "Note style",
+          "type": "select",
+          "options": [
+            "Cornell method",
+            "Bullet points",
+            "Mind map outline",
+            "Summary + key terms",
+            "Q&A format"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are an expert tutor. Create comprehensive study notes.",
+      "userPrompt": "Create {style} study notes on:\n\nTopic: {topic}\nLevel: {level}\n\nInclude:\n- Key concepts with definitions\n- Important facts and dates\n- Examples and analogies\n- Common exam questions\n- Memory aids/mnemonics",
+      "maxTokens": 2500,
+      "keywords": [
+        "study notes",
+        "AI notes",
+        "note generator"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "quiz-generator",
+      "title": "AI Quiz Generator",
+      "tagline": "Generate quizzes on any topic",
+      "description": "Free AI quiz generator. Create multiple choice, true/false, and short answer questions for any subject.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Topic",
+          "type": "textarea",
+          "placeholder": "e.g. World War II, Python programming, Human anatomy",
+          "required": true
+        },
+        {
+          "id": "count",
+          "label": "Number of questions",
+          "type": "select",
+          "options": [
+            "5",
+            "10",
+            "15",
+            "20"
+          ],
+          "required": true
+        },
+        {
+          "id": "type",
+          "label": "Question type",
+          "type": "select",
+          "options": [
+            "Multiple choice",
+            "True/False",
+            "Short answer",
+            "Mixed"
+          ],
+          "required": true
+        },
+        {
+          "id": "difficulty",
+          "label": "Difficulty",
+          "type": "select",
+          "options": [
+            "Easy",
+            "Medium",
+            "Hard",
+            "Mixed"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are an expert educator. Create well-crafted quiz questions with accurate answers.",
+      "userPrompt": "Generate a {count}-question {type} quiz on:\n\nTopic: {topic}\nDifficulty: {difficulty}\n\nFor each question provide:\n- Question\n- Options (for MCQ)\n- Correct answer\n- Brief explanation\n\nMark correct answers clearly.",
+      "maxTokens": 3000,
+      "keywords": [
+        "quiz generator",
+        "quiz maker",
+        "test generator",
+        "practice quiz"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "flashcard-generator",
+      "title": "AI Flashcard Generator",
+      "tagline": "Create study flashcards instantly",
+      "description": "Free AI flashcard generator. Create front-back flashcards for any topic to boost memorization and retention.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Topic",
+          "type": "textarea",
+          "placeholder": "e.g. Spanish vocabulary, AWS services, Biology terms",
+          "required": true
+        },
+        {
+          "id": "count",
+          "label": "Number of flashcards",
+          "type": "select",
+          "options": [
+            "10",
+            "20",
+            "30",
+            "50"
+          ],
+          "required": true
+        },
+        {
+          "id": "style",
+          "label": "Flashcard style",
+          "type": "select",
+          "options": [
+            "Term \u2192 Definition",
+            "Question \u2192 Answer",
+            "Concept \u2192 Example",
+            "Word \u2192 Translation"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a study expert. Create effective flashcards for memorization.",
+      "userPrompt": "Create {count} flashcards ({style}) for:\n\nTopic: {topic}\n\nFormat:\nFRONT: [term/question]\nBACK: [definition/answer]\n---\n\nMake them concise and memorable.",
+      "maxTokens": 3000,
+      "keywords": [
+        "flashcards",
+        "flashcard generator",
+        "study cards",
+        "memorization"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "citation-generator",
+      "title": "Citation Generator",
+      "tagline": "Generate citations in any format",
+      "description": "Free citation generator. Create properly formatted citations in APA, MLA, Chicago, Harvard, and IEEE styles.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "source",
+          "label": "Source information",
+          "type": "textarea",
+          "placeholder": "e.g. Book: The Design of Everyday Things by Don Norman, 2013, Basic Books\nOR paste a URL",
+          "required": true
+        },
+        {
+          "id": "format",
+          "label": "Citation format",
+          "type": "select",
+          "options": [
+            "APA 7th",
+            "MLA 9th",
+            "Chicago",
+            "Harvard",
+            "IEEE",
+            "Vancouver"
+          ],
+          "required": true
+        },
+        {
+          "id": "type",
+          "label": "Source type",
+          "type": "select",
+          "options": [
+            "Book",
+            "Journal article",
+            "Website",
+            "Conference paper",
+            "Report",
+            "Thesis"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a citation expert. Generate perfectly formatted academic citations.",
+      "userPrompt": "Generate a {format} citation for this {type}:\n\n{source}\n\nProvide:\n1. In-text citation\n2. Full reference list entry\n3. Notes on formatting",
+      "maxTokens": 800,
+      "keywords": [
+        "citation generator",
+        "APA citation",
+        "MLA citation",
+        "bibliography"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "math-solver",
+      "title": "AI Math Solver",
+      "tagline": "Solve math problems with step-by-step explanations",
+      "description": "Free AI math solver. Get step-by-step solutions for algebra, calculus, statistics, and more.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "problem",
+          "label": "Math problem",
+          "type": "textarea",
+          "placeholder": "e.g. Solve: 3x\u00b2 + 5x - 2 = 0\nOR: Find the derivative of f(x) = x\u00b3 + 2x\u00b2 - 5x + 1",
+          "required": true
+        },
+        {
+          "id": "level",
+          "label": "Level",
+          "type": "select",
+          "options": [
+            "Basic arithmetic",
+            "Algebra",
+            "Geometry",
+            "Trigonometry",
+            "Calculus",
+            "Statistics",
+            "Linear algebra"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a math tutor. Solve problems with clear, step-by-step explanations.",
+      "userPrompt": "Solve this {level} problem step by step:\n\n{problem}\n\nShow:\n1. Every step clearly\n2. Formula used\n3. Final answer\n4. Verification\n5. Tips for similar problems",
+      "maxTokens": 2000,
+      "keywords": [
+        "math solver",
+        "math calculator",
+        "algebra solver",
+        "calculus solver"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "essay-outline",
+      "title": "Essay Outline Generator",
+      "tagline": "Create structured essay outlines",
+      "description": "Free AI essay outline generator. Get a detailed outline with thesis statement, arguments, and evidence.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Essay topic",
+          "type": "text",
+          "placeholder": "e.g. Impact of social media on mental health",
+          "required": true
+        },
+        {
+          "id": "type",
+          "label": "Essay type",
+          "type": "select",
+          "options": [
+            "Argumentative",
+            "Analytical",
+            "Compare & contrast",
+            "Persuasive",
+            "Research paper",
+            "Literature review"
+          ],
+          "required": true
+        },
+        {
+          "id": "length",
+          "label": "Target length",
+          "type": "select",
+          "options": [
+            "500 words (short)",
+            "1000 words (standard)",
+            "2000 words (long)",
+            "5000 words (research)"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are an academic writing expert. Create detailed essay outlines.",
+      "userPrompt": "Create a detailed {type} essay outline:\n\nTopic: {topic}\nLength: {length}\n\nInclude:\n- Thesis statement (3 options)\n- Introduction hook\n- Body paragraph structure (topic sentence + evidence + analysis)\n- Counterargument (if argumentative)\n- Conclusion framework\n- Suggested sources to research",
+      "maxTokens": 2000,
+      "keywords": [
+        "essay outline",
+        "essay planner",
+        "essay structure"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "study-planner",
+      "title": "AI Study Planner",
+      "tagline": "Create a personalized study schedule",
+      "description": "Free AI study planner. Generate a structured study schedule for exams, courses, or certifications.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "subjects",
+          "label": "Subjects/topics to study",
+          "type": "textarea",
+          "placeholder": "e.g. AWS Solutions Architect: EC2, S3, VPC, IAM, Lambda, RDS",
+          "required": true
+        },
+        {
+          "id": "timeline",
+          "label": "Time available",
+          "type": "select",
+          "options": [
+            "1 week",
+            "2 weeks",
+            "1 month",
+            "2 months",
+            "3 months"
+          ],
+          "required": true
+        },
+        {
+          "id": "hours",
+          "label": "Hours per day available",
+          "type": "select",
+          "options": [
+            "1 hour",
+            "2 hours",
+            "3 hours",
+            "4 hours",
+            "6+ hours"
+          ],
+          "required": true
+        },
+        {
+          "id": "goal",
+          "label": "Goal",
+          "type": "text",
+          "placeholder": "e.g. Pass AWS certification exam",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a study planning expert. Create effective, realistic study schedules.",
+      "userPrompt": "Create a study plan:\n\nSubjects: {subjects}\nTimeline: {timeline}\nDaily hours: {hours}\nGoal: {goal}\n\nInclude:\n- Daily schedule with specific topics\n- Review sessions\n- Practice test days\n- Rest days\n- Milestones and checkpoints\n- Study techniques for each topic",
+      "maxTokens": 2500,
+      "keywords": [
+        "study planner",
+        "study schedule",
+        "exam preparation",
+        "study plan"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "research-summary",
+      "title": "Research Paper Summarizer",
+      "tagline": "Summarize research papers quickly",
+      "description": "Free AI research paper summarizer. Get key findings, methodology, and conclusions from any research paper.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "paper",
+          "label": "Paste research paper text or abstract",
+          "type": "textarea",
+          "placeholder": "Paste the full paper text, abstract, or key sections...",
+          "required": true
+        },
+        {
+          "id": "depth",
+          "label": "Summary depth",
+          "type": "select",
+          "options": [
+            "Quick overview (100 words)",
+            "Standard summary (300 words)",
+            "Detailed analysis (500 words)",
+            "Critical review (800 words)"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a research analyst. Summarize academic papers clearly.",
+      "userPrompt": "Summarize this research paper ({depth}):\n\n\"\"\"\n{paper}\n\"\"\"\n\nInclude:\n1. OBJECTIVE - What was studied\n2. METHODOLOGY - How it was studied\n3. KEY FINDINGS - What was discovered\n4. IMPLICATIONS - Why it matters\n5. LIMITATIONS - What's missing\n6. CITATION - Suggested citation",
+      "maxTokens": 2000,
+      "keywords": [
+        "research summary",
+        "paper summarizer",
+        "academic summary"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "book-summary",
+      "title": "AI Book Summary Generator",
+      "tagline": "Get key takeaways from any book",
+      "description": "Free AI book summary generator. Get chapter-by-chapter summaries, key takeaways, and actionable insights.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "book",
+          "label": "Book title and author",
+          "type": "text",
+          "placeholder": "e.g. Atomic Habits by James Clear",
+          "required": true
+        },
+        {
+          "id": "depth",
+          "label": "Summary type",
+          "type": "select",
+          "options": [
+            "Quick overview (5 key points)",
+            "Chapter summary",
+            "Detailed analysis",
+            "Action items only"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a book reviewer and learning expert. Create insightful book summaries.",
+      "userPrompt": "Summarize this book ({depth}):\n\nBook: {book}\n\nInclude:\n1. MAIN THESIS - Core argument\n2. KEY IDEAS - Top 5-10 concepts\n3. BEST QUOTES - 3-5 memorable lines (paraphrased)\n4. ACTION ITEMS - How to apply the lessons\n5. WHO SHOULD READ - Target audience\n6. SIMILAR BOOKS - 3 recommendations",
+      "maxTokens": 2500,
+      "keywords": [
+        "book summary",
+        "book review",
+        "book notes",
+        "key takeaways"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "assignment-helper",
+      "title": "AI Assignment Helper",
+      "tagline": "Get help structuring assignments",
+      "description": "Free AI assignment helper. Get guidance on structuring, researching, and writing academic assignments.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "assignment",
+          "label": "Assignment description",
+          "type": "textarea",
+          "placeholder": "e.g. Write a 2000-word essay analyzing the impact of blockchain on supply chain management",
+          "required": true
+        },
+        {
+          "id": "level",
+          "label": "Academic level",
+          "type": "select",
+          "options": [
+            "High School",
+            "Undergraduate",
+            "Graduate",
+            "PhD"
+          ],
+          "required": true
+        },
+        {
+          "id": "help",
+          "label": "What help do you need?",
+          "type": "select",
+          "options": [
+            "Structure and outline",
+            "Research guidance",
+            "Writing tips",
+            "Full draft guidance",
+            "Review checklist"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are an academic advisor. Help students structure and approach assignments effectively.",
+      "userPrompt": "Help with this assignment ({help}):\n\nAssignment: {assignment}\nLevel: {level}\n\nProvide:\n1. Recommended structure\n2. Key points to cover\n3. Research suggestions\n4. Writing tips\n5. Common mistakes to avoid\n6. Grading criteria checklist",
+      "maxTokens": 2500,
+      "keywords": [
+        "assignment help",
+        "homework helper",
+        "essay help",
+        "academic help"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "business-plan",
+      "title": "AI Business Plan Generator",
+      "tagline": "Create a business plan outline",
+      "description": "Free AI business plan generator. Get a structured business plan with market analysis, strategy, and financial projections.",
+      "category": "business",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "idea",
+          "label": "Business idea",
+          "type": "textarea",
+          "placeholder": "e.g. AI-powered resume builder SaaS platform",
+          "required": true
+        },
+        {
+          "id": "market",
+          "label": "Target market",
+          "type": "text",
+          "placeholder": "e.g. Job seekers, HR professionals, career coaches",
+          "required": true
+        },
+        {
+          "id": "stage",
+          "label": "Business stage",
+          "type": "select",
+          "options": [
+            "Idea stage",
+            "Pre-launch",
+            "Early stage",
+            "Growing",
+            "Scaling"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a business strategy consultant. Create structured business plans.",
+      "userPrompt": "Create a business plan outline for:\n\nIdea: {idea}\nMarket: {market}\nStage: {stage}\n\nInclude:\n1. EXECUTIVE SUMMARY\n2. PROBLEM & SOLUTION\n3. TARGET MARKET & SIZE\n4. BUSINESS MODEL (revenue streams)\n5. COMPETITIVE ANALYSIS\n6. MARKETING STRATEGY\n7. OPERATIONS PLAN\n8. FINANCIAL PROJECTIONS (Year 1-3)\n9. TEAM REQUIREMENTS\n10. MILESTONES & TIMELINE",
+      "maxTokens": 3000,
+      "keywords": [
+        "business plan",
+        "startup plan",
+        "business plan generator"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "press-release",
+      "title": "AI Press Release Writer",
+      "tagline": "Write professional press releases",
+      "description": "Free AI press release generator. Create AP-style press releases for product launches, announcements, and events.",
+      "category": "business",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "headline",
+          "label": "Announcement",
+          "type": "textarea",
+          "placeholder": "e.g. ZapKitt launches free AI resume builder with 10 templates",
+          "required": true
+        },
+        {
+          "id": "company",
+          "label": "Company name",
+          "type": "text",
+          "placeholder": "e.g. ZapKitt",
+          "required": true
+        },
+        {
+          "id": "contact",
+          "label": "Contact info",
+          "type": "text",
+          "placeholder": "e.g. press@zapkitt.com",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a PR expert. Write AP-style press releases.",
+      "userPrompt": "Write a press release:\n\nAnnouncement: {headline}\nCompany: {company}\nContact: {contact}\n\nFollow AP style:\n- Compelling headline\n- Dateline\n- Lead paragraph (who, what, when, where, why)\n- Supporting quotes\n- Company boilerplate\n- Contact information",
+      "maxTokens": 1500,
+      "keywords": [
+        "press release",
+        "PR writing",
+        "press release generator"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "invoice-template",
+      "title": "Invoice Generator",
+      "tagline": "Create professional invoices",
+      "description": "Free invoice generator. Create clean, professional invoices for freelancers and small businesses.",
+      "category": "business",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "from",
+          "label": "From (your business)",
+          "type": "text",
+          "placeholder": "e.g. John Doe Consulting, 123 Main St",
+          "required": true
+        },
+        {
+          "id": "to",
+          "label": "Bill to (client)",
+          "type": "text",
+          "placeholder": "e.g. Acme Corp, 456 Oak Ave",
+          "required": true
+        },
+        {
+          "id": "items",
+          "label": "Line items (description, quantity, rate)",
+          "type": "textarea",
+          "placeholder": "e.g.\nWebsite design - 1 - $2000\nSEO setup - 1 - $500\nMonthly maintenance - 3 months - $200/month",
+          "required": true
+        },
+        {
+          "id": "notes",
+          "label": "Notes/terms",
+          "type": "text",
+          "placeholder": "e.g. Payment due within 30 days",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are an accounting assistant. Create professional invoices.",
+      "userPrompt": "Create a professional invoice:\n\nFrom: {from}\nTo: {to}\nItems:\n{items}\nNotes: {notes}\n\nFormat as a clean text invoice with:\n- Invoice number (generated)\n- Date\n- Line items table\n- Subtotal\n- Tax (if applicable)\n- Total\n- Payment terms",
+      "maxTokens": 1000,
+      "keywords": [
+        "invoice generator",
+        "free invoice",
+        "invoice template",
+        "billing"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "nda-generator",
+      "title": "NDA Generator",
+      "tagline": "Generate a non-disclosure agreement",
+      "description": "Free AI NDA generator. Create a standard non-disclosure agreement for business relationships.",
+      "category": "business",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "party1",
+          "label": "Disclosing party",
+          "type": "text",
+          "placeholder": "e.g. ZapKitt Inc.",
+          "required": true
+        },
+        {
+          "id": "party2",
+          "label": "Receiving party",
+          "type": "text",
+          "placeholder": "e.g. ABC Consulting",
+          "required": true
+        },
+        {
+          "id": "purpose",
+          "label": "Purpose of disclosure",
+          "type": "textarea",
+          "placeholder": "e.g. Evaluating potential partnership for AI tool integration",
+          "required": true
+        },
+        {
+          "id": "duration",
+          "label": "NDA duration",
+          "type": "select",
+          "options": [
+            "1 year",
+            "2 years",
+            "3 years",
+            "5 years",
+            "Indefinite"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a legal document expert. Generate standard NDA templates. Include disclaimer that this is a template and should be reviewed by a lawyer.",
+      "userPrompt": "Generate a standard NDA:\n\nDisclosing Party: {party1}\nReceiving Party: {party2}\nPurpose: {purpose}\nDuration: {duration}\n\nInclude:\n- Definitions\n- Obligations\n- Exclusions\n- Term and termination\n- Remedies\n- Governing law\n- Signature blocks\n\nAdd disclaimer: This is a template for reference only. Consult a lawyer before use.",
+      "maxTokens": 2500,
+      "keywords": [
+        "NDA",
+        "non-disclosure agreement",
+        "NDA template",
+        "confidentiality agreement"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "mission-statement",
+      "title": "Mission Statement Generator",
+      "tagline": "Write a compelling mission statement",
+      "description": "Free AI mission statement generator. Create an inspiring mission and vision statement for your organization.",
+      "category": "business",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "company",
+          "label": "Company/organization",
+          "type": "text",
+          "placeholder": "e.g. ZapKitt",
+          "required": true
+        },
+        {
+          "id": "does",
+          "label": "What you do",
+          "type": "textarea",
+          "placeholder": "e.g. Provide free AI-powered career tools for job seekers worldwide",
+          "required": true
+        },
+        {
+          "id": "values",
+          "label": "Core values",
+          "type": "text",
+          "placeholder": "e.g. Accessibility, Innovation, Quality, Free for all",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a brand strategist. Create compelling mission and vision statements.",
+      "userPrompt": "Create mission and vision statements for:\n\nCompany: {company}\nWhat we do: {does}\nValues: {values}\n\nProvide:\n1. MISSION STATEMENT (3 options, 1-2 sentences each)\n2. VISION STATEMENT (3 options)\n3. CORE VALUES (5-7 with descriptions)\n4. ELEVATOR PITCH (30 seconds)\n5. TAGLINE (5 options)",
+      "maxTokens": 1500,
+      "keywords": [
+        "mission statement",
+        "vision statement",
+        "company mission",
+        "brand values"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "landing-page-copy",
+      "title": "Landing Page Copy Generator",
+      "tagline": "Write high-converting landing page copy",
+      "description": "Free AI landing page copy generator. Create compelling headlines, CTAs, and copy that converts visitors.",
+      "category": "marketing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "product",
+          "label": "Product/service",
+          "type": "text",
+          "placeholder": "e.g. AI Resume Builder",
+          "required": true
+        },
+        {
+          "id": "audience",
+          "label": "Target audience",
+          "type": "text",
+          "placeholder": "e.g. Job seekers, career changers",
+          "required": true
+        },
+        {
+          "id": "goal",
+          "label": "Conversion goal",
+          "type": "select",
+          "options": [
+            "Sign up",
+            "Buy now",
+            "Start free trial",
+            "Download",
+            "Subscribe",
+            "Contact us"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a conversion copywriter. Write landing page copy that converts.",
+      "userPrompt": "Write landing page copy for:\n\nProduct: {product}\nAudience: {audience}\nGoal: {goal}\n\nProvide:\n1. HERO SECTION (headline + subheadline + CTA)\n2. SOCIAL PROOF section\n3. FEATURES section (5 features with benefits)\n4. HOW IT WORKS (3 steps)\n5. FAQ (5 questions)\n6. FINAL CTA section",
+      "maxTokens": 2500,
+      "keywords": [
+        "landing page",
+        "landing page copy",
+        "conversion copy",
+        "sales page"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "facebook-ads-copy",
+      "title": "Facebook Ads Copy Generator",
+      "tagline": "Write scroll-stopping Facebook ad copy",
+      "description": "Free AI Facebook ads copy generator. Create compelling primary text, headlines, and descriptions for Facebook and Instagram ads.",
+      "category": "marketing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "product",
+          "label": "Product/service",
+          "type": "text",
+          "placeholder": "e.g. AI Resume Builder",
+          "required": true
+        },
+        {
+          "id": "audience",
+          "label": "Target audience",
+          "type": "text",
+          "placeholder": "e.g. Job seekers aged 25-40",
+          "required": true
+        },
+        {
+          "id": "objective",
+          "label": "Campaign objective",
+          "type": "select",
+          "options": [
+            "Awareness",
+            "Traffic",
+            "Engagement",
+            "Leads",
+            "Sales",
+            "App installs"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a Facebook ads expert. Write high-performing ad copy.",
+      "userPrompt": "Create 3 Facebook ad variations for:\n\nProduct: {product}\nAudience: {audience}\nObjective: {objective}\n\nEach ad:\n- Primary text (125 chars for mobile)\n- Headline (40 chars)\n- Description (30 chars)\n- CTA button suggestion\n- Hook idea for creative",
+      "maxTokens": 1500,
+      "keywords": [
+        "Facebook ads",
+        "ad copy",
+        "social media ads",
+        "Facebook advertising"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "sales-copy",
+      "title": "AI Sales Copy Writer",
+      "tagline": "Write persuasive sales copy",
+      "description": "Free AI sales copy generator. Create compelling sales emails, scripts, and pitches that close deals.",
+      "category": "marketing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "product",
+          "label": "Product/service",
+          "type": "text",
+          "placeholder": "e.g. AI-powered resume builder SaaS",
+          "required": true
+        },
+        {
+          "id": "audience",
+          "label": "Target buyer",
+          "type": "text",
+          "placeholder": "e.g. HR managers, recruiters, career coaches",
+          "required": true
+        },
+        {
+          "id": "type",
+          "label": "Copy type",
+          "type": "select",
+          "options": [
+            "Sales email",
+            "Cold pitch",
+            "Product pitch",
+            "Follow-up email",
+            "Proposal intro",
+            "Demo script"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a sales copywriting expert. Write persuasive copy that drives action.",
+      "userPrompt": "Write a {type} for:\n\nProduct: {product}\nTarget: {audience}\n\nUse AIDA framework (Attention, Interest, Desire, Action).\nInclude specific benefits, social proof, and a clear CTA.\n\nProvide 2 versions:\n1. DIRECT approach\n2. CONSULTATIVE approach",
+      "maxTokens": 1500,
+      "keywords": [
+        "sales copy",
+        "sales email",
+        "pitch script",
+        "cold email"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "ai-story-writer",
+      "title": "AI Story Writer",
+      "tagline": "Write creative stories on any topic",
+      "description": "Free AI story writer. Generate creative short stories, plot outlines, and character descriptions.",
+      "category": "writing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "genre",
+          "label": "Genre",
+          "type": "select",
+          "options": [
+            "Fantasy",
+            "Sci-Fi",
+            "Mystery",
+            "Romance",
+            "Horror",
+            "Adventure",
+            "Comedy",
+            "Drama",
+            "Thriller"
+          ],
+          "required": true
+        },
+        {
+          "id": "premise",
+          "label": "Story premise",
+          "type": "textarea",
+          "placeholder": "e.g. A programmer discovers their code can predict the future",
+          "required": true
+        },
+        {
+          "id": "length",
+          "label": "Length",
+          "type": "select",
+          "options": [
+            "Flash fiction (500 words)",
+            "Short story (1500 words)",
+            "Story outline",
+            "Character profiles"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a creative fiction writer. Write engaging, well-structured stories.",
+      "userPrompt": "Write a {genre} {length}:\n\nPremise: {premise}\n\nInclude:\n- Compelling opening hook\n- Character development\n- Rising tension\n- Satisfying resolution\n- Vivid descriptions",
+      "maxTokens": 3000,
+      "keywords": [
+        "story writer",
+        "AI story",
+        "creative writing",
+        "short story generator"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "ai-headlines",
+      "title": "AI Headline Generator",
+      "tagline": "Write attention-grabbing headlines",
+      "description": "Free AI headline generator. Create compelling headlines for articles, blogs, ads, and social media.",
+      "category": "writing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Topic or content",
+          "type": "textarea",
+          "placeholder": "e.g. Tips for landing a remote DevOps job in 2026",
+          "required": true
+        },
+        {
+          "id": "platform",
+          "label": "Platform",
+          "type": "select",
+          "options": [
+            "Blog post",
+            "News article",
+            "Email newsletter",
+            "Social media",
+            "Ad campaign",
+            "YouTube video"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a headline writing expert. Create attention-grabbing headlines.",
+      "userPrompt": "Generate 15 headlines for:\n\nTopic: {topic}\nPlatform: {platform}\n\nCategories:\n- HOW-TO (3)\n- LISTICLE (3)\n- QUESTION (3)\n- CURIOSITY (3)\n- URGENT/NEWS (3)\n\nEach under 70 characters. Include power words.",
+      "maxTokens": 1000,
+      "keywords": [
+        "headline generator",
+        "title generator",
+        "blog headline",
+        "catchy headline"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "ai-grammar-fix",
+      "title": "AI Grammar Fixer",
+      "tagline": "Fix grammar, spelling, and punctuation",
+      "description": "Free AI grammar checker and fixer. Correct grammar, spelling, punctuation, and improve sentence structure.",
+      "category": "writing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text to fix",
+          "type": "textarea",
+          "placeholder": "Paste text with grammar issues...",
+          "required": true
+        },
+        {
+          "id": "style",
+          "label": "Writing style",
+          "type": "select",
+          "options": [
+            "Standard English",
+            "Academic",
+            "Business",
+            "Casual",
+            "British English",
+            "American English"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a professional editor. Fix all grammar, spelling, and punctuation errors.",
+      "userPrompt": "Fix all grammar, spelling, and punctuation errors in this text. Style: {style}\n\nText:\n\"\"\"\n{text}\n\"\"\"\n\nProvide:\n1. CORRECTED TEXT\n2. CHANGES MADE (list each correction)\n3. WRITING TIPS (3 suggestions to improve)",
+      "maxTokens": 2000,
+      "keywords": [
+        "grammar checker",
+        "grammar fixer",
+        "spelling checker",
+        "proofread"
+      ],
+      "faq": []
     }
   ]
 }
