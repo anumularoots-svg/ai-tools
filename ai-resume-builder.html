@@ -585,7 +585,7 @@ function downloadDOCX() {
   fetch("/api/docx", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ resumeJSON: window.resumeJSON, fileName: fName })
+    body: JSON.stringify({ resumeJSON: window.resumeJSON, fileName: fName, template: (document.getElementById("templateSelect")||{}).value||"0", color: "black" })
   }).then(function(resp) {
     if (!resp.ok) throw new Error("API returned " + resp.status);
     return resp.blob();
