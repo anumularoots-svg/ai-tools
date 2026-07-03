@@ -1,35 +1,109 @@
 {
   "categories": [
-    { "id": "resume", "name": "Resume & Career", "icon": "📄", "color": "#7C3AED" },
-    { "id": "writing", "name": "AI Writing", "icon": "✍️", "color": "#2563EB" },
-    { "id": "marketing", "name": "Marketing & SEO", "icon": "📈", "color": "#D97706" },
-    { "id": "social", "name": "Social Media", "icon": "📱", "color": "#EC4899" },
-    { "id": "business", "name": "Business", "icon": "💼", "color": "#059669" },
-    { "id": "student", "name": "Student", "icon": "🎓", "color": "#0EA5E9" },
-    { "id": "pdf", "name": "PDF Tools", "icon": "📑", "color": "#DC2626" },
-    { "id": "image", "name": "Image Tools", "icon": "🖼️", "color": "#8B5CF6" },
-    { "id": "developer", "name": "Developer", "icon": "💻", "color": "#10B981" },
-    { "id": "productivity", "name": "Productivity", "icon": "⚡", "color": "#F59E0B" }
+    {
+      "id": "resume",
+      "name": "Resume & Career",
+      "icon": "\ud83d\udcc4",
+      "color": "#7C3AED"
+    },
+    {
+      "id": "writing",
+      "name": "AI Writing",
+      "icon": "\u270d\ufe0f",
+      "color": "#2563EB"
+    },
+    {
+      "id": "marketing",
+      "name": "Marketing & SEO",
+      "icon": "\ud83d\udcc8",
+      "color": "#D97706"
+    },
+    {
+      "id": "social",
+      "name": "Social Media",
+      "icon": "\ud83d\udcf1",
+      "color": "#EC4899"
+    },
+    {
+      "id": "business",
+      "name": "Business",
+      "icon": "\ud83d\udcbc",
+      "color": "#059669"
+    },
+    {
+      "id": "student",
+      "name": "Student",
+      "icon": "\ud83c\udf93",
+      "color": "#0EA5E9"
+    },
+    {
+      "id": "pdf",
+      "name": "PDF Tools",
+      "icon": "\ud83d\udcd1",
+      "color": "#DC2626"
+    },
+    {
+      "id": "image",
+      "name": "Image Tools",
+      "icon": "\ud83d\uddbc\ufe0f",
+      "color": "#8B5CF6"
+    },
+    {
+      "id": "developer",
+      "name": "Developer",
+      "icon": "\ud83d\udcbb",
+      "color": "#10B981"
+    },
+    {
+      "id": "productivity",
+      "name": "Productivity",
+      "icon": "\u26a1",
+      "color": "#F59E0B"
+    }
   ],
   "tools": [
     {
       "slug": "ai-resume-checker",
       "title": "AI Resume Checker",
       "tagline": "Get instant feedback on your resume",
-      "description": "Free AI resume checker. Get detailed feedback on your resume — ATS compatibility, formatting, content quality, and actionable improvement suggestions.",
+      "description": "Free AI resume checker. Get detailed feedback on your resume \u2014 ATS compatibility, formatting, content quality, and actionable improvement suggestions.",
       "category": "resume",
       "type": "ai",
       "fields": [
-        { "id": "resume", "label": "Paste your resume text", "type": "textarea", "placeholder": "Paste your full resume here...", "required": true },
-        { "id": "jobDesc", "label": "Target job description (optional)", "type": "textarea", "placeholder": "Paste the job posting for targeted feedback...", "required": false }
+        {
+          "id": "resume",
+          "label": "Paste your resume text",
+          "type": "textarea",
+          "placeholder": "Paste your full resume here...",
+          "required": true
+        },
+        {
+          "id": "jobDesc",
+          "label": "Target job description (optional)",
+          "type": "textarea",
+          "placeholder": "Paste the job posting for targeted feedback...",
+          "required": false
+        }
       ],
       "systemPrompt": "You are an expert resume reviewer and career coach. Analyze the resume and provide detailed, actionable feedback.",
       "userPrompt": "Review this resume and provide:\n\n1. OVERALL SCORE (out of 100)\n2. ATS COMPATIBILITY (score + issues)\n3. CONTENT QUALITY (score + issues)\n4. FORMATTING (score + issues)\n5. TOP 5 IMPROVEMENTS (specific, actionable)\n6. MISSING KEYWORDS (if job description provided)\n7. STRENGTH HIGHLIGHTS\n\nResume:\n\"\"\"\n{resume}\n\"\"\"\n\n{jobDesc ? 'Target Job Description:\\n\"\"\"\\n' + jobDesc + '\\n\"\"\"' : ''}",
       "maxTokens": 2000,
-      "keywords": ["resume checker", "resume review", "ATS check", "resume score", "resume feedback"],
+      "keywords": [
+        "resume checker",
+        "resume review",
+        "ATS check",
+        "resume score",
+        "resume feedback"
+      ],
       "faq": [
-        { "q": "How does the AI resume checker work?", "a": "Our AI analyzes your resume for ATS compatibility, content quality, formatting, and keyword optimization. It provides a score out of 100 and specific improvement suggestions." },
-        { "q": "Is it free?", "a": "Yes, completely free. No signup, no watermark, no limits." }
+        {
+          "q": "How does the AI resume checker work?",
+          "a": "Our AI analyzes your resume for ATS compatibility, content quality, formatting, and keyword optimization. It provides a score out of 100 and specific improvement suggestions."
+        },
+        {
+          "q": "Is it free?",
+          "a": "Yes, completely free. No signup, no watermark, no limits."
+        }
       ]
     },
     {
@@ -40,15 +114,36 @@
       "category": "resume",
       "type": "ai",
       "fields": [
-        { "id": "resume", "label": "Paste your resume", "type": "textarea", "placeholder": "Paste your full resume text...", "required": true },
-        { "id": "jobDesc", "label": "Job description", "type": "textarea", "placeholder": "Paste the job posting to check keyword match...", "required": true }
+        {
+          "id": "resume",
+          "label": "Paste your resume",
+          "type": "textarea",
+          "placeholder": "Paste your full resume text...",
+          "required": true
+        },
+        {
+          "id": "jobDesc",
+          "label": "Job description",
+          "type": "textarea",
+          "placeholder": "Paste the job posting to check keyword match...",
+          "required": true
+        }
       ],
       "systemPrompt": "You are an ATS (Applicant Tracking System) expert. Score resumes for ATS compatibility.",
-      "userPrompt": "Analyze this resume against the job description for ATS compatibility.\n\nProvide:\n1. ATS SCORE: X/100\n2. KEYWORD MATCH: List matched and missing keywords\n3. FORMAT CHECK: ✅ or ❌ for each (no tables, no columns, no graphics, standard headings, proper dates, contact info)\n4. SECTION ANALYSIS: Score each section\n5. TOP 10 MISSING KEYWORDS to add\n6. REWRITTEN SUMMARY optimized for this job\n\nResume:\n\"\"\"\n{resume}\n\"\"\"\n\nJob Description:\n\"\"\"\n{jobDesc}\n\"\"\"",
+      "userPrompt": "Analyze this resume against the job description for ATS compatibility.\n\nProvide:\n1. ATS SCORE: X/100\n2. KEYWORD MATCH: List matched and missing keywords\n3. FORMAT CHECK: \u2705 or \u274c for each (no tables, no columns, no graphics, standard headings, proper dates, contact info)\n4. SECTION ANALYSIS: Score each section\n5. TOP 10 MISSING KEYWORDS to add\n6. REWRITTEN SUMMARY optimized for this job\n\nResume:\n\"\"\"\n{resume}\n\"\"\"\n\nJob Description:\n\"\"\"\n{jobDesc}\n\"\"\"",
       "maxTokens": 2000,
-      "keywords": ["ATS score", "ATS checker", "resume ATS", "applicant tracking system", "resume keywords"],
+      "keywords": [
+        "ATS score",
+        "ATS checker",
+        "resume ATS",
+        "applicant tracking system",
+        "resume keywords"
+      ],
       "faq": [
-        { "q": "What is an ATS score?", "a": "ATS score measures how well your resume matches a job description for Applicant Tracking Systems. Higher scores mean better chances of passing the automated screening." }
+        {
+          "q": "What is an ATS score?",
+          "a": "ATS score measures how well your resume matches a job description for Applicant Tracking Systems. Higher scores mean better chances of passing the automated screening."
+        }
       ]
     },
     {
@@ -59,15 +154,44 @@
       "category": "resume",
       "type": "ai",
       "fields": [
-        { "id": "title", "label": "Job title", "type": "text", "placeholder": "e.g. Senior Software Engineer", "required": true },
-        { "id": "experience", "label": "Years of experience", "type": "text", "placeholder": "e.g. 8", "required": true },
-        { "id": "skills", "label": "Key skills", "type": "textarea", "placeholder": "e.g. Python, AWS, Docker, React, Team Leadership", "required": true },
-        { "id": "achievements", "label": "Top achievements", "type": "textarea", "placeholder": "e.g. Led team of 10, Reduced costs by 30%, Built platform serving 1M users", "required": false }
+        {
+          "id": "title",
+          "label": "Job title",
+          "type": "text",
+          "placeholder": "e.g. Senior Software Engineer",
+          "required": true
+        },
+        {
+          "id": "experience",
+          "label": "Years of experience",
+          "type": "text",
+          "placeholder": "e.g. 8",
+          "required": true
+        },
+        {
+          "id": "skills",
+          "label": "Key skills",
+          "type": "textarea",
+          "placeholder": "e.g. Python, AWS, Docker, React, Team Leadership",
+          "required": true
+        },
+        {
+          "id": "achievements",
+          "label": "Top achievements",
+          "type": "textarea",
+          "placeholder": "e.g. Led team of 10, Reduced costs by 30%, Built platform serving 1M users",
+          "required": false
+        }
       ],
       "systemPrompt": "You are an expert resume writer. Write professional resume summaries.",
       "userPrompt": "Write 3 different professional resume summaries (5-7 sentences each) for:\n\nTitle: {title}\nExperience: {experience} years\nSkills: {skills}\n{achievements ? 'Achievements: ' + achievements : ''}\n\nEach summary should:\n- Start with a power phrase\n- Include years of experience\n- Mention 3-4 key skills\n- Include a measurable achievement\n- Be ATS-optimized\n\nLabel them: Option 1, Option 2, Option 3",
       "maxTokens": 1500,
-      "keywords": ["resume summary", "professional summary", "resume summary generator", "career summary"],
+      "keywords": [
+        "resume summary",
+        "professional summary",
+        "resume summary generator",
+        "career summary"
+      ],
       "faq": []
     },
     {
@@ -78,15 +202,44 @@
       "category": "resume",
       "type": "ai",
       "fields": [
-        { "id": "role", "label": "Target role", "type": "text", "placeholder": "e.g. Senior DevOps Engineer", "required": true },
-        { "id": "company", "label": "Company (optional)", "type": "text", "placeholder": "e.g. Amazon, Google", "required": false },
-        { "id": "skills", "label": "Your key skills", "type": "textarea", "placeholder": "e.g. AWS, Kubernetes, Docker, CI/CD, Python", "required": true },
-        { "id": "experience", "label": "Years of experience", "type": "text", "placeholder": "e.g. 8", "required": true }
+        {
+          "id": "role",
+          "label": "Target role",
+          "type": "text",
+          "placeholder": "e.g. Senior DevOps Engineer",
+          "required": true
+        },
+        {
+          "id": "company",
+          "label": "Company (optional)",
+          "type": "text",
+          "placeholder": "e.g. Amazon, Google",
+          "required": false
+        },
+        {
+          "id": "skills",
+          "label": "Your key skills",
+          "type": "textarea",
+          "placeholder": "e.g. AWS, Kubernetes, Docker, CI/CD, Python",
+          "required": true
+        },
+        {
+          "id": "experience",
+          "label": "Years of experience",
+          "type": "text",
+          "placeholder": "e.g. 8",
+          "required": true
+        }
       ],
       "systemPrompt": "You are an expert interview coach. Generate realistic interview questions with detailed STAR-method answers.",
       "userPrompt": "Generate 10 interview questions with detailed answers for:\n\nRole: {role}\n{company ? 'Company: ' + company : ''}\nSkills: {skills}\nExperience: {experience} years\n\nInclude:\n- 3 Technical questions\n- 3 Behavioral/STAR questions\n- 2 Scenario-based questions\n- 2 Role-specific questions\n\nFor each question provide:\nQ: [question]\nA: [detailed answer using STAR method where applicable, 4-6 sentences]",
       "maxTokens": 3000,
-      "keywords": ["interview questions", "interview prep", "job interview", "STAR method"],
+      "keywords": [
+        "interview questions",
+        "interview prep",
+        "job interview",
+        "STAR method"
+      ],
       "faq": []
     },
     {
@@ -97,16 +250,56 @@
       "category": "resume",
       "type": "ai",
       "fields": [
-        { "id": "situation", "label": "Situation", "type": "select", "options": ["New job offer", "Annual raise", "Promotion", "Counter-offer"], "required": true },
-        { "id": "currentSalary", "label": "Current/offered salary", "type": "text", "placeholder": "e.g. $95,000", "required": true },
-        { "id": "targetSalary", "label": "Target salary", "type": "text", "placeholder": "e.g. $115,000", "required": true },
-        { "id": "role", "label": "Role", "type": "text", "placeholder": "e.g. Senior Software Engineer", "required": true },
-        { "id": "reasons", "label": "Key reasons for higher salary", "type": "textarea", "placeholder": "e.g. 8 years experience, led team of 10, market rate is higher...", "required": false }
+        {
+          "id": "situation",
+          "label": "Situation",
+          "type": "select",
+          "options": [
+            "New job offer",
+            "Annual raise",
+            "Promotion",
+            "Counter-offer"
+          ],
+          "required": true
+        },
+        {
+          "id": "currentSalary",
+          "label": "Current/offered salary",
+          "type": "text",
+          "placeholder": "e.g. $95,000",
+          "required": true
+        },
+        {
+          "id": "targetSalary",
+          "label": "Target salary",
+          "type": "text",
+          "placeholder": "e.g. $115,000",
+          "required": true
+        },
+        {
+          "id": "role",
+          "label": "Role",
+          "type": "text",
+          "placeholder": "e.g. Senior Software Engineer",
+          "required": true
+        },
+        {
+          "id": "reasons",
+          "label": "Key reasons for higher salary",
+          "type": "textarea",
+          "placeholder": "e.g. 8 years experience, led team of 10, market rate is higher...",
+          "required": false
+        }
       ],
       "systemPrompt": "You are a salary negotiation expert. Write professional, persuasive salary negotiation emails.",
       "userPrompt": "Write a professional salary negotiation email:\n\nSituation: {situation}\nCurrent/Offered: {currentSalary}\nTarget: {targetSalary}\nRole: {role}\n{reasons ? 'Reasons: ' + reasons : ''}\n\nThe email should:\n- Be professional and respectful\n- Cite market data/experience\n- Express enthusiasm for the role\n- Make a clear ask\n- Leave room for discussion\n\nProvide 2 versions:\n1. CONFIDENT (direct ask)\n2. COLLABORATIVE (softer approach)",
       "maxTokens": 1500,
-      "keywords": ["salary negotiation", "negotiate salary", "salary email", "raise request"],
+      "keywords": [
+        "salary negotiation",
+        "negotiate salary",
+        "salary email",
+        "raise request"
+      ],
       "faq": []
     },
     {
@@ -117,17 +310,69 @@
       "category": "resume",
       "type": "ai",
       "fields": [
-        { "id": "name", "label": "Your name", "type": "text", "placeholder": "e.g. John Doe", "required": true },
-        { "id": "company", "label": "Company name", "type": "text", "placeholder": "e.g. Acme Corp", "required": true },
-        { "id": "manager", "label": "Manager name", "type": "text", "placeholder": "e.g. Jane Smith", "required": true },
-        { "id": "lastDay", "label": "Last working day", "type": "text", "placeholder": "e.g. July 31, 2026", "required": true },
-        { "id": "reason", "label": "Reason (optional)", "type": "select", "options": ["New opportunity", "Career change", "Personal reasons", "Relocation", "Further education", "Prefer not to specify"], "required": false },
-        { "id": "tone", "label": "Tone", "type": "select", "options": ["Professional & warm", "Formal & brief", "Grateful & detailed"], "required": true }
+        {
+          "id": "name",
+          "label": "Your name",
+          "type": "text",
+          "placeholder": "e.g. John Doe",
+          "required": true
+        },
+        {
+          "id": "company",
+          "label": "Company name",
+          "type": "text",
+          "placeholder": "e.g. Acme Corp",
+          "required": true
+        },
+        {
+          "id": "manager",
+          "label": "Manager name",
+          "type": "text",
+          "placeholder": "e.g. Jane Smith",
+          "required": true
+        },
+        {
+          "id": "lastDay",
+          "label": "Last working day",
+          "type": "text",
+          "placeholder": "e.g. July 31, 2026",
+          "required": true
+        },
+        {
+          "id": "reason",
+          "label": "Reason (optional)",
+          "type": "select",
+          "options": [
+            "New opportunity",
+            "Career change",
+            "Personal reasons",
+            "Relocation",
+            "Further education",
+            "Prefer not to specify"
+          ],
+          "required": false
+        },
+        {
+          "id": "tone",
+          "label": "Tone",
+          "type": "select",
+          "options": [
+            "Professional & warm",
+            "Formal & brief",
+            "Grateful & detailed"
+          ],
+          "required": true
+        }
       ],
       "systemPrompt": "You are a professional communication expert. Write resignation letters.",
       "userPrompt": "Write a resignation letter:\n\nFrom: {name}\nCompany: {company}\nManager: {manager}\nLast Day: {lastDay}\nReason: {reason}\nTone: {tone}\n\nThe letter should:\n- Be professional and respectful\n- Express gratitude\n- Offer transition help\n- Keep it to 1 page\n- Include proper formatting (date, address, body, signature)",
       "maxTokens": 1000,
-      "keywords": ["resignation letter", "quit job letter", "two weeks notice", "resignation email"],
+      "keywords": [
+        "resignation letter",
+        "quit job letter",
+        "two weeks notice",
+        "resignation email"
+      ],
       "faq": []
     },
     {
@@ -138,15 +383,43 @@
       "category": "resume",
       "type": "ai",
       "fields": [
-        { "id": "interviewer", "label": "Interviewer name", "type": "text", "placeholder": "e.g. Sarah Johnson", "required": true },
-        { "id": "role", "label": "Role interviewed for", "type": "text", "placeholder": "e.g. Senior DevOps Engineer", "required": true },
-        { "id": "company", "label": "Company", "type": "text", "placeholder": "e.g. Google", "required": true },
-        { "id": "highlights", "label": "Interview highlights", "type": "textarea", "placeholder": "e.g. Discussed Kubernetes migration, liked the team culture, excited about cloud-native projects", "required": false }
+        {
+          "id": "interviewer",
+          "label": "Interviewer name",
+          "type": "text",
+          "placeholder": "e.g. Sarah Johnson",
+          "required": true
+        },
+        {
+          "id": "role",
+          "label": "Role interviewed for",
+          "type": "text",
+          "placeholder": "e.g. Senior DevOps Engineer",
+          "required": true
+        },
+        {
+          "id": "company",
+          "label": "Company",
+          "type": "text",
+          "placeholder": "e.g. Google",
+          "required": true
+        },
+        {
+          "id": "highlights",
+          "label": "Interview highlights",
+          "type": "textarea",
+          "placeholder": "e.g. Discussed Kubernetes migration, liked the team culture, excited about cloud-native projects",
+          "required": false
+        }
       ],
       "systemPrompt": "You are a career communication expert. Write thank-you emails after job interviews.",
       "userPrompt": "Write a thank-you email after a job interview:\n\nInterviewer: {interviewer}\nRole: {role}\nCompany: {company}\n{highlights ? 'Highlights discussed: ' + highlights : ''}\n\nThe email should:\n- Thank them for their time\n- Reference specific discussion points\n- Reinforce your fit for the role\n- Express enthusiasm\n- Be concise (under 200 words)\n\nProvide 2 versions:\n1. FORMAL\n2. WARM & PERSONAL",
       "maxTokens": 1000,
-      "keywords": ["thank you email", "interview follow up", "thank you after interview"],
+      "keywords": [
+        "thank you email",
+        "interview follow up",
+        "thank you after interview"
+      ],
       "faq": []
     },
     {
@@ -157,15 +430,41 @@
       "category": "writing",
       "type": "ai",
       "fields": [
-        { "id": "text", "label": "Paste AI-generated text", "type": "textarea", "placeholder": "Paste the AI text you want to humanize...", "required": true },
-        { "id": "tone", "label": "Target tone", "type": "select", "options": ["Natural conversational", "Professional", "Academic", "Casual blog", "Storytelling"], "required": true }
+        {
+          "id": "text",
+          "label": "Paste AI-generated text",
+          "type": "textarea",
+          "placeholder": "Paste the AI text you want to humanize...",
+          "required": true
+        },
+        {
+          "id": "tone",
+          "label": "Target tone",
+          "type": "select",
+          "options": [
+            "Natural conversational",
+            "Professional",
+            "Academic",
+            "Casual blog",
+            "Storytelling"
+          ],
+          "required": true
+        }
       ],
       "systemPrompt": "You are an expert editor who transforms AI-generated text into natural, human-sounding writing. Never mention you are AI. Write as a human would.",
       "userPrompt": "Rewrite this AI-generated text to sound completely natural and human.\n\nTone: {tone}\n\nRules:\n- Vary sentence length (mix short and long)\n- Use contractions naturally\n- Add occasional filler words\n- Use specific examples instead of generic statements\n- Avoid lists unless the original has them\n- Don't start sentences with \"In today's\" or \"In the realm of\"\n- Remove AI patterns like \"It's important to note\" or \"Furthermore\"\n\nText to humanize:\n\"\"\"\n{text}\n\"\"\"",
       "maxTokens": 2000,
-      "keywords": ["AI humanizer", "humanize AI text", "AI to human text", "bypass AI detector"],
+      "keywords": [
+        "AI humanizer",
+        "humanize AI text",
+        "AI to human text",
+        "bypass AI detector"
+      ],
       "faq": [
-        { "q": "Can this bypass AI detectors?", "a": "Our humanizer rewrites text with natural patterns, varied sentence structures, and human-like expressions. While no tool guarantees 100% bypass, it significantly improves natural readability." }
+        {
+          "q": "Can this bypass AI detectors?",
+          "a": "Our humanizer rewrites text with natural patterns, varied sentence structures, and human-like expressions. While no tool guarantees 100% bypass, it significantly improves natural readability."
+        }
       ]
     },
     {
@@ -176,32 +475,106 @@
       "category": "writing",
       "type": "ai",
       "fields": [
-        { "id": "topic", "label": "Essay topic", "type": "text", "placeholder": "e.g. Impact of artificial intelligence on healthcare", "required": true },
-        { "id": "length", "label": "Length", "type": "select", "options": ["Short (300 words)", "Medium (500 words)", "Long (800 words)", "Extended (1200 words)"], "required": true },
-        { "id": "type", "label": "Essay type", "type": "select", "options": ["Argumentative", "Descriptive", "Narrative", "Expository", "Persuasive", "Compare & Contrast"], "required": true },
-        { "id": "level", "label": "Academic level", "type": "select", "options": ["High School", "Undergraduate", "Graduate", "Professional"], "required": true }
+        {
+          "id": "topic",
+          "label": "Essay topic",
+          "type": "text",
+          "placeholder": "e.g. Impact of artificial intelligence on healthcare",
+          "required": true
+        },
+        {
+          "id": "length",
+          "label": "Length",
+          "type": "select",
+          "options": [
+            "Short (300 words)",
+            "Medium (500 words)",
+            "Long (800 words)",
+            "Extended (1200 words)"
+          ],
+          "required": true
+        },
+        {
+          "id": "type",
+          "label": "Essay type",
+          "type": "select",
+          "options": [
+            "Argumentative",
+            "Descriptive",
+            "Narrative",
+            "Expository",
+            "Persuasive",
+            "Compare & Contrast"
+          ],
+          "required": true
+        },
+        {
+          "id": "level",
+          "label": "Academic level",
+          "type": "select",
+          "options": [
+            "High School",
+            "Undergraduate",
+            "Graduate",
+            "Professional"
+          ],
+          "required": true
+        }
       ],
       "systemPrompt": "You are an expert academic writer. Write well-structured, original essays.",
       "userPrompt": "Write a {type} essay on:\n\nTopic: {topic}\nLength: {length}\nLevel: {level}\n\nStructure:\n- Engaging introduction with thesis statement\n- 3-4 body paragraphs with topic sentences and evidence\n- Strong conclusion\n- Use transitions between paragraphs\n- Include relevant examples\n- Cite general knowledge where appropriate",
       "maxTokens": 3000,
-      "keywords": ["essay writer", "AI essay", "write essay", "essay generator"],
+      "keywords": [
+        "essay writer",
+        "AI essay",
+        "write essay",
+        "essay generator"
+      ],
       "faq": []
     },
     {
       "slug": "ai-tone-changer",
       "title": "AI Tone Changer",
       "tagline": "Change the tone of any text",
-      "description": "Free AI tone changer. Transform your text to any tone — professional, casual, friendly, formal, persuasive, or empathetic.",
+      "description": "Free AI tone changer. Transform your text to any tone \u2014 professional, casual, friendly, formal, persuasive, or empathetic.",
       "category": "writing",
       "type": "ai",
       "fields": [
-        { "id": "text", "label": "Your text", "type": "textarea", "placeholder": "Paste the text you want to change the tone of...", "required": true },
-        { "id": "tone", "label": "Target tone", "type": "select", "options": ["Professional", "Casual", "Friendly", "Formal", "Persuasive", "Empathetic", "Confident", "Humorous", "Diplomatic", "Urgent"], "required": true }
+        {
+          "id": "text",
+          "label": "Your text",
+          "type": "textarea",
+          "placeholder": "Paste the text you want to change the tone of...",
+          "required": true
+        },
+        {
+          "id": "tone",
+          "label": "Target tone",
+          "type": "select",
+          "options": [
+            "Professional",
+            "Casual",
+            "Friendly",
+            "Formal",
+            "Persuasive",
+            "Empathetic",
+            "Confident",
+            "Humorous",
+            "Diplomatic",
+            "Urgent"
+          ],
+          "required": true
+        }
       ],
       "systemPrompt": "You are an expert writer who can adapt text to any tone while preserving the original meaning.",
       "userPrompt": "Rewrite this text in a {tone} tone. Keep the same meaning but change the style and word choice to match the target tone.\n\nOriginal text:\n\"\"\"\n{text}\n\"\"\"",
       "maxTokens": 1500,
-      "keywords": ["tone changer", "change text tone", "rewrite tone", "text tone converter"],
+      "keywords": [
+        "tone changer",
+        "change text tone",
+        "rewrite tone",
+        "text tone converter"
+      ],
       "faq": []
     },
     {
@@ -212,14 +585,52 @@
       "category": "social",
       "type": "ai",
       "fields": [
-        { "id": "topic", "label": "What's the post about?", "type": "textarea", "placeholder": "e.g. New product launch, travel photo from Bali, fitness transformation...", "required": true },
-        { "id": "tone", "label": "Tone", "type": "select", "options": ["Fun & playful", "Inspirational", "Professional", "Witty", "Informative", "Emotional"], "required": true },
-        { "id": "cta", "label": "Call to action", "type": "select", "options": ["None", "Follow for more", "Link in bio", "Comment below", "Share with a friend", "Save this post", "DM for details"], "required": false }
+        {
+          "id": "topic",
+          "label": "What's the post about?",
+          "type": "textarea",
+          "placeholder": "e.g. New product launch, travel photo from Bali, fitness transformation...",
+          "required": true
+        },
+        {
+          "id": "tone",
+          "label": "Tone",
+          "type": "select",
+          "options": [
+            "Fun & playful",
+            "Inspirational",
+            "Professional",
+            "Witty",
+            "Informative",
+            "Emotional"
+          ],
+          "required": true
+        },
+        {
+          "id": "cta",
+          "label": "Call to action",
+          "type": "select",
+          "options": [
+            "None",
+            "Follow for more",
+            "Link in bio",
+            "Comment below",
+            "Share with a friend",
+            "Save this post",
+            "DM for details"
+          ],
+          "required": false
+        }
       ],
       "systemPrompt": "You are a social media expert specializing in Instagram. Write engaging captions that drive engagement.",
       "userPrompt": "Write 3 different Instagram captions for:\n\nTopic: {topic}\nTone: {tone}\nCTA: {cta}\n\nEach caption should:\n- Have a strong hook (first line)\n- Be 2-4 sentences\n- Include a CTA if specified\n- Include 15-20 relevant hashtags\n- Use emojis naturally\n\nLabel: Option 1, Option 2, Option 3",
       "maxTokens": 1500,
-      "keywords": ["Instagram caption", "Instagram caption generator", "IG caption", "social media caption"],
+      "keywords": [
+        "Instagram caption",
+        "Instagram caption generator",
+        "IG caption",
+        "social media caption"
+      ],
       "faq": []
     },
     {
@@ -230,13 +641,38 @@
       "category": "social",
       "type": "ai",
       "fields": [
-        { "id": "topic", "label": "Video topic", "type": "textarea", "placeholder": "e.g. How to deploy Kubernetes on AWS with Terraform", "required": true },
-        { "id": "style", "label": "Style", "type": "select", "options": ["How-to / Tutorial", "Listicle", "Storytelling", "News / Update", "Review", "Challenge", "Vlog"], "required": true }
+        {
+          "id": "topic",
+          "label": "Video topic",
+          "type": "textarea",
+          "placeholder": "e.g. How to deploy Kubernetes on AWS with Terraform",
+          "required": true
+        },
+        {
+          "id": "style",
+          "label": "Style",
+          "type": "select",
+          "options": [
+            "How-to / Tutorial",
+            "Listicle",
+            "Storytelling",
+            "News / Update",
+            "Review",
+            "Challenge",
+            "Vlog"
+          ],
+          "required": true
+        }
       ],
       "systemPrompt": "You are a YouTube SEO expert. Generate clickable, SEO-optimized video titles.",
       "userPrompt": "Generate 10 YouTube title options for:\n\nTopic: {topic}\nStyle: {style}\n\nRules:\n- Under 60 characters each\n- Include power words (Ultimate, Complete, Secret, Easy, Fast)\n- SEO-optimized with main keyword near start\n- Mix of styles (curiosity, how-to, numbered)\n- No clickbait that doesn't deliver\n\nAlso suggest:\n- Best thumbnail text (3-4 words)\n- Optimal description first line",
       "maxTokens": 1000,
-      "keywords": ["YouTube title", "video title generator", "YouTube SEO", "clickable title"],
+      "keywords": [
+        "YouTube title",
+        "video title generator",
+        "YouTube SEO",
+        "clickable title"
+      ],
       "faq": []
     },
     {
@@ -247,14 +683,1000 @@
       "category": "marketing",
       "type": "ai",
       "fields": [
-        { "id": "page", "label": "Page title / topic", "type": "text", "placeholder": "e.g. Free AI Resume Builder - ATS Optimized", "required": true },
-        { "id": "keywords", "label": "Target keywords", "type": "text", "placeholder": "e.g. AI resume builder, free resume, ATS resume", "required": true },
-        { "id": "type", "label": "Page type", "type": "select", "options": ["Homepage", "Product page", "Blog post", "Landing page", "Service page", "Tool page"], "required": true }
+        {
+          "id": "page",
+          "label": "Page title / topic",
+          "type": "text",
+          "placeholder": "e.g. Free AI Resume Builder - ATS Optimized",
+          "required": true
+        },
+        {
+          "id": "keywords",
+          "label": "Target keywords",
+          "type": "text",
+          "placeholder": "e.g. AI resume builder, free resume, ATS resume",
+          "required": true
+        },
+        {
+          "id": "type",
+          "label": "Page type",
+          "type": "select",
+          "options": [
+            "Homepage",
+            "Product page",
+            "Blog post",
+            "Landing page",
+            "Service page",
+            "Tool page"
+          ],
+          "required": true
+        }
       ],
       "systemPrompt": "You are an SEO expert specializing in meta descriptions that maximize click-through rates.",
       "userPrompt": "Write 5 SEO meta descriptions for:\n\nPage: {page}\nKeywords: {keywords}\nType: {type}\n\nRules:\n- 150-160 characters each\n- Include primary keyword naturally\n- Include a CTA or value proposition\n- Create urgency or curiosity\n- Avoid generic phrases\n\nAlso provide:\n- Recommended title tag (50-60 chars)\n- H1 suggestion",
       "maxTokens": 1000,
-      "keywords": ["meta description", "SEO meta", "meta description generator", "SEO tool"],
+      "keywords": [
+        "meta description",
+        "SEO meta",
+        "meta description generator",
+        "SEO tool"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "resume-objective",
+      "title": "Resume Objective Generator",
+      "tagline": "Write a compelling career objective",
+      "description": "Free AI resume objective generator. Create a targeted career objective that grabs recruiters' attention in seconds.",
+      "category": "resume",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "role",
+          "label": "Target role",
+          "type": "text",
+          "placeholder": "e.g. Junior Data Analyst",
+          "required": true
+        },
+        {
+          "id": "experience",
+          "label": "Years of experience",
+          "type": "text",
+          "placeholder": "e.g. 2",
+          "required": true
+        },
+        {
+          "id": "skills",
+          "label": "Key skills",
+          "type": "textarea",
+          "placeholder": "e.g. Python, SQL, Tableau, Excel",
+          "required": true
+        },
+        {
+          "id": "goal",
+          "label": "Career goal",
+          "type": "text",
+          "placeholder": "e.g. Transition from marketing to data analytics",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are an expert resume writer. Write career objectives for resumes.",
+      "userPrompt": "Write 3 different resume objectives for:\n\nRole: {role}\nExperience: {experience} years\nSkills: {skills}\n{goal}\n\nEach should be 2-3 sentences, mention the target role, highlight key skills, and show career motivation.\n\nLabel: Option 1, Option 2, Option 3",
+      "maxTokens": 1000,
+      "keywords": [
+        "resume objective",
+        "career objective",
+        "resume objective generator"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "resume-keywords",
+      "title": "Resume Keywords Optimizer",
+      "tagline": "Extract and optimize ATS keywords",
+      "description": "Free resume keyword optimizer. Extract keywords from job descriptions and optimize your resume for ATS systems.",
+      "category": "resume",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "jobDesc",
+          "label": "Job description",
+          "type": "textarea",
+          "placeholder": "Paste the full job posting...",
+          "required": true
+        },
+        {
+          "id": "resume",
+          "label": "Your current resume (optional)",
+          "type": "textarea",
+          "placeholder": "Paste your resume to check keyword match...",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are an ATS keyword expert. Extract and categorize keywords from job descriptions.",
+      "userPrompt": "Analyze this job description and extract ALL important keywords:\n\nJob Description:\n\"\"\"\n{jobDesc}\n\"\"\"\n\n{resume}\n\nProvide:\n1. MUST-HAVE KEYWORDS (hard skills, tools, technologies)\n2. NICE-TO-HAVE KEYWORDS (soft skills, methodologies)\n3. INDUSTRY TERMS (domain-specific language)\n4. ACTION VERBS to use\n5. KEYWORD DENSITY recommendation\n{resume and '6. MISSING KEYWORDS from your resume' or ''}",
+      "maxTokens": 1500,
+      "keywords": [
+        "resume keywords",
+        "ATS keywords",
+        "job keywords",
+        "resume optimizer"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "linkedin-optimizer",
+      "title": "LinkedIn Profile Optimizer",
+      "tagline": "Optimize your LinkedIn headline and about section",
+      "description": "Free AI LinkedIn profile optimizer. Get an optimized headline, about section, and profile tips to increase visibility.",
+      "category": "resume",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "role",
+          "label": "Current/target role",
+          "type": "text",
+          "placeholder": "e.g. Senior DevOps Engineer",
+          "required": true
+        },
+        {
+          "id": "skills",
+          "label": "Key skills",
+          "type": "textarea",
+          "placeholder": "e.g. AWS, Kubernetes, CI/CD, Python",
+          "required": true
+        },
+        {
+          "id": "experience",
+          "label": "Years of experience",
+          "type": "text",
+          "placeholder": "e.g. 10",
+          "required": true
+        },
+        {
+          "id": "achievements",
+          "label": "Top achievements",
+          "type": "textarea",
+          "placeholder": "e.g. Led team of 15, Reduced costs by 40%",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a LinkedIn optimization expert. Create compelling LinkedIn profiles.",
+      "userPrompt": "Create an optimized LinkedIn profile for:\n\nRole: {role}\nExperience: {experience} years\nSkills: {skills}\n{achievements}\n\nProvide:\n1. HEADLINE (120 chars, keyword-rich, 3 options)\n2. ABOUT SECTION (300 words, storytelling format, keyword-optimized)\n3. FEATURED SKILLS (top 10 to add)\n4. PROFILE TIPS (5 specific improvements)",
+      "maxTokens": 2000,
+      "keywords": [
+        "LinkedIn optimizer",
+        "LinkedIn headline",
+        "LinkedIn about section",
+        "LinkedIn profile"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "job-description-matcher",
+      "title": "Job Description Matcher",
+      "tagline": "See how well your resume matches a job",
+      "description": "Free AI job description matcher. Compare your resume against a job posting to see match percentage and gaps.",
+      "category": "resume",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "resume",
+          "label": "Your resume",
+          "type": "textarea",
+          "placeholder": "Paste your full resume...",
+          "required": true
+        },
+        {
+          "id": "jobDesc",
+          "label": "Job description",
+          "type": "textarea",
+          "placeholder": "Paste the job posting...",
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a recruitment expert. Analyze resume-job fit.",
+      "userPrompt": "Compare this resume against the job description:\n\nResume:\n\"\"\"\n{resume}\n\"\"\"\n\nJob Description:\n\"\"\"\n{jobDesc}\n\"\"\"\n\nProvide:\n1. MATCH SCORE: X/100\n2. MATCHED REQUIREMENTS (list each with \u2705)\n3. MISSING REQUIREMENTS (list each with \u274c)\n4. SKILL GAPS to address\n5. EXPERIENCE GAPS\n6. SUGGESTED RESUME CHANGES (specific bullets to add/modify)\n7. COVER LETTER TALKING POINTS",
+      "maxTokens": 2000,
+      "keywords": [
+        "job match",
+        "resume match",
+        "job description matcher",
+        "resume job fit"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "cover-letter-generator",
+      "title": "AI Cover Letter Generator",
+      "tagline": "Write a targeted cover letter in seconds",
+      "description": "Free AI cover letter generator. Create a professional, job-specific cover letter that complements your resume.",
+      "category": "resume",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "name",
+          "label": "Your name",
+          "type": "text",
+          "placeholder": "e.g. John Doe",
+          "required": true
+        },
+        {
+          "id": "role",
+          "label": "Target role",
+          "type": "text",
+          "placeholder": "e.g. Senior DevOps Engineer",
+          "required": true
+        },
+        {
+          "id": "company",
+          "label": "Company name",
+          "type": "text",
+          "placeholder": "e.g. Google",
+          "required": true
+        },
+        {
+          "id": "skills",
+          "label": "Your key skills & achievements",
+          "type": "textarea",
+          "placeholder": "e.g. 10 years DevOps, AWS certified, reduced costs by 30%",
+          "required": true
+        },
+        {
+          "id": "tone",
+          "label": "Tone",
+          "type": "select",
+          "options": [
+            "Professional",
+            "Enthusiastic",
+            "Confident",
+            "Formal"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are an expert cover letter writer. Write compelling, job-specific cover letters.",
+      "userPrompt": "Write a cover letter:\n\nFrom: {name}\nRole: {role}\nCompany: {company}\nSkills/Achievements: {skills}\nTone: {tone}\n\nThe letter should:\n- Address the hiring manager\n- Show knowledge of the company\n- Connect skills to role requirements\n- Include a specific achievement with metrics\n- Be 3-4 paragraphs, under 400 words\n- End with a strong call to action",
+      "maxTokens": 1500,
+      "keywords": [
+        "cover letter",
+        "cover letter generator",
+        "AI cover letter",
+        "job application letter"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "ai-rewriter",
+      "title": "AI Text Rewriter",
+      "tagline": "Rewrite any text while keeping the meaning",
+      "description": "Free AI text rewriter. Rewrite sentences, paragraphs, or articles while preserving the original meaning.",
+      "category": "writing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text to rewrite",
+          "type": "textarea",
+          "placeholder": "Paste the text you want to rewrite...",
+          "required": true
+        },
+        {
+          "id": "style",
+          "label": "Rewriting style",
+          "type": "select",
+          "options": [
+            "Same meaning, different words",
+            "Simpler language",
+            "More professional",
+            "More concise",
+            "More detailed"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are an expert editor. Rewrite text while preserving the original meaning.",
+      "userPrompt": "Rewrite this text. Style: {style}\n\nOriginal:\n\"\"\"\n{text}\n\"\"\"\n\nProvide the rewritten version only.",
+      "maxTokens": 2000,
+      "keywords": [
+        "text rewriter",
+        "rewrite text",
+        "AI rewriter",
+        "sentence rewriter"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "ai-text-expander",
+      "title": "AI Text Expander",
+      "tagline": "Expand short text into detailed content",
+      "description": "Free AI text expander. Turn bullet points or short notes into detailed, well-written paragraphs.",
+      "category": "writing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Short text or bullet points",
+          "type": "textarea",
+          "placeholder": "e.g. Built CI/CD pipeline. Reduced deploy time. Used Docker and K8s.",
+          "required": true
+        },
+        {
+          "id": "style",
+          "label": "Output style",
+          "type": "select",
+          "options": [
+            "Professional paragraph",
+            "Blog post style",
+            "Academic",
+            "Casual",
+            "Technical documentation"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are an expert writer. Expand short text into well-written, detailed content.",
+      "userPrompt": "Expand this short text into detailed {style} content:\n\nShort text:\n\"\"\"\n{text}\n\"\"\"\n\nExpand each point into 2-3 detailed sentences. Add context, examples, and transitions.",
+      "maxTokens": 2000,
+      "keywords": [
+        "text expander",
+        "expand text",
+        "make text longer",
+        "AI expander"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "ai-text-shortener",
+      "title": "AI Text Shortener",
+      "tagline": "Make text shorter without losing meaning",
+      "description": "Free AI text shortener. Condense long text into a shorter version while keeping all important information.",
+      "category": "writing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text to shorten",
+          "type": "textarea",
+          "placeholder": "Paste the long text you want to shorten...",
+          "required": true
+        },
+        {
+          "id": "target",
+          "label": "Target length",
+          "type": "select",
+          "options": [
+            "50% shorter",
+            "75% shorter",
+            "One paragraph",
+            "3 sentences",
+            "1 sentence"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are an expert editor. Shorten text while preserving key information.",
+      "userPrompt": "Shorten this text to {target}. Keep all important facts and meaning.\n\nOriginal:\n\"\"\"\n{text}\n\"\"\"",
+      "maxTokens": 1500,
+      "keywords": [
+        "text shortener",
+        "shorten text",
+        "make text shorter",
+        "condense text"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "ai-blog-outline",
+      "title": "AI Blog Outline Generator",
+      "tagline": "Create structured blog post outlines",
+      "description": "Free AI blog outline generator. Get a detailed, SEO-optimized blog post outline with headings, subpoints, and key takeaways.",
+      "category": "writing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Blog topic",
+          "type": "text",
+          "placeholder": "e.g. How to Deploy Kubernetes on AWS",
+          "required": true
+        },
+        {
+          "id": "audience",
+          "label": "Target audience",
+          "type": "text",
+          "placeholder": "e.g. DevOps engineers, beginners",
+          "required": false
+        },
+        {
+          "id": "length",
+          "label": "Target word count",
+          "type": "select",
+          "options": [
+            "1000 words",
+            "1500 words",
+            "2000 words",
+            "3000 words"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are an SEO content strategist. Create detailed blog outlines.",
+      "userPrompt": "Create a detailed blog outline for:\n\nTopic: {topic}\nAudience: {audience}\nLength: {length}\n\nInclude:\n- SEO-optimized title (3 options)\n- Meta description\n- H2 and H3 headings\n- Key points under each heading\n- Intro hook\n- Conclusion with CTA\n- Internal linking suggestions",
+      "maxTokens": 2000,
+      "keywords": [
+        "blog outline",
+        "blog post outline",
+        "content outline",
+        "blog structure"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "ai-product-description",
+      "title": "AI Product Description Writer",
+      "tagline": "Write compelling product descriptions",
+      "description": "Free AI product description generator. Create persuasive, SEO-optimized product descriptions for e-commerce.",
+      "category": "writing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "product",
+          "label": "Product name",
+          "type": "text",
+          "placeholder": "e.g. Wireless Noise-Cancelling Headphones",
+          "required": true
+        },
+        {
+          "id": "features",
+          "label": "Key features",
+          "type": "textarea",
+          "placeholder": "e.g. 40hr battery, ANC, Bluetooth 5.3, foldable, 300g weight",
+          "required": true
+        },
+        {
+          "id": "audience",
+          "label": "Target audience",
+          "type": "text",
+          "placeholder": "e.g. remote workers, commuters, music lovers",
+          "required": false
+        },
+        {
+          "id": "tone",
+          "label": "Tone",
+          "type": "select",
+          "options": [
+            "Professional",
+            "Fun & engaging",
+            "Luxury",
+            "Technical",
+            "Minimalist"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are an expert copywriter specializing in e-commerce product descriptions.",
+      "userPrompt": "Write a product description for:\n\nProduct: {product}\nFeatures: {features}\nAudience: {audience}\nTone: {tone}\n\nProvide:\n1. SHORT DESCRIPTION (50 words)\n2. FULL DESCRIPTION (150 words)\n3. BULLET POINTS (5 key selling points)\n4. SEO TITLE\n5. META DESCRIPTION",
+      "maxTokens": 1500,
+      "keywords": [
+        "product description",
+        "product description generator",
+        "e-commerce copy",
+        "product copywriting"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "ai-faq-generator",
+      "title": "AI FAQ Generator",
+      "tagline": "Generate FAQs for any topic or business",
+      "description": "Free AI FAQ generator. Create comprehensive, SEO-friendly FAQ sections for your website, product, or service.",
+      "category": "writing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Topic or business",
+          "type": "textarea",
+          "placeholder": "e.g. ZapKitt AI Resume Builder - free online resume tool",
+          "required": true
+        },
+        {
+          "id": "count",
+          "label": "Number of FAQs",
+          "type": "select",
+          "options": [
+            "5",
+            "10",
+            "15",
+            "20"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are an SEO expert. Generate relevant, helpful FAQs with Schema.org markup.",
+      "userPrompt": "Generate {count} FAQs for:\n\n{topic}\n\nEach FAQ should:\n- Address a real user concern\n- Be concise (2-3 sentence answers)\n- Include relevant keywords naturally\n- Cover different aspects (pricing, features, how-to, comparison, trust)\n\nFormat:\nQ: [question]\nA: [answer]",
+      "maxTokens": 2000,
+      "keywords": [
+        "FAQ generator",
+        "generate FAQs",
+        "FAQ section",
+        "frequently asked questions"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "facebook-caption",
+      "title": "Facebook Caption Generator",
+      "tagline": "Write engaging Facebook post captions",
+      "description": "Free AI Facebook caption generator. Create scroll-stopping captions that drive likes, comments, and shares.",
+      "category": "social",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Post topic",
+          "type": "textarea",
+          "placeholder": "e.g. Launching our new product, team celebration, behind the scenes",
+          "required": true
+        },
+        {
+          "id": "tone",
+          "label": "Tone",
+          "type": "select",
+          "options": [
+            "Professional",
+            "Fun & casual",
+            "Inspirational",
+            "Informative",
+            "Storytelling"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a social media expert. Write engaging Facebook captions.",
+      "userPrompt": "Write 3 Facebook captions for:\n\nTopic: {topic}\nTone: {tone}\n\nEach should:\n- Have a hook in the first line\n- Be 2-4 sentences\n- Include a question or CTA\n- Use 1-2 emojis\n- Include 3-5 hashtags\n\nLabel: Option 1, Option 2, Option 3",
+      "maxTokens": 1000,
+      "keywords": [
+        "Facebook caption",
+        "Facebook post",
+        "social media caption"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "x-post",
+      "title": "X/Twitter Post Generator",
+      "tagline": "Write viral tweets and threads",
+      "description": "Free AI X/Twitter post generator. Create engaging tweets and threads that drive impressions and engagement.",
+      "category": "social",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Topic",
+          "type": "textarea",
+          "placeholder": "e.g. Tips for landing a remote DevOps job",
+          "required": true
+        },
+        {
+          "id": "type",
+          "label": "Post type",
+          "type": "select",
+          "options": [
+            "Single tweet",
+            "Thread (5 tweets)",
+            "Thread (10 tweets)",
+            "Quote tweet reply",
+            "Poll idea"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a viral content creator on X/Twitter. Write engaging posts.",
+      "userPrompt": "Create a {type} about:\n\n{topic}\n\nRules:\n- Each tweet under 280 characters\n- Strong hook in first tweet\n- Use line breaks for readability\n- Include a CTA in the last tweet\n- Threads should build on each other\n- No hashtag spam (max 2)",
+      "maxTokens": 1500,
+      "keywords": [
+        "Twitter post",
+        "tweet generator",
+        "X post",
+        "Twitter thread"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "youtube-description",
+      "title": "YouTube Description Generator",
+      "tagline": "Write SEO-optimized video descriptions",
+      "description": "Free AI YouTube description generator. Create keyword-rich descriptions with timestamps, links, and CTAs.",
+      "category": "social",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "title",
+          "label": "Video title",
+          "type": "text",
+          "placeholder": "e.g. How to Deploy Kubernetes on AWS in 2026",
+          "required": true
+        },
+        {
+          "id": "content",
+          "label": "Video content summary",
+          "type": "textarea",
+          "placeholder": "Briefly describe what the video covers...",
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a YouTube SEO expert. Write optimized video descriptions.",
+      "userPrompt": "Write a YouTube description for:\n\nTitle: {title}\nContent: {content}\n\nInclude:\n1. First 2 lines (shown in search - keyword-rich, compelling)\n2. Full description (200 words)\n3. Timestamps (5-8 chapters)\n4. CTA section (subscribe, like, comment)\n5. Related keywords/tags (15)\n6. Hashtags (5)",
+      "maxTokens": 1500,
+      "keywords": [
+        "YouTube description",
+        "video description",
+        "YouTube SEO"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "hashtag-generator",
+      "title": "Hashtag Generator",
+      "tagline": "Find the best hashtags for any platform",
+      "description": "Free AI hashtag generator. Get relevant, trending hashtags for Instagram, TikTok, Twitter, LinkedIn, and more.",
+      "category": "social",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Post topic",
+          "type": "textarea",
+          "placeholder": "e.g. Fitness transformation, coding tutorial, travel photography",
+          "required": true
+        },
+        {
+          "id": "platform",
+          "label": "Platform",
+          "type": "select",
+          "options": [
+            "Instagram",
+            "TikTok",
+            "Twitter/X",
+            "LinkedIn",
+            "YouTube",
+            "All platforms"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a social media hashtag expert. Generate relevant, effective hashtags.",
+      "userPrompt": "Generate hashtags for:\n\nTopic: {topic}\nPlatform: {platform}\n\nProvide:\n1. HIGH VOLUME (10 popular hashtags, 100K+ posts)\n2. MEDIUM VOLUME (10 niche hashtags, 10K-100K posts)\n3. LOW COMPETITION (10 specific hashtags, under 10K posts)\n4. BRANDED suggestions (3)\n5. TRENDING related (5)\n\nTotal: 30-40 hashtags, ready to copy-paste.",
+      "maxTokens": 1000,
+      "keywords": [
+        "hashtag generator",
+        "Instagram hashtags",
+        "TikTok hashtags",
+        "trending hashtags"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "bio-generator",
+      "title": "Social Media Bio Generator",
+      "tagline": "Write the perfect bio for any platform",
+      "description": "Free AI bio generator. Create compelling bios for Instagram, Twitter, LinkedIn, TikTok, and more.",
+      "category": "social",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "name",
+          "label": "Name or brand",
+          "type": "text",
+          "placeholder": "e.g. John Doe, ZapKitt",
+          "required": true
+        },
+        {
+          "id": "role",
+          "label": "What you do",
+          "type": "text",
+          "placeholder": "e.g. DevOps Engineer, Fitness Coach, Startup Founder",
+          "required": true
+        },
+        {
+          "id": "platform",
+          "label": "Platform",
+          "type": "select",
+          "options": [
+            "Instagram",
+            "Twitter/X",
+            "LinkedIn",
+            "TikTok",
+            "YouTube",
+            "GitHub",
+            "All platforms"
+          ],
+          "required": true
+        },
+        {
+          "id": "style",
+          "label": "Style",
+          "type": "select",
+          "options": [
+            "Professional",
+            "Creative",
+            "Minimal",
+            "Fun",
+            "Inspirational"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a personal branding expert. Write compelling social media bios.",
+      "userPrompt": "Write 5 bio options for:\n\nName: {name}\nRole: {role}\nPlatform: {platform}\nStyle: {style}\n\nRules:\n- Platform character limits (Instagram 150, Twitter 160, LinkedIn 2000)\n- Include relevant emojis\n- Add a CTA where appropriate\n- Use line breaks for readability\n\nLabel: Option 1-5",
+      "maxTokens": 1000,
+      "keywords": [
+        "bio generator",
+        "Instagram bio",
+        "Twitter bio",
+        "LinkedIn bio",
+        "social media bio"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "google-ads-copy",
+      "title": "Google Ads Copy Generator",
+      "tagline": "Write high-converting Google ad copy",
+      "description": "Free AI Google Ads copy generator. Create compelling headlines and descriptions that maximize click-through rates.",
+      "category": "marketing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "product",
+          "label": "Product/Service",
+          "type": "text",
+          "placeholder": "e.g. AI Resume Builder",
+          "required": true
+        },
+        {
+          "id": "keywords",
+          "label": "Target keywords",
+          "type": "text",
+          "placeholder": "e.g. free resume builder, AI resume, ATS resume",
+          "required": true
+        },
+        {
+          "id": "usp",
+          "label": "Unique selling point",
+          "type": "text",
+          "placeholder": "e.g. Free, no signup, ATS-optimized, 10 templates",
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a Google Ads expert. Write high-CTR ad copy.",
+      "userPrompt": "Create 3 Google Ads for:\n\nProduct: {product}\nKeywords: {keywords}\nUSP: {usp}\n\nEach ad:\n- 3 Headlines (30 chars each)\n- 2 Descriptions (90 chars each)\n- Display URL path\n- Sitelink suggestions (4)\n\nFocus on CTR and relevance.",
+      "maxTokens": 1500,
+      "keywords": [
+        "Google Ads",
+        "ad copy",
+        "PPC copy",
+        "Google Ads generator"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "email-subject-lines",
+      "title": "Email Subject Line Generator",
+      "tagline": "Write subject lines that get opened",
+      "description": "Free AI email subject line generator. Create compelling subject lines that boost open rates for marketing and cold emails.",
+      "category": "marketing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "purpose",
+          "label": "Email purpose",
+          "type": "textarea",
+          "placeholder": "e.g. Promoting our new AI resume builder launch",
+          "required": true
+        },
+        {
+          "id": "audience",
+          "label": "Target audience",
+          "type": "text",
+          "placeholder": "e.g. Job seekers, HR professionals",
+          "required": true
+        },
+        {
+          "id": "style",
+          "label": "Style",
+          "type": "select",
+          "options": [
+            "Professional",
+            "Urgent",
+            "Curiosity-driven",
+            "Personal",
+            "Value-focused",
+            "FOMO"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are an email marketing expert. Write subject lines that maximize open rates.",
+      "userPrompt": "Generate 15 email subject lines:\n\nPurpose: {purpose}\nAudience: {audience}\nStyle: {style}\n\nCategories:\n- CURIOSITY (5 lines)\n- VALUE (5 lines)\n- URGENCY (5 lines)\n\nRules: Under 50 chars each, no spam words, personalization where possible.",
+      "maxTokens": 1000,
+      "keywords": [
+        "email subject line",
+        "subject line generator",
+        "email marketing",
+        "open rate"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "brand-name-generator",
+      "title": "Brand Name Generator",
+      "tagline": "Generate unique brand and business names",
+      "description": "Free AI brand name generator. Get creative, memorable brand names with domain availability suggestions.",
+      "category": "marketing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "industry",
+          "label": "Industry",
+          "type": "text",
+          "placeholder": "e.g. AI tools, fitness, e-commerce",
+          "required": true
+        },
+        {
+          "id": "keywords",
+          "label": "Keywords to include",
+          "type": "text",
+          "placeholder": "e.g. fast, smart, cloud, zen",
+          "required": false
+        },
+        {
+          "id": "style",
+          "label": "Name style",
+          "type": "select",
+          "options": [
+            "Modern tech",
+            "Professional",
+            "Playful",
+            "Minimal",
+            "Compound word",
+            "Abstract"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a branding expert. Generate creative, memorable brand names.",
+      "userPrompt": "Generate 20 brand name ideas:\n\nIndustry: {industry}\nKeywords: {keywords}\nStyle: {style}\n\nFor each name provide:\n- Name\n- Tagline (5 words)\n- Domain suggestion (.com, .io, .ai)\n- Why it works (1 sentence)\n\nMix: invented words, compound words, acronyms, metaphors.",
+      "maxTokens": 1500,
+      "keywords": [
+        "brand name",
+        "business name",
+        "name generator",
+        "company name"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "slogan-generator",
+      "title": "Slogan Generator",
+      "tagline": "Create catchy slogans and taglines",
+      "description": "Free AI slogan generator. Create memorable slogans and taglines for your brand, product, or campaign.",
+      "category": "marketing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "brand",
+          "label": "Brand/product name",
+          "type": "text",
+          "placeholder": "e.g. ZapKitt",
+          "required": true
+        },
+        {
+          "id": "description",
+          "label": "What it does",
+          "type": "textarea",
+          "placeholder": "e.g. Free AI-powered tools for job seekers and professionals",
+          "required": true
+        },
+        {
+          "id": "tone",
+          "label": "Tone",
+          "type": "select",
+          "options": [
+            "Inspiring",
+            "Professional",
+            "Fun",
+            "Bold",
+            "Minimal",
+            "Techy"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a creative advertising copywriter. Generate memorable slogans.",
+      "userPrompt": "Generate 15 slogans for:\n\nBrand: {brand}\nDescription: {description}\nTone: {tone}\n\nCategories:\n- SHORT (3-5 words, 5 options)\n- MEDIUM (6-8 words, 5 options)\n- DESCRIPTIVE (9-12 words, 5 options)\n\nEach should be memorable, unique, and brand-aligned.",
+      "maxTokens": 1000,
+      "keywords": [
+        "slogan generator",
+        "tagline generator",
+        "brand slogan",
+        "catchy slogan"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "meeting-notes",
+      "title": "AI Meeting Notes Generator",
+      "tagline": "Turn meeting transcripts into structured notes",
+      "description": "Free AI meeting notes generator. Convert raw meeting transcripts into organized notes with action items.",
+      "category": "business",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "transcript",
+          "label": "Meeting transcript or notes",
+          "type": "textarea",
+          "placeholder": "Paste your raw meeting notes or transcript...",
+          "required": true
+        },
+        {
+          "id": "format",
+          "label": "Output format",
+          "type": "select",
+          "options": [
+            "Executive summary",
+            "Detailed notes",
+            "Action items only",
+            "Decision log"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are an executive assistant. Organize meeting notes professionally.",
+      "userPrompt": "Convert this meeting transcript into {format}:\n\nTranscript:\n\"\"\"\n{transcript}\n\"\"\"\n\nInclude:\n- Meeting summary (2-3 sentences)\n- Key decisions made\n- Action items (who, what, when)\n- Follow-up items\n- Next steps",
+      "maxTokens": 2000,
+      "keywords": [
+        "meeting notes",
+        "meeting summary",
+        "action items",
+        "meeting minutes"
+      ],
+      "faq": []
+    },
+    {
+      "slug": "swot-analysis",
+      "title": "AI SWOT Analysis Generator",
+      "tagline": "Generate a SWOT analysis for any business",
+      "description": "Free AI SWOT analysis tool. Get a detailed Strengths, Weaknesses, Opportunities, Threats analysis for your business or idea.",
+      "category": "business",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "business",
+          "label": "Business/product/idea",
+          "type": "textarea",
+          "placeholder": "e.g. ZapKitt - free AI-powered tools platform for job seekers",
+          "required": true
+        },
+        {
+          "id": "industry",
+          "label": "Industry",
+          "type": "text",
+          "placeholder": "e.g. SaaS, EdTech, AI Tools",
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a business strategy consultant. Create detailed SWOT analyses.",
+      "userPrompt": "Create a detailed SWOT analysis for:\n\nBusiness: {business}\nIndustry: {industry}\n\nFor each quadrant provide 5-7 specific, actionable points:\n\nSTRENGTHS (internal advantages)\nWEAKNESSES (internal challenges)\nOPPORTUNITIES (external possibilities)\nTHREATS (external risks)\n\nAlso provide:\n- Top 3 strategic recommendations\n- Key competitive advantages\n- Immediate action items",
+      "maxTokens": 2000,
+      "keywords": [
+        "SWOT analysis",
+        "business analysis",
+        "strategic planning",
+        "competitive analysis"
+      ],
       "faq": []
     }
   ]
