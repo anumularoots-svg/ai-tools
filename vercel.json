@@ -27,6 +27,6 @@
     }
   },
   "rewrites": [
-    { "source": "/t/:slug*", "destination": "/tool.html" }
+    { "source": "/t/(.*)", "destination": "/tool.html" }
   ]
 }
