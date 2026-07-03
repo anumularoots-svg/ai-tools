@@ -16,6 +16,9 @@
       "memory": 1024,
       "maxDuration": 30
     },
+    "api/docx.js": {
+      "maxDuration": 15
+    },
     "api/generate.js": {
       "maxDuration": 60
     }

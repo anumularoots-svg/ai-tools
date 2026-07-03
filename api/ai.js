@@ -48,8 +48,17 @@ async function callGroq(apiKey, system, prompt, maxTokens, temp) {
 }
 async function jsonMode(res, apiKey, u) {
   const yrs = parseInt(u.totalExp) || 0;
-  const sys = `You are an expert resume writer. Return ONLY valid JSON. No markdown, no code fences, no explanation.
-RULES: Never fabricate companies/titles/dates/education. Use ONLY provided data. Every bullet starts with power verb. 70%+ bullets include metrics. Skills grouped by category.
+  const sys = `You are an expert resume writer producing premium, ATS-optimized resumes. Return ONLY valid JSON. No markdown, no code fences, no explanation.
+CRITICAL RULES:
+1. NEVER fabricate companies/titles/dates/education. Use ONLY provided data.
+2. Every bullet starts with a UNIQUE power verb (Architected, Spearheaded, Delivered, Reduced, Automated, Designed, Led, Implemented, Optimized, Orchestrated, Streamlined, Championed, Engineered, Accelerated, Pioneered).
+3. 70%+ bullets MUST include quantified metrics (%, $, time saved, team size, scale).
+4. Skills MUST be grouped by category (e.g. "Cloud — AWS", "CI/CD & GitOps", "Containers & Orchestration").
+5. Date format: ALWAYS "Mon YYYY" format (e.g. "Jan 2023", "Jun 2021"). For current role, endDate MUST be "Present" (not "current" or blank).
+6. Summary MUST be 5-7 sentences covering: years of experience, specialization, key technologies, notable achievements, and career focus.
+7. Achievements MUST have 4-5 items, each with a specific metric.
+8. Strengths MUST have 6-8 professional strengths (e.g. "CI/CD Pipeline Architecture", "Cloud Cost Optimization", "Security-First DevOps", "Cross-Team Collaboration").
+9. Education and certifications MUST never be empty if user provided them.
 ${yrs <= 2 ? "Fresher: focus on projects, internships, academics." : yrs <= 12 ? "Professional: focus on achievements and impact." : "Executive: focus on strategic leadership and transformation."}`;
 
   const bc = (u.experience || []).map((_, i) => yrs <= 2 ? (i===0?4:3) : yrs <= 12 ? ([7,5,4,3][i]||3) : ([8,6,5,4,3][i]||3));
@@ -64,8 +73,8 @@ ${yrs <= 2 ? "Fresher: focus on projects, internships, academics." : yrs <= 12 ?
   if (u.existingResume) p += `\n\nEXISTING RESUME:\n"""\n${u.existingResume.substring(0,4000)}\n"""`;
   if (u.backgroundDesc) p += `\n\nBACKGROUND:\n"""\n${u.backgroundDesc.substring(0,3000)}\n"""`;
   if (u.jobDescription) p += `\n\nJOB DESCRIPTION:\n"""\n${u.jobDescription.substring(0,3000)}\n"""`;
-  p += `\n\nReturn ONLY this JSON:\n{"personal":{"fullName":"${u.fullName}","title":"","email":"","phone":"","location":"","linkedin":"","github":""},"summary":"","achievements":[{"text":"","metric":""}],"skills":[{"category":"","items":[]}],"experience":[{"title":"","company":"","location":"","startDate":"","endDate":"","bullets":[{"text":""}]}],"education":[{"degree":"","institution":"","year":""}],"certifications":[{"name":"","status":"completed"}],"strengths":[]}`;
-  p += `\nCRITICAL: fullName MUST be "${u.fullName}". Companies MUST match provided data. JSON only.`;
+  p += `\n\nReturn ONLY this JSON:\n{"personal":{"fullName":"${u.fullName}","title":"","email":"","phone":"","location":"","linkedin":"","github":""},"summary":"5-7 sentence professional summary","achievements":[{"text":"Achievement with metric","metric":"60%"}],"skills":[{"category":"Category Name","items":["skill1","skill2"]}],"experience":[{"title":"","company":"","location":"","startDate":"Mon YYYY","endDate":"Mon YYYY or Present","bullets":[{"text":"Power verb + STAR bullet with metric"}]}],"education":[{"degree":"","institution":"","year":""}],"certifications":[{"name":"","status":"completed"}],"strengths":["Strength 1","Strength 2","at least 6 strengths"]}`;
+  p += `\nCRITICAL: fullName MUST be "${u.fullName}". Companies MUST match provided data. Dates MUST be "Mon YYYY" format (Jan 2023, not January 2023). Current role endDate MUST be "Present". Strengths array MUST have 6-8 items. JSON only.`;
 
   const result = await callGroq(apiKey, sys, p, 6000, 0.3);
   if (!result) return res.status(500).json({ error: "AI failed" });

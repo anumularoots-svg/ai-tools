@@ -1,6 +1,6 @@
 // ============================================
 // ResumeGPT PDF API — Puppeteer/Chrome
-// Input: Resume JSON
+// Input: Resume JSON or raw HTML
 // Output: Professional A4 PDF
 // ============================================
 
@@ -21,14 +21,19 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
 
-  const { resumeJSON, template, fileName } = req.body;
+  const { resumeJSON, html, template, fileName } = req.body;
 
-  if (!resumeJSON) return res.status(400).json({ error: "resumeJSON required" });
+  if (!resumeJSON && !html) return res.status(400).json({ error: "resumeJSON or html required" });
 
   let browser = null;
   try {
-    // Render JSON to HTML
-    const resumeHTML = renderResumeHTML(resumeJSON, { template: template || "harvard" });
+    // Build HTML from JSON or use provided HTML
+    let resumeHTML;
+    if (resumeJSON) {
+      resumeHTML = renderResumeHTML(resumeJSON, { template: template || "harvard" });
+    } else {
+      resumeHTML = html;
+    }
 
     // Build full document
     const fullHTML = `<!DOCTYPE html>
@@ -53,7 +58,7 @@ export default async function handler(req, res) {
       margin: { top: "15mm", right: "16mm", bottom: "14mm", left: "16mm" },
     });
 
-    const name = fileName || (resumeJSON.personal?.fullName || "Resume").replace(/\s+/g, "_");
+    const name = fileName || (resumeJSON?.personal?.fullName || "Resume").replace(/\s+/g, "_");
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", `attachment; filename="${name}_Resume.pdf"`);
     res.status(200).send(Buffer.from(pdfBuffer));

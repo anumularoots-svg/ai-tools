@@ -1,16 +1,11 @@
 // ============================================
-// ResumeGPT HTML Renderer v1
+// ResumeGPT HTML Renderer v2
 // Converts Resume JSON → Professional HTML
-// AI never decides fonts, margins, or layout
-// Application has full control
+// Fixes: dates, empty sections, spacing, layout
 // ============================================
 
 function renderResumeHTML(resumeJSON, options = {}) {
-  const {
-    template = "harvard",  // harvard, stanford, google, ats-safe, executive, modern, corporate, mit, mckinsey, faang
-    align = "center",      // center or left (for name)
-  } = options;
-
+  const { align = "center" } = options;
   const p = resumeJSON.personal || {};
   const name = (p.fullName || "").toUpperCase();
   const title = p.title || "";
@@ -27,7 +22,7 @@ function renderResumeHTML(resumeJSON, options = {}) {
   html += `</div>`;
 
   // ---- SUMMARY ----
-  if (resumeJSON.summary) {
+  if (resumeJSON.summary && resumeJSON.summary.trim()) {
     html += `<div class="section">`;
     html += `<div class="section-header">PROFESSIONAL SUMMARY</div>`;
     html += `<div class="text">${resumeJSON.summary}</div>`;
@@ -36,23 +31,32 @@ function renderResumeHTML(resumeJSON, options = {}) {
 
   // ---- KEY ACHIEVEMENTS ----
   if (resumeJSON.achievements && resumeJSON.achievements.length > 0) {
-    html += `<div class="section">`;
-    html += `<div class="section-header">KEY ACHIEVEMENTS</div>`;
-    resumeJSON.achievements.forEach(a => {
-      const text = typeof a === "string" ? a : a.text;
-      html += `<div class="bullet">\u2022 ${text}</div>`;
+    const valid = resumeJSON.achievements.filter(a => {
+      const t = typeof a === "string" ? a : a.text;
+      return t && t.trim();
     });
-    html += `</div>`;
+    if (valid.length) {
+      html += `<div class="section">`;
+      html += `<div class="section-header">KEY ACHIEVEMENTS</div>`;
+      valid.forEach(a => {
+        const text = typeof a === "string" ? a : a.text;
+        html += `<div class="bullet">\u2022 ${text}</div>`;
+      });
+      html += `</div>`;
+    }
   }
 
   // ---- TECHNICAL SKILLS ----
   if (resumeJSON.skills && resumeJSON.skills.length > 0) {
-    html += `<div class="section">`;
-    html += `<div class="section-header">TECHNICAL SKILLS</div>`;
-    resumeJSON.skills.forEach(cat => {
-      html += `<div class="skills-line"><span class="skills-cat">${cat.category}:</span> ${(cat.items || []).join(", ")}</div>`;
-    });
-    html += `</div>`;
+    const valid = resumeJSON.skills.filter(s => s.category && s.items && s.items.length);
+    if (valid.length) {
+      html += `<div class="section">`;
+      html += `<div class="section-header">TECHNICAL SKILLS</div>`;
+      valid.forEach(cat => {
+        html += `<div class="skills-line"><span class="skills-cat">${cat.category}:</span> ${cat.items.join(", ")}</div>`;
+      });
+      html += `</div>`;
+    }
   }
 
   // ---- EXPERIENCE ----
@@ -61,15 +65,25 @@ function renderResumeHTML(resumeJSON, options = {}) {
     html += `<div class="section-header">PROFESSIONAL EXPERIENCE</div>`;
     resumeJSON.experience.forEach(exp => {
       html += `<div class="job">`;
+      // Format dates properly
+      const startDate = (exp.startDate || "").trim();
+      const endDate = (exp.endDate || "").trim();
+      const dateStr = [startDate, endDate].filter(Boolean).join(" \u2014 ");
+
       html += `<div class="job-header">`;
       html += `<span class="job-title">${(exp.title || "").toUpperCase()}</span>`;
-      html += `<span class="job-date">${exp.startDate || ""} \u2014 ${exp.endDate || ""}</span>`;
+      if (dateStr) html += `<span class="job-date">${dateStr}</span>`;
       html += `</div>`;
-      html += `<div class="company">${exp.company || ""}${exp.location ? ", " + exp.location : ""}</div>`;
-      if (exp.bullets) {
+
+      const companyParts = [exp.company, exp.location].filter(Boolean).join(", ");
+      if (companyParts) html += `<div class="company">${companyParts}</div>`;
+
+      if (exp.bullets && exp.bullets.length) {
         exp.bullets.forEach(b => {
           const text = typeof b === "string" ? b : b.text;
-          html += `<div class="bullet">\u2022 ${text}</div>`;
+          if (text && text.trim()) {
+            html += `<div class="bullet">\u2022 ${text}</div>`;
+          }
         });
       }
       html += `</div>`;
@@ -79,47 +93,54 @@ function renderResumeHTML(resumeJSON, options = {}) {
 
   // ---- EDUCATION ----
   if (resumeJSON.education && resumeJSON.education.length > 0) {
-    html += `<div class="section">`;
-    html += `<div class="section-header">EDUCATION</div>`;
-    resumeJSON.education.forEach(edu => {
-      html += `<div class="edu-line"><strong>${edu.degree || ""}</strong>`;
-      if (edu.institution) html += ` \u2014 ${edu.institution}`;
-      if (edu.year) html += ` (${edu.year})`;
+    const valid = resumeJSON.education.filter(e => e.degree || e.institution);
+    if (valid.length) {
+      html += `<div class="section">`;
+      html += `<div class="section-header">EDUCATION</div>`;
+      valid.forEach(edu => {
+        html += `<div class="edu-line"><strong>${edu.degree || ""}</strong>`;
+        if (edu.institution) html += ` \u2014 ${edu.institution}`;
+        if (edu.year) html += ` (${edu.year})`;
+        html += `</div>`;
+        if (edu.gpa) html += `<div class="text">GPA: ${edu.gpa}</div>`;
+      });
       html += `</div>`;
-      if (edu.gpa) html += `<div class="text">GPA: ${edu.gpa}</div>`;
-    });
-    html += `</div>`;
+    }
   }
 
   // ---- CERTIFICATIONS ----
   if (resumeJSON.certifications && resumeJSON.certifications.length > 0) {
-    html += `<div class="section">`;
-    html += `<div class="section-header">CERTIFICATIONS</div>`;
-    resumeJSON.certifications.forEach(cert => {
-      let line = cert.name;
-      if (cert.issuer) line += ` \u2014 ${cert.issuer}`;
-      if (cert.year) line += ` (${cert.year})`;
-      if (cert.status === "target") line += " [Target]";
-      if (cert.status === "in-progress") line += " [In Progress]";
-      html += `<div class="text">${line}</div>`;
-    });
-    html += `</div>`;
+    const valid = resumeJSON.certifications.filter(c => c.name && c.name.trim());
+    if (valid.length) {
+      html += `<div class="section">`;
+      html += `<div class="section-header">CERTIFICATIONS</div>`;
+      valid.forEach(cert => {
+        let line = cert.name;
+        if (cert.issuer) line += ` \u2014 ${cert.issuer}`;
+        if (cert.year) line += ` (${cert.year})`;
+        if (cert.status === "target") line += " [Target]";
+        if (cert.status === "in-progress") line += " [In Progress]";
+        html += `<div class="text">${line}</div>`;
+      });
+      html += `</div>`;
+    }
   }
 
-  // ---- PROJECTS (for freshers) ----
+  // ---- PROJECTS ----
   if (resumeJSON.projects && resumeJSON.projects.length > 0) {
     html += `<div class="section">`;
     html += `<div class="section-header">PROJECTS</div>`;
     resumeJSON.projects.forEach(proj => {
       html += `<div class="job">`;
-      html += `<div class="job-title">${proj.name}</div>`;
+      html += `<div class="job-title">${proj.name || ""}</div>`;
       if (proj.technologies && proj.technologies.length) {
         html += `<div class="text"><em>Technologies: ${proj.technologies.join(", ")}</em></div>`;
       }
       if (proj.description) html += `<div class="text">${proj.description}</div>`;
       if (proj.bullets) {
         proj.bullets.forEach(b => {
-          html += `<div class="bullet">\u2022 ${b}</div>`;
+          const t = typeof b === "string" ? b : (b.text || "");
+          if (t.trim()) html += `<div class="bullet">\u2022 ${t}</div>`;
         });
       }
       html += `</div>`;
@@ -129,10 +150,13 @@ function renderResumeHTML(resumeJSON, options = {}) {
 
   // ---- STRENGTHS ----
   if (resumeJSON.strengths && resumeJSON.strengths.length > 0) {
-    html += `<div class="section">`;
-    html += `<div class="section-header">PROFESSIONAL STRENGTHS</div>`;
-    html += `<div class="text">${resumeJSON.strengths.join("  |  ")}</div>`;
-    html += `</div>`;
+    const valid = resumeJSON.strengths.filter(s => s && s.trim());
+    if (valid.length) {
+      html += `<div class="section">`;
+      html += `<div class="section-header">PROFESSIONAL STRENGTHS</div>`;
+      html += `<div class="text">${valid.join("  |  ")}</div>`;
+      html += `</div>`;
+    }
   }
 
   html += `</div>`;
