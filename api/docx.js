@@ -92,6 +92,7 @@ function buildResumeDoc(rj) {
   function sectionHeader(title) {
     return new Paragraph({
       spacing: { before: 200, after: 60 },
+      keepNext: true,
       border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "000000" } },
       children: [new TextRun({
         text: title.toUpperCase(),
@@ -182,6 +183,7 @@ function buildResumeDoc(rj) {
       sections.push(new Paragraph({
         spacing: { before: 120, after: 20 },
         tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
+        keepNext: true,
         children: titleRuns
       }));
 
@@ -190,6 +192,7 @@ function buildResumeDoc(rj) {
       if (companyParts) {
         sections.push(new Paragraph({
           spacing: { after: 40 },
+          keepNext: true,
           children: [new TextRun({
             text: companyParts,
             size: 18,

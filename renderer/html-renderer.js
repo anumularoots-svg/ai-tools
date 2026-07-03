@@ -211,6 +211,8 @@ body {
   margin-bottom: 1px;
   break-after: avoid;
   page-break-after: avoid;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 .job-title { font-size: 10pt; font-weight: bold; color: #000; }
 .job-date { font-size: 9pt; color: #555; font-style: italic; }
