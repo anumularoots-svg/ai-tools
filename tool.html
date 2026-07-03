@@ -1,0 +1,261 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title id="pageTitle">ZapKitt — Free AI Tools</title>
+<meta name="description" id="pageMeta" content="Free AI-powered tools. No signup, no limits.">
+<link rel="canonical" id="pageCanonical" href="https://zapkitt.com">
+<meta property="og:type" content="website"><meta property="og:site_name" content="ZapKitt">
+<meta property="og:title" id="ogTitle" content="ZapKitt"><meta property="og:description" id="ogDesc" content="">
+<meta property="og:url" id="ogUrl" content="https://zapkitt.com">
+<meta property="og:image" content="https://zapkitt.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237C3AED'/%3E%3Cpath d='M19 5l-7 11h6l-1 12 8-14h-6.5z' fill='white'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,system-ui,sans-serif;background:#fefefe;color:#111;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.04)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;max-width:900px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800}
+.logo svg{width:32px;height:32px}
+.logo span{background:linear-gradient(135deg,#7c3aed,#c026d3);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:20px;font-size:13px;font-weight:600;color:#888}
+.nav-links a:hover{color:#7c3aed}
+.page{max-width:900px;margin:0 auto;padding:0 32px 80px}
+.header{text-align:center;padding:48px 0 32px}
+.chip{display:inline-flex;padding:6px 16px;border-radius:20px;border:1px solid #d1fae5;background:#ecfdf5;font-size:11px;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
+.header h1{font-size:32px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+.header h1 em{font-style:normal;background:linear-gradient(135deg,#7c3aed,#c026d3);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header p{font-size:15px;color:#999}
+.card{background:#fff;border:1.5px solid #e8e8e8;border-radius:16px;padding:28px;margin-bottom:20px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:700;color:#333;margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;padding:12px 16px;border:1.5px solid #e8e8e8;border-radius:10px;font-size:14px;font-family:inherit;background:#fafafa;transition:border .2s}
+.field input:focus,.field textarea:focus,.field select:focus{outline:0;border-color:#7c3aed;background:#fff}
+.field textarea{min-height:120px;resize:vertical;line-height:1.7}
+.required::after{content:" *";color:#dc2626}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;font-size:15px;font-weight:700;border:none;border-radius:12px;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-go{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;box-shadow:0 4px 20px rgba(124,58,237,.2)}
+.btn-go:hover{transform:translateY(-1px)}.btn-go:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-copy{background:#ecfdf5;color:#059669;border:1.5px solid #d1fae5;margin-top:12px}
+.btn-copy:hover{background:#d1fae5}
+.output-box{display:none;margin-top:20px;background:#f9fafb;border:1.5px solid #e8e8e8;border-radius:14px;padding:24px}
+.output-box.show{display:block}
+.output-label{font-size:12px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.output-text{font-size:14px;line-height:1.8;color:#333;white-space:pre-wrap;word-wrap:break-word}
+.model-badge{display:inline-block;font-size:11px;color:#999;margin-top:10px}
+.loading{display:none;text-align:center;padding:24px;color:#7c3aed;font-weight:600}
+.loading.show{display:block}
+.spinner{display:inline-block;width:18px;height:18px;border:2.5px solid #e5e7eb;border-top-color:#7c3aed;border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.seo{margin-top:48px;padding-top:36px;border-top:1px solid #f5f5f5}
+.seo h2{font-size:22px;font-weight:800;margin-bottom:14px}
+.seo p{font-size:14px;color:#999;line-height:1.7;margin-bottom:8px}
+.faq details{border:1px solid #f0f0f0;border-radius:10px;padding:14px 18px;margin-bottom:8px}
+.faq summary{font-weight:700;font-size:14px;cursor:pointer;color:#333}
+.faq p{font-size:13px;color:#888;margin-top:8px;line-height:1.6}
+.foot{text-align:center;padding:40px 32px;font-size:13px;color:#ccc;border-top:1px solid #f5f5f5}
+.foot a{color:#999}
+.related{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.related a{padding:8px 16px;border:1.5px solid #e5e7eb;border-radius:8px;color:#7c3aed;font-size:13px;font-weight:600}
+.error{display:none;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:14px;border-radius:10px;margin-top:12px;font-size:13px}
+.error.show{display:block}
+@media(max-width:600px){.page{padding:0 16px 60px}.header h1{font-size:24px}.card{padding:20px}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-in">
+<a href="/" class="logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="url(#g)"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/><defs><linearGradient id="g" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs></svg><div>Zap<span>Kitt</span></div></a>
+<div class="nav-links"><a href="/">All Tools</a><a href="/blog">Blog</a><a href="/about">About</a><a href="/privacy">Privacy</a></div>
+</div></nav>
+
+<div class="page">
+<div class="header">
+<div class="chip" id="chipText">AI Powered</div>
+<h1 id="toolTitle">Loading...</h1>
+<p id="toolTagline"></p>
+</div>
+
+<div class="card">
+<div id="fieldsContainer"></div>
+<button class="btn btn-go" id="generateBtn" onclick="generate()">⚡ Generate</button>
+<div class="loading" id="loading"><span class="spinner"></span> AI is generating your content...</div>
+<div class="error" id="errorBox"></div>
+</div>
+
+<div class="output-box" id="outputBox">
+<div class="output-label">Result</div>
+<div class="output-text" id="outputText"></div>
+<div class="model-badge" id="modelBadge"></div>
+<button class="btn btn-copy" onclick="copyResult()">📋 Copy to clipboard</button>
+</div>
+
+<div class="seo" id="seoSection"></div>
+<div class="related" id="relatedTools"></div>
+</div>
+
+<footer class="foot">
+<p>ZapKitt — Free AI-powered tools for everyone.</p>
+<p style="margin-top:8px"><a href="/">All Tools</a> · <a href="/blog">Blog</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
+</footer>
+
+<script>
+var toolConfig = null;
+var allTools = [];
+
+async function init() {
+  try {
+    var resp = await fetch("/tools.json");
+    var data = await resp.json();
+    allTools = data.tools;
+
+    // Get slug from URL
+    var path = window.location.pathname;
+    var slug = path.replace(/^\/t\//, "").replace(/^\//, "").replace(/\.html$/, "");
+
+    // Find tool config
+    toolConfig = allTools.find(function(t) { return t.slug === slug; });
+    if (!toolConfig) {
+      document.getElementById("toolTitle").textContent = "Tool not found";
+      return;
+    }
+
+    renderTool();
+  } catch (e) {
+    document.getElementById("toolTitle").textContent = "Error loading tool";
+    console.error(e);
+  }
+}
+
+function renderTool() {
+  var t = toolConfig;
+
+  // SEO
+  document.title = t.title + " — Free Online | ZapKitt";
+  document.getElementById("pageTitle").textContent = t.title + " — Free Online | ZapKitt";
+  document.getElementById("pageMeta").content = t.description;
+  document.getElementById("ogTitle").content = t.title + " | ZapKitt";
+  document.getElementById("ogDesc").content = t.description;
+  document.getElementById("pageCanonical").href = "https://zapkitt.com/t/" + t.slug;
+  document.getElementById("ogUrl").content = "https://zapkitt.com/t/" + t.slug;
+
+  // Header
+  document.getElementById("toolTitle").innerHTML = t.title.replace(/AI\s/, "AI <em>") + (t.title.includes("AI") ? "</em>" : "");
+  document.getElementById("toolTagline").textContent = t.tagline;
+
+  // Fields
+  var fc = document.getElementById("fieldsContainer");
+  fc.innerHTML = "";
+  t.fields.forEach(function(f) {
+    var div = document.createElement("div");
+    div.className = "field";
+    var labelClass = f.required ? "required" : "";
+    if (f.type === "textarea") {
+      div.innerHTML = '<label class="' + labelClass + '">' + f.label + '</label><textarea id="f_' + f.id + '" placeholder="' + (f.placeholder || "") + '"></textarea>';
+    } else if (f.type === "select") {
+      var opts = f.options.map(function(o) { return '<option value="' + o + '">' + o + '</option>'; }).join("");
+      div.innerHTML = '<label class="' + labelClass + '">' + f.label + '</label><select id="f_' + f.id + '">' + opts + '</select>';
+    } else {
+      div.innerHTML = '<label class="' + labelClass + '">' + f.label + '</label><input id="f_' + f.id + '" type="text" placeholder="' + (f.placeholder || "") + '">';
+    }
+    fc.appendChild(div);
+  });
+
+  // Generate button text
+  document.getElementById("generateBtn").textContent = "⚡ Generate " + t.title.replace("AI ", "");
+
+  // SEO section
+  var seoHtml = '<h2>' + t.title + ' — Free Online</h2><p>' + t.description + '</p>';
+  if (t.faq && t.faq.length) {
+    seoHtml += '<div class="faq">';
+    t.faq.forEach(function(f) { seoHtml += '<details><summary>' + f.q + '</summary><p>' + f.a + '</p></details>'; });
+    seoHtml += '</div>';
+  }
+  document.getElementById("seoSection").innerHTML = seoHtml;
+
+  // Related tools
+  var related = allTools.filter(function(rt) { return rt.category === t.category && rt.slug !== t.slug; }).slice(0, 5);
+  var relHtml = related.map(function(r) { return '<a href="/t/' + r.slug + '">' + r.title + '</a>'; }).join("");
+  document.getElementById("relatedTools").innerHTML = relHtml;
+
+  // Schema.org structured data
+  var schema = document.createElement("script");
+  schema.type = "application/ld+json";
+  schema.textContent = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": t.title,
+    "description": t.description,
+    "url": "https://zapkitt.com/t/" + t.slug,
+    "applicationCategory": "UtilitiesApplication",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "operatingSystem": "Web"
+  });
+  document.head.appendChild(schema);
+}
+
+async function generate() {
+  if (!toolConfig) return;
+  var t = toolConfig;
+
+  // Collect field values
+  var fields = {};
+  var valid = true;
+  t.fields.forEach(function(f) {
+    var el = document.getElementById("f_" + f.id);
+    var val = el ? el.value.trim() : "";
+    fields[f.id] = val;
+    if (f.required && !val) { valid = false; el.style.borderColor = "#dc2626"; }
+    else if (el) { el.style.borderColor = "#e8e8e8"; }
+  });
+
+  if (!valid) return alert("Please fill all required fields.");
+
+  var btn = document.getElementById("generateBtn");
+  btn.disabled = true;
+  btn.textContent = "Generating...";
+  document.getElementById("loading").classList.add("show");
+  document.getElementById("outputBox").classList.remove("show");
+  document.getElementById("errorBox").classList.remove("show");
+
+  try {
+    var resp = await fetch("/api/tool", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        systemPrompt: t.systemPrompt,
+        userPrompt: t.userPrompt,
+        fields: fields,
+        maxTokens: t.maxTokens || 2000
+      })
+    });
+
+    var data = await resp.json();
+    if (data.error) throw new Error(data.error);
+
+    document.getElementById("outputText").textContent = data.result;
+    document.getElementById("modelBadge").textContent = "Generated by " + (data.model || "AI");
+    document.getElementById("outputBox").classList.add("show");
+  } catch (e) {
+    document.getElementById("errorBox").textContent = "Error: " + e.message;
+    document.getElementById("errorBox").classList.add("show");
+  }
+
+  btn.disabled = false;
+  btn.textContent = "⚡ Generate " + t.title.replace("AI ", "");
+  document.getElementById("loading").classList.remove("show");
+}
+
+function copyResult() {
+  var text = document.getElementById("outputText").textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.querySelector(".btn-copy");
+    btn.textContent = "✓ Copied!";
+    setTimeout(function() { btn.textContent = "📋 Copy to clipboard"; }, 2000);
+  });
+}
+
+// Initialize
+init();
+</script>
+</body></html>
