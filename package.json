@@ -1,7 +1,9 @@
 {
-  "name": "zapkitt-ai-tools",
+  "name": "resumegpt-engine",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
+  "description": "Open-source AI Resume Builder — Production-grade, Groq-powered, Chrome-quality PDF",
   "dependencies": {
     "@sparticuz/chromium-min": "^133.0.0",
     "puppeteer-core": "^24.2.0"
