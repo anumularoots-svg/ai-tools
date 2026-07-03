@@ -3,61 +3,61 @@
     {
       "id": "resume",
       "name": "Resume & Career",
-      "icon": "\ud83d\udcc4",
+      "icon": "📄",
       "color": "#7C3AED"
     },
     {
       "id": "writing",
       "name": "AI Writing",
-      "icon": "\u270d\ufe0f",
+      "icon": "✍️",
       "color": "#2563EB"
     },
     {
       "id": "marketing",
       "name": "Marketing & SEO",
-      "icon": "\ud83d\udcc8",
+      "icon": "📈",
       "color": "#D97706"
     },
     {
       "id": "social",
       "name": "Social Media",
-      "icon": "\ud83d\udcf1",
+      "icon": "📱",
       "color": "#EC4899"
     },
     {
       "id": "business",
       "name": "Business",
-      "icon": "\ud83d\udcbc",
+      "icon": "💼",
       "color": "#059669"
     },
     {
       "id": "student",
       "name": "Student",
-      "icon": "\ud83c\udf93",
+      "icon": "🎓",
       "color": "#0EA5E9"
     },
     {
       "id": "pdf",
       "name": "PDF Tools",
-      "icon": "\ud83d\udcd1",
+      "icon": "📑",
       "color": "#DC2626"
     },
     {
       "id": "image",
       "name": "Image Tools",
-      "icon": "\ud83d\uddbc\ufe0f",
+      "icon": "🖼️",
       "color": "#8B5CF6"
     },
     {
       "id": "developer",
       "name": "Developer",
-      "icon": "\ud83d\udcbb",
+      "icon": "💻",
       "color": "#10B981"
     },
     {
       "id": "productivity",
       "name": "Productivity",
-      "icon": "\u26a1",
+      "icon": "⚡",
       "color": "#F59E0B"
     }
   ],
@@ -66,7 +66,7 @@
       "slug": "ai-resume-checker",
       "title": "AI Resume Checker",
       "tagline": "Get instant feedback on your resume",
-      "description": "Free AI resume checker. Get detailed feedback on your resume \u2014 ATS compatibility, formatting, content quality, and actionable improvement suggestions.",
+      "description": "Free AI resume checker. Get detailed feedback on your resume — ATS compatibility, formatting, content quality, and actionable improvement suggestions.",
       "category": "resume",
       "type": "ai",
       "fields": [
@@ -130,7 +130,7 @@
         }
       ],
       "systemPrompt": "You are an ATS (Applicant Tracking System) expert. Score resumes for ATS compatibility.",
-      "userPrompt": "Analyze this resume against the job description for ATS compatibility.\n\nProvide:\n1. ATS SCORE: X/100\n2. KEYWORD MATCH: List matched and missing keywords\n3. FORMAT CHECK: \u2705 or \u274c for each (no tables, no columns, no graphics, standard headings, proper dates, contact info)\n4. SECTION ANALYSIS: Score each section\n5. TOP 10 MISSING KEYWORDS to add\n6. REWRITTEN SUMMARY optimized for this job\n\nResume:\n\"\"\"\n{resume}\n\"\"\"\n\nJob Description:\n\"\"\"\n{jobDesc}\n\"\"\"",
+      "userPrompt": "Analyze this resume against the job description for ATS compatibility.\n\nProvide:\n1. ATS SCORE: X/100\n2. KEYWORD MATCH: List matched and missing keywords\n3. FORMAT CHECK: ✅ or ❌ for each (no tables, no columns, no graphics, standard headings, proper dates, contact info)\n4. SECTION ANALYSIS: Score each section\n5. TOP 10 MISSING KEYWORDS to add\n6. REWRITTEN SUMMARY optimized for this job\n\nResume:\n\"\"\"\n{resume}\n\"\"\"\n\nJob Description:\n\"\"\"\n{jobDesc}\n\"\"\"",
       "maxTokens": 2000,
       "keywords": [
         "ATS score",
@@ -536,7 +536,7 @@
       "slug": "ai-tone-changer",
       "title": "AI Tone Changer",
       "tagline": "Change the tone of any text",
-      "description": "Free AI tone changer. Transform your text to any tone \u2014 professional, casual, friendly, formal, persuasive, or empathetic.",
+      "description": "Free AI tone changer. Transform your text to any tone — professional, casual, friendly, formal, persuasive, or empathetic.",
       "category": "writing",
       "type": "ai",
       "fields": [
@@ -876,7 +876,7 @@
         }
       ],
       "systemPrompt": "You are a recruitment expert. Analyze resume-job fit.",
-      "userPrompt": "Compare this resume against the job description:\n\nResume:\n\"\"\"\n{resume}\n\"\"\"\n\nJob Description:\n\"\"\"\n{jobDesc}\n\"\"\"\n\nProvide:\n1. MATCH SCORE: X/100\n2. MATCHED REQUIREMENTS (list each with \u2705)\n3. MISSING REQUIREMENTS (list each with \u274c)\n4. SKILL GAPS to address\n5. EXPERIENCE GAPS\n6. SUGGESTED RESUME CHANGES (specific bullets to add/modify)\n7. COVER LETTER TALKING POINTS",
+      "userPrompt": "Compare this resume against the job description:\n\nResume:\n\"\"\"\n{resume}\n\"\"\"\n\nJob Description:\n\"\"\"\n{jobDesc}\n\"\"\"\n\nProvide:\n1. MATCH SCORE: X/100\n2. MATCHED REQUIREMENTS (list each with ✅)\n3. MISSING REQUIREMENTS (list each with ❌)\n4. SKILL GAPS to address\n5. EXPERIENCE GAPS\n6. SUGGESTED RESUME CHANGES (specific bullets to add/modify)\n7. COVER LETTER TALKING POINTS",
       "maxTokens": 2000,
       "keywords": [
         "job match",
@@ -1825,10 +1825,10 @@
           "label": "Flashcard style",
           "type": "select",
           "options": [
-            "Term \u2192 Definition",
-            "Question \u2192 Answer",
-            "Concept \u2192 Example",
-            "Word \u2192 Translation"
+            "Term → Definition",
+            "Question → Answer",
+            "Concept → Example",
+            "Word → Translation"
           ],
           "required": true
         }
@@ -1911,7 +1911,7 @@
           "id": "problem",
           "label": "Math problem",
           "type": "textarea",
-          "placeholder": "e.g. Solve: 3x\u00b2 + 5x - 2 = 0\nOR: Find the derivative of f(x) = x\u00b3 + 2x\u00b2 - 5x + 1",
+          "placeholder": "e.g. Solve: 3x² + 5x - 2 = 0\nOR: Find the derivative of f(x) = x³ + 2x² - 5x + 1",
           "required": true
         },
         {
@@ -2692,6 +2692,2659 @@
         "proofread"
       ],
       "faq": []
+    },
+    {
+      "slug": "code-explainer",
+      "title": "Code Explainer",
+      "tagline": "Understand any code instantly",
+      "description": "Paste any code and get a clear, line-by-line explanation. Supports Python, JavaScript, Java, C++, and 20+ languages.",
+      "category": "developer",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "code",
+          "label": "Paste your code",
+          "type": "textarea",
+          "placeholder": "Paste code here...",
+          "required": true
+        },
+        {
+          "id": "language",
+          "label": "Programming language",
+          "type": "select",
+          "options": [
+            "Auto-detect",
+            "Python",
+            "JavaScript",
+            "TypeScript",
+            "Java",
+            "C++",
+            "C#",
+            "Go",
+            "Rust",
+            "PHP",
+            "Ruby",
+            "Swift",
+            "Kotlin",
+            "SQL",
+            "HTML/CSS",
+            "Shell/Bash"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are an expert programmer and teacher. Explain code clearly with line-by-line breakdown.",
+      "userPrompt": "Explain this code in detail:\n\nLanguage: {language}\n\n```\n{code}\n```\n\nProvide:\n1. OVERVIEW - What does this code do (2-3 sentences)\n2. LINE-BY-LINE EXPLANATION\n3. KEY CONCEPTS used\n4. POTENTIAL ISSUES or improvements\n5. EXAMPLE OUTPUT (if applicable)",
+      "maxTokens": 2000,
+      "keywords": [
+        "code explainer",
+        "explain code",
+        "code breakdown",
+        "understand code"
+      ],
+      "faq": [
+        {
+          "q": "What languages are supported?",
+          "a": "20+ languages including Python, JavaScript, Java, C++, Go, Rust, and more."
+        }
+      ]
+    },
+    {
+      "slug": "code-converter",
+      "title": "Code Converter",
+      "tagline": "Convert code between programming languages",
+      "description": "Convert code from one programming language to another instantly. Supports Python, JavaScript, Java, C++, Go, Rust, and more.",
+      "category": "developer",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "code",
+          "label": "Source code",
+          "type": "textarea",
+          "placeholder": "Paste code to convert...",
+          "required": true
+        },
+        {
+          "id": "fromLang",
+          "label": "From language",
+          "type": "select",
+          "options": [
+            "Python",
+            "JavaScript",
+            "TypeScript",
+            "Java",
+            "C++",
+            "C#",
+            "Go",
+            "Rust",
+            "PHP",
+            "Ruby",
+            "Swift",
+            "Kotlin",
+            "SQL"
+          ],
+          "required": true
+        },
+        {
+          "id": "toLang",
+          "label": "To language",
+          "type": "select",
+          "options": [
+            "Python",
+            "JavaScript",
+            "TypeScript",
+            "Java",
+            "C++",
+            "C#",
+            "Go",
+            "Rust",
+            "PHP",
+            "Ruby",
+            "Swift",
+            "Kotlin",
+            "SQL"
+          ],
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are an expert polyglot programmer. Convert code between languages accurately, maintaining logic and using idiomatic patterns of the target language.",
+      "userPrompt": "Convert this {fromLang} code to {toLang}:\n\n```{fromLang}\n{code}\n```\n\nProvide:\n1. CONVERTED CODE (idiomatic {toLang})\n2. KEY DIFFERENCES between the two implementations\n3. NOTES on any language-specific considerations",
+      "maxTokens": 2000,
+      "keywords": [
+        "code converter",
+        "translate code",
+        "code translation",
+        "convert programming language"
+      ],
+      "faq": [
+        {
+          "q": "Is the conversion accurate?",
+          "a": "AI produces idiomatic code in the target language with proper patterns and conventions."
+        }
+      ]
+    },
+    {
+      "slug": "regex-generator",
+      "title": "Regex Generator",
+      "tagline": "Generate regex patterns from plain English",
+      "description": "Describe what you want to match in plain English and get a working regex pattern with explanation and test cases.",
+      "category": "developer",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "description",
+          "label": "What do you want to match?",
+          "type": "textarea",
+          "placeholder": "e.g., Email addresses, phone numbers starting with +91, URLs with https...",
+          "required": true
+        },
+        {
+          "id": "flavor",
+          "label": "Regex flavor",
+          "type": "select",
+          "options": [
+            "JavaScript",
+            "Python",
+            "Java",
+            "PHP",
+            "Go",
+            ".NET",
+            "PCRE"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a regex expert. Generate accurate regex patterns from natural language descriptions.",
+      "userPrompt": "Generate a regex pattern for: {description}\n\nFlavor: {flavor}\n\nProvide:\n1. REGEX PATTERN\n2. EXPLANATION (part by part)\n3. TEST CASES (5 matching, 3 non-matching examples)\n4. COMMON EDGE CASES to watch for\n5. USAGE EXAMPLE in {flavor} code",
+      "maxTokens": 1500,
+      "keywords": [
+        "regex generator",
+        "regular expression",
+        "regex builder",
+        "pattern matching"
+      ],
+      "faq": [
+        {
+          "q": "What regex flavors are supported?",
+          "a": "JavaScript, Python, Java, PHP, Go, .NET, and PCRE."
+        }
+      ]
+    },
+    {
+      "slug": "sql-generator",
+      "title": "SQL Query Generator",
+      "tagline": "Write SQL queries from plain English",
+      "description": "Describe what data you need in plain English and get a working SQL query with explanation.",
+      "category": "developer",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "description",
+          "label": "What data do you need?",
+          "type": "textarea",
+          "placeholder": "e.g., Get all users who signed up last month and ordered more than 3 times...",
+          "required": true
+        },
+        {
+          "id": "tables",
+          "label": "Table structure (optional)",
+          "type": "textarea",
+          "placeholder": "users(id, name, email, created_at)\norders(id, user_id, amount, date)",
+          "required": false
+        },
+        {
+          "id": "dialect",
+          "label": "SQL dialect",
+          "type": "select",
+          "options": [
+            "MySQL",
+            "PostgreSQL",
+            "SQLite",
+            "SQL Server",
+            "Oracle"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are an expert SQL developer. Generate optimized SQL queries from natural language descriptions.",
+      "userPrompt": "Generate a SQL query for: {description}\n\nDialect: {dialect}\n{tables ? 'Table structure:\\n' + tables : ''}\n\nProvide:\n1. SQL QUERY (optimized)\n2. EXPLANATION of each clause\n3. INDEX RECOMMENDATIONS\n4. ALTERNATIVE APPROACHES if applicable",
+      "maxTokens": 1500,
+      "keywords": [
+        "sql generator",
+        "sql query builder",
+        "write sql",
+        "sql from english"
+      ],
+      "faq": [
+        {
+          "q": "What databases are supported?",
+          "a": "MySQL, PostgreSQL, SQLite, SQL Server, and Oracle."
+        }
+      ]
+    },
+    {
+      "slug": "api-docs-generator",
+      "title": "API Docs Generator",
+      "tagline": "Generate API documentation instantly",
+      "description": "Paste your API endpoint details and get professional, structured API documentation with examples.",
+      "category": "developer",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "endpoint",
+          "label": "API endpoint details",
+          "type": "textarea",
+          "placeholder": "GET /api/users/:id\nReturns user profile with orders...",
+          "required": true
+        },
+        {
+          "id": "format",
+          "label": "Documentation format",
+          "type": "select",
+          "options": [
+            "Markdown",
+            "OpenAPI/Swagger",
+            "Postman Collection",
+            "cURL examples"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a technical writer specializing in API documentation. Create clear, developer-friendly docs.",
+      "userPrompt": "Generate API documentation for:\n\n{endpoint}\n\nFormat: {format}\n\nInclude:\n1. ENDPOINT DESCRIPTION\n2. REQUEST (method, URL, headers, params, body)\n3. RESPONSE (success + error examples)\n4. CODE EXAMPLES (cURL, JavaScript, Python)\n5. RATE LIMITS & NOTES",
+      "maxTokens": 2000,
+      "keywords": [
+        "api documentation",
+        "api docs generator",
+        "swagger generator",
+        "rest api docs"
+      ],
+      "faq": [
+        {
+          "q": "What formats are supported?",
+          "a": "Markdown, OpenAPI/Swagger, Postman Collection, and cURL examples."
+        }
+      ]
+    },
+    {
+      "slug": "git-commit-message",
+      "title": "Git Commit Message Generator",
+      "tagline": "Write perfect commit messages",
+      "description": "Describe your code changes and get professional, conventional commit messages.",
+      "category": "developer",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "changes",
+          "label": "What did you change?",
+          "type": "textarea",
+          "placeholder": "e.g., Fixed login bug where users couldn't reset password, added email validation...",
+          "required": true
+        },
+        {
+          "id": "style",
+          "label": "Commit style",
+          "type": "select",
+          "options": [
+            "Conventional Commits",
+            "Angular",
+            "Emoji (gitmoji)",
+            "Simple descriptive"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a senior developer expert in git workflows. Write clear, conventional commit messages.",
+      "userPrompt": "Generate git commit messages for these changes:\n\n{changes}\n\nStyle: {style}\n\nProvide:\n1. PRIMARY COMMIT MESSAGE (subject line)\n2. DETAILED BODY (if needed)\n3. 3 ALTERNATIVE MESSAGES\n4. BREAKING CHANGE note (if applicable)",
+      "maxTokens": 800,
+      "keywords": [
+        "git commit message",
+        "commit message generator",
+        "conventional commits"
+      ],
+      "faq": [
+        {
+          "q": "What commit styles are supported?",
+          "a": "Conventional Commits, Angular, Emoji (gitmoji), and simple descriptive."
+        }
+      ]
+    },
+    {
+      "slug": "code-reviewer",
+      "title": "AI Code Reviewer",
+      "tagline": "Get expert code review feedback",
+      "description": "Paste your code and get detailed review feedback on quality, bugs, performance, and best practices.",
+      "category": "developer",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "code",
+          "label": "Paste your code",
+          "type": "textarea",
+          "placeholder": "Paste code for review...",
+          "required": true
+        },
+        {
+          "id": "focus",
+          "label": "Review focus",
+          "type": "select",
+          "options": [
+            "Full review",
+            "Bug detection",
+            "Performance",
+            "Security",
+            "Clean code / readability",
+            "Best practices"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a senior staff engineer conducting thorough code reviews. Be constructive, specific, and prioritize issues by severity.",
+      "userPrompt": "Review this code (focus: {focus}):\n\n```\n{code}\n```\n\nProvide:\n1. OVERALL RATING (1-10)\n2. CRITICAL ISSUES (bugs, security)\n3. IMPROVEMENTS (performance, readability)\n4. BEST PRACTICES violations\n5. REFACTORED VERSION (key sections)\n6. POSITIVE HIGHLIGHTS",
+      "maxTokens": 2000,
+      "keywords": [
+        "code review",
+        "code reviewer",
+        "review code",
+        "code quality"
+      ],
+      "faq": [
+        {
+          "q": "What languages can be reviewed?",
+          "a": "Any programming language — Python, JavaScript, Java, C++, Go, and more."
+        }
+      ]
+    },
+    {
+      "slug": "cron-generator",
+      "title": "Cron Expression Generator",
+      "tagline": "Create cron schedules from plain English",
+      "description": "Describe when you want a task to run and get the correct cron expression with explanation.",
+      "category": "developer",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "schedule",
+          "label": "When should it run?",
+          "type": "textarea",
+          "placeholder": "e.g., Every Monday at 9am, first day of each month at midnight, every 15 minutes during business hours...",
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a cron/scheduling expert. Generate accurate cron expressions from plain English descriptions.",
+      "userPrompt": "Generate a cron expression for: {schedule}\n\nProvide:\n1. CRON EXPRESSION\n2. FIELD-BY-FIELD EXPLANATION\n3. NEXT 5 RUN TIMES\n4. ALTERNATIVE expressions (if applicable)\n5. USAGE in common tools (crontab, AWS, GitHub Actions)",
+      "maxTokens": 1000,
+      "keywords": [
+        "cron generator",
+        "cron expression",
+        "cron schedule",
+        "crontab generator"
+      ],
+      "faq": [
+        {
+          "q": "What cron formats are supported?",
+          "a": "Standard 5-field cron, 6-field (with seconds), and platform-specific formats."
+        }
+      ]
+    },
+    {
+      "slug": "readme-generator",
+      "title": "README Generator",
+      "tagline": "Create professional README files",
+      "description": "Generate a professional, complete README.md for your project with badges, installation, usage, and more.",
+      "category": "developer",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "projectName",
+          "label": "Project name",
+          "type": "text",
+          "placeholder": "my-awesome-project",
+          "required": true
+        },
+        {
+          "id": "description",
+          "label": "Project description",
+          "type": "textarea",
+          "placeholder": "What does your project do? Key features?",
+          "required": true
+        },
+        {
+          "id": "techStack",
+          "label": "Tech stack",
+          "type": "text",
+          "placeholder": "e.g., React, Node.js, PostgreSQL",
+          "required": false
+        },
+        {
+          "id": "sections",
+          "label": "Include sections",
+          "type": "select",
+          "options": [
+            "Full (all sections)",
+            "Minimal (overview + install + usage)",
+            "Library/Package",
+            "CLI Tool",
+            "API Service"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a technical writer. Create professional, well-structured README.md files in Markdown format.",
+      "userPrompt": "Generate a README.md for:\n\nProject: {projectName}\nDescription: {description}\nTech: {techStack}\nStyle: {sections}\n\nInclude: badges, features, installation, usage examples, API reference (if applicable), contributing guidelines, and license section.",
+      "maxTokens": 2500,
+      "keywords": [
+        "readme generator",
+        "readme template",
+        "github readme",
+        "project documentation"
+      ],
+      "faq": [
+        {
+          "q": "What format is the output?",
+          "a": "Markdown (.md) format ready for GitHub, GitLab, or any git platform."
+        }
+      ]
+    },
+    {
+      "slug": "error-debugger",
+      "title": "Error Message Debugger",
+      "tagline": "Fix errors with AI explanations",
+      "description": "Paste any error message and get a clear explanation of what went wrong, why, and how to fix it.",
+      "category": "developer",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "error",
+          "label": "Paste your error message",
+          "type": "textarea",
+          "placeholder": "Paste the full error message or stack trace...",
+          "required": true
+        },
+        {
+          "id": "context",
+          "label": "Context (optional)",
+          "type": "textarea",
+          "placeholder": "What were you doing when this error occurred? Any relevant code?",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a senior debugger expert. Explain errors clearly and provide step-by-step fixes.",
+      "userPrompt": "Debug this error:\n\n```\n{error}\n```\n\n{context ? 'Context: ' + context : ''}\n\nProvide:\n1. WHAT HAPPENED (plain English)\n2. WHY it happened\n3. HOW TO FIX IT (step-by-step)\n4. PREVENTION tips\n5. RELATED COMMON ERRORS",
+      "maxTokens": 1500,
+      "keywords": [
+        "error debugger",
+        "fix error",
+        "debug error message",
+        "stack trace debugger"
+      ],
+      "faq": [
+        {
+          "q": "What errors can it debug?",
+          "a": "Any error — JavaScript, Python, Java, database, server, build errors, and more."
+        }
+      ]
+    },
+    {
+      "slug": "docker-generator",
+      "title": "Dockerfile Generator",
+      "tagline": "Generate optimized Dockerfiles",
+      "description": "Describe your application and get a production-ready, optimized Dockerfile with multi-stage builds.",
+      "category": "developer",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "appType",
+          "label": "Application type",
+          "type": "select",
+          "options": [
+            "Node.js",
+            "Python/Flask",
+            "Python/Django",
+            "React/Next.js",
+            "Java/Spring Boot",
+            "Go",
+            "Ruby on Rails",
+            ".NET",
+            "PHP/Laravel",
+            "Static site"
+          ],
+          "required": true
+        },
+        {
+          "id": "details",
+          "label": "App details",
+          "type": "textarea",
+          "placeholder": "e.g., Node.js Express API with PostgreSQL, needs Redis for caching...",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a DevOps expert. Generate optimized, production-ready Dockerfiles following best practices.",
+      "userPrompt": "Generate a Dockerfile for:\n\nApp type: {appType}\nDetails: {details}\n\nProvide:\n1. OPTIMIZED DOCKERFILE (multi-stage if applicable)\n2. .dockerignore file\n3. docker-compose.yml (if multiple services)\n4. BUILD & RUN commands\n5. OPTIMIZATION NOTES",
+      "maxTokens": 2000,
+      "keywords": [
+        "dockerfile generator",
+        "docker compose",
+        "containerize app",
+        "docker template"
+      ],
+      "faq": [
+        {
+          "q": "Does it support multi-stage builds?",
+          "a": "Yes, generates optimized multi-stage builds for smaller production images."
+        }
+      ]
+    },
+    {
+      "slug": "htaccess-generator",
+      "title": ".htaccess Generator",
+      "tagline": "Generate Apache .htaccess rules",
+      "description": "Generate .htaccess rules for redirects, security headers, caching, and more.",
+      "category": "developer",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "needs",
+          "label": "What do you need?",
+          "type": "textarea",
+          "placeholder": "e.g., Redirect all HTTP to HTTPS, block access to wp-admin, enable gzip compression, set cache headers...",
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are an Apache server configuration expert. Generate correct, secure .htaccess rules.",
+      "userPrompt": "Generate .htaccess rules for:\n\n{needs}\n\nProvide:\n1. .htaccess CODE\n2. LINE-BY-LINE EXPLANATION\n3. TESTING instructions\n4. COMMON ISSUES & fixes\n5. SECURITY NOTES",
+      "maxTokens": 1500,
+      "keywords": [
+        "htaccess generator",
+        "apache redirect",
+        "htaccess rules",
+        "server configuration"
+      ],
+      "faq": [
+        {
+          "q": "What rules can it generate?",
+          "a": "Redirects, rewrites, security headers, caching, CORS, authentication, and more."
+        }
+      ]
+    },
+    {
+      "slug": "daily-planner",
+      "title": "Daily Planner",
+      "tagline": "AI-powered daily schedule generator",
+      "description": "Tell AI your tasks, meetings, and priorities — get an optimized daily schedule with time blocks.",
+      "category": "productivity",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "tasks",
+          "label": "What do you need to do today?",
+          "type": "textarea",
+          "placeholder": "List your tasks, meetings, deadlines...\ne.g., Team standup at 10am, finish report, gym, grocery shopping",
+          "required": true
+        },
+        {
+          "id": "workHours",
+          "label": "Work hours",
+          "type": "text",
+          "placeholder": "e.g., 9am-6pm",
+          "required": false
+        },
+        {
+          "id": "priority",
+          "label": "Top priority today?",
+          "type": "text",
+          "placeholder": "e.g., Finish the quarterly report",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a productivity expert and time management coach. Create optimized daily schedules using time-blocking techniques.",
+      "userPrompt": "Create an optimized daily schedule:\n\nTasks & meetings: {tasks}\nWork hours: {workHours}\nTop priority: {priority}\n\nProvide:\n1. OPTIMIZED TIME-BLOCKED SCHEDULE\n2. PRIORITY RANKING of tasks\n3. FOCUS TIME blocks for deep work\n4. BREAK SCHEDULE\n5. TIPS for staying on track",
+      "maxTokens": 1500,
+      "keywords": [
+        "daily planner",
+        "schedule maker",
+        "time blocking",
+        "daily schedule"
+      ],
+      "faq": [
+        {
+          "q": "How does it optimize my schedule?",
+          "a": "Uses time-blocking techniques, prioritizes high-impact tasks, and schedules breaks for peak productivity."
+        }
+      ]
+    },
+    {
+      "slug": "decision-maker",
+      "title": "Decision Maker",
+      "tagline": "Make better decisions with AI analysis",
+      "description": "Describe your decision dilemma and get a structured pros/cons analysis with a recommendation.",
+      "category": "productivity",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "decision",
+          "label": "What decision are you trying to make?",
+          "type": "textarea",
+          "placeholder": "e.g., Should I take the new job offer or stay at my current company?",
+          "required": true
+        },
+        {
+          "id": "factors",
+          "label": "Important factors (optional)",
+          "type": "textarea",
+          "placeholder": "e.g., salary, work-life balance, career growth, location...",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a decision analysis expert. Help people make well-reasoned decisions using structured frameworks.",
+      "userPrompt": "Help me decide: {decision}\n\nImportant factors: {factors}\n\nProvide:\n1. DECISION FRAMEWORK (organize key factors)\n2. PROS & CONS for each option\n3. WEIGHTED SCORING (rate each factor 1-10)\n4. RISK ASSESSMENT\n5. RECOMMENDATION with reasoning\n6. WHAT-IF SCENARIOS",
+      "maxTokens": 2000,
+      "keywords": [
+        "decision maker",
+        "pros and cons",
+        "decision analysis",
+        "should I"
+      ],
+      "faq": [
+        {
+          "q": "How does the analysis work?",
+          "a": "Uses weighted scoring, risk assessment, and structured frameworks to help you see all angles of your decision."
+        }
+      ]
+    },
+    {
+      "slug": "goal-setter",
+      "title": "SMART Goal Setter",
+      "tagline": "Turn vague goals into SMART action plans",
+      "description": "Describe your goal and get a SMART (Specific, Measurable, Achievable, Relevant, Time-bound) action plan.",
+      "category": "productivity",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "goal",
+          "label": "What's your goal?",
+          "type": "textarea",
+          "placeholder": "e.g., I want to learn web development and get a job...",
+          "required": true
+        },
+        {
+          "id": "timeline",
+          "label": "Timeline",
+          "type": "select",
+          "options": [
+            "1 month",
+            "3 months",
+            "6 months",
+            "1 year",
+            "Flexible"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a goal-setting and productivity expert. Convert vague goals into SMART goals with actionable steps.",
+      "userPrompt": "Convert this into a SMART goal with action plan:\n\nGoal: {goal}\nTimeline: {timeline}\n\nProvide:\n1. SMART GOAL (Specific, Measurable, Achievable, Relevant, Time-bound)\n2. MILESTONES (weekly/monthly checkpoints)\n3. ACTION STEPS (specific tasks)\n4. POTENTIAL OBSTACLES & solutions\n5. TRACKING METHOD\n6. ACCOUNTABILITY TIPS",
+      "maxTokens": 2000,
+      "keywords": [
+        "smart goal",
+        "goal setting",
+        "action plan",
+        "goal planner"
+      ],
+      "faq": [
+        {
+          "q": "What is a SMART goal?",
+          "a": "A goal that is Specific, Measurable, Achievable, Relevant, and Time-bound — proven to increase success rates."
+        }
+      ]
+    },
+    {
+      "slug": "meeting-agenda",
+      "title": "Meeting Agenda Generator",
+      "tagline": "Create structured meeting agendas",
+      "description": "Describe your meeting purpose and get a professional, timed agenda with discussion points.",
+      "category": "productivity",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "purpose",
+          "label": "Meeting purpose",
+          "type": "textarea",
+          "placeholder": "e.g., Q3 planning meeting with marketing team to discuss campaign strategy...",
+          "required": true
+        },
+        {
+          "id": "duration",
+          "label": "Meeting duration",
+          "type": "select",
+          "options": [
+            "15 minutes",
+            "30 minutes",
+            "45 minutes",
+            "1 hour",
+            "1.5 hours",
+            "2 hours"
+          ],
+          "required": false
+        },
+        {
+          "id": "attendees",
+          "label": "Attendees (optional)",
+          "type": "text",
+          "placeholder": "e.g., Marketing team, VP Sales, Product Manager",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a meeting facilitation expert. Create efficient, well-structured meeting agendas.",
+      "userPrompt": "Create a meeting agenda:\n\nPurpose: {purpose}\nDuration: {duration}\nAttendees: {attendees}\n\nProvide:\n1. MEETING TITLE & OBJECTIVE\n2. TIMED AGENDA (with allocated minutes per item)\n3. DISCUSSION POINTS for each item\n4. PRE-MEETING PREP (what attendees should prepare)\n5. ACTION ITEMS TEMPLATE\n6. FOLLOW-UP PLAN",
+      "maxTokens": 1500,
+      "keywords": [
+        "meeting agenda",
+        "agenda template",
+        "meeting planner",
+        "agenda generator"
+      ],
+      "faq": [
+        {
+          "q": "Can I customize the duration?",
+          "a": "Yes, choose from 15 minutes to 2 hours and the agenda will be optimized for your time slot."
+        }
+      ]
+    },
+    {
+      "slug": "habit-tracker-plan",
+      "title": "Habit Builder",
+      "tagline": "Build better habits with AI coaching",
+      "description": "Describe the habits you want to build and get a personalized plan based on behavioral science.",
+      "category": "productivity",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "habits",
+          "label": "What habits do you want to build?",
+          "type": "textarea",
+          "placeholder": "e.g., Exercise daily, read 30 min, meditate, drink more water...",
+          "required": true
+        },
+        {
+          "id": "challenges",
+          "label": "Current challenges (optional)",
+          "type": "textarea",
+          "placeholder": "e.g., I start strong but lose motivation after 2 weeks...",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a behavioral science expert and habit coach. Create evidence-based habit-building plans using proven frameworks like Atomic Habits, habit stacking, and the 2-minute rule.",
+      "userPrompt": "Create a habit-building plan for:\n\nHabits: {habits}\nChallenges: {challenges}\n\nProvide:\n1. HABIT STACKING PLAN (link new habits to existing routines)\n2. 2-MINUTE STARTER VERSION of each habit\n3. 30-DAY PROGRESSION (gradual increase)\n4. ENVIRONMENT DESIGN tips\n5. ACCOUNTABILITY SYSTEM\n6. RECOVERY PLAN (when you miss a day)",
+      "maxTokens": 2000,
+      "keywords": [
+        "habit builder",
+        "habit tracker",
+        "build habits",
+        "atomic habits"
+      ],
+      "faq": [
+        {
+          "q": "What method does it use?",
+          "a": "Based on Atomic Habits, habit stacking, and behavioral science research."
+        }
+      ]
+    },
+    {
+      "slug": "email-responder",
+      "title": "Email Reply Generator",
+      "tagline": "Draft professional email replies in seconds",
+      "description": "Paste the email you received and get multiple reply options — professional, friendly, or assertive.",
+      "category": "productivity",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "email",
+          "label": "Paste the email you received",
+          "type": "textarea",
+          "placeholder": "Paste the email you need to reply to...",
+          "required": true
+        },
+        {
+          "id": "tone",
+          "label": "Reply tone",
+          "type": "select",
+          "options": [
+            "Professional",
+            "Friendly",
+            "Assertive",
+            "Apologetic",
+            "Grateful",
+            "Decline politely"
+          ],
+          "required": false
+        },
+        {
+          "id": "keyPoints",
+          "label": "Key points to include (optional)",
+          "type": "textarea",
+          "placeholder": "e.g., I can't attend Tuesday but free Thursday...",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a professional communication expert. Draft email replies that are clear, appropriate in tone, and effective.",
+      "userPrompt": "Draft a reply ({tone} tone) to this email:\n\n\"\"\"\n{email}\n\"\"\"\n\nKey points to include: {keyPoints}\n\nProvide:\n1. REPLY EMAIL (ready to send)\n2. SUBJECT LINE (if needed)\n3. 2 ALTERNATIVE VERSIONS",
+      "maxTokens": 1500,
+      "keywords": [
+        "email reply",
+        "email response",
+        "reply to email",
+        "professional email"
+      ],
+      "faq": [
+        {
+          "q": "Can it handle formal and casual emails?",
+          "a": "Yes, choose from 6 tone options including professional, friendly, assertive, and more."
+        }
+      ]
+    },
+    {
+      "slug": "brainstorm",
+      "title": "AI Brainstormer",
+      "tagline": "Generate creative ideas for any topic",
+      "description": "Describe your challenge or topic and get 20+ creative ideas, solutions, and approaches.",
+      "category": "productivity",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "What do you need ideas for?",
+          "type": "textarea",
+          "placeholder": "e.g., Marketing ideas for a new coffee shop, birthday party themes, app feature ideas...",
+          "required": true
+        },
+        {
+          "id": "constraints",
+          "label": "Any constraints? (optional)",
+          "type": "text",
+          "placeholder": "e.g., low budget, under $100, remote-only...",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a creative strategist and brainstorming facilitator. Generate diverse, innovative ideas spanning multiple approaches.",
+      "userPrompt": "Brainstorm ideas for: {topic}\n\nConstraints: {constraints}\n\nProvide:\n1. TOP 5 IDEAS (most impactful, with details)\n2. 10 QUICK IDEAS (one-liner each)\n3. 3 WILD/UNCONVENTIONAL IDEAS\n4. 3 LOW-EFFORT/QUICK-WIN IDEAS\n5. IMPLEMENTATION PRIORITY (which to do first)",
+      "maxTokens": 2000,
+      "keywords": [
+        "brainstorm",
+        "idea generator",
+        "brainstorming",
+        "creative ideas"
+      ],
+      "faq": [
+        {
+          "q": "Can it brainstorm for any topic?",
+          "a": "Yes — business ideas, marketing campaigns, party themes, product features, or any creative challenge."
+        }
+      ]
+    },
+    {
+      "slug": "project-plan",
+      "title": "Project Plan Generator",
+      "tagline": "Create detailed project plans with milestones",
+      "description": "Describe your project and get a complete plan with phases, milestones, tasks, and timeline.",
+      "category": "productivity",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "project",
+          "label": "Project description",
+          "type": "textarea",
+          "placeholder": "e.g., Build an e-commerce website for handmade jewelry...",
+          "required": true
+        },
+        {
+          "id": "timeline",
+          "label": "Target timeline",
+          "type": "text",
+          "placeholder": "e.g., 3 months, by December 2024",
+          "required": false
+        },
+        {
+          "id": "team",
+          "label": "Team size (optional)",
+          "type": "text",
+          "placeholder": "e.g., 3 developers, 1 designer",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a project management expert. Create comprehensive, realistic project plans with actionable milestones.",
+      "userPrompt": "Create a project plan for:\n\nProject: {project}\nTimeline: {timeline}\nTeam: {team}\n\nProvide:\n1. PROJECT PHASES (with dates)\n2. MILESTONES (key deliverables)\n3. TASK BREAKDOWN (for each phase)\n4. DEPENDENCIES & critical path\n5. RISK ASSESSMENT\n6. RESOURCE ALLOCATION\n7. COMMUNICATION PLAN",
+      "maxTokens": 2500,
+      "keywords": [
+        "project plan",
+        "project management",
+        "project timeline",
+        "project roadmap"
+      ],
+      "faq": [
+        {
+          "q": "How detailed is the plan?",
+          "a": "Includes phases, milestones, tasks, dependencies, risk assessment, and resource allocation."
+        }
+      ]
+    },
+    {
+      "slug": "sop-generator",
+      "title": "SOP Generator",
+      "tagline": "Create standard operating procedures",
+      "description": "Describe a process and get a professional, step-by-step SOP document with checklists.",
+      "category": "productivity",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "process",
+          "label": "What process needs documentation?",
+          "type": "textarea",
+          "placeholder": "e.g., Employee onboarding process, customer refund handling, social media posting workflow...",
+          "required": true
+        },
+        {
+          "id": "audience",
+          "label": "Who will use this SOP?",
+          "type": "text",
+          "placeholder": "e.g., New hires, customer support team, marketing team",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a process documentation expert. Create clear, professional SOPs that anyone can follow.",
+      "userPrompt": "Create an SOP for:\n\nProcess: {process}\nAudience: {audience}\n\nProvide:\n1. SOP TITLE & PURPOSE\n2. SCOPE (what's covered)\n3. STEP-BY-STEP PROCEDURE\n4. CHECKLIST VERSION\n5. DECISION POINTS (if/then scenarios)\n6. COMMON MISTAKES to avoid\n7. QUALITY CHECK points",
+      "maxTokens": 2000,
+      "keywords": [
+        "sop generator",
+        "standard operating procedure",
+        "process documentation",
+        "workflow template"
+      ],
+      "faq": [
+        {
+          "q": "What is an SOP?",
+          "a": "A Standard Operating Procedure — a step-by-step guide that ensures processes are done consistently."
+        }
+      ]
+    },
+    {
+      "slug": "weekly-report",
+      "title": "Weekly Report Generator",
+      "tagline": "Generate professional weekly status reports",
+      "description": "List your accomplishments and plans, and get a polished weekly report ready to send to your manager.",
+      "category": "productivity",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "done",
+          "label": "What did you accomplish this week?",
+          "type": "textarea",
+          "placeholder": "e.g., Completed user auth module, fixed 5 bugs, deployed v2.1...",
+          "required": true
+        },
+        {
+          "id": "nextWeek",
+          "label": "Plans for next week (optional)",
+          "type": "textarea",
+          "placeholder": "e.g., Start API integration, design review meeting...",
+          "required": false
+        },
+        {
+          "id": "blockers",
+          "label": "Blockers or challenges (optional)",
+          "type": "textarea",
+          "placeholder": "e.g., Waiting for design specs, server migration delayed...",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a professional technical writer. Create concise, impactful weekly status reports.",
+      "userPrompt": "Generate a weekly status report:\n\nAccomplishments: {done}\nNext week: {nextWeek}\nBlockers: {blockers}\n\nProvide:\n1. EXECUTIVE SUMMARY (2-3 sentences)\n2. COMPLETED (with impact/metrics where possible)\n3. IN PROGRESS\n4. PLANNED FOR NEXT WEEK\n5. BLOCKERS & RISKS\n6. KEY METRICS/HIGHLIGHTS",
+      "maxTokens": 1500,
+      "keywords": [
+        "weekly report",
+        "status report",
+        "progress report",
+        "weekly update"
+      ],
+      "faq": [
+        {
+          "q": "Can I use this for work?",
+          "a": "Yes — generates professional reports ready to send to managers, stakeholders, or teams."
+        }
+      ]
+    },
+    {
+      "slug": "tiktok-caption",
+      "title": "TikTok Caption Generator",
+      "tagline": "Viral TikTok captions with trending hooks",
+      "description": "Generate attention-grabbing TikTok captions with hooks, hashtags, and call-to-actions.",
+      "category": "social",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "What's your video about?",
+          "type": "textarea",
+          "placeholder": "e.g., Morning routine, cooking hack, fitness transformation...",
+          "required": true
+        },
+        {
+          "id": "vibe",
+          "label": "Vibe",
+          "type": "select",
+          "options": [
+            "Funny/Relatable",
+            "Educational",
+            "Motivational",
+            "Trendy/Viral",
+            "Storytelling",
+            "Aesthetic"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a TikTok content strategist who understands viral trends, hooks, and the platform's culture.",
+      "userPrompt": "Generate TikTok captions for a video about: {topic}\n\nVibe: {vibe}\n\nProvide:\n1. 5 CAPTION OPTIONS (with hooks)\n2. TRENDING HASHTAGS (10-15)\n3. HOOK IDEAS (first 3 seconds script)\n4. CTA suggestions\n5. BEST POSTING TIME tips",
+      "maxTokens": 1500,
+      "keywords": [
+        "tiktok caption",
+        "tiktok hooks",
+        "tiktok hashtags",
+        "viral tiktok"
+      ],
+      "faq": [
+        {
+          "q": "Does it include trending hashtags?",
+          "a": "Yes, generates relevant trending hashtags for maximum reach on TikTok."
+        }
+      ]
+    },
+    {
+      "slug": "pinterest-pin",
+      "title": "Pinterest Pin Description",
+      "tagline": "SEO-optimized Pinterest pin descriptions",
+      "description": "Generate keyword-rich Pinterest descriptions that drive traffic and saves.",
+      "category": "social",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "What's your pin about?",
+          "type": "textarea",
+          "placeholder": "e.g., Easy meal prep recipes for beginners, modern bathroom design ideas...",
+          "required": true
+        },
+        {
+          "id": "link",
+          "label": "Link destination (optional)",
+          "type": "text",
+          "placeholder": "e.g., blog post, product page, Etsy shop...",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a Pinterest marketing expert. Write keyword-rich, SEO-optimized pin descriptions that drive clicks and saves.",
+      "userPrompt": "Generate Pinterest pin descriptions for: {topic}\n\nLink to: {link}\n\nProvide:\n1. PIN TITLE (2-3 options)\n2. PIN DESCRIPTION (keyword-rich, 200-300 chars)\n3. 3 ALTERNATIVE DESCRIPTIONS\n4. BOARD SUGGESTIONS\n5. KEYWORD LIST for Pinterest SEO\n6. BEST PRACTICES tips",
+      "maxTokens": 1500,
+      "keywords": [
+        "pinterest description",
+        "pinterest pin",
+        "pinterest seo",
+        "pin description"
+      ],
+      "faq": [
+        {
+          "q": "Are descriptions SEO-optimized?",
+          "a": "Yes, packed with relevant keywords that Pinterest's search algorithm favors."
+        }
+      ]
+    },
+    {
+      "slug": "linkedin-headline",
+      "title": "LinkedIn Headline Generator",
+      "tagline": "Stand out with a powerful LinkedIn headline",
+      "description": "Generate attention-grabbing LinkedIn headlines that get you noticed by recruiters and connections.",
+      "category": "social",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "role",
+          "label": "Your current/target role",
+          "type": "text",
+          "placeholder": "e.g., Full Stack Developer, Marketing Manager...",
+          "required": true
+        },
+        {
+          "id": "skills",
+          "label": "Key skills/achievements",
+          "type": "textarea",
+          "placeholder": "e.g., 5 years React, grew revenue 200%, built teams of 20+...",
+          "required": false
+        },
+        {
+          "id": "style",
+          "label": "Headline style",
+          "type": "select",
+          "options": [
+            "Professional/Corporate",
+            "Creative/Unique",
+            "Results-focused",
+            "Keyword-optimized",
+            "Personal brand"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a LinkedIn personal branding expert. Create compelling headlines that maximize profile visibility and engagement.",
+      "userPrompt": "Generate LinkedIn headlines for:\n\nRole: {role}\nSkills/achievements: {skills}\nStyle: {style}\n\nProvide:\n1. TOP 5 HEADLINE OPTIONS (120 chars max each)\n2. KEYWORD-OPTIMIZED VERSION\n3. CREATIVE/UNIQUE VERSION\n4. WHAT MAKES EACH EFFECTIVE\n5. TIPS for headline optimization",
+      "maxTokens": 1200,
+      "keywords": [
+        "linkedin headline",
+        "linkedin profile",
+        "personal branding",
+        "linkedin optimization"
+      ],
+      "faq": [
+        {
+          "q": "How long should a LinkedIn headline be?",
+          "a": "LinkedIn allows 220 characters, but the most visible portion is the first 120 characters."
+        }
+      ]
+    },
+    {
+      "slug": "thread-generator",
+      "title": "Thread Generator",
+      "tagline": "Create engaging Twitter/X threads",
+      "description": "Turn any topic into a compelling, well-structured thread that gets likes, retweets, and followers.",
+      "category": "social",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Thread topic",
+          "type": "textarea",
+          "placeholder": "e.g., 10 lessons I learned building a startup, How to learn coding in 2024...",
+          "required": true
+        },
+        {
+          "id": "length",
+          "label": "Thread length",
+          "type": "select",
+          "options": [
+            "Short (5-7 tweets)",
+            "Medium (8-12 tweets)",
+            "Long (13-20 tweets)"
+          ],
+          "required": false
+        },
+        {
+          "id": "style",
+          "label": "Writing style",
+          "type": "select",
+          "options": [
+            "Educational",
+            "Storytelling",
+            "Listicle",
+            "Contrarian/Hot take",
+            "How-to guide"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a Twitter/X content strategist who creates viral threads. Use proven thread structures, hooks, and engagement techniques.",
+      "userPrompt": "Create a Twitter/X thread about: {topic}\n\nLength: {length}\nStyle: {style}\n\nProvide:\n1. HOOK TWEET (attention-grabbing opener)\n2. THREAD BODY (numbered tweets, each under 280 chars)\n3. CLOSING CTA tweet\n4. 3 ALTERNATIVE HOOK OPTIONS\n5. BEST TIME TO POST",
+      "maxTokens": 2000,
+      "keywords": [
+        "thread generator",
+        "twitter thread",
+        "x thread",
+        "viral thread"
+      ],
+      "faq": [
+        {
+          "q": "How many tweets per thread?",
+          "a": "Choose short (5-7), medium (8-12), or long (13-20) threads."
+        }
+      ]
+    },
+    {
+      "slug": "youtube-script",
+      "title": "YouTube Script Writer",
+      "tagline": "Write engaging YouTube video scripts",
+      "description": "Generate complete YouTube video scripts with hooks, structure, and calls-to-action.",
+      "category": "social",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Video topic",
+          "type": "textarea",
+          "placeholder": "e.g., How to start freelancing in 2024, Top 10 productivity apps...",
+          "required": true
+        },
+        {
+          "id": "duration",
+          "label": "Video length",
+          "type": "select",
+          "options": [
+            "Short (3-5 min)",
+            "Medium (8-12 min)",
+            "Long (15-20 min)",
+            "YouTube Short (60 sec)"
+          ],
+          "required": false
+        },
+        {
+          "id": "style",
+          "label": "Content style",
+          "type": "select",
+          "options": [
+            "Educational/Tutorial",
+            "Listicle/Top 10",
+            "Story/Vlog",
+            "Review",
+            "How-to guide",
+            "Commentary"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a YouTube content strategist and scriptwriter. Create engaging scripts with proven retention techniques.",
+      "userPrompt": "Write a YouTube script for: {topic}\n\nLength: {duration}\nStyle: {style}\n\nProvide:\n1. TITLE OPTIONS (3 clickable titles)\n2. THUMBNAIL IDEAS\n3. HOOK (first 30 seconds — critical for retention)\n4. FULL SCRIPT with timestamps\n5. CTA PLACEMENTS (subscribe, like, comment prompts)\n6. END SCREEN suggestions\n7. DESCRIPTION & TAGS",
+      "maxTokens": 3000,
+      "keywords": [
+        "youtube script",
+        "video script",
+        "youtube content",
+        "script writer"
+      ],
+      "faq": [
+        {
+          "q": "Does it include timestamps?",
+          "a": "Yes, includes timestamped sections for easy recording and editing."
+        }
+      ]
+    },
+    {
+      "slug": "social-media-calendar",
+      "title": "Social Media Calendar",
+      "tagline": "30-day content calendar with post ideas",
+      "description": "Get a complete 30-day social media content calendar with post ideas, captions, and hashtags.",
+      "category": "social",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "business",
+          "label": "Business/brand type",
+          "type": "textarea",
+          "placeholder": "e.g., Fitness coaching business, handmade jewelry shop, SaaS startup...",
+          "required": true
+        },
+        {
+          "id": "platforms",
+          "label": "Target platforms",
+          "type": "select",
+          "options": [
+            "Instagram + TikTok",
+            "LinkedIn",
+            "Twitter/X",
+            "All platforms",
+            "Facebook + Instagram"
+          ],
+          "required": false
+        },
+        {
+          "id": "frequency",
+          "label": "Posts per week",
+          "type": "select",
+          "options": [
+            "3 posts/week",
+            "5 posts/week",
+            "Daily",
+            "2 posts/day"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a social media manager and content strategist. Create comprehensive content calendars with diverse, engaging post ideas.",
+      "userPrompt": "Create a 30-day social media calendar for:\n\nBusiness: {business}\nPlatforms: {platforms}\nFrequency: {frequency}\n\nProvide:\n1. CONTENT PILLARS (3-5 themes)\n2. 30-DAY CALENDAR (date, post type, topic, caption preview)\n3. CONTENT MIX (educational, entertaining, promotional ratio)\n4. HASHTAG SETS for each pillar\n5. ENGAGEMENT STRATEGY\n6. BEST POSTING TIMES",
+      "maxTokens": 3000,
+      "keywords": [
+        "social media calendar",
+        "content calendar",
+        "social media plan",
+        "content planner"
+      ],
+      "faq": [
+        {
+          "q": "How many posts does it generate?",
+          "a": "A full 30-day calendar with captions, hashtags, and engagement tips based on your chosen frequency."
+        }
+      ]
+    },
+    {
+      "slug": "seo-blog-writer",
+      "title": "SEO Blog Writer",
+      "tagline": "Write SEO-optimized blog posts that rank",
+      "description": "Enter your keyword and get a complete, SEO-optimized blog post with meta tags, headers, and internal linking suggestions.",
+      "category": "marketing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "keyword",
+          "label": "Target keyword",
+          "type": "text",
+          "placeholder": "e.g., best project management tools 2024",
+          "required": true
+        },
+        {
+          "id": "length",
+          "label": "Article length",
+          "type": "select",
+          "options": [
+            "Short (800 words)",
+            "Medium (1500 words)",
+            "Long (2500+ words)"
+          ],
+          "required": false
+        },
+        {
+          "id": "audience",
+          "label": "Target audience (optional)",
+          "type": "text",
+          "placeholder": "e.g., small business owners, students, developers",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are an SEO content writer expert. Write comprehensive, SEO-optimized blog posts that rank on Google.",
+      "userPrompt": "Write an SEO-optimized blog post:\n\nKeyword: {keyword}\nLength: {length}\nAudience: {audience}\n\nProvide:\n1. SEO TITLE (with keyword)\n2. META DESCRIPTION (155 chars)\n3. FULL BLOG POST with H2/H3 headers\n4. KEYWORD PLACEMENT analysis\n5. INTERNAL LINKING suggestions\n6. FAQ SECTION (for featured snippets)\n7. CALL-TO-ACTION",
+      "maxTokens": 3000,
+      "keywords": [
+        "seo blog writer",
+        "blog post generator",
+        "seo content writer",
+        "article writer"
+      ],
+      "faq": [
+        {
+          "q": "Is the content SEO-optimized?",
+          "a": "Yes — includes keyword placement, meta tags, header structure, FAQ schema, and internal linking suggestions."
+        }
+      ]
+    },
+    {
+      "slug": "ad-copy-writer",
+      "title": "Ad Copy Generator",
+      "tagline": "High-converting ad copy for any platform",
+      "description": "Generate persuasive ad copy for Google, Facebook, Instagram, LinkedIn, and more.",
+      "category": "marketing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "product",
+          "label": "Product/service",
+          "type": "textarea",
+          "placeholder": "e.g., Online fitness coaching program for busy professionals...",
+          "required": true
+        },
+        {
+          "id": "platform",
+          "label": "Ad platform",
+          "type": "select",
+          "options": [
+            "Google Ads",
+            "Facebook/Instagram Ads",
+            "LinkedIn Ads",
+            "TikTok Ads",
+            "YouTube Ads",
+            "All platforms"
+          ],
+          "required": false
+        },
+        {
+          "id": "goal",
+          "label": "Campaign goal",
+          "type": "select",
+          "options": [
+            "Sales/Conversions",
+            "Lead generation",
+            "Brand awareness",
+            "App installs",
+            "Traffic"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a performance marketing copywriter. Write high-converting ad copy using proven frameworks (PAS, AIDA, BAB).",
+      "userPrompt": "Generate ad copy for:\n\nProduct: {product}\nPlatform: {platform}\nGoal: {goal}\n\nProvide:\n1. 5 AD VARIATIONS (different angles)\n2. HEADLINES (5-10 options)\n3. DESCRIPTIONS/BODY COPY\n4. CTA options\n5. A/B TESTING suggestions\n6. AUDIENCE TARGETING tips",
+      "maxTokens": 2000,
+      "keywords": [
+        "ad copy",
+        "ad copywriter",
+        "facebook ads copy",
+        "google ads copy"
+      ],
+      "faq": [
+        {
+          "q": "What platforms are supported?",
+          "a": "Google Ads, Facebook, Instagram, LinkedIn, TikTok, YouTube, and more."
+        }
+      ]
+    },
+    {
+      "slug": "competitor-analysis",
+      "title": "Competitor Analysis",
+      "tagline": "Analyze competitors with AI insights",
+      "description": "Enter competitor details and get a structured competitive analysis with strengths, weaknesses, and opportunities.",
+      "category": "marketing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "business",
+          "label": "Your business",
+          "type": "textarea",
+          "placeholder": "e.g., Online tutoring platform for K-12 students...",
+          "required": true
+        },
+        {
+          "id": "competitors",
+          "label": "Competitors (2-5)",
+          "type": "textarea",
+          "placeholder": "e.g., Khan Academy, Chegg, Coursera...",
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a competitive intelligence analyst. Provide structured, actionable competitive analysis.",
+      "userPrompt": "Analyze competitors for my business:\n\nMy business: {business}\nCompetitors: {competitors}\n\nProvide:\n1. COMPETITOR OVERVIEW (strengths & weaknesses of each)\n2. FEATURE COMPARISON TABLE\n3. PRICING COMPARISON\n4. MARKET POSITIONING MAP\n5. COMPETITIVE ADVANTAGES (yours)\n6. GAPS & OPPORTUNITIES\n7. STRATEGIC RECOMMENDATIONS",
+      "maxTokens": 2500,
+      "keywords": [
+        "competitor analysis",
+        "competitive analysis",
+        "market research",
+        "competitor comparison"
+      ],
+      "faq": [
+        {
+          "q": "How detailed is the analysis?",
+          "a": "Covers strengths, weaknesses, features, pricing, positioning, and strategic recommendations."
+        }
+      ]
+    },
+    {
+      "slug": "value-proposition",
+      "title": "Value Proposition Generator",
+      "tagline": "Craft compelling value propositions",
+      "description": "Generate clear, powerful value propositions that communicate your unique benefit to customers.",
+      "category": "marketing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "product",
+          "label": "Product/service description",
+          "type": "textarea",
+          "placeholder": "e.g., Project management tool that uses AI to auto-assign tasks...",
+          "required": true
+        },
+        {
+          "id": "audience",
+          "label": "Target audience",
+          "type": "text",
+          "placeholder": "e.g., Remote teams, startups, freelancers",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a brand strategist and positioning expert. Craft compelling value propositions using proven frameworks.",
+      "userPrompt": "Generate value propositions for:\n\nProduct: {product}\nAudience: {audience}\n\nProvide:\n1. CORE VALUE PROPOSITION (one sentence)\n2. 5 VARIATIONS (different angles)\n3. ELEVATOR PITCH (30 seconds)\n4. HEADLINE + SUBHEADLINE format\n5. BEFORE/AFTER framework\n6. UNIQUE SELLING POINTS (3-5)",
+      "maxTokens": 1500,
+      "keywords": [
+        "value proposition",
+        "unique selling proposition",
+        "brand positioning",
+        "usp generator"
+      ],
+      "faq": [
+        {
+          "q": "What frameworks are used?",
+          "a": "Uses proven frameworks like Jobs-to-be-Done, Before/After, and unique selling proposition models."
+        }
+      ]
+    },
+    {
+      "slug": "customer-persona",
+      "title": "Customer Persona Generator",
+      "tagline": "Create detailed buyer personas",
+      "description": "Generate detailed customer personas with demographics, pain points, motivations, and buying behavior.",
+      "category": "marketing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "business",
+          "label": "Your business/product",
+          "type": "textarea",
+          "placeholder": "e.g., B2B SaaS for HR teams, organic skincare brand...",
+          "required": true
+        },
+        {
+          "id": "count",
+          "label": "Number of personas",
+          "type": "select",
+          "options": [
+            "1 persona",
+            "2 personas",
+            "3 personas"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a marketing strategist specializing in customer research and persona development.",
+      "userPrompt": "Create {count} for:\n\nBusiness: {business}\n\nFor each persona provide:\n1. NAME & AVATAR description\n2. DEMOGRAPHICS (age, income, location, education)\n3. JOB TITLE & daily responsibilities\n4. PAIN POINTS (top 5)\n5. GOALS & MOTIVATIONS\n6. BUYING BEHAVIOR (channels, triggers, objections)\n7. PREFERRED CONTENT types\n8. QUOTE that represents them\n9. HOW TO REACH THEM (channels & messaging)",
+      "maxTokens": 2500,
+      "keywords": [
+        "customer persona",
+        "buyer persona",
+        "target audience",
+        "user persona"
+      ],
+      "faq": [
+        {
+          "q": "How many personas can I generate?",
+          "a": "Generate 1 to 3 detailed personas per request."
+        }
+      ]
+    },
+    {
+      "slug": "product-launch-plan",
+      "title": "Product Launch Plan",
+      "tagline": "Complete product launch strategy",
+      "description": "Get a comprehensive product launch plan with pre-launch, launch day, and post-launch strategies.",
+      "category": "marketing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "product",
+          "label": "Product description",
+          "type": "textarea",
+          "placeholder": "e.g., Mobile app for meal planning with AI-generated recipes...",
+          "required": true
+        },
+        {
+          "id": "budget",
+          "label": "Marketing budget",
+          "type": "select",
+          "options": [
+            "Bootstrap ($0-500)",
+            "Small ($500-5K)",
+            "Medium ($5K-50K)",
+            "Large ($50K+)"
+          ],
+          "required": false
+        },
+        {
+          "id": "timeline",
+          "label": "Launch timeline",
+          "type": "select",
+          "options": [
+            "2 weeks",
+            "1 month",
+            "2 months",
+            "3 months"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a product launch strategist with experience launching products from startups to enterprises.",
+      "userPrompt": "Create a product launch plan for:\n\nProduct: {product}\nBudget: {budget}\nTimeline: {timeline}\n\nProvide:\n1. PRE-LAUNCH (build anticipation)\n2. LAUNCH DAY plan\n3. POST-LAUNCH (first 30 days)\n4. CHANNEL STRATEGY\n5. CONTENT CALENDAR\n6. METRICS TO TRACK\n7. CONTINGENCY PLANS",
+      "maxTokens": 2500,
+      "keywords": [
+        "product launch",
+        "launch plan",
+        "go-to-market",
+        "product launch strategy"
+      ],
+      "faq": [
+        {
+          "q": "Does it work for any budget?",
+          "a": "Yes — strategies are tailored to your budget, from bootstrap to large-scale launches."
+        }
+      ]
+    },
+    {
+      "slug": "keyword-research",
+      "title": "Keyword Research Tool",
+      "tagline": "Find high-traffic, low-competition keywords",
+      "description": "Enter a seed keyword and get related keywords with estimated difficulty, search intent, and content ideas.",
+      "category": "marketing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "keyword",
+          "label": "Seed keyword",
+          "type": "text",
+          "placeholder": "e.g., meal prep, saas marketing, home workout",
+          "required": true
+        },
+        {
+          "id": "niche",
+          "label": "Your niche/industry (optional)",
+          "type": "text",
+          "placeholder": "e.g., fitness, technology, cooking",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are an SEO keyword research expert. Provide comprehensive keyword analysis with actionable insights.",
+      "userPrompt": "Do keyword research for: {keyword}\n\nNiche: {niche}\n\nProvide:\n1. PRIMARY KEYWORD analysis (intent, difficulty estimate)\n2. LONG-TAIL KEYWORDS (20+)\n3. QUESTION KEYWORDS (People Also Ask)\n4. LSI/RELATED KEYWORDS\n5. KEYWORD CLUSTERING by topic\n6. CONTENT IDEAS for top keywords\n7. COMPETITOR KEYWORD GAPS\n8. PRIORITIZED ACTION PLAN",
+      "maxTokens": 2500,
+      "keywords": [
+        "keyword research",
+        "seo keywords",
+        "keyword tool",
+        "find keywords"
+      ],
+      "faq": [
+        {
+          "q": "How many keywords does it find?",
+          "a": "Generates 50+ keyword ideas including long-tail, question-based, and LSI keywords."
+        }
+      ]
+    },
+    {
+      "slug": "email-newsletter",
+      "title": "Newsletter Writer",
+      "tagline": "Write engaging email newsletters",
+      "description": "Generate complete email newsletters with subject lines, body content, and CTAs.",
+      "category": "marketing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Newsletter topic/update",
+          "type": "textarea",
+          "placeholder": "e.g., Monthly product update, industry news roundup, tips and tricks...",
+          "required": true
+        },
+        {
+          "id": "brand",
+          "label": "Brand name",
+          "type": "text",
+          "placeholder": "e.g., ZapKitt, MyCompany",
+          "required": false
+        },
+        {
+          "id": "tone",
+          "label": "Newsletter tone",
+          "type": "select",
+          "options": [
+            "Professional",
+            "Casual/Friendly",
+            "Witty/Fun",
+            "Educational",
+            "News-style"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are an email marketing expert. Write engaging newsletters with high open and click-through rates.",
+      "userPrompt": "Write an email newsletter:\n\nTopic: {topic}\nBrand: {brand}\nTone: {tone}\n\nProvide:\n1. SUBJECT LINE OPTIONS (5, with emoji variants)\n2. PREVIEW TEXT\n3. NEWSLETTER BODY (structured sections)\n4. CTA BUTTONS (text suggestions)\n5. P.S. LINE\n6. A/B TEST suggestions",
+      "maxTokens": 2000,
+      "keywords": [
+        "newsletter writer",
+        "email newsletter",
+        "email marketing",
+        "newsletter generator"
+      ],
+      "faq": [
+        {
+          "q": "Does it include subject lines?",
+          "a": "Yes — generates 5 subject line options optimized for open rates, plus preview text."
+        }
+      ]
+    },
+    {
+      "slug": "ai-poem-writer",
+      "title": "AI Poem Writer",
+      "tagline": "Create poems in any style",
+      "description": "Generate beautiful poems — haiku, sonnet, free verse, limerick, and more. Choose your topic and style.",
+      "category": "writing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Poem topic",
+          "type": "textarea",
+          "placeholder": "e.g., Nature, love, loss, adventure, a specific person or memory...",
+          "required": true
+        },
+        {
+          "id": "style",
+          "label": "Poetry style",
+          "type": "select",
+          "options": [
+            "Free Verse",
+            "Sonnet",
+            "Haiku",
+            "Limerick",
+            "Rhyming",
+            "Acrostic",
+            "Ballad",
+            "Ode"
+          ],
+          "required": false
+        },
+        {
+          "id": "mood",
+          "label": "Mood",
+          "type": "select",
+          "options": [
+            "Happy/Uplifting",
+            "Melancholic/Reflective",
+            "Romantic",
+            "Dark/Mysterious",
+            "Humorous",
+            "Inspirational"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a creative poet skilled in all poetry forms. Write evocative, well-crafted poems.",
+      "userPrompt": "Write a poem about: {topic}\n\nStyle: {style}\nMood: {mood}\n\nProvide:\n1. POEM (in requested style)\n2. TITLE\n3. 2 ALTERNATIVE VERSIONS (different style/mood)\n4. BRIEF ANALYSIS (themes, literary devices used)",
+      "maxTokens": 1500,
+      "keywords": [
+        "poem writer",
+        "poetry generator",
+        "write poem",
+        "haiku generator",
+        "sonnet writer"
+      ],
+      "faq": [
+        {
+          "q": "What poetry styles are supported?",
+          "a": "Free verse, sonnet, haiku, limerick, rhyming, acrostic, ballad, ode, and more."
+        }
+      ]
+    },
+    {
+      "slug": "ai-speech-writer",
+      "title": "Speech Writer",
+      "tagline": "Write memorable speeches for any occasion",
+      "description": "Generate professional speeches — wedding toasts, graduation, business presentations, eulogies, and more.",
+      "category": "writing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "occasion",
+          "label": "What's the occasion?",
+          "type": "select",
+          "options": [
+            "Wedding toast",
+            "Graduation",
+            "Business/Conference",
+            "Award acceptance",
+            "Farewell",
+            "Eulogy",
+            "Birthday",
+            "Retirement",
+            "Political/Campaign",
+            "Other"
+          ],
+          "required": true
+        },
+        {
+          "id": "details",
+          "label": "Key details",
+          "type": "textarea",
+          "placeholder": "e.g., Best man speech for my brother Tom's wedding, he loves golf and dad jokes...",
+          "required": true
+        },
+        {
+          "id": "duration",
+          "label": "Speech length",
+          "type": "select",
+          "options": [
+            "Short (1-2 min)",
+            "Medium (3-5 min)",
+            "Long (8-10 min)",
+            "Extended (15+ min)"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are an expert speechwriter who crafts memorable, emotionally resonant speeches for all occasions.",
+      "userPrompt": "Write a speech:\n\nOccasion: {occasion}\nDetails: {details}\nLength: {duration}\n\nProvide:\n1. COMPLETE SPEECH (with natural pauses marked)\n2. OPENING HOOK\n3. KEY EMOTIONAL MOMENTS\n4. STRONG CLOSING\n5. DELIVERY TIPS\n6. OPTIONAL HUMOR ADDITIONS",
+      "maxTokens": 2500,
+      "keywords": [
+        "speech writer",
+        "write speech",
+        "wedding speech",
+        "graduation speech"
+      ],
+      "faq": [
+        {
+          "q": "What types of speeches can it write?",
+          "a": "Wedding toasts, graduations, business presentations, eulogies, birthday, retirement, and more."
+        }
+      ]
+    },
+    {
+      "slug": "ai-letter-writer",
+      "title": "Letter Writer",
+      "tagline": "Write formal & personal letters",
+      "description": "Generate professional letters — recommendation letters, complaint letters, thank you letters, and more.",
+      "category": "writing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "letterType",
+          "label": "Letter type",
+          "type": "select",
+          "options": [
+            "Recommendation letter",
+            "Complaint letter",
+            "Thank you letter",
+            "Apology letter",
+            "Application letter",
+            "Invitation letter",
+            "Reference letter",
+            "Authorization letter",
+            "Formal request",
+            "Personal letter"
+          ],
+          "required": true
+        },
+        {
+          "id": "details",
+          "label": "Key details",
+          "type": "textarea",
+          "placeholder": "e.g., Recommendation for my student John who's applying to MIT, he excels in research...",
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a professional letter writer. Write clear, well-structured letters appropriate for any occasion.",
+      "userPrompt": "Write a {letterType}:\n\nDetails: {details}\n\nProvide:\n1. COMPLETE LETTER (properly formatted)\n2. SUBJECT LINE (if formal)\n3. KEY POINTS highlighted\n4. ALTERNATIVE VERSION (slightly different tone)\n5. FORMATTING TIPS",
+      "maxTokens": 1500,
+      "keywords": [
+        "letter writer",
+        "write letter",
+        "formal letter",
+        "recommendation letter"
+      ],
+      "faq": [
+        {
+          "q": "What types of letters can it write?",
+          "a": "Recommendation, complaint, thank you, apology, application, invitation, reference, and more."
+        }
+      ]
+    },
+    {
+      "slug": "ai-caption-writer",
+      "title": "Caption Writer",
+      "tagline": "Captions for any photo or video",
+      "description": "Generate engaging captions for your photos and videos — perfect for Instagram, Facebook, or any platform.",
+      "category": "writing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "content",
+          "label": "Describe your photo/video",
+          "type": "textarea",
+          "placeholder": "e.g., Sunset at the beach with friends, new coffee shop visit, workout progress photo...",
+          "required": true
+        },
+        {
+          "id": "platform",
+          "label": "Platform",
+          "type": "select",
+          "options": [
+            "Instagram",
+            "Facebook",
+            "TikTok",
+            "LinkedIn",
+            "Any platform"
+          ],
+          "required": false
+        },
+        {
+          "id": "vibe",
+          "label": "Caption vibe",
+          "type": "select",
+          "options": [
+            "Funny/Witty",
+            "Inspirational",
+            "Casual/Chill",
+            "Professional",
+            "Romantic",
+            "Sassy"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a social media caption expert. Write engaging, platform-optimized captions.",
+      "userPrompt": "Write captions for: {content}\n\nPlatform: {platform}\nVibe: {vibe}\n\nProvide:\n1. TOP 5 CAPTION OPTIONS\n2. SHORT VERSION (under 50 chars)\n3. LONG VERSION (with story/context)\n4. HASHTAGS (15-20 relevant)\n5. EMOJI SUGGESTIONS",
+      "maxTokens": 1500,
+      "keywords": [
+        "caption writer",
+        "photo caption",
+        "instagram caption",
+        "caption generator"
+      ],
+      "faq": [
+        {
+          "q": "What platforms does it support?",
+          "a": "Instagram, Facebook, TikTok, LinkedIn, and any other social media platform."
+        }
+      ]
+    },
+    {
+      "slug": "ai-bio-writer",
+      "title": "Professional Bio Writer",
+      "tagline": "Write professional bios for any platform",
+      "description": "Generate professional bios for websites, portfolios, speaker profiles, and company pages.",
+      "category": "writing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "name",
+          "label": "Your name",
+          "type": "text",
+          "placeholder": "e.g., Anil Kumar",
+          "required": true
+        },
+        {
+          "id": "details",
+          "label": "Key details about you",
+          "type": "textarea",
+          "placeholder": "e.g., 10 years software engineering, built 3 startups, TEDx speaker, Stanford CS grad...",
+          "required": true
+        },
+        {
+          "id": "purpose",
+          "label": "Bio purpose",
+          "type": "select",
+          "options": [
+            "Website/Portfolio",
+            "Speaker profile",
+            "Company page",
+            "Social media",
+            "Book author",
+            "Conference"
+          ],
+          "required": false
+        },
+        {
+          "id": "length",
+          "label": "Bio length",
+          "type": "select",
+          "options": [
+            "One-liner (50 words)",
+            "Short (100 words)",
+            "Medium (200 words)",
+            "Long (400 words)"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a professional bio writer and personal branding expert.",
+      "userPrompt": "Write a professional bio:\n\nName: {name}\nDetails: {details}\nPurpose: {purpose}\nLength: {length}\n\nProvide:\n1. PRIMARY BIO (requested length)\n2. FIRST-PERSON VERSION\n3. THIRD-PERSON VERSION\n4. ONE-LINER VERSION\n5. IMPROVEMENT SUGGESTIONS",
+      "maxTokens": 1500,
+      "keywords": [
+        "bio writer",
+        "professional bio",
+        "about me",
+        "speaker bio"
+      ],
+      "faq": [
+        {
+          "q": "What perspectives are available?",
+          "a": "First-person and third-person versions in multiple lengths."
+        }
+      ]
+    },
+    {
+      "slug": "ai-slogan-rewriter",
+      "title": "Tagline Generator",
+      "tagline": "Create catchy taglines for your brand",
+      "description": "Generate memorable taglines and slogans that capture your brand's essence.",
+      "category": "writing",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "brand",
+          "label": "Brand/product name",
+          "type": "text",
+          "placeholder": "e.g., ZapKitt, FreshBite, CodePilot",
+          "required": true
+        },
+        {
+          "id": "description",
+          "label": "What does your brand do?",
+          "type": "textarea",
+          "placeholder": "e.g., AI-powered free online tools for everyone...",
+          "required": true
+        },
+        {
+          "id": "tone",
+          "label": "Brand tone",
+          "type": "select",
+          "options": [
+            "Professional/Corporate",
+            "Fun/Playful",
+            "Bold/Edgy",
+            "Warm/Friendly",
+            "Tech/Modern",
+            "Luxury/Premium"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a branding expert and copywriter. Create memorable, impactful taglines and slogans.",
+      "userPrompt": "Generate taglines for:\n\nBrand: {brand}\nDescription: {description}\nTone: {tone}\n\nProvide:\n1. TOP 10 TAGLINE OPTIONS\n2. RHYMING TAGLINES (3)\n3. QUESTION-BASED TAGLINES (3)\n4. SINGLE-WORD POWER TAGLINES (3)\n5. WHAT MAKES EACH EFFECTIVE\n6. BEST 3 RECOMMENDATIONS with reasoning",
+      "maxTokens": 1500,
+      "keywords": [
+        "tagline generator",
+        "slogan maker",
+        "brand tagline",
+        "catchy slogan"
+      ],
+      "faq": [
+        {
+          "q": "How many taglines does it generate?",
+          "a": "20+ tagline options across different styles — rhyming, question-based, and power taglines."
+        }
+      ]
+    },
+    {
+      "slug": "thesis-statement",
+      "title": "Thesis Statement Generator",
+      "tagline": "Strong thesis statements for essays",
+      "description": "Enter your topic and get a clear, arguable thesis statement with supporting points for your essay.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Essay topic",
+          "type": "textarea",
+          "placeholder": "e.g., Impact of social media on mental health, climate change solutions...",
+          "required": true
+        },
+        {
+          "id": "essayType",
+          "label": "Essay type",
+          "type": "select",
+          "options": [
+            "Argumentative",
+            "Expository",
+            "Analytical",
+            "Compare & Contrast",
+            "Persuasive",
+            "Research paper"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are an academic writing expert. Generate strong, specific, arguable thesis statements.",
+      "userPrompt": "Generate thesis statements for:\n\nTopic: {topic}\nEssay type: {essayType}\n\nProvide:\n1. PRIMARY THESIS STATEMENT\n2. 4 ALTERNATIVE THESIS OPTIONS\n3. SUPPORTING ARGUMENTS (3 for each thesis)\n4. COUNTER-ARGUMENT to address\n5. OUTLINE based on best thesis\n6. TIPS for strengthening thesis",
+      "maxTokens": 1500,
+      "keywords": [
+        "thesis statement",
+        "thesis generator",
+        "essay thesis",
+        "thesis writer"
+      ],
+      "faq": [
+        {
+          "q": "What essay types are supported?",
+          "a": "Argumentative, expository, analytical, compare & contrast, persuasive, and research papers."
+        }
+      ]
+    },
+    {
+      "slug": "paraphrase-academic",
+      "title": "Academic Paraphraser",
+      "tagline": "Paraphrase text with academic rigor",
+      "description": "Paraphrase text while maintaining academic tone, proper citations, and avoiding plagiarism.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "text",
+          "label": "Text to paraphrase",
+          "type": "textarea",
+          "placeholder": "Paste the text you need to paraphrase...",
+          "required": true
+        },
+        {
+          "id": "style",
+          "label": "Academic level",
+          "type": "select",
+          "options": [
+            "High school",
+            "Undergraduate",
+            "Graduate/Masters",
+            "PhD/Research"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are an academic writing expert. Paraphrase text while maintaining meaning, academic rigor, and avoiding plagiarism.",
+      "userPrompt": "Paraphrase this text for {style} level:\n\n\"\"\"\n{text}\n\"\"\"\n\nProvide:\n1. PARAPHRASED VERSION\n2. 2 ALTERNATIVE VERSIONS (different approaches)\n3. KEY VOCABULARY CHANGES highlighted\n4. CITATION GUIDANCE\n5. PLAGIARISM CHECK notes",
+      "maxTokens": 1500,
+      "keywords": [
+        "academic paraphraser",
+        "paraphrase tool",
+        "avoid plagiarism",
+        "academic writing"
+      ],
+      "faq": [
+        {
+          "q": "Does it avoid plagiarism?",
+          "a": "Yes — completely rewrites text while maintaining the original meaning, with citation guidance."
+        }
+      ]
+    },
+    {
+      "slug": "exam-prep",
+      "title": "Exam Prep Assistant",
+      "tagline": "AI-powered exam preparation guide",
+      "description": "Enter your subject and exam details to get a personalized study plan, key concepts, and practice questions.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "subject",
+          "label": "Subject/exam",
+          "type": "text",
+          "placeholder": "e.g., AP Biology, GRE Math, Organic Chemistry final...",
+          "required": true
+        },
+        {
+          "id": "topics",
+          "label": "Topics to cover",
+          "type": "textarea",
+          "placeholder": "e.g., Cell division, photosynthesis, genetics...",
+          "required": false
+        },
+        {
+          "id": "timeLeft",
+          "label": "Time until exam",
+          "type": "select",
+          "options": [
+            "Tomorrow",
+            "3 days",
+            "1 week",
+            "2 weeks",
+            "1 month"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are an expert tutor and exam preparation specialist. Create comprehensive, efficient study plans.",
+      "userPrompt": "Create an exam prep plan:\n\nSubject: {subject}\nTopics: {topics}\nTime left: {timeLeft}\n\nProvide:\n1. STUDY SCHEDULE (daily breakdown)\n2. KEY CONCEPTS summary for each topic\n3. PRACTICE QUESTIONS (10, with answers)\n4. COMMON MISTAKES to avoid\n5. MEMORY TRICKS & mnemonics\n6. LAST-MINUTE REVIEW checklist",
+      "maxTokens": 2500,
+      "keywords": [
+        "exam prep",
+        "study plan",
+        "exam preparation",
+        "test prep"
+      ],
+      "faq": [
+        {
+          "q": "How does it create the study plan?",
+          "a": "Based on your time available and topics, creates a prioritized schedule focusing on high-impact areas."
+        }
+      ]
+    },
+    {
+      "slug": "presentation-outline",
+      "title": "Presentation Outline Generator",
+      "tagline": "Create structured presentation outlines",
+      "description": "Generate a complete presentation outline with slide content, speaker notes, and timing.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Presentation topic",
+          "type": "textarea",
+          "placeholder": "e.g., Impact of AI on healthcare, renewable energy solutions...",
+          "required": true
+        },
+        {
+          "id": "slides",
+          "label": "Number of slides",
+          "type": "select",
+          "options": [
+            "5-7 slides",
+            "8-10 slides",
+            "12-15 slides",
+            "20+ slides"
+          ],
+          "required": false
+        },
+        {
+          "id": "audience",
+          "label": "Audience",
+          "type": "text",
+          "placeholder": "e.g., classmates, professors, conference attendees",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a presentation design expert. Create well-structured, engaging presentation outlines.",
+      "userPrompt": "Create a presentation outline:\n\nTopic: {topic}\nSlides: {slides}\nAudience: {audience}\n\nProvide:\n1. TITLE SLIDE\n2. SLIDE-BY-SLIDE OUTLINE (title, key points, visuals suggestion)\n3. SPEAKER NOTES for each slide\n4. OPENING HOOK\n5. TRANSITIONS between sections\n6. CLOSING/CTA slide\n7. Q&A PREPARATION (anticipated questions)",
+      "maxTokens": 2500,
+      "keywords": [
+        "presentation outline",
+        "slide outline",
+        "ppt outline",
+        "presentation generator"
+      ],
+      "faq": [
+        {
+          "q": "Does it include speaker notes?",
+          "a": "Yes — complete speaker notes, transitions, and even anticipated Q&A questions."
+        }
+      ]
+    },
+    {
+      "slug": "literature-review",
+      "title": "Literature Review Helper",
+      "tagline": "Structure your literature review",
+      "description": "Get help organizing and structuring your literature review with themes, gaps, and synthesis.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "topic",
+          "label": "Research topic",
+          "type": "textarea",
+          "placeholder": "e.g., The effect of remote work on employee productivity...",
+          "required": true
+        },
+        {
+          "id": "sources",
+          "label": "Key sources/papers (optional)",
+          "type": "textarea",
+          "placeholder": "List any papers or authors you've found...",
+          "required": false
+        },
+        {
+          "id": "level",
+          "label": "Academic level",
+          "type": "select",
+          "options": [
+            "Undergraduate",
+            "Masters",
+            "PhD",
+            "Journal publication"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a research methodology expert. Help students structure and organize literature reviews.",
+      "userPrompt": "Help me structure a literature review on:\n\nTopic: {topic}\nSources: {sources}\nLevel: {level}\n\nProvide:\n1. THEMATIC ORGANIZATION (3-5 themes)\n2. KEY THEORIES/FRAMEWORKS to include\n3. RESEARCH GAP identification\n4. SYNTHESIS approach\n5. TRANSITION SENTENCES between themes\n6. CRITICAL ANALYSIS tips\n7. RECOMMENDED SEARCH TERMS for finding more sources",
+      "maxTokens": 2000,
+      "keywords": [
+        "literature review",
+        "research paper",
+        "academic review",
+        "lit review helper"
+      ],
+      "faq": [
+        {
+          "q": "What academic levels are supported?",
+          "a": "Undergraduate, Masters, PhD, and journal publication level."
+        }
+      ]
+    },
+    {
+      "slug": "homework-helper",
+      "title": "Homework Helper",
+      "tagline": "Get step-by-step homework help",
+      "description": "Paste your homework question and get a detailed, step-by-step solution with explanations.",
+      "category": "student",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "question",
+          "label": "Your homework question",
+          "type": "textarea",
+          "placeholder": "Paste your homework question here...",
+          "required": true
+        },
+        {
+          "id": "subject",
+          "label": "Subject",
+          "type": "select",
+          "options": [
+            "Math",
+            "Science",
+            "English/Writing",
+            "History",
+            "Computer Science",
+            "Economics",
+            "Physics",
+            "Chemistry",
+            "Biology",
+            "Other"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a patient, expert tutor. Solve problems step-by-step, explaining the reasoning behind each step so students learn the concept.",
+      "userPrompt": "Help with this {subject} question:\n\n{question}\n\nProvide:\n1. STEP-BY-STEP SOLUTION (with reasoning)\n2. KEY CONCEPT explanation\n3. SIMILAR PRACTICE PROBLEM (with answer)\n4. COMMON MISTAKES to avoid\n5. TIPS for mastering this type of problem",
+      "maxTokens": 2000,
+      "keywords": [
+        "homework helper",
+        "homework solver",
+        "step by step solution",
+        "homework help"
+      ],
+      "faq": [
+        {
+          "q": "What subjects are supported?",
+          "a": "Math, Science, English, History, Computer Science, Economics, Physics, Chemistry, Biology, and more."
+        }
+      ]
+    },
+    {
+      "slug": "pitch-deck-outline",
+      "title": "Pitch Deck Outline",
+      "tagline": "Create investor-ready pitch deck outlines",
+      "description": "Generate a complete pitch deck outline with slide content for fundraising, competitions, or partnerships.",
+      "category": "business",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "startup",
+          "label": "Startup/business description",
+          "type": "textarea",
+          "placeholder": "e.g., AI-powered tutoring platform connecting students with personalized learning...",
+          "required": true
+        },
+        {
+          "id": "stage",
+          "label": "Funding stage",
+          "type": "select",
+          "options": [
+            "Pre-seed",
+            "Seed",
+            "Series A",
+            "Series B+",
+            "Competition/Grant"
+          ],
+          "required": false
+        },
+        {
+          "id": "ask",
+          "label": "Funding ask (optional)",
+          "type": "text",
+          "placeholder": "e.g., $500K, $2M",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a startup advisor and pitch deck expert. Create compelling pitch deck outlines following proven VC-friendly formats.",
+      "userPrompt": "Create a pitch deck outline:\n\nStartup: {startup}\nStage: {stage}\nAsk: {ask}\n\nProvide:\n1. SLIDE-BY-SLIDE OUTLINE (12-15 slides)\n2. KEY TALKING POINTS per slide\n3. DATA/METRICS to include\n4. STORYTELLING ARC\n5. ANTICIPATED INVESTOR QUESTIONS\n6. DESIGN TIPS",
+      "maxTokens": 2500,
+      "keywords": [
+        "pitch deck",
+        "investor pitch",
+        "startup pitch",
+        "fundraising deck"
+      ],
+      "faq": [
+        {
+          "q": "What format does the pitch deck follow?",
+          "a": "Follows the proven Guy Kawasaki/Sequoia format that VCs expect."
+        }
+      ]
+    },
+    {
+      "slug": "contract-template",
+      "title": "Contract Template Generator",
+      "tagline": "Generate basic contract templates",
+      "description": "Generate basic contract templates for freelancing, services, partnerships, and more. Note: review with a legal professional.",
+      "category": "business",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "contractType",
+          "label": "Contract type",
+          "type": "select",
+          "options": [
+            "Freelance/Service agreement",
+            "Partnership agreement",
+            "Employment contract",
+            "Non-compete agreement",
+            "Consulting agreement",
+            "Rental/Lease agreement",
+            "Sales agreement"
+          ],
+          "required": true
+        },
+        {
+          "id": "details",
+          "label": "Key terms and details",
+          "type": "textarea",
+          "placeholder": "e.g., Web development project, $5000, 3 months duration, include IP ownership...",
+          "required": true
+        }
+      ],
+      "systemPrompt": "You are a legal document assistant. Generate basic contract templates. Always include a disclaimer that these should be reviewed by a legal professional.",
+      "userPrompt": "Generate a {contractType} template:\n\nDetails: {details}\n\nProvide:\n1. COMPLETE CONTRACT TEMPLATE\n2. KEY CLAUSES explained\n3. CUSTOMIZATION NOTES (what to modify)\n4. IMPORTANT CLAUSES often missed\n5. DISCLAIMER about legal review\n\nIMPORTANT: Include clear disclaimer that this is a template and should be reviewed by a qualified legal professional before use.",
+      "maxTokens": 2500,
+      "keywords": [
+        "contract template",
+        "contract generator",
+        "freelance contract",
+        "service agreement"
+      ],
+      "faq": [
+        {
+          "q": "Can I use these contracts legally?",
+          "a": "These are templates to start with — always review with a qualified legal professional before signing."
+        }
+      ]
+    },
+    {
+      "slug": "business-email",
+      "title": "Business Email Templates",
+      "tagline": "Professional business email templates",
+      "description": "Generate professional business emails — proposals, follow-ups, introductions, negotiations, and more.",
+      "category": "business",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "emailType",
+          "label": "Email type",
+          "type": "select",
+          "options": [
+            "Business proposal",
+            "Follow-up",
+            "Introduction/Networking",
+            "Negotiation",
+            "Partnership request",
+            "Client update",
+            "Meeting request",
+            "Feedback request",
+            "Apology/Escalation"
+          ],
+          "required": true
+        },
+        {
+          "id": "details",
+          "label": "Key details",
+          "type": "textarea",
+          "placeholder": "e.g., Following up on our meeting about the Q3 marketing campaign partnership...",
+          "required": true
+        },
+        {
+          "id": "tone",
+          "label": "Tone",
+          "type": "select",
+          "options": [
+            "Formal",
+            "Professional but friendly",
+            "Casual/Startup",
+            "Urgent"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a business communication expert. Write professional, effective business emails.",
+      "userPrompt": "Write a {emailType} email:\n\nDetails: {details}\nTone: {tone}\n\nProvide:\n1. SUBJECT LINE (3 options)\n2. EMAIL BODY (ready to send)\n3. ALTERNATIVE VERSION\n4. FOLLOW-UP EMAIL (if no reply in 3 days)\n5. KEY PHRASES for {emailType}",
+      "maxTokens": 1500,
+      "keywords": [
+        "business email",
+        "professional email",
+        "email template",
+        "business communication"
+      ],
+      "faq": [
+        {
+          "q": "What types of business emails can it write?",
+          "a": "Proposals, follow-ups, introductions, negotiations, partnerships, and 5+ more types."
+        }
+      ]
+    },
+    {
+      "slug": "company-description",
+      "title": "Company Description Writer",
+      "tagline": "Write compelling company descriptions",
+      "description": "Generate professional company descriptions for websites, LinkedIn, directories, and funding applications.",
+      "category": "business",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "company",
+          "label": "Company name",
+          "type": "text",
+          "placeholder": "e.g., ZapKitt",
+          "required": true
+        },
+        {
+          "id": "details",
+          "label": "What does your company do?",
+          "type": "textarea",
+          "placeholder": "e.g., Free AI-powered online tools for students and professionals...",
+          "required": true
+        },
+        {
+          "id": "purpose",
+          "label": "Where will it be used?",
+          "type": "select",
+          "options": [
+            "Website About page",
+            "LinkedIn company page",
+            "Directory listing",
+            "Funding application",
+            "Press kit",
+            "All formats"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are a brand copywriter specializing in company descriptions and about pages.",
+      "userPrompt": "Write company descriptions for {company}:\n\nDetails: {details}\nPurpose: {purpose}\n\nProvide:\n1. LONG VERSION (250-300 words)\n2. MEDIUM VERSION (100-150 words)\n3. SHORT VERSION (50 words)\n4. ONE-LINER (under 15 words)\n5. BOILERPLATE (for press releases)\n6. LINKEDIN VERSION",
+      "maxTokens": 1500,
+      "keywords": [
+        "company description",
+        "about us page",
+        "company profile",
+        "business description"
+      ],
+      "faq": [
+        {
+          "q": "What formats does it provide?",
+          "a": "Long, medium, short, one-liner, boilerplate, and LinkedIn-specific versions."
+        }
+      ]
+    },
+    {
+      "slug": "okr-generator",
+      "title": "OKR Generator",
+      "tagline": "Create Objectives & Key Results",
+      "description": "Generate well-structured OKRs (Objectives and Key Results) for teams, departments, or companies.",
+      "category": "business",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "context",
+          "label": "Team/department and goals",
+          "type": "textarea",
+          "placeholder": "e.g., Marketing team Q4 goals: increase brand awareness and generate more leads...",
+          "required": true
+        },
+        {
+          "id": "timeframe",
+          "label": "OKR period",
+          "type": "select",
+          "options": [
+            "Monthly",
+            "Quarterly",
+            "Half-yearly",
+            "Annual"
+          ],
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are an OKR expert and strategic planning consultant. Create measurable, ambitious yet achievable OKRs.",
+      "userPrompt": "Generate OKRs for:\n\nContext: {context}\nPeriod: {timeframe}\n\nProvide:\n1. 3-5 OBJECTIVES (ambitious, qualitative)\n2. 3-4 KEY RESULTS per objective (measurable, quantitative)\n3. INITIATIVES/TASKS for each key result\n4. SCORING RUBRIC\n5. ALIGNMENT suggestions (how OKRs connect)\n6. COMMON PITFALLS to avoid",
+      "maxTokens": 2000,
+      "keywords": [
+        "okr generator",
+        "objectives key results",
+        "okr template",
+        "goal setting framework"
+      ],
+      "faq": [
+        {
+          "q": "What is an OKR?",
+          "a": "Objectives and Key Results — a goal-setting framework used by Google, Intel, and top companies."
+        }
+      ]
+    },
+    {
+      "slug": "job-posting",
+      "title": "Job Posting Generator",
+      "tagline": "Write compelling job postings",
+      "description": "Generate professional, inclusive job postings that attract top talent with clear requirements and benefits.",
+      "category": "business",
+      "type": "ai",
+      "fields": [
+        {
+          "id": "role",
+          "label": "Job title",
+          "type": "text",
+          "placeholder": "e.g., Senior Frontend Developer, Marketing Manager...",
+          "required": true
+        },
+        {
+          "id": "details",
+          "label": "Role details",
+          "type": "textarea",
+          "placeholder": "e.g., Remote, React/TypeScript, 3-5 years experience, startup culture...",
+          "required": true
+        },
+        {
+          "id": "company",
+          "label": "Company name (optional)",
+          "type": "text",
+          "placeholder": "e.g., ZapKitt",
+          "required": false
+        }
+      ],
+      "systemPrompt": "You are an HR and talent acquisition expert. Write inclusive, compelling job postings that attract diverse, qualified candidates.",
+      "userPrompt": "Write a job posting:\n\nRole: {role}\nDetails: {details}\nCompany: {company}\n\nProvide:\n1. JOB TITLE (optimized for search)\n2. COMPANY INTRO (2-3 sentences)\n3. ROLE OVERVIEW\n4. RESPONSIBILITIES (6-8)\n5. REQUIREMENTS (must-have vs nice-to-have)\n6. BENEFITS & PERKS\n7. HOW TO APPLY\n8. INCLUSIVE LANGUAGE notes",
+      "maxTokens": 2000,
+      "keywords": [
+        "job posting",
+        "job description",
+        "hiring",
+        "job listing generator"
+      ],
+      "faq": [
+        {
+          "q": "Does it use inclusive language?",
+          "a": "Yes — generates bias-free, inclusive job postings that attract diverse talent."
+        }
+      ]
     }
   ]
 }
