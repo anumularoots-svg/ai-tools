@@ -109,9 +109,16 @@ async function init() {
     var data = await resp.json();
     allTools = data.tools;
 
-    // Get slug from URL
+    // Get slug from URL - supports /t/slug and ?s=slug
     var path = window.location.pathname;
-    var slug = path.replace(/^\/t\//, "").replace(/^\//, "").replace(/\.html$/, "");
+    var slug = "";
+    if (path.indexOf("/t/") === 0) {
+      slug = path.replace(/^\/t\//, "").replace(/\/$/, "");
+    } else {
+      var params = new URLSearchParams(window.location.search);
+      slug = params.get("s") || "";
+    }
+    if (!slug) slug = path.replace(/^\//, "").replace(/\.html$/, "").replace(/\/$/, "");
 
     // Find tool config
     toolConfig = allTools.find(function(t) { return t.slug === slug; });
