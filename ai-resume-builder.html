@@ -127,190 +127,223 @@ function _getFormData() {
 // =====================================================
 // generateResume
 // =====================================================
-function generateResume() {
-  var gv = function(id) {
-    var el = document.getElementById(id);
-    return el ? el.value.trim() : "";
-  };
 
-  var t = gv("fullName");
-  if (!t) return void alert("Please go to Step 2 and enter your full name.");
+// ============================================
+// GLOBAL STATE
+// ============================================
+var resumeJSON = null;  // Structured resume data
 
-  var _hasExp = (O && O.length > 0) || A || k;
-  if (!_hasExp) {
-    if (!confirm("WARNING: No work experience data provided.\n\nPlease either:\n- Paste your existing resume in Step 1\n- OR fill in experience in Step 3\n\nWithout this, AI may generate inaccurate content.\n\nClick OK to continue, Cancel to go back.")) {
-      return;
-    }
+// ============================================
+// JSON RESUME RENDERER — renders structured HTML from JSON
+// ============================================
+function renderJSONResume(rj) {
+  var p = rj.personal || {};
+  var name = (p.fullName || "").toUpperCase();
+  var title = p.title || "";
+  var parts = [p.email, p.phone, p.linkedin, p.github, p.portfolio, p.location].filter(Boolean);
+  var contact = parts.join("  |  ");
+
+  var h = '<div style="text-align:center;padding:14px 0 10px;margin-bottom:10px;border-bottom:1.5px solid #1a1a2e">';
+  h += '<div style="font-size:22px;font-weight:900;color:#1a1a2e;letter-spacing:2px;margin-bottom:3px">' + name + '</div>';
+  if (title) h += '<div style="font-size:13px;font-weight:500;color:#555;margin-bottom:4px">' + title + '</div>';
+  if (contact) h += '<div style="font-size:11px;color:#777;line-height:1.5">' + contact + '</div>';
+  h += '</div>';
+
+  // Summary
+  if (rj.summary) {
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">PROFESSIONAL SUMMARY</h2>';
+    h += '<div style="font-size:10px;line-height:1.5;margin-bottom:6px">' + rj.summary + '</div>';
   }
 
-  var e = gv("jobDesc");
-  var n = gv("email");
-  var phone = gv("phone");
-  var cc = gv("countryCode");
-  var o = phone ? cc + " " + phone : "";
-  var s = gv("location");
-  var i = gv("linkedin");
-  var a = gv("portfolio");
-  var r = gv("summary");
-  var l = gv("totalExp");
-  var c = gv("careerLevel");
-  var d = gv("techSkills");
-  var u = gv("softSkills");
-  var m = gv("achievements");
-  var p = gv("degree");
-  var univ = gv("university");
-  var gradYr = gv("gradYear");
-  var y = gv("certs");
-  var addlEdu = gv("addlEdu");
-  var v = gv("targetTitle");
-  var f = gv("targetCompany");
-  var S = gv("industry");
-  var w = gv("resumeFormat");
-  var I = gv("resumeTone");
-  var T = gv("atsLevel");
-  var x = gv("resumeLang");
-  var C = gv("targetCountry");
-  var A = gv("existingResume");
-  var k = gv("bgDescription");
+  // Achievements
+  if (rj.achievements && rj.achievements.length > 0) {
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">KEY ACHIEVEMENTS</h2>';
+    rj.achievements.forEach(function(a) {
+      var txt = typeof a === "string" ? a : a.text;
+      h += '<div style="font-size:10px;margin-left:4px;margin-bottom:3px;text-indent:-10px;padding-left:14px">\u2022 ' + txt + '</div>';
+    });
+  }
+
+  // Skills (GROUPED by category)
+  if (rj.skills && rj.skills.length > 0) {
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">TECHNICAL SKILLS</h2>';
+    rj.skills.forEach(function(cat) {
+      h += '<div style="font-size:10px;margin-bottom:2px"><strong>' + cat.category + ':</strong> ' + (cat.items || []).join(", ") + '</div>';
+    });
+  }
+
+  // Experience
+  if (rj.experience && rj.experience.length > 0) {
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">PROFESSIONAL EXPERIENCE</h2>';
+    rj.experience.forEach(function(exp) {
+      h += '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;margin-bottom:1px">';
+      h += '<span style="font-size:10.5px;font-weight:bold">' + (exp.title || "").toUpperCase() + '</span>';
+      h += '<span style="font-size:9px;color:#555;font-style:italic">' + (exp.startDate || "") + ' \u2014 ' + (exp.endDate || "") + '</span>';
+      h += '</div>';
+      h += '<div style="font-size:9px;color:#555;font-style:italic;margin-bottom:3px">' + (exp.company || "") + (exp.location ? ", " + exp.location : "") + '</div>';
+      if (exp.bullets) {
+        exp.bullets.forEach(function(b) {
+          var txt = typeof b === "string" ? b : b.text;
+          h += '<div style="font-size:10px;margin-left:4px;margin-bottom:2px;text-indent:-10px;padding-left:14px">\u2022 ' + txt + '</div>';
+        });
+      }
+    });
+  }
+
+  // Education
+  if (rj.education && rj.education.length > 0) {
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">EDUCATION</h2>';
+    rj.education.forEach(function(edu) {
+      h += '<div style="font-size:10px;margin-bottom:2px"><strong>' + (edu.degree || "") + '</strong>';
+      if (edu.institution) h += ' \u2014 ' + edu.institution;
+      if (edu.year) h += ' (' + edu.year + ')';
+      h += '</div>';
+    });
+  }
+
+  // Certifications
+  if (rj.certifications && rj.certifications.length > 0) {
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">CERTIFICATIONS</h2>';
+    rj.certifications.forEach(function(c) {
+      var line = c.name || "";
+      if (c.issuer) line += " \u2014 " + c.issuer;
+      if (c.year) line += " (" + c.year + ")";
+      if (c.status === "target") line += " [Target]";
+      h += '<div style="font-size:10px;margin-bottom:2px">' + line + '</div>';
+    });
+  }
+
+  // Strengths
+  if (rj.strengths && rj.strengths.length > 0) {
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">PROFESSIONAL STRENGTHS</h2>';
+    h += '<div style="font-size:10px">' + rj.strengths.join("  |  ") + '</div>';
+  }
+
+  return h;
+}
+
+// ============================================
+// GENERATE RESUME — uses JSON mode
+// ============================================
+function generateResume() {
+  var gv = function(id) { var el = document.getElementById(id); return el ? el.value.trim() : ""; };
+  var fullName = gv("fullName");
+  if (!fullName) return void alert("Please enter your full name in Step 2.");
 
   var N = document.getElementById("genBtn");
   var R = document.getElementById("loading");
   N.disabled = true;
   R.classList.add("show");
   document.getElementById("output").classList.remove("show");
-  showLoadStep("Analyzing job description keywords...");
+  showLoadStep("Analyzing candidate profile...");
 
   var O = collectExp();
-  var B = document.getElementById("fresherProjects") ? document.getElementById("fresherProjects").value.trim() : "";
-  var L = O.map(function(exp, idx) {
-    return "ROLE " + (idx + 1) + ": " + exp.title + " at " + exp.company + " (" + (exp.start || "?") + " — " + (exp.end || "?") + ")" + (exp.location ? ", " + exp.location : "") + "\nDetails: " + exp.details;
-  }).join("\n\n");
-  if (c === "fresher" && B) L = "FRESHER — Projects/Internships:\n" + B;
+  var A = gv("existingResume");
+  var k = gv("bgDescription");
 
-  var P = [n, o, s, i, a].filter(Boolean).join(" | ");
-  var existingInfo = "";
-  if (sourceType === "paste" && A) {
-    existingInfo = '\nEXISTING RESUME (use as primary source — extract all info, improve writing):\n"""\n' + A + '\n"""';
-  } else if (sourceType === "describe" && k) {
-    existingInfo = '\nCANDIDATE BACKGROUND DESCRIPTION (extract all info, structure professionally):\n"""\n' + k + '\n"""';
-  }
+  // Build userData object for JSON mode
+  var userData = {
+    fullName: fullName,
+    email: gv("email"),
+    phone: gv("phone") ? gv("countryCode") + " " + gv("phone") : "",
+    location: gv("location"),
+    linkedin: gv("linkedin"),
+    github: gv("portfolio"),
+    targetTitle: gv("targetTitle"),
+    targetCompany: gv("targetCompany"),
+    industry: gv("industry"),
+    totalExp: gv("totalExp"),
+    careerLevel: gv("careerLevel"),
+    summary: gv("summary"),
+    techSkills: gv("techSkills"),
+    softSkills: gv("softSkills"),
+    achievements: gv("achievements"),
+    degree: gv("degree"),
+    university: gv("university"),
+    gradYear: gv("gradYear"),
+    certifications: gv("certs"),
+    additionalEdu: gv("addlEdu"),
+    experience: O.map(function(exp) { return { title: exp.title, company: exp.company, start: exp.start, end: exp.end, location: exp.location, details: exp.details }; }),
+    existingResume: A || "",
+    backgroundDesc: k || "",
+    jobDescription: gv("jobDesc")
+  };
 
-  // Auto page count based on experience
-  var yrs = parseInt(l) || 0;
-  var pageInstr;
-  if (yrs <= 2) {
-    pageInstr = "Write a CONCISE 1-page resume. 3-4 bullet points per role. Summary 2-3 sentences. Target: exactly 1 page.";
-  } else if (yrs >= 10) {
-    pageInstr = "Write a DETAILED and COMPLETE resume. MANDATORY — include ALL sections with MINIMUM content:\n" +
-    "1. PROFESSIONAL SUMMARY: 5-7 detailed sentences, minimum 100 words\n" +
-    "2. KEY ACHIEVEMENTS: 5-6 quantified bullets, each 2 lines\n" +
-    "3. TECHNICAL SKILLS: ALL categories with inline comma-separated skills\n" +
-    "4. PROFESSIONAL EXPERIENCE: Most recent role 7-8 bullets. Second role 5-6 bullets. Third role 4-5 bullets. Older roles 3-4 bullets each. NEVER less than 3 bullets for ANY role regardless of seniority.\n" +
-    "5. EDUCATION & CERTIFICATIONS: MANDATORY section. Include degree, university, year, and ALL certifications. Do NOT skip this.\n" +
-    "6. PROFESSIONAL STRENGTHS: 6-8 soft skills inline.\n" +
-    "CRITICAL: Do NOT stop after Professional Experience. You MUST write Education, Certifications, and Strengths. Resume is INCOMPLETE without these final sections.";
-  } else {
-    pageInstr = "Write a DETAILED 2-page resume. Include ALL sections:\n" +
-    "1. PROFESSIONAL SUMMARY: 4-5 sentences\n" +
-    "2. KEY ACHIEVEMENTS: 4-5 quantified bullets\n" +
-    "3. TECHNICAL SKILLS: All categories inline\n" +
-    "4. PROFESSIONAL EXPERIENCE: 6-7 bullets for recent role, 4-5 mid, 3-4 older. Every role minimum 3 bullets.\n" +
-    "5. EDUCATION & CERTIFICATIONS: MANDATORY — degree, university, year, all certs.\n" +
-    "6. PROFESSIONAL STRENGTHS: 6-8 soft skills.\n" +
-    "CRITICAL: Do NOT stop after Experience. Must include Education and Strengths sections.";
-  }
-
-  setTimeout(function() { showLoadStep("Matching skills to job requirements..."); }, 3000);
-  setTimeout(function() { showLoadStep("Writing achievement-focused bullets..."); }, 6000);
-  setTimeout(function() { showLoadStep("Optimizing ATS keyword placement..."); }, 9000);
-  setTimeout(function() { showLoadStep("Building professional summary..."); }, 12000);
-  setTimeout(function() { showLoadStep("Final formatting and quality check..."); }, 15000);
-
-  var levelMap = { entry: "Entry Level", mid: "Mid Level", senior: "Senior", lead: "Lead/Principal", executive: "Executive/Director" };
-
-  var prompt = 'You are a world-class resume writer who has helped 50,000+ professionals get hired at Fortune 500 companies. Generate a professional, ATS-optimized resume.'
-    + existingInfo
-    + '\n\n' + (e ? 'TARGET JOB DESCRIPTION:\n"""\n' + e + '\n"""' : 'No specific job description provided — create a strong general resume.')
-    + '\n\nTARGET ROLE: ' + (v || "Not specified")
-    + '\nTARGET COMPANY: ' + (f || "Not specified")
-    + '\nINDUSTRY: ' + S
-    + '\n\nCANDIDATE:\nName: ' + t
-    + '\nContact: ' + P
-    + '\nCareer Level: ' + (levelMap[c] || "Senior")
-    + '\nTotal Experience: ' + (l || "Not specified") + ' years'
-    + '\n' + (r ? 'Candidate Summary: ' + r : 'GENERATE an ATS-optimized professional summary.')
-    + '\n\nEDUCATION:\n' + (p || "Not provided") + (univ ? " — " + univ : "") + (gradYr ? " (" + gradYr + ")" : "")
-    + '\n' + (addlEdu ? "Additional: " + addlEdu : "")
-    + '\n' + (y ? "Certifications: " + y : "")
-    + '\n\nTECHNICAL SKILLS: ' + (d || "Extract from experience/resume")
-    + '\n' + (u ? "SOFT SKILLS: " + u : "")
-    + '\n\n' + (m ? "KEY ACHIEVEMENTS:\n" + m : "")
-    + '\n\nWORK EXPERIENCE:\n' + (L || "Extract from existing resume/background description above.")
-    + '\n\nINSTRUCTIONS — FOLLOW EXACTLY:'
-    + '\n\n0. LANGUAGE: Write the ENTIRE resume in ' + x + '. ' + (x !== "English" ? 'Translate all section headers, bullet points, summary, and skills into ' + x + '. Keep technical terms in English.' : '')
-    + '\n   TARGET COUNTRY: ' + C + '. ' + (C !== "Global" ? 'Follow resume conventions for ' + C + '.' : 'Use international resume format.')
-    + '\n\n1. LENGTH: ' + pageInstr
-    + '\n\n2. FORMAT: ' + w + ' format. ' + I + ' tone.'
-    + '\n\n3. ATS OPTIMIZATION (' + T + '): Extract EVERY keyword from the job description. Integrate naturally.'
-    + '\n\n4. RESUME STRUCTURE — MANDATORY OUTPUT FORMAT:'
-    + '\n   LINE 1: Candidate FULL NAME in uppercase. Example: ANUMULASETTY ANIL KUMAR'
-    + '\n   LINE 2: Job title/designation. Example: Senior DevSecOps Engineer'
-    + '\n   LINE 3: Contact info with | separators. Example: email@example.com | +91-9876543210 | City'
-    + '\n   NEVER start with CONTACT INFORMATION header.'
-    + '\n   Then sections in this order:'
-    + '\n   PROFESSIONAL SUMMARY (3-7 sentences based on experience level)'
-    + '\n   KEY ACHIEVEMENTS (4-6 quantified bullets)'
-    + '\n   CORE COMPETENCIES (top 15-18 skills grouped by category)'
-    + '\n   PROFESSIONAL EXPERIENCE (STAR framework bullets, power verbs, metrics)'
-    + '\n   TECHNICAL SKILLS (INLINE format: Category: skill1, skill2, skill3. ONE line per category.)'
-    + '\n   EDUCATION & CERTIFICATIONS (use EXACT data from candidate — NEVER fabricate)'
-    + '\n\n5. BULLET RULES: Start with power verbs. Include numbers in 70%+ of bullets. STAR format. Each bullet 1.5-2 lines.'
-    + '\n\n6. CRITICAL: Use EXACT education, certifications, and company details provided. NEVER fabricate or change them.'
-    + '\n\n7. Output ONLY the resume text. No commentary. No markdown. No code fences. Plain text with • bullets and ALL CAPS section headers.';
+  setTimeout(function() { showLoadStep("Building structured prompt..."); }, 2000);
+  setTimeout(function() { showLoadStep("AI generating resume JSON..."); }, 5000);
+  setTimeout(function() { showLoadStep("Validating and rendering..."); }, 10000);
 
   fetch("/api/ai", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        prompt: prompt,
-        system: "You are the world best executive resume writer with 20+ years experience. STRICT RULES: 1) Output ONLY the resume text — no thinking, no commentary. 2) NEVER use markdown. Section headers in PLAIN ALL CAPS. 3) NEVER fabricate or invent work experience, job titles, companies, education, or certifications. Use ONLY the candidate data provided. 4) Bullets with bullet character only. 5) Technical skills as inline comma-separated categories. 6) MUST include ALL sections: Summary, Achievements, Skills, Experience, Education, Certifications, Strengths. 7) NEVER stop before Education section — resume is INCOMPLETE without it. 8) Every role must have minimum 3 bullet points. 9) No <think> blocks.",
-        max_tokens: 5500
-      })
-    }).then(function(resp) {
-      return resp.json();
-    }).then(function(data) {
-      if (!data.result) throw new Error(data.error || "AI returned no result");
-      var cleanText = _cleanAIOutput(data.result);
-      // Ensure Education section exists — if AI skipped it, append from form data
-      if (!/EDUCATION/i.test(cleanText)) {
-        var _deg = document.getElementById("degree") ? document.getElementById("degree").value.trim() : "";
-        var _uni = document.getElementById("university") ? document.getElementById("university").value.trim() : "";
-        var _yr = document.getElementById("gradYear") ? document.getElementById("gradYear").value.trim() : "";
-        var _certs = document.getElementById("certs") ? document.getElementById("certs").value.trim() : "";
-        var _addEdu = document.getElementById("addlEdu") ? document.getElementById("addlEdu").value.trim() : "";
-        if (_deg || _certs) {
-          cleanText += "\n\nEDUCATION & CERTIFICATIONS\n";
-          if (_deg) cleanText += _deg + (_uni ? " — " + _uni : "") + (_yr ? " (" + _yr + ")" : "") + "\n";
-          if (_addEdu) cleanText += _addEdu + "\n";
-          if (_certs) cleanText += "\nCertifications: " + _certs + "\n";
-        }
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ mode: "json", userData: userData })
+  }).then(function(resp) {
+    return resp.json();
+  }).then(function(data) {
+    if (data.resume) {
+      // JSON mode success
+      resumeJSON = data.resume;
+      // Fix personal data to match form (in case AI changed it)
+      resumeJSON.personal = resumeJSON.personal || {};
+      resumeJSON.personal.fullName = fullName;
+      resumeJSON.personal.email = userData.email;
+      resumeJSON.personal.phone = userData.phone;
+      resumeJSON.personal.location = userData.location;
+      resumeJSON.personal.linkedin = userData.linkedin;
+      resumeJSON.personal.github = userData.github;
+      resumeJSON.personal.title = userData.targetTitle || resumeJSON.personal.title || "";
+
+      // Fix education if AI didn't include it
+      if ((!resumeJSON.education || resumeJSON.education.length === 0) && userData.degree) {
+        resumeJSON.education = [{ degree: userData.degree, institution: userData.university || "", year: userData.gradYear || "" }];
       }
-      resumeText = cleanText;
-      renderResume(cleanText, e, d);
-      document.getElementById("output").classList.add("show");
-      document.getElementById("interviewSection").style.display = "block";
-      document.getElementById("output").scrollIntoView({ behavior: "smooth", block: "start" });
-    }).catch(function(fetchErr) {
-      alert("API Error: " + fetchErr.message + "\n\nCheck browser Console (F12) for details.");
-    }).finally(function() {
-      N.disabled = false;
-      R.classList.remove("show");
-    });
+      // Fix certifications
+      if ((!resumeJSON.certifications || resumeJSON.certifications.length === 0) && userData.certifications) {
+        resumeJSON.certifications = userData.certifications.split(/[,;]/).map(function(c) { return { name: c.trim(), status: "completed" }; });
+      }
+
+      var htmlContent = renderJSONResume(resumeJSON);
+      document.getElementById("resumeContent").innerHTML = htmlContent;
+
+      // Build plain text for copy/download
+      resumeText = jsonToPlainText(resumeJSON);
+    } else if (data.result) {
+      // Legacy text mode fallback
+      resumeText = data.result;
+      resumeJSON = null;
+      var fd = _getFormData();
+      renderResume(data.result, userData.jobDescription, userData.techSkills);
+    } else {
+      throw new Error(data.error || "No result from AI");
+    }
+    document.getElementById("output").classList.add("show");
+    document.getElementById("interviewSection").style.display = "block";
+    document.getElementById("output").scrollIntoView({ behavior: "smooth", block: "start" });
+  }).catch(function(err) {
+    alert("Error: " + err.message);
+  }).finally(function() {
+    N.disabled = false;
+    R.classList.remove("show");
+  });
 }
 
-// =====================================================
-// renderResume — HTML preview
-// =====================================================
+// Convert JSON resume to plain text
+function jsonToPlainText(rj) {
+  var t = "";
+  var p = rj.personal || {};
+  t += (p.fullName || "") + "\n" + (p.title || "") + "\n";
+  t += [p.email, p.phone, p.linkedin, p.location].filter(Boolean).join(" | ") + "\n\n";
+  if (rj.summary) t += "PROFESSIONAL SUMMARY\n" + rj.summary + "\n\n";
+  if (rj.achievements) { t += "KEY ACHIEVEMENTS\n"; rj.achievements.forEach(function(a) { t += "\u2022 " + (a.text || a) + "\n"; }); t += "\n"; }
+  if (rj.skills) { t += "TECHNICAL SKILLS\n"; rj.skills.forEach(function(s) { t += s.category + ": " + (s.items||[]).join(", ") + "\n"; }); t += "\n"; }
+  if (rj.experience) { t += "PROFESSIONAL EXPERIENCE\n"; rj.experience.forEach(function(e) { t += e.title + " | " + e.company + " | " + e.startDate + " \u2014 " + e.endDate + "\n"; (e.bullets||[]).forEach(function(b) { t += "\u2022 " + (b.text || b) + "\n"; }); t += "\n"; }); }
+  if (rj.education) { t += "EDUCATION\n"; rj.education.forEach(function(e) { t += (e.degree||"") + " \u2014 " + (e.institution||"") + " (" + (e.year||"") + ")\n"; }); t += "\n"; }
+  if (rj.certifications) { t += "CERTIFICATIONS\n"; rj.certifications.forEach(function(c) { t += c.name + "\n"; }); t += "\n"; }
+  if (rj.strengths) { t += "STRENGTHS\n" + rj.strengths.join(" | ") + "\n"; }
+  return t;
+}
+
+
 function renderResume(text, jobDesc, skills) {
   var fd = _getFormData();
   var lines = text.split("\n");
@@ -466,6 +499,7 @@ function renderResume(text, jobDesc, skills) {
 // =====================================================
 // copyResume
 // =====================================================
+
 function copyResume() {
   navigator.clipboard.writeText(resumeText).then(function() {
     var btn = document.querySelector(".copy-btn");
@@ -476,6 +510,7 @@ function copyResume() {
 // =====================================================
 // downloadTxt
 // =====================================================
+
 function downloadTxt() {
   var blob = new Blob([resumeText], { type: "text/plain" });
   var a = document.createElement("a");
@@ -488,6 +523,7 @@ function downloadTxt() {
 // =====================================================
 // downloadPDF — Complete clean rewrite
 // =====================================================
+
 function downloadPDF() {
   var fd = _getFormData();
   var allLines = resumeText.split("\n");
@@ -647,5 +683,6 @@ function fallbackPDF(resumeHtml, fd, tmpl, btn, origText) {
     document.head.appendChild(s);
   } else { doRender(); }
 }
+
 
 function toggleFresher(){"fresher"===document.getElementById("careerLevel").value&&setExpType("fresher",document.querySelectorAll("#step3 .stoggle")[1])}function setExpType(e,t){document.querySelectorAll("#step3 .stoggle").forEach(e=>e.classList.remove("active")),t&&t.classList.add("active");const n=document.getElementById("fresherSection"),o=document.getElementById("expSection");"fresher"===e?(n.style.display="block",o.style.display="none",document.getElementById("careerLevel").value="fresher"):(n.style.display="none",o.style.display="block")}async function autoSuggestSkills(){const e=document.getElementById("suggestBtn");e.textContent="⏳ AI analyzing your experience...",e.disabled=!0;let t="";const n=document.getElementById("existingResume").value.trim(),o=document.getElementById("bgDescription").value.trim(),s=document.getElementById("jobDesc").value.trim();if(document.querySelectorAll(".exp-details").forEach(e=>{e.value.trim()&&(t+=e.value.trim()+"\n")}),n&&(t+=n),o&&(t+=o),!t&&!s)return alert("Please fill in your experience (Step 3) or paste a resume (Step 1) first — AI needs something to analyze."),e.textContent="AI: Auto-suggest skills from my experience",void(e.disabled=!1);try{const e=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:"Based on this professional background, list the most relevant technical skills as a comma-separated list. Include tools, platforms, languages, frameworks, and methodologies. Group by category (e.g. Cloud: AWS EC2, S3; DevOps: Docker, Kubernetes). Output ONLY the skills list, nothing else.\n\nBackground:\n"+t+(s?"\n\nTarget Job:\n"+s:""),system:"You are a career expert. Extract and suggest relevant technical skills. Output only a clean comma-separated skills list grouped by category. No explanations.",max_tokens:500})}),n=await e.json();if(n.result){const e=document.getElementById("techSkills").value.trim();document.getElementById("techSkills").value=e?e+", "+n.result:n.result}}catch(e){}e.textContent="AI: Auto-suggest skills from my experience",e.disabled=!1}async function aiRewriteExp(e){const t=e.closest(".exp-block")||e.closest(".field").parentElement,n=t.querySelector(".exp-details"),o=t.querySelector(".exp-title"),s=t.querySelector(".exp-company"),i=n.value.trim();if(!i)return void alert("Write your responsibilities/achievements first, then click AI rewrite.");e.textContent="⏳ AI rewriting...",e.disabled=!0;const a=o?o.value.trim():"",r=s?s.value.trim():"";try{const e=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:`Rewrite these job responsibilities/achievements into powerful STAR-format resume bullet points.\n\nRole: ${a||"Not specified"} at ${r||"Not specified"}\n\nOriginal:\n${i}\n\nRules:\n- Start each bullet with a UNIQUE power verb (Architected, Spearheaded, Delivered, Reduced, Automated, Designed, Led, Implemented, Optimized, Orchestrated, Streamlined, Championed, Engineered, Accelerated, Pioneered)\n- Use STAR format: include the action AND the measurable result\n- Include specific numbers/metrics (%, $, time, team size, scale)\n- If no numbers provided, add realistic estimates\n- Each bullet should be 1-2 lines\n- Output 6-10 bullet points using • character\n- Output ONLY the bullet points, nothing else`,system:"Expert resume writer. Rewrite bullets with STAR framework. Output only • bullet points.",max_tokens:800})}),t=await e.json();t.result&&(n.value=t.result)}catch(e){}e.textContent="AI: Rewrite with STAR framework & power verbs",e.disabled=!1}async function autoSuggestSoftSkills(){const e=document.getElementById("suggestSoftBtn");e.textContent="⏳ AI analyzing...",e.disabled=!0;let t="";const n=document.getElementById("totalExp").value.trim(),o=document.getElementById("careerLevel").value;document.querySelectorAll(".exp-details").forEach(e=>{e.value.trim()&&(t+=e.value.trim()+"\n")});const s=document.getElementById("existingResume").value.trim();s&&(t+=s);const i=document.getElementById("jobDesc").value.trim();try{const e=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:`Based on this professional's background (${n||"?"} years, ${o} level), suggest the most relevant soft skills and management skills as a comma-separated list.\n\nBackground: ${t||"General professional"}\n${i?"Target Job: "+i:""}\n\nInclude skills like: Team Leadership, Cross-functional Collaboration, Agile/Scrum, Stakeholder Management, Mentoring, Incident Management, Technical Writing, Strategic Planning, Vendor Management, Risk Assessment, etc.\n\nOutput ONLY a comma-separated list of 10-15 soft skills. No explanations.`,system:"Career expert. Suggest relevant soft skills. Output only comma-separated list.",max_tokens:200})}),s=await e.json();if(s.result){const e=document.getElementById("softSkills").value.trim();document.getElementById("softSkills").value=e?e+", "+s.result:s.result}}catch(e){}e.textContent="AI: Auto-suggest soft skills from my experience",e.disabled=!1}async function generateInterviewPrep(){if(!resumeText)return void alert("Generate your resume first, then click Interview Prep.");document.getElementById("jobDesc").value.trim();const e=document.getElementById("targetTitle").value.trim(),t=document.getElementById("careerLevel").value,n="fresher"===t||"entry"===t,o=document.getElementById("resumeLang").value,s="English"!==o?"\nIMPORTANT: Write ALL questions and answers in "+o+". Keep technical terms (AWS, Docker, kubectl, etc.) in English. Everything else in "+o+".":"",i=document.getElementById("prepBtn"),a=document.getElementById("prepLoading");i.disabled=!0,a.style.display="block",document.getElementById("prepLoading").innerHTML='<span class="spinner"></span>Generating Part 1/2 — Scenario & Coding questions... (20 sec)';const r=resumeText.substring(0,2500),l="You are a senior technical interviewer at a Fortune 500 company. Generate interview prep based on the candidate resume. Include current 2025-2026 market trends and real-world scenarios. Output plain text only. No markdown.",c=n?"\nNOTE: This is a FRESHER/ENTRY-LEVEL candidate. Ask questions appropriate for 0-2 years experience. Focus on fundamentals, projects, internships, and learning ability rather than production experience.":"",d=`Based on this resume, generate interview questions with detailed answers.${c}${s}\n\nRESUME: """${r}"""\nTARGET: ${e||"Based on resume"}\n\nGenerate EXACTLY:\n\nSECTION 1: REAL-TIME SCENARIO QUESTIONS (10 questions)\nProduction scenarios based on their tech stack. Include specific kubectl/aws/terraform commands in answers. Consider 2026 market trends (AI/ML integration, platform engineering, FinOps).\nFormat: Q1: [question]\nANSWER: [4-6 sentence detailed answer with specific steps]\n\nSECTION 2: CODING & TECHNICAL QUESTIONS (10 questions)\nActual code questions — Python scripts, Terraform configs, Dockerfiles, K8s YAML, Bash scripts, CI/CD pipeline configs. Include the COMPLETE code solution in the answer.\nFormat: Q1: [question]\nANSWER: [code solution with explanation]\n\nSECTION 3: CROSS-SCENARIO QUESTIONS (10 questions)\nMulti-technology debugging scenarios. E.g. "CI/CD deploys to K8s but pods crash — debug from pipeline to pod." Include step-by-step debugging with actual commands.\nFormat: Q1: [question]\nANSWER: [comprehensive debugging steps]`;let u="",m="";try{const e=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:d,system:l,max_tokens:4096})}),t=await e.json();if(!t.result)return alert("Error generating Part 1: "+(t.error||"Failed")),i.disabled=!1,void(a.style.display="none");u=t.result}catch(e){return alert("Connection error on Part 1."),i.disabled=!1,void(a.style.display="none")}document.getElementById("prepLoading").innerHTML='<span class="spinner"></span>Generating Part 2/2 — Experience & Deep-dive questions... (20 sec)';const p=`Based on this resume, generate interview questions with detailed answers.${c}${s}\n\nRESUME: """${r}"""\nTARGET: ${e||"Based on resume"}\n\nGenerate EXACTLY:\n\nSECTION 4: EXPERIENCE-BASED QUESTIONS (10 questions)\n"Tell me about a time when..." questions based on SPECIFIC projects and achievements from the resume. Answers must use STAR format (Situation-Task-Action-Result) referencing actual experience.\nFormat: Q1: [question]\nANSWER: [STAR format answer from their resume experience]\n\nSECTION 5: TOPIC DEEP-DIVE QUESTIONS (10 questions)\nDeep technical questions on core resume topics (K8s internals, AWS networking, CI/CD best practices, security, FinOps, GitOps). Include real-world examples, best practices, and current 2026 trends.\nFormat: Q1: [question]\nANSWER: [detailed technical answer with examples]`;try{const e=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:p,system:l,max_tokens:4096})}),t=await e.json();t.result&&(m=t.result)}catch(e){}const h=u+"\n\n"+m;document.getElementById("prepContent").textContent=h,document.getElementById("prepOutput").style.display="block",document.getElementById("prepOutput").scrollIntoView({behavior:"smooth"}),window._interviewText=h,i.disabled=!1,a.style.display="none",document.getElementById("prepLoading").innerHTML='<span class="spinner"></span>AI is preparing your interview guide...'}function copyInterviewPrep(){navigator.clipboard.writeText(window._interviewText||""),event.target.textContent="✓ Copied!",setTimeout(()=>event.target.textContent="Copy All",1500)}function downloadInterviewPDF(){try{const{jsPDF:e}=window.jspdf,t=new e({unit:"mm",format:"a4"}),n=document.getElementById("fullName").value.trim()||"Interview",o=window._interviewText||"",s=210,i=297,a=16,r=16,l=18,c=16,d=s-a-r;let u=l;t.setFont("helvetica","bold"),t.setFontSize(16),t.setTextColor(124,58,237),t.text("Interview Preparation Guide",s/2,u,{align:"center"}),u+=8,t.setFont("helvetica","normal"),t.setFontSize(9),t.setTextColor(100,116,139),t.text("Generated by ZapKitt AI — based on your resume",s/2,u,{align:"center"}),u+=8;const m=o.split("\n");for(const e of m){const n=e.trim();if(!n){u+=2;continue}if(/^SECTION \d|^REAL-TIME|^CODING|^CROSS-SCENARIO|^EXPERIENCE|^TOPIC/i.test(n)){u+12>i-c&&(t.addPage(),u=l),u+=4,t.setFont("helvetica","bold"),t.setFontSize(11),t.setTextColor(124,58,237),t.text(n,a,u),u+=2,t.setDrawColor(124,58,237),t.setLineWidth(.3),t.line(a,u,s-r,u),u+=5;continue}if(/^Q\d+[:.]/i.test(n)){u+8>i-c&&(t.addPage(),u=l),u+=2,t.setFont("helvetica","bold"),t.setFontSize(10),t.setTextColor(26,26,46);t.splitTextToSize(n,d).forEach(e=>{u+4>i-c&&(t.addPage(),u=l),t.text(e,a,u),u+=4.5});continue}if(/^ANSWER:/i.test(n)){t.setFont("helvetica","bold"),t.setFontSize(9.5),t.setTextColor(22,163,74),t.text("ANSWER:",a,u),u+=4;const e=n.replace(/^ANSWER:\s*/i,"");if(e){t.setFont("helvetica","normal"),t.setTextColor(30,30,50);t.splitTextToSize(e,d).forEach(e=>{u+4>i-c&&(t.addPage(),u=l),t.text(e,a,u),u+=3.8})}continue}t.setFont("helvetica","normal"),t.setFontSize(9.5),t.setTextColor(30,30,50);t.splitTextToSize(n,d).forEach(e=>{u+4>i-c&&(t.addPage(),u=l),t.text(e,a,u),u+=3.8})}const p=t.internal.getNumberOfPages();for(let e=1;e<=p;e++)t.setPage(e),t.setFont("helvetica","normal"),t.setFontSize(8),t.setTextColor(148,163,184),t.text("Page "+e+"/"+p+" — ZapKitt Interview Prep",s/2,i-8,{align:"center"});t.save(n.replace(/\s+/g,"_")+"_Interview_Prep.pdf")}catch(e){alert("PDF error: "+e.message)}}async function optimizeMore(){if(!resumeText)return;const e=document.getElementById("jobDesc").value.trim();if(!e)return void alert("Paste a job description in Step 5 first — ATS optimization needs a target.");const t=document.getElementById("genBtn"),n=document.getElementById("loading");t.disabled=!0,n.classList.add("show"),showLoadStep("Analyzing keyword gaps and optimizing...");try{const t=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:`You are an ATS optimization specialist. Improve this resume to better match the job description. Naturally integrate missing keywords without keyword stuffing. Strengthen weak bullet points with more specific metrics. Ensure every section header is in ALL CAPS. Keep the exact same structure.\n\nJOB DESCRIPTION:\n"""\n${e}\n"""\n\nCURRENT RESUME:\n"""\n${resumeText}\n"""\n\nOutput ONLY the improved resume text. No commentary. No markdown. Same structure, better keywords and metrics.`,system:"ATS optimization expert. Improve keyword match while keeping natural writing. Output only the resume text with ALL CAPS section headers and • bullet points.",max_tokens:4096})}),n=await t.json();n.result&&(resumeText=n.result,renderResume(n.result,e,document.getElementById("techSkills").value),document.getElementById("output").scrollIntoView({behavior:"smooth"}))}catch(e){}t.disabled=!1,n.classList.remove("show")}async function aiRewriteFresher(){const e=document.getElementById("fresherProjects"),t=e.value.trim();if(!t)return void alert("Add your projects/internships first.");const n=event.target;n.textContent="⏳ AI converting...",n.disabled=!0;try{const n=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:`Convert these student/fresher projects and activities into professional resume entries. Use STAR format with action verbs. Make them sound impressive and professional while staying honest.\n\nProjects/Activities:\n${t}\n\nOutput format for each entry:\nPROJECT/INTERNSHIP TITLE | Organization | Duration\n• Bullet point 1 with action verb and result\n• Bullet point 2 with action verb and result\n\nOutput ONLY the formatted entries. No explanations.`,system:"Expert resume writer specializing in entry-level resumes. Convert student projects into impressive professional entries.",max_tokens:800})}),o=await n.json();o.result&&(e.value=o.result)}catch(e){}n.textContent="AI: Convert projects into professional resume entries",n.disabled=!1}function validatePhone(el){const cc=document.getElementById("countryCode").value;const maxLen={"+91":10,"+1":10,"+44":10,"+61":9,"+971":9,"+65":8,"+49":11,"+33":9,"+81":10,"+86":11,"+82":10,"+55":11,"+27":9,"+234":10,"+254":9,"+60":10,"+63":10,"+966":9,"+7":10,"+52":10,"+39":10,"+34":9,"+31":9,"+46":9,"+41":9,"+353":9,"+64":9,"+48":9,"+90":10,"+92":10,"+880":10,"+94":9,"+977":10};const ml=maxLen[cc]||15;el.value=el.value.replace(/[^0-9]/g,"").slice(0,ml);const hint=el.parentElement.parentElement.querySelector(".hint");if(!hint){const d=document.createElement("div");d.className="hint";d.id="phoneHint";d.textContent=ml+" digits for "+cc;el.parentElement.parentElement.appendChild(d)}else if(hint.id!=="phoneHint"){const d=document.createElement("div");d.className="hint";d.id="phoneHint";d.textContent=ml+" digits for "+cc;el.parentElement.parentElement.appendChild(d)}const ph=document.getElementById("phoneHint");if(ph)ph.textContent=el.value.length+"/"+ml+" digits";}</script></body></html>
