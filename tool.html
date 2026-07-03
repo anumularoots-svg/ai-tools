@@ -97,7 +97,8 @@ a{text-decoration:none;color:inherit}
 
 <footer class="foot">
 <p>ZapKitt — Free AI-powered tools for everyone.</p>
-<p style="margin-top:8px"><a href="/">All Tools</a> · <a href="/blog">Blog</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
+<p style="margin-top:8px"><a href="/">Home</a> · <a href="/all-tools">All Tools</a> · <a href="/blog">Blog</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
+<p style="margin-top:8px;font-size:12px"><a href="/writing-tools">Writing</a> · <a href="/student-tools">Student</a> · <a href="/developer-tools">Developer</a> · <a href="/marketing-tools">Marketing</a> · <a href="/social-media-tools">Social Media</a> · <a href="/business-tools">Business</a> · <a href="/productivity-tools">Productivity</a> · <a href="/resume-tools">Resume</a></p>
 </footer>
 
 <script>
@@ -190,9 +191,52 @@ function renderTool() {
   }
   document.getElementById("seoSection").innerHTML = seoHtml;
 
-  // Related tools
+  // Related tools — same category
   var related = allTools.filter(function(rt) { return rt.category === t.category && rt.slug !== t.slug; }).slice(0, 5);
-  var relHtml = related.map(function(r) { return '<a href="/t/' + r.slug + '">' + r.title + '</a>'; }).join("");
+  var relHtml = '<h3 style="font-size:15px;font-weight:700;margin-bottom:10px">More ' + catName2 + ' Tools</h3>';
+  relHtml += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">';
+  relHtml += related.map(function(r) { return '<a href="/t/' + r.slug + '" style="padding:8px 16px;border:1.5px solid #e5e7eb;border-radius:8px;color:#7c3aed;font-size:13px;font-weight:600;text-decoration:none">' + r.title + '</a>'; }).join("");
+  relHtml += '</div>';
+
+  // Category page link
+  var catSlug3 = t.category + "-tools";
+  if (t.category === "social") catSlug3 = "social-media-tools";
+  relHtml += '<a href="/' + catSlug3 + '" style="display:inline-flex;align-items:center;gap:6px;color:#7c3aed;font-size:14px;font-weight:600;text-decoration:none;margin-bottom:20px">→ See all ' + catName2 + ' tools</a>';
+
+  // Relevant blog links
+  var blogMap = {
+    "writing": {url: "/blog-ai-writing-tools-free", title: "18 Free AI Writing Tools That Replace Your Entire Writing Stack"},
+    "student": {url: "/blog-free-ai-tools-for-students", title: "16 Free AI Tools Every Student Needs in 2026"},
+    "developer": {url: "/blog-free-developer-tools", title: "12 Free AI Developer Tools You'll Actually Use Every Day"},
+    "marketing": {url: "/blog-ai-marketing-tools-free", title: "16 Free AI Marketing Tools That Replace $500/Month Subscriptions"},
+    "resume": {url: "/blog-free-ai-resume-builder", title: "Free AI Resume Builder — ATS Score, STAR Method, PDF Download"},
+    "social": {url: "/blog-ai-marketing-tools-free", title: "16 Free AI Marketing & Social Media Tools"},
+    "business": {url: "/blog-best-free-ai-tools", title: "110+ Best Free AI Tools Online — Complete List"},
+    "productivity": {url: "/blog-best-free-ai-tools", title: "110+ Best Free AI Tools Online — Complete List"}
+  };
+  if (blogMap[t.category]) {
+    relHtml += '<div style="margin-top:16px;padding:16px;background:#f8f7fc;border-radius:10px;border:1px solid #ede9fe"><p style="font-size:13px;font-weight:600;color:#6b7280;margin:0 0 6px">📖 Related Guide</p><a href="' + blogMap[t.category].url + '" style="font-size:14px;font-weight:700;color:#7c3aed;text-decoration:none">' + blogMap[t.category].title + '</a></div>';
+  }
+
+  // Explore other categories
+  relHtml += '<div style="margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f0"><p style="font-size:13px;font-weight:600;color:#6b7280;margin:0 0 10px">Explore Other Categories</p><div style="display:flex;gap:8px;flex-wrap:wrap">';
+  var otherCats = [
+    {id:"writing",name:"✍️ Writing",slug:"writing-tools"},
+    {id:"student",name:"🎓 Student",slug:"student-tools"},
+    {id:"developer",name:"💻 Developer",slug:"developer-tools"},
+    {id:"marketing",name:"📈 Marketing",slug:"marketing-tools"},
+    {id:"social",name:"📱 Social",slug:"social-media-tools"},
+    {id:"business",name:"💼 Business",slug:"business-tools"},
+    {id:"productivity",name:"⚡ Productivity",slug:"productivity-tools"},
+    {id:"resume",name:"📄 Resume",slug:"resume-tools"}
+  ];
+  otherCats.forEach(function(oc) {
+    if (oc.id !== t.category) {
+      relHtml += '<a href="/' + oc.slug + '" style="padding:6px 14px;background:#f3f0ff;border-radius:6px;color:#7c3aed;font-size:12px;font-weight:600;text-decoration:none">' + oc.name + '</a>';
+    }
+  });
+  relHtml += '</div></div>';
+
   document.getElementById("relatedTools").innerHTML = relHtml;
 
   // Schema.org structured data — SoftwareApplication
