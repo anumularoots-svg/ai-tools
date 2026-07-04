@@ -1,19 +1,19 @@
 /* ZapKitt — Shared styles for all pages */
-/* Single source of truth: change here = all 25+ pages update */
+/* Updated to match new blue (#2563EB) design system */
 
 /* Nav */
-.fp-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid #f0eef5}
-.fp-nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
-.fp-logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:21px;color:#1a1a2e}
-.fp-logo svg{width:34px;height:34px}
-.fp-logo span{color:#7C3AED}
-.fp-nav-links{display:flex;gap:20px}
-.fp-nav-links a{text-decoration:none;color:#64748b;font-size:14px;font-weight:500;transition:color .2s}
-.fp-nav-links a:hover{color:#7C3AED}
+.fp-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E5E7EB}
+.fp-nav-inner{max-width:1120px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.fp-logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:20px;color:#111827;letter-spacing:-0.5px}
+.fp-logo svg{width:32px;height:32px}
+.fp-logo span{color:#2563EB}
+.fp-nav-links{display:flex;gap:28px}
+.fp-nav-links a{text-decoration:none;color:#6B7280;font-size:14px;font-weight:500;transition:color .15s}
+.fp-nav-links a:hover{color:#111827}
 
 /* Footer */
-.fp-footer{text-align:center;padding:40px 24px;border-top:1px solid #f0eef5;color:#94a3b8;font-size:13px;margin-top:40px}
-.fp-footer a{color:#7C3AED;text-decoration:none;font-weight:500}
+.fp-footer{text-align:center;padding:40px 24px;border-top:1px solid #E5E7EB;color:#6B7280;font-size:13px;margin-top:40px}
+.fp-footer a{color:#2563EB;text-decoration:none;font-weight:500}
 .fp-footer a:hover{text-decoration:underline}
 
 /* Mobile */
@@ -22,76 +22,18 @@
   .fp-nav-inner{padding:0 16px}
 }
 
-/* ===== PREMIUM EFFECTS ===== */
-
-/* Glassmorphism card effect */
-.glass{background:rgba(255,255,255,.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.3);box-shadow:0 8px 32px rgba(124,58,237,.08)}
-
-/* Smooth fade-in animation */
-@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+/* Subtle animations */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes slideInLeft{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
-@keyframes scaleIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
-@keyframes pulse-glow{0%,100%{box-shadow:0 0 8px rgba(124,58,237,.15)}50%{box-shadow:0 0 20px rgba(124,58,237,.3)}}
 
-/* Staggered card animations */
-.card,.tool-card,.wc{animation:fadeInUp .5s ease both}
-.card:nth-child(1),.tool-card:nth-child(1){animation-delay:.05s}
-.card:nth-child(2),.tool-card:nth-child(2){animation-delay:.1s}
-.card:nth-child(3),.tool-card:nth-child(3){animation-delay:.15s}
-.card:nth-child(4),.tool-card:nth-child(4){animation-delay:.2s}
-.card:nth-child(5),.tool-card:nth-child(5){animation-delay:.25s}
-.card:nth-child(6),.tool-card:nth-child(6){animation-delay:.3s}
-.card:nth-child(7),.tool-card:nth-child(7){animation-delay:.35s}
-.card:nth-child(8),.tool-card:nth-child(8){animation-delay:.4s}
-
-/* Enhanced card hover — lift + glow */
-.card:hover,.tool-card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 12px 40px rgba(124,58,237,.15),0 0 0 1px rgba(124,58,237,.1);border-color:rgba(124,58,237,.3)}
-
-/* Icon container hover — gentle float */
-.ic:hover,.card-icon:hover{animation:float 2s ease-in-out infinite}
-
-/* Gradient text utility */
-.gradient-text{background:linear-gradient(135deg,#7c3aed,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-
-/* Shimmer loading effect */
-.shimmer{background:linear-gradient(90deg,#f0eef5 25%,#e8e5f0 50%,#f0eef5 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
-
-/* Smooth page transitions */
-body{animation:fadeIn .4s ease}
-
-/* Button hover glow */
-.cta-b:hover,a[style*="background:linear-gradient"]:hover{box-shadow:0 8px 32px rgba(124,58,237,.35);transform:translateY(-3px) scale(1.02)}
-
-/* Nav glassmorphism enhancement */
-.fp-nav,.nw{background:rgba(255,255,255,.85);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%)}
-
-/* Footer donation card hover */
-.fp-footer div[style*="gradient"]:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,58,237,.1)}
-
-/* Stats counter animation */
-.si .n{animation:scaleIn .6s ease both}
-
-/* Hero section animation */
-.hero h1,.hero p,.chip,.trust{animation:fadeInUp .6s ease both}
-.hero h1{animation-delay:.1s}
-.hero p{animation-delay:.2s}
-.chip{animation-delay:0s}
-.trust{animation-delay:.3s}
-
-/* Filter buttons */
-.fp:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(124,58,237,.12)}
-.fp.on{animation:pulse-glow 2s ease-in-out infinite}
-
-/* Category title slide-in */
-.cat-title{animation:slideInLeft .5s ease both}
+/* Card hover */
+.card:hover,.tool-card:hover{transform:translateY(-3px);box-shadow:0 4px 16px rgba(37,99,235,.08);border-color:#C7D2FE}
 
 /* Smooth scrolling */
 html{scroll-behavior:smooth}
 
-/* Reduced motion for accessibility */
+/* Reduced motion */
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
 
-/* Anti-copy protection */
+/* Body base */
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;animation:fadeIn .3s ease}
