@@ -13,6 +13,7 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"ZapKitt","url":"https://zapkitt.com","potentialAction":{"@type":"SearchAction","target":"https://zapkitt.com/all-tools?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"ZapKitt","url":"https://zapkitt.com","logo":"https://zapkitt.com/og-image.png"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is ZapKitt really free?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every tool is 100% free with no signup, no watermarks, and no daily limits."}},{"@type":"Question","name":"Do you upload my files?","acceptedAnswer":{"@type":"Answer","text":"No. Most tools process files in your browser. Your files never leave your device."}},{"@type":"Question","name":"What AI model does ZapKitt use?","acceptedAnswer":{"@type":"Answer","text":"Llama 3.3 70B for writing tools. FLUX and Stable Diffusion for image generation."}},{"@type":"Question","name":"Do I need an account?","acceptedAnswer":{"@type":"Answer","text":"No. Use every tool immediately without signing up."}},{"@type":"Question","name":"Does it work on mobile?","acceptedAnswer":{"@type":"Answer","text":"Yes. Fully responsive on phone, tablet, and desktop."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://zapkitt.com/"},{"@type":"ListItem","position":2,"name":"All AI Tools","item":"https://zapkitt.com/all-tools"}]}</script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 </head><body>
 
@@ -134,8 +135,8 @@
 <!-- STATS -->
 <div class="stats-strip fade-in">
   <div class="stat-item"><div class="stat-num">110+</div><div class="stat-label">Free AI Tools</div></div>
-  <div class="stat-item"><div class="stat-num">25K+</div><div class="stat-label">Users</div></div>
-  <div class="stat-item"><div class="stat-num">500K+</div><div class="stat-label">AI Generations</div></div>
+  <div class="stat-item"><div class="stat-num">12.5K+</div><div class="stat-label">Users</div></div>
+  <div class="stat-item"><div class="stat-num">250K+</div><div class="stat-label">AI Generations</div></div>
   <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">Available</div></div>
 </div>
 
@@ -251,7 +252,7 @@ si.addEventListener('input',function(){
   sr.innerHTML=m.map(t=>'<a href="'+t.u+'" class="search-result"><div><div class="search-result-name">'+t.n+'</div><div class="search-result-desc">'+t.d+'</div></div></a>').join('');
   sr.classList.add('open');
 });
-document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==si){e.preventDefault();si.focus()}});
+document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==si){e.preventDefault();si.focus()}if(e.key==='Escape'){sr.classList.remove('open');si.blur()}if(e.key==='Enter'&&document.activeElement===si){const first=sr.querySelector('.search-result');if(first)window.location.href=first.getAttribute('href')}});
 document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))sr.classList.remove('open')});
 if(window.matchMedia('(prefers-reduced-motion:no-preference)').matches){
   const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}})},{threshold:.1});
