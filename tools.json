@@ -3,61 +3,61 @@
     {
       "id": "resume",
       "name": "Resume & Career",
-      "icon": "📄",
+      "icon": "resume",
       "color": "#7C3AED"
     },
     {
       "id": "writing",
       "name": "AI Writing",
-      "icon": "✍️",
+      "icon": "writing",
       "color": "#2563EB"
     },
     {
       "id": "marketing",
       "name": "Marketing & SEO",
-      "icon": "📈",
+      "icon": "marketing",
       "color": "#D97706"
     },
     {
       "id": "social",
       "name": "Social Media",
-      "icon": "📱",
+      "icon": "social",
       "color": "#EC4899"
     },
     {
       "id": "business",
       "name": "Business",
-      "icon": "💼",
+      "icon": "business",
       "color": "#059669"
     },
     {
       "id": "student",
       "name": "Student",
-      "icon": "🎓",
+      "icon": "student",
       "color": "#0EA5E9"
     },
     {
       "id": "pdf",
       "name": "PDF Tools",
-      "icon": "📑",
+      "icon": "pdf",
       "color": "#DC2626"
     },
     {
       "id": "image",
       "name": "Image Tools",
-      "icon": "🖼️",
+      "icon": "image",
       "color": "#8B5CF6"
     },
     {
       "id": "developer",
       "name": "Developer",
-      "icon": "💻",
+      "icon": "developer",
       "color": "#10B981"
     },
     {
       "id": "productivity",
       "name": "Productivity",
-      "icon": "⚡",
+      "icon": "productivity",
       "color": "#F59E0B"
     }
   ],
@@ -130,7 +130,7 @@
         }
       ],
       "systemPrompt": "You are an ATS (Applicant Tracking System) expert. Score resumes for ATS compatibility.",
-      "userPrompt": "Analyze this resume against the job description for ATS compatibility.\n\nProvide:\n1. ATS SCORE: X/100\n2. KEYWORD MATCH: List matched and missing keywords\n3. FORMAT CHECK: ✅ or ❌ for each (no tables, no columns, no graphics, standard headings, proper dates, contact info)\n4. SECTION ANALYSIS: Score each section\n5. TOP 10 MISSING KEYWORDS to add\n6. REWRITTEN SUMMARY optimized for this job\n\nResume:\n\"\"\"\n{resume}\n\"\"\"\n\nJob Description:\n\"\"\"\n{jobDesc}\n\"\"\"",
+      "userPrompt": "Analyze this resume against the job description for ATS compatibility.\n\nProvide:\n1. ATS SCORE: X/100\n2. KEYWORD MATCH: List matched and missing keywords\n3. FORMAT CHECK: Yes or No for each (no tables, no columns, no graphics, standard headings, proper dates, contact info)\n4. SECTION ANALYSIS: Score each section\n5. TOP 10 MISSING KEYWORDS to add\n6. REWRITTEN SUMMARY optimized for this job\n\nResume:\n\"\"\"\n{resume}\n\"\"\"\n\nJob Description:\n\"\"\"\n{jobDesc}\n\"\"\"",
       "maxTokens": 2000,
       "keywords": [
         "ATS score",
@@ -876,7 +876,7 @@
         }
       ],
       "systemPrompt": "You are a recruitment expert. Analyze resume-job fit.",
-      "userPrompt": "Compare this resume against the job description:\n\nResume:\n\"\"\"\n{resume}\n\"\"\"\n\nJob Description:\n\"\"\"\n{jobDesc}\n\"\"\"\n\nProvide:\n1. MATCH SCORE: X/100\n2. MATCHED REQUIREMENTS (list each with ✅)\n3. MISSING REQUIREMENTS (list each with ❌)\n4. SKILL GAPS to address\n5. EXPERIENCE GAPS\n6. SUGGESTED RESUME CHANGES (specific bullets to add/modify)\n7. COVER LETTER TALKING POINTS",
+      "userPrompt": "Compare this resume against the job description:\n\nResume:\n\"\"\"\n{resume}\n\"\"\"\n\nJob Description:\n\"\"\"\n{jobDesc}\n\"\"\"\n\nProvide:\n1. MATCH SCORE: X/100\n2. MATCHED REQUIREMENTS (list each with Yes)\n3. MISSING REQUIREMENTS (list each with No)\n4. SKILL GAPS to address\n5. EXPERIENCE GAPS\n6. SUGGESTED RESUME CHANGES (specific bullets to add/modify)\n7. COVER LETTER TALKING POINTS",
       "maxTokens": 2000,
       "keywords": [
         "job match",

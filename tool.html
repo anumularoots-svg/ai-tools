@@ -80,7 +80,7 @@ a{text-decoration:none;color:inherit}
 <div class="card">
 <div id="fieldsContainer"></div>
 <div class="field" style="margin-top:12px"><label>Output language</label><select id="f_language" style="width:100%;padding:12px 16px;border:1.5px solid #e8e8e8;border-radius:10px;font-size:14px;font-family:inherit;background:#fafafa"><option value="English" selected>English</option><option value="Hindi">Hindi (हिन्दी)</option><option value="Telugu">Telugu (తెలుగు)</option><option value="Tamil">Tamil (தமிழ்)</option><option value="Spanish">Spanish (Español)</option><option value="French">French (Français)</option><option value="German">German (Deutsch)</option><option value="Portuguese">Portuguese (Português)</option><option value="Italian">Italian (Italiano)</option><option value="Dutch">Dutch (Nederlands)</option><option value="Russian">Russian (Русский)</option><option value="Japanese">Japanese (日本語)</option><option value="Korean">Korean (한국어)</option><option value="Chinese">Chinese (中文)</option><option value="Arabic">Arabic (العربية)</option><option value="Bengali">Bengali (বাংলা)</option><option value="Urdu">Urdu (اردو)</option><option value="Turkish">Turkish (Türkçe)</option><option value="Indonesian">Indonesian (Bahasa)</option><option value="Vietnamese">Vietnamese (Tiếng Việt)</option><option value="Thai">Thai (ไทย)</option><option value="Polish">Polish (Polski)</option><option value="Ukrainian">Ukrainian (Українська)</option><option value="Swahili">Swahili</option><option value="Malay">Malay (Bahasa Melayu)</option></select></div>
-<button class="btn btn-go" id="generateBtn" onclick="generate()">⚡ Generate</button>
+<button class="btn btn-go" id="generateBtn" onclick="generate()">Generate</button>
 <div class="loading" id="loading"><span class="spinner"></span> AI is generating your content...</div>
 <div class="error" id="errorBox"></div>
 </div>
@@ -89,14 +89,14 @@ a{text-decoration:none;color:inherit}
 <div class="output-label">Result</div>
 <div class="output-text" id="outputText"></div>
 <div class="model-badge" id="modelBadge"></div>
-<button class="btn btn-copy" onclick="copyResult()">📋 Copy to clipboard</button>
+<button class="btn btn-copy" onclick="copyResult()"> Copy to clipboard</button>
 </div>
 
 <div class="seo" id="seoSection"></div>
 <div class="related" id="relatedTools"></div>
 </div>
 
-<footer class="foot"><div style="max-width:480px;margin:0 auto 24px;padding:28px 24px;background:linear-gradient(135deg,#fdf2f8,#f3e8ff);border-radius:16px;border:1.5px solid #f0e0f5;text-align:center"><p style="font-size:20px;margin-bottom:8px">❤️ Love ZapKitt?</p><p style="font-size:14px;color:#64748b;margin-bottom:16px;line-height:1.6">ZapKitt is 100% free with no ads, no signup, no limits. Help us keep it that way!</p><div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap"><a href="https://buymeacoffee.com/zapkitt" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#FFDD00;color:#000;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;transition:.25s;box-shadow:0 2px 8px rgba(0,0,0,.1)">☕ Buy Me a Coffee</a><a href="upi://pay?pa=9985933964-3@ybl&pn=ZapKitt&cu=INR" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#5F259F;color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;transition:.25s;box-shadow:0 2px 8px rgba(95,37,159,.2)">💜 UPI Donate</a><a href="https://github.com/sponsors/zapkitt" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#24292e;color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;transition:.25s;box-shadow:0 2px 8px rgba(0,0,0,.15)">⭐ GitHub Sponsors</a></div></div>
+<footer class="foot"><div style="max-width:480px;margin:0 auto 24px;padding:28px 24px;background:#F9FAFB;border-radius:16px;border:1px solid #E5E7EB;text-align:center"><p style="font-size:18px;font-weight:700;margin-bottom:8px;color:#111827">Support ZapKitt</p><p style="font-size:14px;color:#6B7280;margin-bottom:16px;line-height:1.6">ZapKitt is 100% free with no ads, no signup, no limits. Help us keep it that way.</p><div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap"><a href="https://buymeacoffee.com/zapkitt" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#FFDD00;color:#000;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;transition:.25s;box-shadow:0 2px 8px rgba(0,0,0,.1)">Buy Me a Coffee</a><a href="upi://pay?pa=9985933964-3@ybl&pn=ZapKitt&cu=INR" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#2563EB;color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;transition:.25s;box-shadow:0 2px 8px rgba(37,99,235,.2)">UPI Donate</a><a href="https://github.com/sponsors/zapkitt" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#24292e;color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;transition:.25s;box-shadow:0 2px 8px rgba(0,0,0,.15)">GitHub Sponsors</a></div></div>
 <p>ZapKitt — Free AI-powered tools for everyone.</p>
 <p style="margin-top:8px"><a href="/">Home</a> · <a href="/all-tools">All Tools</a> · <a href="/blog">Blog</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
 <p style="margin-top:8px;font-size:12px"><a href="/writing-tools">Writing</a> · <a href="/student-tools">Student</a> · <a href="/developer-tools">Developer</a> · <a href="/marketing-tools">Marketing</a> · <a href="/social-media-tools">Social Media</a> · <a href="/business-tools">Business</a> · <a href="/productivity-tools">Productivity</a> · <a href="/resume-tools">Resume</a></p>
@@ -181,7 +181,7 @@ function renderTool() {
   });
 
   // Generate button text
-  document.getElementById("generateBtn").textContent = "⚡ Generate " + t.title.replace("AI ", "");
+  document.getElementById("generateBtn").textContent = "Generate " + t.title.replace("AI ", "");
 
   // SEO section
   var seoHtml = '<h2>' + t.title + ' — Free Online</h2><p>' + t.description + '</p>';
@@ -216,7 +216,7 @@ function renderTool() {
     "productivity": {url: "/blog-best-free-ai-tools", title: "110+ Best Free AI Tools Online — Complete List"}
   };
   if (blogMap[t.category]) {
-    relHtml += '<div style="margin-top:16px;padding:16px;background:#f8f7fc;border-radius:10px;border:1px solid #ede9fe"><p style="font-size:13px;font-weight:600;color:#6b7280;margin:0 0 6px">📖 Related Guide</p><a href="' + blogMap[t.category].url + '" style="font-size:14px;font-weight:700;color:#7c3aed;text-decoration:none">' + blogMap[t.category].title + '</a></div>';
+    relHtml += '<div style="margin-top:16px;padding:16px;background:#f8f7fc;border-radius:10px;border:1px solid #ede9fe"><p style="font-size:13px;font-weight:600;color:#6b7280;margin:0 0 6px"> Related Guide</p><a href="' + blogMap[t.category].url + '" style="font-size:14px;font-weight:700;color:#7c3aed;text-decoration:none">' + blogMap[t.category].title + '</a></div>';
   }
 
   // Explore other categories
@@ -360,7 +360,7 @@ async function generate() {
   }
 
   btn.disabled = false;
-  btn.textContent = "⚡ Generate " + t.title.replace("AI ", "");
+  btn.textContent = "Generate " + t.title.replace("AI ", "");
   document.getElementById("loading").classList.remove("show");
 }
 
@@ -369,7 +369,7 @@ function copyResult() {
   navigator.clipboard.writeText(text).then(function() {
     var btn = document.querySelector(".btn-copy");
     btn.textContent = "✓ Copied!";
-    setTimeout(function() { btn.textContent = "📋 Copy to clipboard"; }, 2000);
+    setTimeout(function() { btn.textContent = " Copy to clipboard"; }, 2000);
   });
 }
 
