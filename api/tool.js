@@ -1,12 +1,24 @@
 // ZapKitt Shared Tool API — handles ALL config-driven AI tools
 // Single endpoint, different prompts per tool
 
+// Multi-key rotation: supports comma-separated keys per provider
+function pickKey(envValue) {
+  if (!envValue) return null;
+  const keys = envValue.split(",").map(function(k) { return k.trim(); }).filter(Boolean);
+  return keys.length > 0 ? keys[Math.floor(Math.random() * keys.length)] : null;
+}
+
 function getProviders() {
   const providers = [];
-  if (process.env.GROQ_API_KEY) providers.push({ name: "groq", url: "https://api.groq.com/openai/v1/chat/completions", key: process.env.GROQ_API_KEY, models: ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"], format: "openai" });
-  if (process.env.GEMINI_API_KEY) providers.push({ name: "gemini", url: "https://generativelanguage.googleapis.com/v1beta", key: process.env.GEMINI_API_KEY, models: ["gemini-2.5-flash", "gemini-2.0-flash-lite"], format: "gemini" });
-  if (process.env.OPENROUTER_API_KEY) providers.push({ name: "openrouter", url: "https://openrouter.ai/api/v1/chat/completions", key: process.env.OPENROUTER_API_KEY, models: ["meta-llama/llama-3.3-70b-instruct:free"], format: "openai" });
-  if (process.env.CEREBRAS_API_KEY) providers.push({ name: "cerebras", url: "https://api.cerebras.ai/v1/chat/completions", key: process.env.CEREBRAS_API_KEY, models: ["llama-3.3-70b"], format: "openai" });
+  var k;
+  k = pickKey(process.env.GROQ_API_KEY);
+  if (k) providers.push({ name: "groq", url: "https://api.groq.com/openai/v1/chat/completions", key: k, models: ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"], format: "openai" });
+  k = pickKey(process.env.GEMINI_API_KEY);
+  if (k) providers.push({ name: "gemini", url: "https://generativelanguage.googleapis.com/v1beta", key: k, models: ["gemini-2.5-flash", "gemini-2.0-flash-lite"], format: "gemini" });
+  k = pickKey(process.env.OPENROUTER_API_KEY);
+  if (k) providers.push({ name: "openrouter", url: "https://openrouter.ai/api/v1/chat/completions", key: k, models: ["meta-llama/llama-3.3-70b-instruct:free"], format: "openai" });
+  k = pickKey(process.env.CEREBRAS_API_KEY);
+  if (k) providers.push({ name: "cerebras", url: "https://api.cerebras.ai/v1/chat/completions", key: k, models: ["llama-3.3-70b"], format: "openai" });
   return providers;
 }
 

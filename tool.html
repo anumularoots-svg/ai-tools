@@ -79,6 +79,7 @@ a{text-decoration:none;color:inherit}
 
 <div class="card">
 <div id="fieldsContainer"></div>
+<div class="field" style="margin-top:12px"><label>Output language</label><select id="f_language" style="width:100%;padding:12px 16px;border:1.5px solid #e8e8e8;border-radius:10px;font-size:14px;font-family:inherit;background:#fafafa"><option value="English" selected>English</option><option value="Hindi">Hindi (हिन्दी)</option><option value="Telugu">Telugu (తెలుగు)</option><option value="Tamil">Tamil (தமிழ்)</option><option value="Spanish">Spanish (Español)</option><option value="French">French (Français)</option><option value="German">German (Deutsch)</option><option value="Portuguese">Portuguese (Português)</option><option value="Italian">Italian (Italiano)</option><option value="Dutch">Dutch (Nederlands)</option><option value="Russian">Russian (Русский)</option><option value="Japanese">Japanese (日本語)</option><option value="Korean">Korean (한국어)</option><option value="Chinese">Chinese (中文)</option><option value="Arabic">Arabic (العربية)</option><option value="Bengali">Bengali (বাংলা)</option><option value="Urdu">Urdu (اردو)</option><option value="Turkish">Turkish (Türkçe)</option><option value="Indonesian">Indonesian (Bahasa)</option><option value="Vietnamese">Vietnamese (Tiếng Việt)</option><option value="Thai">Thai (ไทย)</option><option value="Polish">Polish (Polski)</option><option value="Ukrainian">Ukrainian (Українська)</option><option value="Swahili">Swahili</option><option value="Malay">Malay (Bahasa Melayu)</option></select></div>
 <button class="btn btn-go" id="generateBtn" onclick="generate()">⚡ Generate</button>
 <div class="loading" id="loading"><span class="spinner"></span> AI is generating your content...</div>
 <div class="error" id="errorBox"></div>
@@ -327,6 +328,7 @@ async function generate() {
 
   if (!valid) return alert("Please fill all required fields.");
 
+  var lang = document.getElementById("f_language").value || "English";
   var btn = document.getElementById("generateBtn");
   btn.disabled = true;
   btn.textContent = "Generating...";
@@ -339,7 +341,7 @@ async function generate() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        systemPrompt: t.systemPrompt,
+        systemPrompt: t.systemPrompt + (lang !== "English" ? "\n\nIMPORTANT: Write the ENTIRE output in " + lang + " language. Every word must be in " + lang + "." : ""),
         userPrompt: t.userPrompt,
         fields: fields,
         maxTokens: t.maxTokens || 2000
