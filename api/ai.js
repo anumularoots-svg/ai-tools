@@ -16,19 +16,33 @@ function extractJSON(text) {
   return c;
 }
 
+// Multi-key rotation: supports comma-separated keys per provider
+// Example env: GEMINI_API_KEY=key1,key2,key3,key4,key5
+// Each request picks a random key → distributes load across accounts
+function pickKey(envValue) {
+  if (!envValue) return null;
+  const keys = envValue.split(",").map(function(k) { return k.trim(); }).filter(Boolean);
+  return keys.length > 0 ? keys[Math.floor(Math.random() * keys.length)] : null;
+}
+
 function getProviders() {
   const providers = [];
-  if (process.env.GROQ_API_KEY) {
-    providers.push({ name: "groq", url: "https://api.groq.com/openai/v1/chat/completions", key: process.env.GROQ_API_KEY, models: ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"], format: "openai" });
+  var k;
+  k = pickKey(process.env.GROQ_API_KEY);
+  if (k) {
+    providers.push({ name: "groq", url: "https://api.groq.com/openai/v1/chat/completions", key: k, models: ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"], format: "openai" });
   }
-  if (process.env.GEMINI_API_KEY) {
-    providers.push({ name: "gemini", url: "https://generativelanguage.googleapis.com/v1beta", key: process.env.GEMINI_API_KEY, models: ["gemini-2.5-flash", "gemini-2.0-flash-lite"], format: "gemini" });
+  k = pickKey(process.env.GEMINI_API_KEY);
+  if (k) {
+    providers.push({ name: "gemini", url: "https://generativelanguage.googleapis.com/v1beta", key: k, models: ["gemini-2.5-flash", "gemini-2.0-flash-lite"], format: "gemini" });
   }
-  if (process.env.OPENROUTER_API_KEY) {
-    providers.push({ name: "openrouter", url: "https://openrouter.ai/api/v1/chat/completions", key: process.env.OPENROUTER_API_KEY, models: ["meta-llama/llama-3.3-70b-instruct:free"], format: "openai" });
+  k = pickKey(process.env.OPENROUTER_API_KEY);
+  if (k) {
+    providers.push({ name: "openrouter", url: "https://openrouter.ai/api/v1/chat/completions", key: k, models: ["meta-llama/llama-3.3-70b-instruct:free"], format: "openai" });
   }
-  if (process.env.CEREBRAS_API_KEY) {
-    providers.push({ name: "cerebras", url: "https://api.cerebras.ai/v1/chat/completions", key: process.env.CEREBRAS_API_KEY, models: ["llama-3.3-70b"], format: "openai" });
+  k = pickKey(process.env.CEREBRAS_API_KEY);
+  if (k) {
+    providers.push({ name: "cerebras", url: "https://api.cerebras.ai/v1/chat/completions", key: k, models: ["llama-3.3-70b"], format: "openai" });
   }
   return providers;
 }
@@ -56,21 +70,59 @@ async function callGemini(provider, model, system, prompt, maxTokens, temp) {
   return d.candidates && d.candidates[0] && d.candidates[0].content ? d.candidates[0].content.parts[0].text : null;
 }
 
+// getAllKeys returns all keys for a provider (for retry on rate limit)
+function getAllKeys(envName) {
+  var val = process.env[envName];
+  if (!val) return [];
+  return val.split(",").map(function(k) { return k.trim(); }).filter(Boolean);
+}
+
 async function callAI(system, prompt, maxTokens, temp) {
-  const providers = getProviders();
-  if (providers.length === 0) return { error: "No API keys configured. Add GROQ_API_KEY or GEMINI_API_KEY in Vercel env vars." };
-  const errors = [];
-  for (var pi = 0; pi < providers.length; pi++) {
-    var provider = providers[pi];
-    for (var mi = 0; mi < provider.models.length; mi++) {
-      var model = provider.models[mi];
-      try {
-        var text = provider.format === "gemini" ? await callGemini(provider, model, system, prompt, maxTokens, temp) : await callOpenAI(provider, model, system, prompt, maxTokens, temp);
-        if (text) return { text: text, model: provider.name + "/" + model };
-        errors.push(provider.name + "/" + model + ": empty response");
-      } catch (e) { errors.push(provider.name + "/" + model + ": " + e.message); continue; }
+  // Build provider configs with ALL available keys for retry
+  var providerConfigs = [
+    { name: "groq", envName: "GROQ_API_KEY", url: "https://api.groq.com/openai/v1/chat/completions", models: ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"], format: "openai" },
+    { name: "gemini", envName: "GEMINI_API_KEY", url: "https://generativelanguage.googleapis.com/v1beta", models: ["gemini-2.5-flash", "gemini-2.0-flash-lite"], format: "gemini" },
+    { name: "openrouter", envName: "OPENROUTER_API_KEY", url: "https://openrouter.ai/api/v1/chat/completions", models: ["meta-llama/llama-3.3-70b-instruct:free"], format: "openai" },
+    { name: "cerebras", envName: "CEREBRAS_API_KEY", url: "https://api.cerebras.ai/v1/chat/completions", models: ["llama-3.3-70b"], format: "openai" }
+  ];
+  var errors = [];
+  var anyKey = false;
+
+  for (var pi = 0; pi < providerConfigs.length; pi++) {
+    var cfg = providerConfigs[pi];
+    var allKeys = getAllKeys(cfg.envName);
+    if (allKeys.length === 0) continue;
+    anyKey = true;
+
+    // Shuffle keys so each request starts with random key
+    for (var s = allKeys.length - 1; s > 0; s--) {
+      var j = Math.floor(Math.random() * (s + 1));
+      var tmp = allKeys[s]; allKeys[s] = allKeys[j]; allKeys[j] = tmp;
+    }
+
+    // Try each key, each model
+    for (var ki = 0; ki < allKeys.length; ki++) {
+      var provider = { name: cfg.name, url: cfg.url, key: allKeys[ki], format: cfg.format };
+      for (var mi = 0; mi < cfg.models.length; mi++) {
+        var model = cfg.models[mi];
+        try {
+          var text = provider.format === "gemini"
+            ? await callGemini(provider, model, system, prompt, maxTokens, temp)
+            : await callOpenAI(provider, model, system, prompt, maxTokens, temp);
+          if (text) return { text: text, model: provider.name + "/" + model };
+          errors.push(cfg.name + "/" + model + ": empty response");
+        } catch (e) {
+          errors.push(cfg.name + "/" + model + "[key" + (ki+1) + "]: " + e.message);
+          // If rate limited (429), try next key for same provider
+          if (e.message.indexOf("429") >= 0) continue;
+          // Other errors (auth, server) — skip to next model/provider
+          break;
+        }
+      }
     }
   }
+
+  if (!anyKey) return { error: "No API keys configured. Add GROQ_API_KEY or GEMINI_API_KEY in Vercel env vars." };
   return { error: errors.join(" | ") };
 }
 
