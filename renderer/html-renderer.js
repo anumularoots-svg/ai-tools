@@ -184,7 +184,7 @@ body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #000;
 .job-title { font-size: 9pt; font-weight: bold; }
 .job-date { font-size: 8pt; color: #555; font-style: italic; }
 .company { font-size: 8pt; color: #555; font-style: italic; margin-bottom: 1px; }
-.bullet { font-size: 8.5pt; margin-left: 4px; margin-bottom: 1px; text-indent: -10px; padding-left: 14px; line-height: 1.32; }
+.bullet { font-size: 8.5pt; margin-left: 4px; margin-bottom: 1px; text-indent: -10px; padding-left: 14px; line-height: 1.32; break-inside: avoid; page-break-inside: avoid; }
 .text { font-size: 8.5pt; margin-bottom: 1px; line-height: 1.35; }
 .skills-line { font-size: 8.5pt; margin-bottom: 1px; line-height: 1.3; }
 .skills-cat { font-weight: bold; }
