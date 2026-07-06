@@ -55,7 +55,7 @@ export default async function handler(req, res) {
       format: "A4",
       printBackground: true,
       preferCSSPageSize: true,
-      margin: { top: "15mm", right: "16mm", bottom: "14mm", left: "16mm" },
+      margin: { top: "12mm", right: "14mm", bottom: "12mm", left: "14mm" },
     });
 
     const name = fileName || (resumeJSON?.personal?.fullName || "Resume").replace(/\s+/g, "_");

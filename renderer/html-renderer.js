@@ -130,26 +130,26 @@ function renderResumeHTML(resumeJSON, options = {}) {
 }
 
 const RESUME_CSS = `
-@page { size: A4; margin: 15mm 16mm 14mm 16mm; }
+@page { size: A4; margin: 12mm 14mm 12mm 14mm; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #000; font-size: 9.5pt; line-height: 1.45; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #000; font-size: 9pt; line-height: 1.4; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .resume-container { width: 100%; }
-.header { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1.5px solid #000; }
-.name { font-size: 20pt; font-weight: 900; letter-spacing: 1.5px; margin-bottom: 3px; }
-.title { font-size: 11pt; margin-bottom: 4px; }
-.contact { font-size: 8.5pt; color: #666; }
-.section { margin-bottom: 6px; }
-.section-header { font-size: 10.5pt; font-weight: bold; margin-top: 10px; padding-bottom: 2px; border-bottom: 1px solid #000; margin-bottom: 5px; break-after: avoid; page-break-after: avoid; }
-.job { margin-bottom: 6px; break-inside: avoid; page-break-inside: avoid; }
-.job-header { display: flex; justify-content: space-between; align-items: baseline; margin-top: 6px; margin-bottom: 1px; break-after: avoid; page-break-after: avoid; break-inside: avoid; page-break-inside: avoid; }
-.job-title { font-size: 10pt; font-weight: bold; }
-.job-date { font-size: 9pt; color: #555; font-style: italic; }
-.company { font-size: 9pt; color: #555; font-style: italic; margin-bottom: 4px; }
-.bullet { font-size: 9.5pt; margin-left: 4px; margin-bottom: 2.5px; text-indent: -12px; padding-left: 16px; }
-.text { font-size: 9.5pt; margin-bottom: 2px; }
-.skills-line { font-size: 9pt; margin-bottom: 2px; }
+.header { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1.5px solid #000; }
+.name { font-size: 18pt; font-weight: 900; letter-spacing: 1.5px; margin-bottom: 2px; }
+.title { font-size: 9.5pt; margin-bottom: 3px; }
+.contact { font-size: 8pt; color: #555; }
+.section { margin-bottom: 4px; }
+.section-header { font-size: 9.5pt; font-weight: bold; margin-top: 6px; padding-bottom: 1.5px; border-bottom: 1px solid #000; margin-bottom: 3px; break-after: avoid; page-break-after: avoid; }
+.job { margin-bottom: 4px; }
+.job-header { display: flex; justify-content: space-between; align-items: baseline; margin-top: 4px; margin-bottom: 1px; break-after: avoid; page-break-after: avoid; }
+.job-title { font-size: 9.5pt; font-weight: bold; }
+.job-date { font-size: 8.5pt; color: #555; font-style: italic; }
+.company { font-size: 8.5pt; color: #555; font-style: italic; margin-bottom: 2px; }
+.bullet { font-size: 9pt; margin-left: 4px; margin-bottom: 1.5px; text-indent: -10px; padding-left: 14px; line-height: 1.35; }
+.text { font-size: 9pt; margin-bottom: 1.5px; line-height: 1.4; }
+.skills-line { font-size: 8.5pt; margin-bottom: 1.5px; line-height: 1.35; }
 .skills-cat { font-weight: bold; }
-.edu-line { font-size: 9.5pt; margin-bottom: 3px; }
+.edu-line { font-size: 9pt; margin-bottom: 2px; }
 `;
 
 export { renderResumeHTML, RESUME_CSS };
