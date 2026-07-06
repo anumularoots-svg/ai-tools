@@ -162,8 +162,8 @@ async function jsonMode(res, u) {
   if (u.additionalEdu && u.additionalEdu.trim()) eduStr += (eduStr ? "\n" : "") + u.additionalEdu.trim();
 
   var p = "Generate a COMPLETE " + pageTarget + "-page resume JSON for:\nName: " + u.fullName + "\nEmail: " + (u.email||"") + "\nPhone: " + (u.phone||"") + "\nLocation: " + (u.location||"") + "\nLinkedIn: " + (u.linkedin||"") + "\nGitHub: " + (u.github||"") + "\nTitle: " + (u.targetTitle||"") + "\nExperience: " + (u.totalExp||"0") + " years\n";
-  p += "\nEDUCATION:\n" + (eduStr || "[none provided]");
-  p += "\nCERTIFICATIONS: " + (u.certifications || "[none]") + "\nSKILLS: " + (u.techSkills || "extract from experience and source resume");
+  p += "\nEDUCATION:\n" + (eduStr || (hasSource ? "[EXTRACT from pasted resume — look for degree, university, graduation year. NEVER return 'Not Applicable' if education exists in the source resume]" : "[none provided]"));
+  p += "\nCERTIFICATIONS: " + (u.certifications || (hasSource ? "[EXTRACT from pasted resume — look for any certifications, courses, or training mentioned. NEVER return empty if certifications exist in the source resume]" : "[none]")) + "\nSKILLS: " + (u.techSkills || "extract from experience and source resume — group into 8+ categories, ONLY include skills actually mentioned, leave empty categories OUT");
   if (u.softSkills) p += "\nSOFT SKILLS: " + u.softSkills;
   if (u.achievements) p += "\nACHIEVEMENTS: " + u.achievements;
 
@@ -175,19 +175,31 @@ async function jsonMode(res, u) {
   if (u.existingResume) {
     p += "\n\nEXISTING RESUME (CRITICAL — extract ALL information from this. If no Step 3 experience was provided, extract EVERY role, company, date, and achievement from this resume and generate full STAR bullets for each role):\n\"\"\"\n" + u.existingResume.substring(0, 5000) + "\n\"\"\"";
     if (!hasExp) {
-      p += "\nIMPORTANT: No experience was entered in Step 3. You MUST extract ALL work experience roles from the pasted resume above. For each role, generate " + (yrs <= 6 ? "8" : "10") + " STAR-format bullets with metrics. Do NOT skip any role from the source resume.";
+      p += "\nIMPORTANT: No experience was entered in Step 3. You MUST:\n- Extract ALL work experience roles from the pasted resume\n- Extract ALL education (degrees, universities, years)\n- Extract ALL certifications\n- Extract ALL skills and group them into categories\n- For each role, generate " + (yrs <= 6 ? "8" : "10") + " STAR-format bullets with metrics\n- Do NOT return 'Not Applicable' for any field that has data in the source resume\n- Do NOT leave skill categories empty — only include categories that have actual skills";
     }
   }
   if (u.backgroundDesc) p += "\n\nBACKGROUND:\n\"\"\"\n" + u.backgroundDesc.substring(0, 3000) + "\n\"\"\"";
   if (u.jobDescription) p += "\n\nTARGET JOB DESCRIPTION (weave keywords naturally into resume):\n\"\"\"\n" + u.jobDescription.substring(0, 3000) + "\n\"\"\"";
 
   p += "\n\nReturn ONLY this JSON (generate ENOUGH content for " + pageTarget + " full pages):\n{\"personal\":{\"fullName\":\"" + u.fullName + "\",\"title\":\"\",\"email\":\"\",\"phone\":\"\",\"location\":\"\",\"linkedin\":\"\",\"github\":\"\"},\"highlights\":[\"6-8 short metric strings\"],\"summary\":\"6-8 line executive summary\",\"skills\":[{\"category\":\"\",\"items\":[]}],\"certifications\":[{\"name\":\"\",\"status\":\"completed\"}],\"experience\":[{\"title\":\"\",\"company\":\"\",\"location\":\"\",\"startDate\":\"Mon YYYY\",\"endDate\":\"Present\",\"client\":\"\",\"projectType\":\"\",\"teamSize\":\"\",\"bullets\":[{\"text\":\"\"}]}],\"quantifiedAchievements\":[\"Reduced regression by 60%\",\"Accelerated releases by 50%\"],\"projectPortfolio\":[{\"client\":\"\",\"project\":\"\",\"type\":\"\",\"role\":\"\",\"duration\":\"\",\"teamSize\":\"\"}],\"education\":[{\"degree\":\"\",\"institution\":\"\",\"year\":\"\"}],\"coreCompetencies\":[\"Test Strategy\",\"Automation Design\",\"Agile Delivery\"],\"additionalInfo\":{\"currentLocation\":\"\",\"preferredLocation\":\"\",\"languages\":\"\"},\"strengths\":[\"6-8 items\"]}";
-  p += "\n\nCRITICAL FINAL RULES:\n1. Include ALL education — never skip any degree.\n2. Dates = \"Mon YYYY\". Current role endDate = \"Present\".\n3. highlights = 6-8 SHORT metric cards like: \"4+ Yrs QA Automation\", \"200+ Test Cases\", \"60% Faster Regression\", \"2 Enterprise Clients\". NOT long sentences.\n4. quantifiedAchievements = 6-8 specific measurable results as short strings.\n5. projectPortfolio = table data for each project with client, project name, type, role, duration, team size.\n6. coreCompetencies = 6-9 short professional competency keywords.\n7. experience.client, experience.projectType, experience.teamSize = add project metadata to each role.\n8. If candidate has multiple projects under one company, create SEPARATE experience entries for each project.\n9. fullName = \"" + u.fullName + "\" — never change.\n10. Generate MINIMUM " + (yrs <= 2 ? "5" : yrs <= 6 ? "8" : "10") + " bullets for the most recent role.\n11. Skills grouped into 8+ categories.\n12. Summary = 6-8 sentences.\n13. Total content must FILL " + pageTarget + " page(s) completely.";
+  p += "\n\nCRITICAL FINAL RULES:\n1. Include ALL education — never skip any degree. NEVER return 'Not Applicable' — extract from source resume.\n2. Dates = \"Mon YYYY\". Current role endDate = \"Present\".\n3. highlights = 6-8 SHORT metric cards like: \"4+ Yrs QA Automation\", \"200+ Test Cases\", \"60% Faster Regression\". NOT long sentences.\n4. quantifiedAchievements = 6-8 specific measurable results as short strings.\n5. projectPortfolio = table data for each project.\n6. coreCompetencies = 6-9 SHORT professional keywords like: Test Strategy, Automation Design, Agile Delivery. NOT long sentences.\n7. If candidate has multiple projects under one company, create SEPARATE experience entries.\n8. fullName = \"" + u.fullName + "\" — never change.\n9. Generate MINIMUM " + (yrs <= 2 ? "5" : yrs <= 6 ? "8" : "10") + " bullets for the most recent role.\n10. Skills: ONLY include categories that have actual skills. Do NOT include empty categories like 'Monitoring:' with no items. Remove any category where items array is empty.\n11. Summary = 6-8 sentences.\n12. strengths/coreCompetencies = SHORT keywords only (2-3 words each), NOT long sentences.\n13. Total content must FILL " + pageTarget + " page(s) completely.\n14. If source resume has education, certifications, or skills — you MUST include them. Never ignore source data.";
 
   const result = await callAI(sys, p, 6000, 0.3);
   if (result.error) return res.status(500).json({ error: "AI failed: " + result.error });
   try {
     const resume = JSON.parse(extractJSON(result.text));
+    // Post-process: remove empty skill categories
+    if (resume.skills) {
+      resume.skills = resume.skills.filter(function(s) { return s.category && s.items && s.items.length > 0; });
+    }
+    // Post-process: remove "Not Applicable" education
+    if (resume.education) {
+      resume.education = resume.education.filter(function(e) { return e.degree && e.degree !== "Not Applicable" && e.degree !== "N/A"; });
+    }
+    // Post-process: remove empty certifications
+    if (resume.certifications) {
+      resume.certifications = resume.certifications.filter(function(c) { return c.name && c.name.trim() && c.name !== "None" && c.name !== "N/A"; });
+    }
     return res.status(200).json({ resume: resume, model: result.model });
   } catch (e) { return res.status(200).json({ result: result.text, model: result.model, jsonError: true }); }
 }
