@@ -149,6 +149,16 @@ function renderJSONResume(rj) {
   if (contact) h += '<div style="font-size:11px;color:#777;line-height:1.5">' + contact + '</div>';
   h += '</div>';
 
+  // Professional Highlights (new)
+  if (rj.highlights && rj.highlights.length > 0) {
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">PROFESSIONAL HIGHLIGHTS</h2>';
+    h += '<div style="display:flex;flex-wrap:wrap;gap:4px 12px;margin-bottom:6px">';
+    rj.highlights.forEach(function(hl) {
+      h += '<div style="font-size:10px;margin-bottom:1px">\u2713 ' + hl + '</div>';
+    });
+    h += '</div>';
+  }
+
   // Summary
   if (rj.summary) {
     h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">PROFESSIONAL SUMMARY</h2>';
@@ -342,6 +352,7 @@ function jsonToPlainText(rj) {
   var p = rj.personal || {};
   t += (p.fullName || "") + "\n" + (p.title || "") + "\n";
   t += [p.email, p.phone, p.linkedin, p.location].filter(Boolean).join(" | ") + "\n\n";
+  if (rj.highlights) { t += "PROFESSIONAL HIGHLIGHTS\n"; rj.highlights.forEach(function(hl) { t += "\u2713 " + hl + "\n"; }); t += "\n"; }
   if (rj.summary) t += "PROFESSIONAL SUMMARY\n" + rj.summary + "\n\n";
   if (rj.achievements) { t += "KEY ACHIEVEMENTS\n"; rj.achievements.forEach(function(a) { t += "\u2022 " + (a.text || a) + "\n"; }); t += "\n"; }
   if (rj.skills) { t += "TECHNICAL SKILLS\n"; rj.skills.forEach(function(s) { t += s.category + ": " + (s.items||[]).join(", ") + "\n"; }); t += "\n"; }

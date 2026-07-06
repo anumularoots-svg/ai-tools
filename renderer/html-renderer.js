@@ -31,6 +31,13 @@ function renderResumeHTML(resumeJSON, options = {}) {
 
   function secHead(t) { return `<div class="section-header" style="color:${theme.primary};border-bottom-color:${theme.line}">${t}</div>`; }
 
+  // Professional Highlights
+  if (resumeJSON.highlights && resumeJSON.highlights.length > 0) {
+    html += `<div class="section">${secHead("PROFESSIONAL HIGHLIGHTS")}<div style="display:flex;flex-wrap:wrap;gap:4px 16px">`;
+    resumeJSON.highlights.forEach(hl => { html += `<div class="bullet" style="margin:0">\u2713 ${hl}</div>`; });
+    html += `</div></div>`;
+  }
+
   if (resumeJSON.summary && resumeJSON.summary.trim()) {
     html += `<div class="section">${secHead("PROFESSIONAL SUMMARY")}<div class="text">${resumeJSON.summary}</div></div>`;
   }
