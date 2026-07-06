@@ -143,124 +143,210 @@ function renderJSONResume(rj) {
   var parts = [p.email, p.phone, p.linkedin, p.github, p.portfolio, p.location].filter(Boolean);
   var contact = parts.join("  |  ");
 
-  var h = '<div style="text-align:center;padding:10px 0 6px;margin-bottom:6px;border-bottom:1.5px solid #1a1a2e">';
-  h += '<div style="font-size:20px;font-weight:900;color:#1a1a2e;letter-spacing:2px;margin-bottom:2px">' + name + '</div>';
-  if (title) h += '<div style="font-size:12px;font-weight:500;color:#555;margin-bottom:3px">' + title + '</div>';
-  if (contact) h += '<div style="font-size:10px;color:#777;line-height:1.4">' + contact + '</div>';
+  var h = '<div style="text-align:center;padding:14px 0 10px;margin-bottom:10px;border-bottom:1.5px solid #1a1a2e">';
+  h += '<div style="font-size:22px;font-weight:900;color:#1a1a2e;letter-spacing:2px;margin-bottom:3px">' + name + '</div>';
+  if (title) h += '<div style="font-size:13px;font-weight:500;color:#555;margin-bottom:4px">' + title + '</div>';
+  if (contact) h += '<div style="font-size:11px;color:#777;line-height:1.5">' + contact + '</div>';
   h += '</div>';
 
-  // Highlights
+  // Professional Highlights (new)
   if (rj.highlights && rj.highlights.length > 0) {
-    h += '<h2 style="color:#1a1a2e;font-size:10px;margin-top:6px;padding-bottom:1px;border-bottom:1px solid #1a1a2e;margin-bottom:3px;font-weight:bold">PROFESSIONAL HIGHLIGHTS</h2>';
-    h += '<div style="display:flex;flex-wrap:wrap;gap:1px 12px;margin-bottom:4px">';
-    rj.highlights.forEach(function(hl) { h += '<span style="font-size:9px">\u2713 ' + hl + '</span>'; });
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">PROFESSIONAL HIGHLIGHTS</h2>';
+    h += '<div style="display:flex;flex-wrap:wrap;gap:4px 12px;margin-bottom:6px">';
+    rj.highlights.forEach(function(hl) {
+      h += '<div style="font-size:10px;margin-bottom:1px">\u2713 ' + hl + '</div>';
+    });
     h += '</div>';
   }
 
   // Summary
   if (rj.summary) {
-    h += '<h2 style="color:#1a1a2e;font-size:10px;margin-top:6px;padding-bottom:1px;border-bottom:1px solid #1a1a2e;margin-bottom:3px;font-weight:bold">PROFESSIONAL SUMMARY</h2>';
-    h += '<div style="font-size:9.5px;line-height:1.45;margin-bottom:4px">' + rj.summary + '</div>';
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">PROFESSIONAL SUMMARY</h2>';
+    h += '<div style="font-size:10px;line-height:1.5;margin-bottom:6px">' + rj.summary + '</div>';
   }
 
-  // Skills
-  if (rj.skills && rj.skills.length > 0) {
-    h += '<h2 style="color:#1a1a2e;font-size:10px;margin-top:6px;padding-bottom:1px;border-bottom:1px solid #1a1a2e;margin-bottom:3px;font-weight:bold">TECHNICAL SKILLS</h2>';
-    rj.skills.forEach(function(cat) {
-      if (cat.category && cat.items && cat.items.length) h += '<div style="font-size:9px;margin-bottom:1px"><strong>' + cat.category + ':</strong> ' + cat.items.join(", ") + '</div>';
+  // Achievements
+  if (rj.achievements && rj.achievements.length > 0) {
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">KEY ACHIEVEMENTS</h2>';
+    rj.achievements.forEach(function(a) {
+      var txt = typeof a === "string" ? a : a.text;
+      h += '<div style="font-size:10px;margin-left:4px;margin-bottom:3px;text-indent:-10px;padding-left:14px">\u2022 ' + txt + '</div>';
     });
   }
 
-  // Certifications
-  if (rj.certifications && rj.certifications.length > 0) {
-    var vc = rj.certifications.filter(function(c) { return c.name && c.name.trim(); });
-    if (vc.length) {
-      h += '<h2 style="color:#1a1a2e;font-size:10px;margin-top:6px;padding-bottom:1px;border-bottom:1px solid #1a1a2e;margin-bottom:3px;font-weight:bold">CERTIFICATIONS</h2>';
-      vc.forEach(function(c) { h += '<div style="font-size:9px;margin-bottom:1px">' + c.name + (c.status === "in_progress" ? " [In Progress]" : "") + '</div>'; });
-    }
+  // Skills (GROUPED by category)
+  if (rj.skills && rj.skills.length > 0) {
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">TECHNICAL SKILLS</h2>';
+    rj.skills.forEach(function(cat) {
+      h += '<div style="font-size:10px;margin-bottom:2px"><strong>' + cat.category + ':</strong> ' + (cat.items || []).join(", ") + '</div>';
+    });
   }
 
   // Experience
   if (rj.experience && rj.experience.length > 0) {
-    h += '<h2 style="color:#1a1a2e;font-size:10px;margin-top:6px;padding-bottom:1px;border-bottom:1px solid #1a1a2e;margin-bottom:3px;font-weight:bold">PROFESSIONAL EXPERIENCE</h2>';
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">PROFESSIONAL EXPERIENCE</h2>';
     rj.experience.forEach(function(exp) {
-      h += '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:4px;margin-bottom:0">';
-      h += '<span style="font-size:9.5px;font-weight:bold">' + (exp.title || "").toUpperCase() + '</span>';
-      h += '<span style="font-size:8px;color:#555;font-style:italic">' + (exp.startDate || "") + ' \u2014 ' + (exp.endDate || "") + '</span>';
+      h += '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;margin-bottom:1px">';
+      h += '<span style="font-size:10.5px;font-weight:bold">' + (exp.title || "").toUpperCase() + '</span>';
+      h += '<span style="font-size:9px;color:#555;font-style:italic">' + (exp.startDate || "") + ' \u2014 ' + (exp.endDate || "") + '</span>';
       h += '</div>';
-      h += '<div style="font-size:8px;color:#555;font-style:italic;margin-bottom:1px">' + (exp.company || "") + (exp.location ? ", " + exp.location : "") + '</div>';
-      var meta = [exp.client ? "Client: " + exp.client : "", exp.projectType ? "Project: " + exp.projectType : "", exp.teamSize ? "Team: " + exp.teamSize : ""].filter(Boolean).join("  |  ");
-      if (meta) h += '<div style="font-size:8px;color:#555;font-style:italic;margin-bottom:1px">' + meta + '</div>';
+      h += '<div style="font-size:9px;color:#555;font-style:italic;margin-bottom:3px">' + (exp.company || "") + (exp.location ? ", " + exp.location : "") + '</div>';
       if (exp.bullets) {
         exp.bullets.forEach(function(b) {
           var txt = typeof b === "string" ? b : b.text;
-          if (txt && txt.trim()) h += '<div style="font-size:9px;margin-left:4px;margin-bottom:1px;text-indent:-10px;padding-left:14px;line-height:1.35">\u2022 ' + txt + '</div>';
+          h += '<div style="font-size:10px;margin-left:4px;margin-bottom:2px;text-indent:-10px;padding-left:14px">\u2022 ' + txt + '</div>';
         });
       }
     });
   }
 
-  // Quantified Achievements
-  if (rj.quantifiedAchievements && rj.quantifiedAchievements.length > 0) {
-    h += '<h2 style="color:#1a1a2e;font-size:10px;margin-top:6px;padding-bottom:1px;border-bottom:1px solid #1a1a2e;margin-bottom:3px;font-weight:bold">QUANTIFIED ACHIEVEMENTS</h2>';
-    rj.quantifiedAchievements.forEach(function(a) { var t = typeof a === "string" ? a : a.text || a; h += '<div style="font-size:9px;margin-left:4px;margin-bottom:1px;text-indent:-10px;padding-left:14px">\u2022 ' + t + '</div>'; });
-  } else if (rj.achievements && rj.achievements.length > 0) {
-    h += '<h2 style="color:#1a1a2e;font-size:10px;margin-top:6px;padding-bottom:1px;border-bottom:1px solid #1a1a2e;margin-bottom:3px;font-weight:bold">KEY ACHIEVEMENTS</h2>';
-    rj.achievements.forEach(function(a) { var t = typeof a === "string" ? a : a.text; if (t) h += '<div style="font-size:9px;margin-left:4px;margin-bottom:1px;text-indent:-10px;padding-left:14px">\u2022 ' + t + '</div>'; });
-  }
-
-  // Project Portfolio Table
-  if (rj.projectPortfolio && rj.projectPortfolio.length > 0) {
-    h += '<h2 style="color:#1a1a2e;font-size:10px;margin-top:6px;padding-bottom:1px;border-bottom:1px solid #1a1a2e;margin-bottom:3px;font-weight:bold">PROJECT PORTFOLIO</h2>';
-    h += '<table style="width:100%;border-collapse:collapse;font-size:8px;margin-top:2px"><tr style="background:#f5f5f5"><th style="text-align:left;padding:2px 4px;border:0.5px solid #ccc;font-size:7.5px">Client</th><th style="text-align:left;padding:2px 4px;border:0.5px solid #ccc;font-size:7.5px">Project</th><th style="text-align:left;padding:2px 4px;border:0.5px solid #ccc;font-size:7.5px">Type</th><th style="text-align:left;padding:2px 4px;border:0.5px solid #ccc;font-size:7.5px">Role</th><th style="text-align:left;padding:2px 4px;border:0.5px solid #ccc;font-size:7.5px">Duration</th><th style="text-align:left;padding:2px 4px;border:0.5px solid #ccc;font-size:7.5px">Team</th></tr>';
-    rj.projectPortfolio.forEach(function(proj) { h += '<tr><td style="padding:2px 4px;border:0.5px solid #ddd;font-size:7.5px">' + (proj.client||"") + '</td><td style="padding:2px 4px;border:0.5px solid #ddd;font-size:7.5px">' + (proj.project||"") + '</td><td style="padding:2px 4px;border:0.5px solid #ddd;font-size:7.5px">' + (proj.type||"") + '</td><td style="padding:2px 4px;border:0.5px solid #ddd;font-size:7.5px">' + (proj.role||"") + '</td><td style="padding:2px 4px;border:0.5px solid #ddd;font-size:7.5px">' + (proj.duration||"") + '</td><td style="padding:2px 4px;border:0.5px solid #ddd;font-size:7.5px">' + (proj.teamSize||"") + '</td></tr>'; });
-    h += '</table>';
-  }
-
   // Education
   if (rj.education && rj.education.length > 0) {
-    h += '<h2 style="color:#1a1a2e;font-size:10px;margin-top:6px;padding-bottom:1px;border-bottom:1px solid #1a1a2e;margin-bottom:3px;font-weight:bold">EDUCATION</h2>';
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">EDUCATION</h2>';
     rj.education.forEach(function(edu) {
-      h += '<div style="font-size:9px;margin-bottom:1px"><strong>' + (edu.degree || "") + '</strong>';
+      h += '<div style="font-size:10px;margin-bottom:2px"><strong>' + (edu.degree || "") + '</strong>';
       if (edu.institution) h += ' \u2014 ' + edu.institution;
       if (edu.year) h += ' (' + edu.year + ')';
       h += '</div>';
     });
   }
 
-  // Core Competencies
-  var comps = rj.coreCompetencies || rj.strengths || [];
-  if (comps.length > 0) {
-    var valid = comps.filter(function(s) { return s && s.trim(); });
-    if (valid.length) {
-      h += '<h2 style="color:#1a1a2e;font-size:10px;margin-top:6px;padding-bottom:1px;border-bottom:1px solid #1a1a2e;margin-bottom:3px;font-weight:bold">CORE COMPETENCIES</h2>';
-      h += '<div style="font-size:9px;line-height:1.4">' + valid.join("  |  ") + '</div>';
-    }
-  }
-
-  // Additional Information
-  if (rj.additionalInfo) {
-    var ai = rj.additionalInfo;
-    var infoParts = [ai.currentLocation ? "Current Location: " + ai.currentLocation : "", ai.preferredLocation ? "Preferred Location: " + ai.preferredLocation : "", ai.languages ? "Languages: " + ai.languages : "", ai.noticePeriod ? "Notice Period: " + ai.noticePeriod : ""].filter(Boolean);
-    if (infoParts.length) {
-      h += '<h2 style="color:#1a1a2e;font-size:10px;margin-top:6px;padding-bottom:1px;border-bottom:1px solid #1a1a2e;margin-bottom:3px;font-weight:bold">ADDITIONAL INFORMATION</h2>';
-      h += '<div style="font-size:9px">' + infoParts.join("  |  ") + '</div>';
-    }
-  }
-
-  // Projects (freshers)
-  if (rj.projects && rj.projects.length > 0) {
-    h += '<h2 style="color:#1a1a2e;font-size:10px;margin-top:6px;padding-bottom:1px;border-bottom:1px solid #1a1a2e;margin-bottom:3px;font-weight:bold">PROJECTS</h2>';
-    rj.projects.forEach(function(proj) {
-      h += '<div style="font-size:9.5px;font-weight:bold;margin-top:3px">' + (proj.name || "") + '</div>';
-      if (proj.technologies && proj.technologies.length) h += '<div style="font-size:8px;color:#555;font-style:italic">Technologies: ' + proj.technologies.join(", ") + '</div>';
-      if (proj.description) h += '<div style="font-size:9px">' + proj.description + '</div>';
-      if (proj.bullets) proj.bullets.forEach(function(b) { var t = typeof b === "string" ? b : (b.text||""); if (t.trim()) h += '<div style="font-size:9px;margin-left:4px;text-indent:-10px;padding-left:14px">\u2022 ' + t + '</div>'; });
+  // Certifications
+  if (rj.certifications && rj.certifications.length > 0) {
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">CERTIFICATIONS</h2>';
+    rj.certifications.forEach(function(c) {
+      var line = c.name || "";
+      if (c.issuer) line += " \u2014 " + c.issuer;
+      if (c.year) line += " (" + c.year + ")";
+      if (c.status === "target") line += " [Target]";
+      h += '<div style="font-size:10px;margin-bottom:2px">' + line + '</div>';
     });
+  }
+
+  // Strengths
+  if (rj.strengths && rj.strengths.length > 0) {
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">PROFESSIONAL STRENGTHS</h2>';
+    h += '<div style="font-size:10px">' + rj.strengths.join("  |  ") + '</div>';
   }
 
   return h;
 }
+
+// ============================================
+// GENERATE RESUME — uses JSON mode
+// ============================================
+function generateResume() {
+  var gv = function(id) { var el = document.getElementById(id); return el ? el.value.trim() : ""; };
+  var fullName = gv("fullName");
+  if (!fullName) return void alert("Please enter your full name in Step 2.");
+
+  var N = document.getElementById("genBtn");
+  var R = document.getElementById("loading");
+  N.disabled = true;
+  R.classList.add("show");
+  document.getElementById("output").classList.remove("show");
+  showLoadStep("Analyzing candidate profile...");
+
+  var O = collectExp();
+  var A = gv("existingResume");
+  var k = gv("bgDescription");
+
+  // Build userData object for JSON mode
+  var userData = {
+    fullName: fullName,
+    email: gv("email"),
+    phone: gv("phone") ? gv("countryCode") + " " + gv("phone") : "",
+    location: gv("location"),
+    linkedin: gv("linkedin"),
+    github: gv("portfolio"),
+    targetTitle: gv("targetTitle"),
+    targetCompany: gv("targetCompany"),
+    industry: gv("industry"),
+    totalExp: gv("totalExp"),
+    careerLevel: gv("careerLevel"),
+    summary: gv("summary"),
+    techSkills: gv("techSkills"),
+    softSkills: gv("softSkills"),
+    achievements: gv("achievements"),
+    degree: gv("degree"),
+    university: gv("university"),
+    gradYear: gv("gradYear"),
+    certifications: gv("certs"),
+    additionalEdu: (function() { var d=gv("addlDegree"),u=gv("addlUniv"),y=gv("addlYear"); if(!d) return ""; return d + (u?" — "+u:"") + (y?" — "+y:""); })(),
+    experience: O.map(function(exp) { return { title: exp.title, company: exp.company, start: exp.start, end: exp.end, location: exp.location, details: exp.details }; }),
+    existingResume: A || "",
+    backgroundDesc: k || "",
+    jobDescription: gv("jobDesc")
+  };
+
+  setTimeout(function() { showLoadStep("Building structured prompt..."); }, 2000);
+  setTimeout(function() { showLoadStep("AI generating resume JSON..."); }, 5000);
+  setTimeout(function() { showLoadStep("Validating and rendering..."); }, 10000);
+
+  fetch("/api/ai", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ mode: "json", userData: userData })
+  }).then(function(resp) {
+    return resp.json();
+  }).then(function(data) {
+    if (data.resume) {
+      // JSON mode success
+      window.resumeJSON = data.resume;
+      var resumeJSON = window.resumeJSON;
+      // Fix personal data to match form (in case AI changed it)
+      resumeJSON.personal = resumeJSON.personal || {};
+      resumeJSON.personal.fullName = fullName;
+      resumeJSON.personal.email = userData.email;
+      resumeJSON.personal.phone = userData.phone;
+      resumeJSON.personal.location = userData.location;
+      resumeJSON.personal.linkedin = userData.linkedin;
+      resumeJSON.personal.github = userData.github;
+      resumeJSON.personal.title = userData.targetTitle || resumeJSON.personal.title || "";
+
+      // Fix education if AI didn't include it
+      if ((!resumeJSON.education || resumeJSON.education.length === 0) && userData.degree) {
+        resumeJSON.education = [{ degree: userData.degree, institution: userData.university || "", year: userData.gradYear || "" }];
+      }
+      // Add additional education (post-graduation) if user provided it
+      if (userData.additionalEdu && userData.additionalEdu.trim()) {
+        if (!resumeJSON.education) resumeJSON.education = [];
+        var addlParts = userData.additionalEdu.trim().split(/\s*[—\-]\s*/);
+        var addlEdu = { degree: addlParts[0] || userData.additionalEdu, institution: addlParts[1] || "", year: addlParts[2] || "" };
+        var alreadyHas = resumeJSON.education.some(function(e) { return e.degree && userData.additionalEdu.includes(e.degree); });
+        if (!alreadyHas) resumeJSON.education.push(addlEdu);
+      }
+      // Fix certifications
+      if ((!resumeJSON.certifications || resumeJSON.certifications.length === 0) && userData.certifications) {
+        resumeJSON.certifications = userData.certifications.split(/[,;]/).map(function(c) { return { name: c.trim(), status: "completed" }; });
+      }
+
+      var htmlContent = renderJSONResume(resumeJSON);
+      document.getElementById("resumeContent").innerHTML = htmlContent;
+
+      // Build plain text for copy/download
+      resumeText = jsonToPlainText(resumeJSON);
+    } else if (data.result) {
+      // Legacy text mode fallback
+      resumeText = data.result;
+      window.resumeJSON = null;
+      var fd = _getFormData();
+      renderResume(data.result, userData.jobDescription, userData.techSkills);
+    } else {
+      throw new Error(data.error || "No result from AI");
+    }
+    document.getElementById("output").classList.add("show");
+    document.getElementById("interviewSection").style.display = "block";
+    document.getElementById("output").scrollIntoView({ behavior: "smooth", block: "start" });
+  }).catch(function(err) {
+    alert("Error: " + err.message);
+  }).finally(function() {
+    N.disabled = false;
+    R.classList.remove("show");
+  });
+}
+
+// Convert JSON resume to plain text
 function jsonToPlainText(rj) {
   var t = "";
   var p = rj.personal || {};
@@ -268,16 +354,12 @@ function jsonToPlainText(rj) {
   t += [p.email, p.phone, p.linkedin, p.location].filter(Boolean).join(" | ") + "\n\n";
   if (rj.highlights) { t += "PROFESSIONAL HIGHLIGHTS\n"; rj.highlights.forEach(function(hl) { t += "\u2713 " + hl + "\n"; }); t += "\n"; }
   if (rj.summary) t += "PROFESSIONAL SUMMARY\n" + rj.summary + "\n\n";
-  if (rj.skills) { t += "TECHNICAL SKILLS\n"; rj.skills.forEach(function(s) { if (s.category && s.items) t += s.category + ": " + s.items.join(", ") + "\n"; }); t += "\n"; }
-  if (rj.certifications) { var vc = rj.certifications.filter(function(c){return c.name;}); if (vc.length) { t += "CERTIFICATIONS\n"; vc.forEach(function(c) { t += c.name + "\n"; }); t += "\n"; } }
-  if (rj.experience) { t += "PROFESSIONAL EXPERIENCE\n"; rj.experience.forEach(function(e) { t += e.title + " | " + e.company + " | " + e.startDate + " \u2014 " + e.endDate + "\n"; if (e.client) t += "Client: " + e.client + (e.teamSize ? " | Team: " + e.teamSize : "") + "\n"; (e.bullets||[]).forEach(function(b) { t += "\u2022 " + (b.text || b) + "\n"; }); t += "\n"; }); }
-  if (rj.quantifiedAchievements) { t += "QUANTIFIED ACHIEVEMENTS\n"; rj.quantifiedAchievements.forEach(function(a) { t += "\u2022 " + (typeof a === "string" ? a : a.text || a) + "\n"; }); t += "\n"; }
-  else if (rj.achievements) { t += "KEY ACHIEVEMENTS\n"; rj.achievements.forEach(function(a) { t += "\u2022 " + (a.text || a) + "\n"; }); t += "\n"; }
-  if (rj.projectPortfolio) { t += "PROJECT PORTFOLIO\n"; rj.projectPortfolio.forEach(function(p) { t += (p.client||"") + " | " + (p.project||"") + " | " + (p.role||"") + " | " + (p.duration||"") + "\n"; }); t += "\n"; }
+  if (rj.achievements) { t += "KEY ACHIEVEMENTS\n"; rj.achievements.forEach(function(a) { t += "\u2022 " + (a.text || a) + "\n"; }); t += "\n"; }
+  if (rj.skills) { t += "TECHNICAL SKILLS\n"; rj.skills.forEach(function(s) { t += s.category + ": " + (s.items||[]).join(", ") + "\n"; }); t += "\n"; }
+  if (rj.experience) { t += "PROFESSIONAL EXPERIENCE\n"; rj.experience.forEach(function(e) { t += e.title + " | " + e.company + " | " + e.startDate + " \u2014 " + e.endDate + "\n"; (e.bullets||[]).forEach(function(b) { t += "\u2022 " + (b.text || b) + "\n"; }); t += "\n"; }); }
   if (rj.education) { t += "EDUCATION\n"; rj.education.forEach(function(e) { t += (e.degree||"") + " \u2014 " + (e.institution||"") + " (" + (e.year||"") + ")\n"; }); t += "\n"; }
-  var comps = rj.coreCompetencies || rj.strengths || [];
-  if (comps.length) { t += "CORE COMPETENCIES\n" + comps.join(" | ") + "\n\n"; }
-  if (rj.additionalInfo) { var ai = rj.additionalInfo; var parts = [ai.currentLocation ? "Location: " + ai.currentLocation : "", ai.preferredLocation ? "Preferred: " + ai.preferredLocation : "", ai.languages ? "Languages: " + ai.languages : ""].filter(Boolean); if (parts.length) t += "ADDITIONAL INFORMATION\n" + parts.join(" | ") + "\n"; }
+  if (rj.certifications) { t += "CERTIFICATIONS\n"; rj.certifications.forEach(function(c) { t += c.name + "\n"; }); t += "\n"; }
+  if (rj.strengths) { t += "STRENGTHS\n" + rj.strengths.join(" | ") + "\n"; }
   return t;
 }
 
