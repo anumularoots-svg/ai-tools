@@ -169,14 +169,14 @@ function renderResumeHTML(resumeJSON, options = {}) {
 const RESUME_CSS = `
 @page { size: A4; margin: 12mm 14mm 10mm 14mm; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #000; font-size: 9pt; line-height: 1.38; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #000; font-size: 8.5pt; line-height: 1.35; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .resume-container { width: 100%; }
 .header { margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1.5px solid #000; }
 .name { font-size: 17pt; font-weight: 900; letter-spacing: 1.5px; margin-bottom: 2px; }
 .title { font-size: 9pt; margin-bottom: 2px; }
 .contact { font-size: 8pt; color: #555; }
-.section { margin-bottom: 3px; }
-.section-header { font-size: 9pt; font-weight: bold; text-transform: uppercase; margin-top: 5px; padding-bottom: 1px; border-bottom: 1px solid #000; margin-bottom: 3px; break-after: avoid; page-break-after: avoid; }
+.section { margin-bottom: 2px; }
+.section-header { font-size: 9pt; font-weight: bold; text-transform: uppercase; margin-top: 4px; padding-bottom: 1px; border-bottom: 1px solid #000; margin-bottom: 3px; break-after: avoid; page-break-after: avoid; }
 .highlights-row { display: flex; flex-wrap: wrap; gap: 2px 14px; }
 .hl-item { font-size: 8.5pt; white-space: nowrap; }
 .job { margin-bottom: 3px; }
@@ -184,7 +184,7 @@ body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #000;
 .job-title { font-size: 9pt; font-weight: bold; }
 .job-date { font-size: 8pt; color: #555; font-style: italic; }
 .company { font-size: 8pt; color: #555; font-style: italic; margin-bottom: 1px; }
-.bullet { font-size: 8.5pt; margin-left: 4px; margin-bottom: 1px; text-indent: -10px; padding-left: 14px; line-height: 1.32; break-inside: avoid; page-break-inside: avoid; }
+.bullet { font-size: 8.5pt; margin-left: 4px; margin-bottom: 1px; text-indent: -10px; padding-left: 14px; line-height: 1.32; page-break-inside: avoid; -webkit-column-break-inside: avoid; display: table; width: 100%; }
 .text { font-size: 8.5pt; margin-bottom: 1px; line-height: 1.35; }
 .skills-line { font-size: 8.5pt; margin-bottom: 1px; line-height: 1.3; }
 .skills-cat { font-weight: bold; }
