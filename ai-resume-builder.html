@@ -567,46 +567,35 @@ function downloadTxt() {
 }
 
 // =====================================================
-// downloadPDF — JSON-first with Puppeteer, html2canvas fallback
+// downloadPDF — client-side jsPDF (instant, no server needed)
 // =====================================================
 
 function downloadPDF() {
   var btn = document.querySelector("[onclick*='downloadPDF']");
-  var origText = btn ? btn.textContent : "";
-  if (btn) { btn.textContent = "Generating PDF..."; btn.disabled = true; }
+  var origText = btn ? btn.textContent : "Download PDF";
+  try {
+    if (btn) { btn.textContent = "Generating PDF..."; btn.disabled = true; }
 
-  var fd = _getFormData();
-  var TEMPLATES = [
-    {id:"Harvard_Classic"},{id:"Stanford_Clean"},{id:"Google_XYZ"},{id:"ATS_Ultra_Safe"},
-    {id:"Executive_Standard"},{id:"Modern_Minimal"},{id:"Corporate_Formal"},
-    {id:"MIT_Technical"},{id:"McKinsey_Compact"},{id:"FAANG_Standard"}
-  ];
-  var sel = document.getElementById("templateSelect");
-  var tIdx = 0;
-  if (sel && sel.value !== "auto") { tIdx = parseInt(sel.value); }
-  else { var h2 = 0; for (var fi = 0; fi < fd.name.length; fi++) h2 = (h2 << 5) - h2 + fd.name.charCodeAt(fi); tIdx = Math.abs(h2) % 10; }
-  var tmpl = TEMPLATES[tIdx];
-  var fName = fd.name.replace(/\s+/g, "_") + "_Resume_" + tmpl.id;
+    if (!window.resumeJSON) { alert("Generate your resume first."); if (btn) { btn.textContent = origText; btn.disabled = false; } return; }
 
-  // If we have resumeJSON, use JSON mode (best quality) — sends structured data to server
-  if (window.resumeJSON) {
-    fetch("/api/pdf", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ resumeJSON: window.resumeJSON, template: tmpl.id, fileName: fName })
-    }).then(function(resp) {
-      if (!resp.ok) throw new Error("API returned " + resp.status);
-      return resp.blob();
-    }).then(function(blob) {
-      _downloadBlob(blob, fName + ".pdf");
-      if (btn) { btn.textContent = origText; btn.disabled = false; }
-    }).catch(function(err) {
-      console.warn("Puppeteer PDF failed, using client-side fallback:", err.message);
-      _fallbackClientPDF(fd, fName, btn, origText);
-    });
-  } else {
-    // Legacy text mode fallback
-    _fallbackClientPDF(fd, fName, btn, origText);
+    var fd = _getFormData();
+    var TEMPLATES = [
+      {id:"Harvard_Classic"},{id:"Stanford_Clean"},{id:"Google_XYZ"},{id:"ATS_Ultra_Safe"},
+      {id:"Executive_Standard"},{id:"Modern_Minimal"},{id:"Corporate_Formal"},
+      {id:"MIT_Technical"},{id:"McKinsey_Compact"},{id:"FAANG_Standard"}
+    ];
+    var sel = document.getElementById("templateSelect");
+    var tIdx = 0;
+    if (sel && sel.value !== "auto") { tIdx = parseInt(sel.value); }
+    else { var h2 = 0; for (var fi = 0; fi < fd.name.length; fi++) h2 = (h2 << 5) - h2 + fd.name.charCodeAt(fi); tIdx = Math.abs(h2) % 10; }
+    var tmpl = TEMPLATES[tIdx];
+    var fName = fd.name.replace(/\s+/g, "_") + "_Resume_" + tmpl.id;
+
+    _buildJsPDF(fName, btn, origText);
+  } catch(err) {
+    console.error("PDF error:", err);
+    alert("PDF generation failed: " + err.message);
+    if (btn) { btn.textContent = origText; btn.disabled = false; }
   }
 }
 
@@ -644,36 +633,365 @@ function _downloadBlob(blob, fileName) {
   URL.revokeObjectURL(url);
 }
 
-function _fallbackClientPDF(fd, fName, btn, origText) {
-  // Use browser print to generate professional PDF
+function _buildJsPDF(fName, btn, origText) {
   var rj = window.resumeJSON;
   if (!rj) { alert("Generate resume first."); if (btn) { btn.textContent = origText; btn.disabled = false; } return; }
-  
-  // Get the already-rendered HTML from the preview
-  var previewEl = document.getElementById("resumeContent");
-  var resumeHTML = previewEl ? previewEl.innerHTML : renderJSONResume(rj);
-  
-  // Open print window with resume
-  var printWin = window.open("", "_blank", "width=800,height=1000");
-  printWin.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + (rj.personal.fullName || "Resume") + ' Resume</title>');
-  printWin.document.write('<style>');
-  printWin.document.write('@page { size: A4; margin: 12mm 14mm 10mm 14mm; }');
-  printWin.document.write('@media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }');
-  printWin.document.write('* { box-sizing: border-box; margin: 0; padding: 0; }');
-  printWin.document.write('body { font-family: Helvetica, Arial, sans-serif; color: #000; font-size: 9.5pt; line-height: 1.4; padding: 0; background: #fff; }');
-  printWin.document.write('h2 { font-size: 10pt; font-weight: bold; color: #1a1a2e; margin-top: 6px; padding-bottom: 1px; border-bottom: 1px solid #1a1a2e; margin-bottom: 3px; break-after: avoid; page-break-after: avoid; }');
-  printWin.document.write('table { width: 100%; border-collapse: collapse; font-size: 8pt; } th { background: #f5f5f5; font-weight: bold; text-align: left; padding: 2px 4px; border: 0.5px solid #ccc; } td { padding: 2px 4px; border: 0.5px solid #ddd; }');
-  printWin.document.write('</style></head><body>');
-  printWin.document.write(resumeHTML);
-  printWin.document.write('</body></html>');
-  printWin.document.close();
-  
-  // Wait for content to load, then print
-  setTimeout(function() {
-    printWin.focus();
-    printWin.print();
-    if (btn) { btn.textContent = origText; btn.disabled = false; }
-  }, 500);
+
+  var J = window.jspdf;
+  if (!J) { alert("PDF library not loaded. Please refresh and try again."); if (btn) { btn.textContent = origText; btn.disabled = false; } return; }
+  var doc = new J.jsPDF({ unit: "mm", format: "a4" });
+  var W = 210, H = 297, ML = 14, MR = 14, MT = 13, MB = 12;
+  var CW = W - ML - MR; // content width
+  var y = MT;
+
+  // Helper: check page break
+  function chk(need) { if (y + need > H - MB) { doc.addPage(); y = MT; } }
+
+  // Helper: draw section header
+  function secH(title) {
+    chk(10);
+    y += 3;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(26, 35, 126); // navy
+    doc.text(title.toUpperCase(), ML, y);
+    y += 1;
+    doc.setDrawColor(26, 35, 126);
+    doc.setLineWidth(0.4);
+    doc.line(ML, y, W - MR, y);
+    y += 4;
+  }
+
+  // Helper: wrap text and draw
+  function drawText(text, fontSize, fontStyle, indent, lineH) {
+    if (!text) return;
+    indent = indent || 0;
+    lineH = lineH || fontSize * 0.42;
+    doc.setFont("helvetica", fontStyle || "normal");
+    doc.setFontSize(fontSize);
+    doc.setTextColor(33, 33, 33);
+    var lines = doc.splitTextToSize(text, CW - indent);
+    lines.forEach(function(ln) {
+      chk(lineH);
+      doc.text(ln, ML + indent, y);
+      y += lineH;
+    });
+  }
+
+  // Helper: draw bullet
+  function drawBullet(text) {
+    if (!text) return;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.2);
+    doc.setTextColor(33, 33, 33);
+    var lines = doc.splitTextToSize(text, CW - 10);
+    chk(lines.length * 3.4 + 1);
+    doc.text("-", ML + 3, y);
+    lines.forEach(function(ln, i) {
+      doc.text(ln, ML + 7, y);
+      y += 3.4;
+    });
+    y += 0.3;
+  }
+
+  var p = rj.personal || {};
+
+  // ── HEADER ──
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(18);
+  doc.setTextColor(26, 35, 126);
+  doc.text((p.fullName || "").toUpperCase(), W / 2, y, { align: "center" });
+  y += 5;
+
+  // Headline
+  if (rj.headline) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(80, 80, 80);
+    doc.text(rj.headline, W / 2, y, { align: "center" });
+    y += 4;
+  } else if (p.title) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(80, 80, 80);
+    doc.text(p.title, W / 2, y, { align: "center" });
+    y += 4;
+  }
+
+  // Contact
+  var contactParts = [p.email, p.phone, p.location, p.linkedin, p.github].filter(Boolean);
+  if (contactParts.length > 0) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text(contactParts.join("  |  "), W / 2, y, { align: "center" });
+    y += 3;
+  }
+
+  // Header line
+  doc.setDrawColor(26, 35, 126);
+  doc.setLineWidth(0.6);
+  doc.line(ML, y, W - MR, y);
+  y += 3;
+
+  // ── HIGHLIGHTS ──
+  if (rj.highlights && rj.highlights.length > 0) {
+    chk(12);
+    doc.setFillColor(232, 234, 246);
+    doc.setDrawColor(57, 73, 171);
+    doc.setLineWidth(0.3);
+    var hlH = 8;
+    var hlW = CW / Math.min(rj.highlights.length, 4);
+    var hlCount = Math.min(rj.highlights.length, 8);
+    var hlPerRow = Math.min(hlCount, 4);
+    var rows = Math.ceil(hlCount / hlPerRow);
+    for (var row = 0; row < rows; row++) {
+      chk(hlH + 2);
+      for (var col = 0; col < hlPerRow; col++) {
+        var idx = row * hlPerRow + col;
+        if (idx >= hlCount) break;
+        var hx = ML + col * hlW;
+        doc.roundedRect(hx + 0.5, y, hlW - 1, hlH, 1, 1, "FD");
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(7.5);
+        doc.setTextColor(26, 35, 126);
+        var hlText = rj.highlights[idx].replace(/[^\x20-\x7E%+.]/g, "");
+        var hlLines = doc.splitTextToSize(hlText, hlW - 4);
+        doc.text(hlLines[0] || "", hx + hlW / 2, y + hlH / 2 + 1, { align: "center" });
+      }
+      y += hlH + 1;
+    }
+    y += 2;
+  }
+
+  // ── SUMMARY ──
+  if (rj.summary) {
+    secH("Professional Summary");
+    drawText(rj.summary, 8.3, "normal", 0, 3.5);
+    y += 1;
+  }
+
+  // ── KEY ACHIEVEMENTS ──
+  if (rj.achievements && rj.achievements.length > 0) {
+    secH("Key Achievements");
+    rj.achievements.forEach(function(a) {
+      var txt = typeof a === "string" ? a : (a.text || a);
+      drawBullet(txt.replace(/[^\x20-\x7E%$+.,;:()\/\-'\"!@#&*=]/g, ""));
+    });
+    y += 1;
+  }
+
+  // ── TECHNICAL SKILLS ──
+  if (rj.skills && rj.skills.length > 0) {
+    secH("Technical Skills");
+    rj.skills.forEach(function(sk) {
+      var cat = sk.category || sk.name || "";
+      var items = "";
+      if (sk.items) { items = Array.isArray(sk.items) ? sk.items.join(", ") : sk.items; }
+      else if (sk.skills) { items = Array.isArray(sk.skills) ? sk.skills.join(", ") : sk.skills; }
+      chk(5);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(33, 33, 33);
+      var catW = doc.getTextWidth(cat + ": ");
+      doc.text(cat + ":", ML, y);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(66, 66, 66);
+      var valLines = doc.splitTextToSize(items, CW - catW - 2);
+      valLines.forEach(function(vl, vi) {
+        doc.text(vl, ML + catW + 1, y);
+        y += 3.3;
+      });
+      y += 0.3;
+    });
+    y += 1;
+  }
+
+  // ── EXPERIENCE ──
+  if (rj.experience && rj.experience.length > 0) {
+    secH("Professional Experience");
+    rj.experience.forEach(function(exp, ei) {
+      chk(12);
+      // Title + dates on same line
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(33, 33, 33);
+      var expTitle = (exp.title || "").toUpperCase();
+      doc.text(expTitle, ML, y);
+      if (exp.dates || exp.duration) {
+        doc.setFont("helvetica", "italic");
+        doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100);
+        doc.text(exp.dates || exp.duration || "", W - MR, y, { align: "right" });
+      }
+      y += 3.8;
+
+      // Company + metadata
+      var meta = exp.company || "";
+      if (exp.client) meta += " | Client: " + exp.client;
+      if (exp.domain) meta += " | " + exp.domain;
+      if (exp.teamSize) meta += " | Team: " + exp.teamSize;
+      if (meta) {
+        doc.setFont("helvetica", "italic");
+        doc.setFontSize(8);
+        doc.setTextColor(80, 80, 80);
+        var metaLines = doc.splitTextToSize(meta, CW);
+        metaLines.forEach(function(ml) { doc.text(ml, ML, y); y += 3.3; });
+      }
+      y += 1;
+
+      // Bullets
+      if (exp.bullets && exp.bullets.length > 0) {
+        exp.bullets.forEach(function(b) {
+          var bText = typeof b === "string" ? b : (b.text || b);
+          drawBullet(bText.replace(/[^\x20-\x7E%$+.,;:()\/\-'\"!@#&*=~]/g, ""));
+        });
+      }
+      y += 2;
+    });
+  }
+
+  // ── QUANTIFIED ACHIEVEMENTS ──
+  if (rj.quantifiedAchievements && rj.quantifiedAchievements.length > 0) {
+    secH("Quantified Achievements");
+    rj.quantifiedAchievements.forEach(function(qa) {
+      var txt = typeof qa === "string" ? qa : (qa.text || qa.metric || qa);
+      drawBullet(txt.replace(/[^\x20-\x7E%$+.,;:()\/\-'\"!@#&*=~]/g, ""));
+    });
+    y += 1;
+  }
+
+  // ── PROJECT PORTFOLIO ──
+  if (rj.projectPortfolio && rj.projectPortfolio.length > 0) {
+    secH("Project Portfolio");
+    chk(8 + rj.projectPortfolio.length * 6);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.5);
+    doc.setTextColor(255, 255, 255);
+    var cols = [35, 45, 30, 22, 35, 15];
+    var headers = ["Client", "Project", "Type", "Role", "Duration", "Team"];
+    var cx = ML;
+    doc.setFillColor(26, 35, 126);
+    doc.rect(ML, y - 3, CW, 6, "F");
+    headers.forEach(function(hdr, hi) {
+      doc.text(hdr, cx + cols[hi] / 2, y, { align: "center" });
+      cx += cols[hi];
+    });
+    y += 4;
+    rj.projectPortfolio.forEach(function(proj, pi) {
+      chk(6);
+      if (pi % 2 === 0) {
+        doc.setFillColor(245, 245, 245);
+        doc.rect(ML, y - 3, CW, 5.5, "F");
+      }
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7.5);
+      doc.setTextColor(33, 33, 33);
+      cx = ML;
+      var vals = [proj.client || "", proj.project || proj.name || "", proj.type || "", proj.role || "", proj.duration || "", (proj.team || proj.teamSize || "").toString()];
+      vals.forEach(function(v, vi) {
+        var vLines = doc.splitTextToSize(v, cols[vi] - 2);
+        doc.text(vLines[0] || "", cx + cols[vi] / 2, y, { align: "center" });
+        cx += cols[vi];
+      });
+      y += 5;
+    });
+    y += 2;
+  }
+
+  // ── EDUCATION ──
+  if (rj.education && rj.education.length > 0) {
+    secH("Education");
+    rj.education.forEach(function(edu) {
+      chk(6);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8.5);
+      doc.setTextColor(33, 33, 33);
+      doc.text(edu.degree || "", ML, y);
+      if (edu.year || edu.graduation) {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100);
+        doc.text((edu.year || edu.graduation || "").toString(), W - MR, y, { align: "right" });
+      }
+      y += 3.5;
+      if (edu.institution || edu.school) {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(80, 80, 80);
+        doc.text(edu.institution || edu.school || "", ML, y);
+        y += 3.5;
+      }
+      y += 1;
+    });
+  }
+
+  // ── CERTIFICATIONS ──
+  if (rj.certifications && rj.certifications.length > 0) {
+    secH("Certifications");
+    rj.certifications.forEach(function(c) {
+      var cText = typeof c === "string" ? c : (c.name || c.title || c);
+      drawBullet(cText);
+    });
+    y += 1;
+  }
+
+  // ── CORE COMPETENCIES ──
+  if (rj.coreCompetencies && rj.coreCompetencies.length > 0) {
+    secH("Core Competencies");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.2);
+    doc.setTextColor(33, 33, 33);
+    var compText = rj.coreCompetencies.join("  |  ");
+    var compLines = doc.splitTextToSize(compText, CW);
+    compLines.forEach(function(cl) { chk(3.5); doc.text(cl, ML, y); y += 3.5; });
+    y += 1;
+  }
+
+  // ── STRENGTHS ──
+  if (rj.strengths && rj.strengths.length > 0 && !rj.coreCompetencies) {
+    secH("Professional Strengths");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.2);
+    doc.setTextColor(33, 33, 33);
+    var strText = rj.strengths.join("  |  ");
+    var strLines = doc.splitTextToSize(strText, CW);
+    strLines.forEach(function(sl) { chk(3.5); doc.text(sl, ML, y); y += 3.5; });
+    y += 1;
+  }
+
+  // ── ADDITIONAL INFO ──
+  if (rj.additionalInfo) {
+    secH("Additional Information");
+    var ai = rj.additionalInfo;
+    var infoItems = [];
+    if (ai.location) infoItems.push("Location: " + ai.location);
+    if (ai.preferredLocations) infoItems.push("Preferred: " + (Array.isArray(ai.preferredLocations) ? ai.preferredLocations.join(", ") : ai.preferredLocations));
+    if (ai.languages) infoItems.push("Languages: " + (Array.isArray(ai.languages) ? ai.languages.join(", ") : ai.languages));
+    if (ai.noticePeriod) infoItems.push("Notice: " + ai.noticePeriod);
+    if (typeof ai === "string") infoItems.push(ai);
+    infoItems.forEach(function(item) {
+      chk(4);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(33, 33, 33);
+      doc.text(item, ML, y);
+      y += 3.5;
+    });
+  }
+
+  // ── PAGE NUMBERS ──
+  var totalPages = doc.internal.getNumberOfPages();
+  for (var pg = 1; pg <= totalPages; pg++) {
+    doc.setPage(pg);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7);
+    doc.setTextColor(148, 163, 184);
+    doc.text("Page " + pg + "/" + totalPages, W / 2, H - 5, { align: "center" });
+  }
+
+  doc.save(fName + ".pdf");
+  if (btn) { btn.textContent = origText; btn.disabled = false; }
 }
 
 function toggleFresher(){"fresher"===document.getElementById("careerLevel").value&&setExpType("fresher",document.querySelectorAll("#step3 .stoggle")[1])}function setExpType(e,t){document.querySelectorAll("#step3 .stoggle").forEach(e=>e.classList.remove("active")),t&&t.classList.add("active");const n=document.getElementById("fresherSection"),o=document.getElementById("expSection");"fresher"===e?(n.style.display="block",o.style.display="none",document.getElementById("careerLevel").value="fresher"):(n.style.display="none",o.style.display="block")}async function autoSuggestSkills(){const e=document.getElementById("suggestBtn");e.textContent="⏳ AI analyzing your experience...",e.disabled=!0;let t="";const n=document.getElementById("existingResume").value.trim(),o=document.getElementById("bgDescription").value.trim(),s=document.getElementById("jobDesc").value.trim();if(document.querySelectorAll(".exp-details").forEach(e=>{e.value.trim()&&(t+=e.value.trim()+"\n")}),n&&(t+=n),o&&(t+=o),!t&&!s)return alert("Please fill in your experience (Step 3) or paste a resume (Step 1) first — AI needs something to analyze."),e.textContent="AI: Auto-suggest skills from my experience",void(e.disabled=!1);try{const e=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:"Based on this professional background, list the most relevant technical skills as a comma-separated list. Include tools, platforms, languages, frameworks, and methodologies. Group by category (e.g. Cloud: AWS EC2, S3; DevOps: Docker, Kubernetes). Output ONLY the skills list, nothing else.\n\nBackground:\n"+t+(s?"\n\nTarget Job:\n"+s:""),system:"You are a career expert. Extract and suggest relevant technical skills. Output only a clean comma-separated skills list grouped by category. No explanations.",max_tokens:500})}),n=await e.json();if(n.result){const e=document.getElementById("techSkills").value.trim();document.getElementById("techSkills").value=e?e+", "+n.result:n.result}}catch(e){}e.textContent="AI: Auto-suggest skills from my experience",e.disabled=!1}async function aiRewriteExp(e){const t=e.closest(".exp-block")||e.closest(".field").parentElement,n=t.querySelector(".exp-details"),o=t.querySelector(".exp-title"),s=t.querySelector(".exp-company"),i=n.value.trim();if(!i)return void alert("Write your responsibilities/achievements first, then click AI rewrite.");e.textContent="⏳ AI rewriting...",e.disabled=!0;const a=o?o.value.trim():"",r=s?s.value.trim():"";try{const e=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:`Rewrite these job responsibilities/achievements into powerful STAR-format resume bullet points.\n\nRole: ${a||"Not specified"} at ${r||"Not specified"}\n\nOriginal:\n${i}\n\nRules:\n- Start each bullet with a UNIQUE power verb (Architected, Spearheaded, Delivered, Reduced, Automated, Designed, Led, Implemented, Optimized, Orchestrated, Streamlined, Championed, Engineered, Accelerated, Pioneered)\n- Use STAR format: include the action AND the measurable result\n- Include specific numbers/metrics (%, $, time, team size, scale)\n- If no numbers provided, add realistic estimates\n- Each bullet should be 1-2 lines\n- Output 6-10 bullet points using • character\n- Output ONLY the bullet points, nothing else`,system:"Expert resume writer. Rewrite bullets with STAR framework. Output only • bullet points.",max_tokens:800})}),t=await e.json();t.result&&(n.value=t.result)}catch(e){}e.textContent="AI: Rewrite with STAR framework & power verbs",e.disabled=!1}async function autoSuggestSoftSkills(){const e=document.getElementById("suggestSoftBtn");e.textContent="⏳ AI analyzing...",e.disabled=!0;let t="";const n=document.getElementById("totalExp").value.trim(),o=document.getElementById("careerLevel").value;document.querySelectorAll(".exp-details").forEach(e=>{e.value.trim()&&(t+=e.value.trim()+"\n")});const s=document.getElementById("existingResume").value.trim();s&&(t+=s);const i=document.getElementById("jobDesc").value.trim();try{const e=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:`Based on this professional's background (${n||"?"} years, ${o} level), suggest the most relevant soft skills and management skills as a comma-separated list.\n\nBackground: ${t||"General professional"}\n${i?"Target Job: "+i:""}\n\nInclude skills like: Team Leadership, Cross-functional Collaboration, Agile/Scrum, Stakeholder Management, Mentoring, Incident Management, Technical Writing, Strategic Planning, Vendor Management, Risk Assessment, etc.\n\nOutput ONLY a comma-separated list of 10-15 soft skills. No explanations.`,system:"Career expert. Suggest relevant soft skills. Output only comma-separated list.",max_tokens:200})}),s=await e.json();if(s.result){const e=document.getElementById("softSkills").value.trim();document.getElementById("softSkills").value=e?e+", "+s.result:s.result}}catch(e){}e.textContent="AI: Auto-suggest soft skills from my experience",e.disabled=!1}async function generateInterviewPrep(){if(!resumeText)return void alert("Generate your resume first, then click Interview Prep.");document.getElementById("jobDesc").value.trim();const e=document.getElementById("targetTitle").value.trim(),t=document.getElementById("careerLevel").value,n="fresher"===t||"entry"===t,o=document.getElementById("resumeLang").value,s="English"!==o?"\nIMPORTANT: Write ALL questions and answers in "+o+". Keep technical terms (AWS, Docker, kubectl, etc.) in English. Everything else in "+o+".":"",i=document.getElementById("prepBtn"),a=document.getElementById("prepLoading");i.disabled=!0,a.style.display="block",document.getElementById("prepLoading").innerHTML='<span class="spinner"></span>Generating Part 1/2 — Scenario & Coding questions... (20 sec)';const r=resumeText.substring(0,2500),l="You are a senior technical interviewer at a Fortune 500 company. Generate interview prep based on the candidate resume. Include current 2025-2026 market trends and real-world scenarios. Output plain text only. No markdown.",c=n?"\nNOTE: This is a FRESHER/ENTRY-LEVEL candidate. Ask questions appropriate for 0-2 years experience. Focus on fundamentals, projects, internships, and learning ability rather than production experience.":"",d=`Based on this resume, generate interview questions with detailed answers.${c}${s}\n\nRESUME: """${r}"""\nTARGET: ${e||"Based on resume"}\n\nGenerate EXACTLY:\n\nSECTION 1: REAL-TIME SCENARIO QUESTIONS (10 questions)\nProduction scenarios based on their tech stack. Include specific kubectl/aws/terraform commands in answers. Consider 2026 market trends (AI/ML integration, platform engineering, FinOps).\nFormat: Q1: [question]\nANSWER: [4-6 sentence detailed answer with specific steps]\n\nSECTION 2: CODING & TECHNICAL QUESTIONS (10 questions)\nActual code questions — Python scripts, Terraform configs, Dockerfiles, K8s YAML, Bash scripts, CI/CD pipeline configs. Include the COMPLETE code solution in the answer.\nFormat: Q1: [question]\nANSWER: [code solution with explanation]\n\nSECTION 3: CROSS-SCENARIO QUESTIONS (10 questions)\nMulti-technology debugging scenarios. E.g. "CI/CD deploys to K8s but pods crash — debug from pipeline to pod." Include step-by-step debugging with actual commands.\nFormat: Q1: [question]\nANSWER: [comprehensive debugging steps]`;let u="",m="";try{const e=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:d,system:l,max_tokens:4096})}),t=await e.json();if(!t.result)return alert("Error generating Part 1: "+(t.error||"Failed")),i.disabled=!1,void(a.style.display="none");u=t.result}catch(e){return alert("Connection error on Part 1."),i.disabled=!1,void(a.style.display="none")}document.getElementById("prepLoading").innerHTML='<span class="spinner"></span>Generating Part 2/2 — Experience & Deep-dive questions... (20 sec)';const p=`Based on this resume, generate interview questions with detailed answers.${c}${s}\n\nRESUME: """${r}"""\nTARGET: ${e||"Based on resume"}\n\nGenerate EXACTLY:\n\nSECTION 4: EXPERIENCE-BASED QUESTIONS (10 questions)\n"Tell me about a time when..." questions based on SPECIFIC projects and achievements from the resume. Answers must use STAR format (Situation-Task-Action-Result) referencing actual experience.\nFormat: Q1: [question]\nANSWER: [STAR format answer from their resume experience]\n\nSECTION 5: TOPIC DEEP-DIVE QUESTIONS (10 questions)\nDeep technical questions on core resume topics (K8s internals, AWS networking, CI/CD best practices, security, FinOps, GitOps). Include real-world examples, best practices, and current 2026 trends.\nFormat: Q1: [question]\nANSWER: [detailed technical answer with examples]`;try{const e=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:p,system:l,max_tokens:4096})}),t=await e.json();t.result&&(m=t.result)}catch(e){}const h=u+"\n\n"+m;document.getElementById("prepContent").textContent=h,document.getElementById("prepOutput").style.display="block",document.getElementById("prepOutput").scrollIntoView({behavior:"smooth"}),window._interviewText=h,i.disabled=!1,a.style.display="none",document.getElementById("prepLoading").innerHTML='<span class="spinner"></span>AI is preparing your interview guide...'}function copyInterviewPrep(){navigator.clipboard.writeText(window._interviewText||""),event.target.textContent="✓ Copied!",setTimeout(()=>event.target.textContent="Copy All",1500)}function downloadInterviewPDF(){try{const{jsPDF:e}=window.jspdf,t=new e({unit:"mm",format:"a4"}),n=document.getElementById("fullName").value.trim()||"Interview",o=window._interviewText||"",s=210,i=297,a=16,r=16,l=18,c=16,d=s-a-r;let u=l;t.setFont("helvetica","bold"),t.setFontSize(16),t.setTextColor(124,58,237),t.text("Interview Preparation Guide",s/2,u,{align:"center"}),u+=8,t.setFont("helvetica","normal"),t.setFontSize(9),t.setTextColor(100,116,139),t.text("Generated by ZapKitt AI — based on your resume",s/2,u,{align:"center"}),u+=8;const m=o.split("\n");for(const e of m){const n=e.trim();if(!n){u+=2;continue}if(/^SECTION \d|^REAL-TIME|^CODING|^CROSS-SCENARIO|^EXPERIENCE|^TOPIC/i.test(n)){u+12>i-c&&(t.addPage(),u=l),u+=4,t.setFont("helvetica","bold"),t.setFontSize(11),t.setTextColor(124,58,237),t.text(n,a,u),u+=2,t.setDrawColor(124,58,237),t.setLineWidth(.3),t.line(a,u,s-r,u),u+=5;continue}if(/^Q\d+[:.]/i.test(n)){u+8>i-c&&(t.addPage(),u=l),u+=2,t.setFont("helvetica","bold"),t.setFontSize(10),t.setTextColor(26,26,46);t.splitTextToSize(n,d).forEach(e=>{u+4>i-c&&(t.addPage(),u=l),t.text(e,a,u),u+=4.5});continue}if(/^ANSWER:/i.test(n)){t.setFont("helvetica","bold"),t.setFontSize(9.5),t.setTextColor(22,163,74),t.text("ANSWER:",a,u),u+=4;const e=n.replace(/^ANSWER:\s*/i,"");if(e){t.setFont("helvetica","normal"),t.setTextColor(30,30,50);t.splitTextToSize(e,d).forEach(e=>{u+4>i-c&&(t.addPage(),u=l),t.text(e,a,u),u+=3.8})}continue}t.setFont("helvetica","normal"),t.setFontSize(9.5),t.setTextColor(30,30,50);t.splitTextToSize(n,d).forEach(e=>{u+4>i-c&&(t.addPage(),u=l),t.text(e,a,u),u+=3.8})}const p=t.internal.getNumberOfPages();for(let e=1;e<=p;e++)t.setPage(e),t.setFont("helvetica","normal"),t.setFontSize(8),t.setTextColor(148,163,184),t.text("Page "+e+"/"+p+" — ZapKitt Interview Prep",s/2,i-8,{align:"center"});t.save(n.replace(/\s+/g,"_")+"_Interview_Prep.pdf")}catch(e){alert("PDF error: "+e.message)}}async function optimizeMore(){if(!resumeText)return;const e=document.getElementById("jobDesc").value.trim();if(!e)return void alert("Paste a job description in Step 5 first — ATS optimization needs a target.");const t=document.getElementById("genBtn"),n=document.getElementById("loading");t.disabled=!0,n.classList.add("show"),showLoadStep("Analyzing keyword gaps and optimizing...");try{const t=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:`You are an ATS optimization specialist. Improve this resume to better match the job description. Naturally integrate missing keywords without keyword stuffing. Strengthen weak bullet points with more specific metrics. Ensure every section header is in ALL CAPS. Keep the exact same structure.\n\nJOB DESCRIPTION:\n"""\n${e}\n"""\n\nCURRENT RESUME:\n"""\n${resumeText}\n"""\n\nOutput ONLY the improved resume text. No commentary. No markdown. Same structure, better keywords and metrics.`,system:"ATS optimization expert. Improve keyword match while keeping natural writing. Output only the resume text with ALL CAPS section headers and • bullet points.",max_tokens:4096})}),n=await t.json();n.result&&(resumeText=n.result,renderResume(n.result,e,document.getElementById("techSkills").value),document.getElementById("output").scrollIntoView({behavior:"smooth"}))}catch(e){}t.disabled=!1,n.classList.remove("show")}async function aiRewriteFresher(){const e=document.getElementById("fresherProjects"),t=e.value.trim();if(!t)return void alert("Add your projects/internships first.");const n=event.target;n.textContent="⏳ AI converting...",n.disabled=!0;try{const n=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:`Convert these student/fresher projects and activities into professional resume entries. Use STAR format with action verbs. Make them sound impressive and professional while staying honest.\n\nProjects/Activities:\n${t}\n\nOutput format for each entry:\nPROJECT/INTERNSHIP TITLE | Organization | Duration\n• Bullet point 1 with action verb and result\n• Bullet point 2 with action verb and result\n\nOutput ONLY the formatted entries. No explanations.`,system:"Expert resume writer specializing in entry-level resumes. Convert student projects into impressive professional entries.",max_tokens:800})}),o=await n.json();o.result&&(e.value=o.result)}catch(e){}n.textContent="AI: Convert projects into professional resume entries",n.disabled=!1}function validatePhone(el){const cc=document.getElementById("countryCode").value;const maxLen={"+91":10,"+1":10,"+44":10,"+61":9,"+971":9,"+65":8,"+49":11,"+33":9,"+81":10,"+86":11,"+82":10,"+55":11,"+27":9,"+234":10,"+254":9,"+60":10,"+63":10,"+966":9,"+7":10,"+52":10,"+39":10,"+34":9,"+31":9,"+46":9,"+41":9,"+353":9,"+64":9,"+48":9,"+90":10,"+92":10,"+880":10,"+94":9,"+977":10};const ml=maxLen[cc]||15;el.value=el.value.replace(/[^0-9]/g,"").slice(0,ml);const hint=el.parentElement.parentElement.querySelector(".hint");if(!hint){const d=document.createElement("div");d.className="hint";d.id="phoneHint";d.textContent=ml+" digits for "+cc;el.parentElement.parentElement.appendChild(d)}else if(hint.id!=="phoneHint"){const d=document.createElement("div");d.className="hint";d.id="phoneHint";d.textContent=ml+" digits for "+cc;el.parentElement.parentElement.appendChild(d)}const ph=document.getElementById("phoneHint");if(ph)ph.textContent=el.value.length+"/"+ml+" digits";}</script></body></html>
