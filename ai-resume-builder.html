@@ -658,7 +658,7 @@ function _fallbackClientPDF(fd, fName, btn, origText) {
 
     function checkPage(need) { if (y + need > H - MB) { doc.addPage(); y = MT; } }
     function drawLine() { doc.setDrawColor(0); doc.setLineWidth(0.3); doc.line(ML, y, W - MR, y); y += 2; }
-    function sectionHead(title) { checkPage(10); y += 2; doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(0); doc.text(title, ML, y); y += 1; drawLine(); y += 1; }
+    function sectionHead(title) { checkPage(10); y += 1; doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(0); doc.text(title, ML, y); y += 1; drawLine(); y += 1; }
 
     // Name
     doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.setTextColor(0);
@@ -674,9 +674,11 @@ function _fallbackClientPDF(fd, fName, btn, origText) {
     if (rj.highlights && rj.highlights.length) {
       sectionHead("PROFESSIONAL HIGHLIGHTS");
       doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); doc.setTextColor(0);
-      var hlText = rj.highlights.map(function(h) { return "\u2713 " + h; }).join("    ");
-      var hlLines = doc.splitTextToSize(hlText, usable);
-      hlLines.forEach(function(l) { checkPage(4); doc.text(l, ML, y); y += 3.5; });
+      rj.highlights.forEach(function(h) {
+        checkPage(3.5);
+        doc.text(">> " + h, ML, y);
+        y += 3.2;
+      });
       y += 1;
     }
 
@@ -685,7 +687,7 @@ function _fallbackClientPDF(fd, fName, btn, origText) {
       sectionHead("PROFESSIONAL SUMMARY");
       doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(0);
       var sumLines = doc.splitTextToSize(rj.summary, usable);
-      sumLines.forEach(function(l) { checkPage(4); doc.text(l, ML, y); y += 3.8; });
+      sumLines.forEach(function(l) { checkPage(4); doc.text(l, ML, y); y += 3.5; });
       y += 1;
     }
 
@@ -696,7 +698,7 @@ function _fallbackClientPDF(fd, fName, btn, origText) {
       rj.achievements.forEach(function(a) {
         var txt = typeof a === "string" ? a : (a.text || "") + (a.metric ? " " + a.metric : "");
         if (!txt.trim()) return;
-        var lines = doc.splitTextToSize("\u2022 " + txt, usable - 4);
+        var lines = doc.splitTextToSize("- " + txt, usable - 4);
         lines.forEach(function(l, i) { checkPage(4); doc.text(l, ML + (i === 0 ? 0 : 3), y); y += 3.5; });
       });
       y += 1;
@@ -736,11 +738,11 @@ function _fallbackClientPDF(fd, fName, btn, origText) {
             var txt = typeof b === "string" ? b : b.text;
             if (!txt || !txt.trim()) return;
             doc.setFont("helvetica", "normal"); doc.setFontSize(8.5);
-            var lines = doc.splitTextToSize("\u2022 " + txt, usable - 4);
-            lines.forEach(function(l, i) { checkPage(3.5); doc.text(l, ML + (i === 0 ? 0 : 3), y); y += 3.3; });
+            var lines = doc.splitTextToSize("- " + txt, usable - 4);
+            lines.forEach(function(l, i) { checkPage(3.5); doc.text(l, ML + (i === 0 ? 0 : 3), y); y += 3; });
           });
         }
-        y += 2;
+        y += 1;
       });
     }
 
@@ -790,8 +792,8 @@ function _fallbackClientPDF(fd, fName, btn, origText) {
       rj.quantifiedAchievements.forEach(function(a) {
         var txt = typeof a === "string" ? a : (a.text || a);
         if (!txt) return;
-        var lines = doc.splitTextToSize("\u2022 " + txt, usable - 4);
-        lines.forEach(function(l, i) { checkPage(3.5); doc.text(l, ML + (i === 0 ? 0 : 3), y); y += 3.3; });
+        var lines = doc.splitTextToSize("- " + txt, usable - 4);
+        lines.forEach(function(l, i) { checkPage(3.5); doc.text(l, ML + (i === 0 ? 0 : 3), y); y += 3; });
       });
       y += 1;
     }
