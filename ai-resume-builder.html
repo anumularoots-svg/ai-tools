@@ -620,9 +620,12 @@ function _downloadBlob(blob, fileName) {
 }
 
 function _fallbackClientPDF(fd, fName, btn, origText) {
-  // Build HTML from resumeJSON or resumeText
+  // Use the already-rendered HTML from the preview container
+  var previewEl = document.getElementById("resumeContent");
   var rh = "";
-  if (window.resumeJSON) {
+  if (previewEl && previewEl.innerHTML.trim().length > 100) {
+    rh = previewEl.innerHTML;
+  } else if (window.resumeJSON) {
     rh = renderJSONResume(window.resumeJSON);
   } else {
     // Legacy text parsing
