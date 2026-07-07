@@ -736,30 +736,43 @@ function _buildJsPDF(fName, btn, origText) {
 
   // ── HIGHLIGHTS ──
   if (rj.highlights && rj.highlights.length > 0) {
-    chk(12);
-    doc.setFillColor(232, 234, 246);
-    doc.setDrawColor(57, 73, 171);
-    doc.setLineWidth(0.3);
-    var hlH = 8;
-    var hlW = CW / Math.min(rj.highlights.length, 4);
     var hlCount = Math.min(rj.highlights.length, 8);
     var hlPerRow = Math.min(hlCount, 4);
-    var rows = Math.ceil(hlCount / hlPerRow);
-    for (var row = 0; row < rows; row++) {
+    var hlRows = Math.ceil(hlCount / hlPerRow);
+    var hlW = CW / hlPerRow;
+    var hlH = 9;
+    
+    for (var hrow = 0; hrow < hlRows; hrow++) {
       chk(hlH + 2);
-      for (var col = 0; col < hlPerRow; col++) {
-        var idx = row * hlPerRow + col;
-        if (idx >= hlCount) break;
-        var hx = ML + col * hlW;
-        doc.roundedRect(hx + 0.5, y, hlW - 1, hlH, 1, 1, "FD");
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(7.5);
-        doc.setTextColor(26, 35, 126);
-        var hlText = rj.highlights[idx].replace(/[^\x20-\x7E%+.]/g, "");
-        var hlLines = doc.splitTextToSize(hlText, hlW - 4);
-        doc.text(hlLines[0] || "", hx + hlW / 2, y + hlH / 2 + 1, { align: "center" });
+      // Draw all boxes first
+      for (var hcol = 0; hcol < hlPerRow; hcol++) {
+        var hidx = hrow * hlPerRow + hcol;
+        if (hidx >= hlCount) break;
+        var bx = ML + hcol * hlW + 0.5;
+        doc.setFillColor(232, 234, 246);
+        doc.setDrawColor(57, 73, 171);
+        doc.setLineWidth(0.3);
+        doc.roundedRect(bx, y, hlW - 1, hlH, 1, 1, "FD");
       }
-      y += hlH + 1;
+      // Now draw text on top of boxes
+      for (var hcol2 = 0; hcol2 < hlPerRow; hcol2++) {
+        var hidx2 = hrow * hlPerRow + hcol2;
+        if (hidx2 >= hlCount) break;
+        var tx = ML + hcol2 * hlW + 0.5;
+        var hlRaw = rj.highlights[hidx2] || "";
+        // Clean text - keep basic ASCII, digits, %, +
+        var hlClean = hlRaw.replace(/[^\w\s%+.,\-\/()]/g, "").trim();
+        if (hlClean) {
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(7.5);
+          doc.setTextColor(26, 35, 126);
+          // Truncate if too long for box
+          var maxChars = Math.floor((hlW - 4) / 1.8);
+          if (hlClean.length > maxChars) hlClean = hlClean.substring(0, maxChars);
+          doc.text(hlClean, tx + (hlW - 1) / 2, y + hlH / 2 + 1.5, { align: "center" });
+        }
+      }
+      y += hlH + 1.5;
     }
     y += 2;
   }
@@ -776,6 +789,11 @@ function _buildJsPDF(fName, btn, origText) {
     secH("Key Achievements");
     rj.achievements.forEach(function(a) {
       var txt = typeof a === "string" ? a : (a.text || a);
+      var metric = a.metric || "";
+      // If text ends with "by" or similar but has no number, append metric
+      if (metric && txt.indexOf(metric) === -1) {
+        txt = txt.replace(/\s*by\s*$/, "") + " by " + metric;
+      }
       drawBullet(txt.replace(/[^\x20-\x7E%$+.,;:()\/\-'\"!@#&*=]/g, ""));
     });
     y += 1;
@@ -818,11 +836,12 @@ function _buildJsPDF(fName, btn, origText) {
       doc.setTextColor(33, 33, 33);
       var expTitle = (exp.title || "").toUpperCase();
       doc.text(expTitle, ML, y);
-      if (exp.dates || exp.duration) {
+      if (exp.dates || exp.duration || exp.startDate) {
         doc.setFont("helvetica", "italic");
         doc.setFontSize(8);
         doc.setTextColor(100, 100, 100);
-        doc.text(exp.dates || exp.duration || "", W - MR, y, { align: "right" });
+        var dateStr = exp.dates || exp.duration || ((exp.startDate || "") + " - " + (exp.endDate || "Present"));
+        doc.text(dateStr, W - MR, y, { align: "right" });
       }
       y += 3.8;
 
@@ -965,11 +984,12 @@ function _buildJsPDF(fName, btn, origText) {
     secH("Additional Information");
     var ai = rj.additionalInfo;
     var infoItems = [];
-    if (ai.location) infoItems.push("Location: " + ai.location);
-    if (ai.preferredLocations) infoItems.push("Preferred: " + (Array.isArray(ai.preferredLocations) ? ai.preferredLocations.join(", ") : ai.preferredLocations));
+    if (ai.location || ai.currentLocation) infoItems.push("Location: " + (ai.location || ai.currentLocation));
+    if (ai.preferredLocations || ai.preferredLocation) infoItems.push("Preferred: " + (Array.isArray(ai.preferredLocations || ai.preferredLocation) ? (ai.preferredLocations || ai.preferredLocation).join(", ") : (ai.preferredLocations || ai.preferredLocation)));
     if (ai.languages) infoItems.push("Languages: " + (Array.isArray(ai.languages) ? ai.languages.join(", ") : ai.languages));
     if (ai.noticePeriod) infoItems.push("Notice: " + ai.noticePeriod);
     if (typeof ai === "string") infoItems.push(ai);
+    if (infoItems.length === 0 && rj.personal && rj.personal.location) infoItems.push("Location: " + rj.personal.location);
     infoItems.forEach(function(item) {
       chk(4);
       doc.setFont("helvetica", "normal");
