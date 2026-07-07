@@ -224,10 +224,35 @@ function renderJSONResume(rj) {
     });
   }
 
-  // Strengths
-  if (rj.strengths && rj.strengths.length > 0) {
-    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">PROFESSIONAL STRENGTHS</h2>';
-    h += '<div style="font-size:10px">' + rj.strengths.join("  |  ") + '</div>';
+  // Strengths / Core Competencies
+  var comps = rj.coreCompetencies || rj.strengths || [];
+  if (comps && comps.length > 0) {
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">CORE COMPETENCIES</h2>';
+    h += '<div style="font-size:10px">' + comps.filter(Boolean).join("  |  ") + '</div>';
+  }
+
+  // Quantified Achievements
+  if (rj.quantifiedAchievements && rj.quantifiedAchievements.length > 0) {
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">QUANTIFIED ACHIEVEMENTS</h2>';
+    rj.quantifiedAchievements.forEach(function(a) { var t = typeof a === "string" ? a : a.text || a; if (t) h += '<div style="font-size:10px;margin-left:4px;text-indent:-10px;padding-left:14px">\u2022 ' + t + '</div>'; });
+  }
+
+  // Project Portfolio
+  if (rj.projectPortfolio && rj.projectPortfolio.length > 0) {
+    h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">PROJECT PORTFOLIO</h2>';
+    h += '<table style="width:100%;border-collapse:collapse;font-size:8px"><tr style="background:#f5f5f5"><th style="text-align:left;padding:2px 4px;border:0.5px solid #ccc">Client</th><th style="text-align:left;padding:2px 4px;border:0.5px solid #ccc">Project</th><th style="text-align:left;padding:2px 4px;border:0.5px solid #ccc">Type</th><th style="text-align:left;padding:2px 4px;border:0.5px solid #ccc">Role</th><th style="text-align:left;padding:2px 4px;border:0.5px solid #ccc">Duration</th><th style="text-align:left;padding:2px 4px;border:0.5px solid #ccc">Team</th></tr>';
+    rj.projectPortfolio.forEach(function(proj) { h += '<tr><td style="padding:2px 4px;border:0.5px solid #ddd">' + (proj.client||"") + '</td><td style="padding:2px 4px;border:0.5px solid #ddd">' + (proj.project||"") + '</td><td style="padding:2px 4px;border:0.5px solid #ddd">' + (proj.type||"") + '</td><td style="padding:2px 4px;border:0.5px solid #ddd">' + (proj.role||"") + '</td><td style="padding:2px 4px;border:0.5px solid #ddd">' + (proj.duration||"") + '</td><td style="padding:2px 4px;border:0.5px solid #ddd">' + (proj.teamSize||"") + '</td></tr>'; });
+    h += '</table>';
+  }
+
+  // Additional Info
+  if (rj.additionalInfo) {
+    var ai = rj.additionalInfo;
+    var infoParts = [ai.currentLocation ? "Current Location: " + ai.currentLocation : "", ai.preferredLocation ? "Preferred: " + ai.preferredLocation : "", ai.languages ? "Languages: " + ai.languages : ""].filter(Boolean);
+    if (infoParts.length) {
+      h += '<h2 style="color:#1a1a2e;border-bottom-color:#1a1a2e;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #1a1a2e;margin-bottom:4px">ADDITIONAL INFORMATION</h2>';
+      h += '<div style="font-size:10px">' + infoParts.join("  |  ") + '</div>';
+    }
   }
 
   return h;
@@ -638,8 +663,8 @@ function _fallbackClientPDF(fd, fName, btn, origText) {
     // Name
     doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.setTextColor(0);
     doc.text((p.fullName || fd.name || "").toUpperCase(), W / 2, y, { align: "center" }); y += 6;
-    // Title
-    if (p.title) { doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(80); doc.text(p.title, W / 2, y, { align: "center" }); y += 5; }
+    // Headline
+    if (p.headline || p.title) { doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(80); var hl = p.headline || p.title; var hlLines = doc.splitTextToSize(hl, usable); hlLines.forEach(function(l) { doc.text(l, W / 2, y, { align: "center" }); y += 4; }); }
     // Contact
     var contact = [p.email, p.phone, p.linkedin, p.location].filter(Boolean).join("  |  ");
     if (contact) { doc.setFontSize(8); doc.setTextColor(100); doc.text(contact, W / 2, y, { align: "center" }); y += 4; }
@@ -703,6 +728,8 @@ function _fallbackClientPDF(fd, fName, btn, origText) {
         doc.text(dateStr, W - MR, y, { align: "right" }); y += 4;
         var comp = (exp.company || "") + (exp.location ? ", " + exp.location : "");
         if (comp) { doc.setFont("helvetica", "italic"); doc.setFontSize(8.5); doc.setTextColor(100); doc.text(comp, ML, y); y += 3.5; }
+        var meta = [exp.client ? "Client: " + exp.client : "", exp.domain ? "Domain: " + exp.domain : "", exp.teamSize ? "Team: " + exp.teamSize : ""].filter(Boolean).join("  |  ");
+        if (meta) { doc.setFont("helvetica", "italic"); doc.setFontSize(8); doc.setTextColor(100); doc.text(meta, ML, y); y += 3.5; }
         doc.setTextColor(0);
         if (exp.bullets && exp.bullets.length) {
           exp.bullets.forEach(function(b) {
@@ -746,13 +773,64 @@ function _fallbackClientPDF(fd, fName, btn, origText) {
       }
     }
 
-    // Strengths
-    if (rj.strengths && rj.strengths.length) {
+    // Strengths / Core Competencies
+    var comps = rj.coreCompetencies || rj.strengths || [];
+    if (comps && comps.length) {
       sectionHead("CORE COMPETENCIES");
       doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(0);
-      var strText = rj.strengths.filter(Boolean).join("  |  ");
+      var strText = comps.filter(Boolean).join("  |  ");
       var strLines = doc.splitTextToSize(strText, usable);
       strLines.forEach(function(l) { checkPage(4); doc.text(l, ML, y); y += 3.5; });
+    }
+
+    // Quantified Achievements
+    if (rj.quantifiedAchievements && rj.quantifiedAchievements.length) {
+      sectionHead("QUANTIFIED ACHIEVEMENTS");
+      doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); doc.setTextColor(0);
+      rj.quantifiedAchievements.forEach(function(a) {
+        var txt = typeof a === "string" ? a : (a.text || a);
+        if (!txt) return;
+        var lines = doc.splitTextToSize("\u2022 " + txt, usable - 4);
+        lines.forEach(function(l, i) { checkPage(3.5); doc.text(l, ML + (i === 0 ? 0 : 3), y); y += 3.3; });
+      });
+      y += 1;
+    }
+
+    // Project Portfolio Table
+    if (rj.projectPortfolio && rj.projectPortfolio.length) {
+      sectionHead("PROJECT PORTFOLIO");
+      doc.setFont("helvetica", "bold"); doc.setFontSize(7.5); doc.setTextColor(0);
+      var cols = ["Client", "Project", "Type", "Role", "Duration", "Team"];
+      var colW = [28, 40, 22, 35, 28, 15];
+      var cx = ML;
+      cols.forEach(function(c, i) { doc.text(c, cx + 1, y); cx += colW[i]; });
+      y += 1; doc.setDrawColor(150); doc.setLineWidth(0.2); doc.line(ML, y, W - MR, y); y += 2;
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7);
+      rj.projectPortfolio.forEach(function(proj) {
+        checkPage(5);
+        cx = ML;
+        var row = [proj.client||"", proj.project||"", proj.type||"", proj.role||"", proj.duration||"", proj.teamSize||""];
+        row.forEach(function(val, i) {
+          var lines = doc.splitTextToSize(val, colW[i] - 2);
+          doc.text(lines[0] || "", cx + 1, y);
+          cx += colW[i];
+        });
+        y += 3.5;
+      });
+      y += 1;
+    }
+
+    // Additional Information
+    if (rj.additionalInfo) {
+      var ai = rj.additionalInfo;
+      var infoParts = [ai.currentLocation ? "Current Location: " + ai.currentLocation : "", ai.preferredLocation ? "Preferred: " + ai.preferredLocation : "", ai.languages ? "Languages: " + ai.languages : "", ai.noticePeriod ? "Notice: " + ai.noticePeriod : ""].filter(Boolean);
+      if (infoParts.length) {
+        sectionHead("ADDITIONAL INFORMATION");
+        doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); doc.setTextColor(0);
+        var aiText = infoParts.join("  |  ");
+        var aiLines = doc.splitTextToSize(aiText, usable);
+        aiLines.forEach(function(l) { checkPage(4); doc.text(l, ML, y); y += 3.5; });
+      }
     }
 
     // Page numbers
