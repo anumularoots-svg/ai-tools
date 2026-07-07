@@ -620,81 +620,153 @@ function _downloadBlob(blob, fileName) {
 }
 
 function _fallbackClientPDF(fd, fName, btn, origText) {
-  // Use the already-rendered HTML from the preview container
-  var previewEl = document.getElementById("resumeContent");
-  var rh = "";
-  if (previewEl && previewEl.innerHTML.trim().length > 100) {
-    rh = previewEl.innerHTML;
-  } else if (window.resumeJSON) {
-    rh = renderJSONResume(window.resumeJSON);
-  } else {
-    // Legacy text parsing
-    var allLines = resumeText.split("\n");
-    var bodyStart = _findBodyStart(allLines);
-    rh = '<div class="resume-container">';
-    rh += '<div class="header" style="text-align:center">';
-    rh += '<div class="name">' + fd.nameUpper + '</div>';
-    if (fd.targetTitle) rh += '<div class="title">' + fd.targetTitle + '</div>';
-    if (fd.contactLine) rh += '<div class="contact">' + fd.contactLine + '</div>';
-    rh += '</div>';
-    for (var k = bodyStart; k < allLines.length; k++) {
-      var line = allLines[k].trim();
-      if (!line) continue;
-      if (_isSectionHeader(line)) { rh += '<div class="section-header">' + line + '</div>'; continue; }
-      if (/^[\u2022\u25AA\u25BA\u25CF\u2219\-]\s/.test(line)) { rh += '<div class="bullet">\u2022 ' + line.replace(/^[\u2022\u25AA\u25BA\u25CF\u2219\-]\s*/, "") + '</div>'; continue; }
-      rh += '<div class="text">' + line + '</div>';
+  // Direct jsPDF text rendering — no html2canvas, no raw JSON possible
+  try {
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ unit: "mm", format: "a4" });
+    var W = 210, H = 297, ML = 16, MR = 16, MT = 16, MB = 14;
+    var usable = W - ML - MR;
+    var y = MT;
+    var rj = window.resumeJSON;
+    if (!rj) { alert("Generate resume first."); if (btn) { btn.textContent = origText; btn.disabled = false; } return; }
+    var p = rj.personal || {};
+
+    function checkPage(need) { if (y + need > H - MB) { doc.addPage(); y = MT; } }
+    function drawLine() { doc.setDrawColor(0); doc.setLineWidth(0.3); doc.line(ML, y, W - MR, y); y += 2; }
+    function sectionHead(title) { checkPage(10); y += 2; doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(0); doc.text(title, ML, y); y += 1; drawLine(); y += 1; }
+
+    // Name
+    doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.setTextColor(0);
+    doc.text((p.fullName || fd.name || "").toUpperCase(), W / 2, y, { align: "center" }); y += 6;
+    // Title
+    if (p.title) { doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(80); doc.text(p.title, W / 2, y, { align: "center" }); y += 5; }
+    // Contact
+    var contact = [p.email, p.phone, p.linkedin, p.location].filter(Boolean).join("  |  ");
+    if (contact) { doc.setFontSize(8); doc.setTextColor(100); doc.text(contact, W / 2, y, { align: "center" }); y += 4; }
+    drawLine();
+
+    // Highlights
+    if (rj.highlights && rj.highlights.length) {
+      sectionHead("PROFESSIONAL HIGHLIGHTS");
+      doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); doc.setTextColor(0);
+      var hlText = rj.highlights.map(function(h) { return "\u2713 " + h; }).join("    ");
+      var hlLines = doc.splitTextToSize(hlText, usable);
+      hlLines.forEach(function(l) { checkPage(4); doc.text(l, ML, y); y += 3.5; });
+      y += 1;
     }
-    rh += '</div>';
-  }
 
-  var container = document.createElement("div");
-  container.style.cssText = "position:fixed;top:-9999px;left:-9999px;width:700px;background:#fff;padding:36px 40px;box-sizing:border-box;font-family:Helvetica,Arial,sans-serif;color:#000;font-size:9.5pt;line-height:1.45;";
-  container.innerHTML = rh;
-  document.body.appendChild(container);
+    // Summary
+    if (rj.summary) {
+      sectionHead("PROFESSIONAL SUMMARY");
+      doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(0);
+      var sumLines = doc.splitTextToSize(rj.summary, usable);
+      sumLines.forEach(function(l) { checkPage(4); doc.text(l, ML, y); y += 3.8; });
+      y += 1;
+    }
 
-  function doRender() {
-    html2canvas(container, { scale: 2.5, useCORS: true, backgroundColor: "#ffffff" }).then(function(canvas) {
-      document.body.removeChild(container);
-      var jsPDF = window.jspdf.jsPDF;
-      var doc = new jsPDF("p", "mm", "a4");
-      var pageW = 210, pageH = 297;
-      var imgW = pageW;
-      var imgH = (canvas.height * imgW) / canvas.width;
-      var remainH = imgH;
-      var srcY = 0;
-      var pageNum = 0;
-      while (remainH > 0) {
-        if (pageNum > 0) doc.addPage();
-        var drawH = Math.min(remainH, pageH);
-        var srcH = (drawH / imgH) * canvas.height;
-        var pc = document.createElement("canvas");
-        pc.width = canvas.width;
-        pc.height = Math.ceil(srcH);
-        var ctx = pc.getContext("2d");
-        ctx.fillStyle = "#fff";
-        ctx.fillRect(0, 0, pc.width, pc.height);
-        ctx.drawImage(canvas, 0, srcY, canvas.width, srcH, 0, 0, canvas.width, srcH);
-        doc.addImage(pc.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, imgW, drawH);
-        srcY += srcH;
-        remainH -= drawH;
-        pageNum++;
+    // Achievements
+    if (rj.achievements && rj.achievements.length) {
+      sectionHead("KEY ACHIEVEMENTS");
+      doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(0);
+      rj.achievements.forEach(function(a) {
+        var txt = typeof a === "string" ? a : (a.text || "") + (a.metric ? " " + a.metric : "");
+        if (!txt.trim()) return;
+        var lines = doc.splitTextToSize("\u2022 " + txt, usable - 4);
+        lines.forEach(function(l, i) { checkPage(4); doc.text(l, ML + (i === 0 ? 0 : 3), y); y += 3.5; });
+      });
+      y += 1;
+    }
+
+    // Skills
+    if (rj.skills && rj.skills.length) {
+      sectionHead("TECHNICAL SKILLS");
+      rj.skills.forEach(function(cat) {
+        if (!cat.category || !cat.items || !cat.items.length) return;
+        checkPage(4);
+        doc.setFont("helvetica", "bold"); doc.setFontSize(8.5); doc.text(cat.category + ":", ML, y);
+        var catW = doc.getTextWidth(cat.category + ": ");
+        doc.setFont("helvetica", "normal"); doc.text(cat.items.join(", "), ML + catW, y);
+        y += 3.5;
+      });
+      y += 1;
+    }
+
+    // Experience
+    if (rj.experience && rj.experience.length) {
+      sectionHead("PROFESSIONAL EXPERIENCE");
+      rj.experience.forEach(function(exp) {
+        checkPage(12);
+        doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); doc.setTextColor(0);
+        doc.text((exp.title || "").toUpperCase(), ML, y);
+        var dateStr = (exp.startDate || "") + " \u2014 " + (exp.endDate || "");
+        doc.setFont("helvetica", "italic"); doc.setFontSize(8.5); doc.setTextColor(100);
+        doc.text(dateStr, W - MR, y, { align: "right" }); y += 4;
+        var comp = (exp.company || "") + (exp.location ? ", " + exp.location : "");
+        if (comp) { doc.setFont("helvetica", "italic"); doc.setFontSize(8.5); doc.setTextColor(100); doc.text(comp, ML, y); y += 3.5; }
+        doc.setTextColor(0);
+        if (exp.bullets && exp.bullets.length) {
+          exp.bullets.forEach(function(b) {
+            var txt = typeof b === "string" ? b : b.text;
+            if (!txt || !txt.trim()) return;
+            doc.setFont("helvetica", "normal"); doc.setFontSize(8.5);
+            var lines = doc.splitTextToSize("\u2022 " + txt, usable - 4);
+            lines.forEach(function(l, i) { checkPage(3.5); doc.text(l, ML + (i === 0 ? 0 : 3), y); y += 3.3; });
+          });
+        }
+        y += 2;
+      });
+    }
+
+    // Education
+    if (rj.education && rj.education.length) {
+      var validEdu = rj.education.filter(function(e) { return e.degree && e.degree !== "Not Applicable"; });
+      if (validEdu.length) {
+        sectionHead("EDUCATION");
+        doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(0);
+        validEdu.forEach(function(edu) {
+          checkPage(5);
+          doc.setFont("helvetica", "bold"); doc.text((edu.degree || ""), ML, y);
+          doc.setFont("helvetica", "normal");
+          var rest = (edu.institution ? " \u2014 " + edu.institution : "") + (edu.year ? " (" + edu.year + ")" : "");
+          doc.text(rest, ML + doc.getTextWidth(edu.degree || ""), y);
+          y += 4;
+        });
+        y += 1;
       }
-      doc.save(fName + ".pdf");
-      if (btn) { btn.textContent = origText; btn.disabled = false; }
-    }).catch(function(e) {
-      document.body.removeChild(container);
-      alert("PDF error: " + e.message);
-      if (btn) { btn.textContent = origText; btn.disabled = false; }
-    });
-  }
+    }
 
-  if (typeof html2canvas === "undefined") {
-    var s = document.createElement("script");
-    s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
-    s.onload = doRender;
-    s.onerror = function() { alert("PDF library failed."); document.body.removeChild(container); if (btn) { btn.textContent = origText; btn.disabled = false; } };
-    document.head.appendChild(s);
-  } else { doRender(); }
+    // Certifications
+    if (rj.certifications && rj.certifications.length) {
+      var validCert = rj.certifications.filter(function(c) { return c.name && c.name.trim(); });
+      if (validCert.length) {
+        sectionHead("CERTIFICATIONS");
+        doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(0);
+        validCert.forEach(function(c) { checkPage(4); doc.text(c.name, ML, y); y += 3.5; });
+        y += 1;
+      }
+    }
+
+    // Strengths
+    if (rj.strengths && rj.strengths.length) {
+      sectionHead("CORE COMPETENCIES");
+      doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(0);
+      var strText = rj.strengths.filter(Boolean).join("  |  ");
+      var strLines = doc.splitTextToSize(strText, usable);
+      strLines.forEach(function(l) { checkPage(4); doc.text(l, ML, y); y += 3.5; });
+    }
+
+    // Page numbers
+    var totalPages = doc.internal.getNumberOfPages();
+    for (var pg = 1; pg <= totalPages; pg++) {
+      doc.setPage(pg); doc.setFont("helvetica", "normal"); doc.setFontSize(7); doc.setTextColor(150);
+    }
+
+    doc.save(fName + ".pdf");
+    if (btn) { btn.textContent = origText; btn.disabled = false; }
+  } catch (e) {
+    alert("PDF error: " + e.message);
+    if (btn) { btn.textContent = origText; btn.disabled = false; }
+  }
 }
 
 
