@@ -151,8 +151,17 @@ h1{font-size:28px;font-weight:900;text-align:center;background:linear-gradient(1
 <script>
 var S={resume:'',role:'',co:'',jd:'',diff:'intermediate',qNum:0,totalQs:5,transcript:'',qas:[],timer:null,secs:0,answerTimer:null,answerSecs:60};
 
-function checkFreeLimit(){var d=new Date().toISOString().split('T')[0];return parseInt(localStorage.getItem('zk_free_'+d)||'0')}
-function incFree(){var d=new Date().toISOString().split('T')[0],k='zk_free_'+d;localStorage.setItem(k,(parseInt(localStorage.getItem(k)||'0')+1).toString())}
+async function checkIPLimit(){
+  try{
+    var r=await fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'checkLimit'})});
+    var d=await r.json();
+    if(d.limited){alert('Free Trial Used Today!\n\nYou already used your free interview today.\nTry again tomorrow or unlock Premium rounds.\n\nRound 2: 25 Questions @ \u20b99/$2\nRound 3: 25 Questions @ \u20b929/$5');return false}
+    return true;
+  }catch(e){return true}
+}
+function recordUsage(){
+  fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'recordUsage'})}).catch(function(){});
+}
 
 function handleFile(inp){if(!inp.files||!inp.files[0])return;var f=inp.files[0],n=f.name.toLowerCase();document.getElementById('fn').textContent='Reading...';var r=new FileReader();
 if(n.endsWith('.txt')){r.onload=function(e){document.getElementById('inp_r').value=e.target.result;document.getElementById('fn').textContent='\u2713 '+f.name};r.readAsText(f)}
@@ -170,11 +179,11 @@ function payRound(amt){
   link.href='upi://pay?pa=9985933964-3@ybl&pn=ZapKitt&am='+amt+'&cu=INR&tn=MockInterview';
   S.totalQs=amt===9?30:55;
 }
-function begin(){
+async function begin(){
   if(checkFreeLimit()>=3){alert('Free Trial Limit Reached! You used 1 free interview today. Try tomorrow or upgrade to Premium (25 Questions @ \u20b99/$1)');return}
   S.resume=document.getElementById('inp_r').value.trim();S.role=document.getElementById('inp_role').value.trim()||'Software Engineer';S.co=document.getElementById('inp_co').value.trim()||S.co;S.jd=document.getElementById('inp_jd').value.trim();
   if(!S.resume||S.resume.length<30){alert('Paste or upload your resume first');return}
-  incFree();S.qNum=0;S.transcript='';S.qas=[];
+  recordUsage();S.qNum=0;S.transcript='';S.qas=[];
   document.getElementById('setup').classList.add('hide');document.getElementById('iv').classList.add('show');
   S.secs=0;S.timer=setInterval(function(){S.secs++;var m=Math.floor(S.secs/60),s=S.secs%60;document.getElementById('t_tm').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s},1000);
   var intro=S.co?'Good morning! I am from '+S.co+' and I will be conducting your interview for the '+S.role+' position.':'Welcome! I will be your interviewer for the '+S.role+' position.';
@@ -200,7 +209,7 @@ async function ask(){
     S.qas.push({q:q,a:''});
     setStatus('Speaker reading question...');
     speak(q,function(){
-      if(S.qNum===4||(S.qNum>=16&&S.qNum<=20)||(S.qNum>=21&&S.qNum<=25)||q.toLowerCase().indexOf('write')>=0||q.toLowerCase().indexOf('code')>=0||q.toLowerCase().indexOf('script')>=0||q.toLowerCase().indexOf('implement')>=0||q.toLowerCase().indexOf('function')>=0){
+      if(S.qNum===5||(S.qNum>=26&&S.qNum<=35)){
         setStatus('Coding question - write your code (2 min)');S.answerSecs=120;showCodeEditor();startTimer()
       }else{setStatus('Your turn - speak or type (60s)');enableInp();autoMicOn();startTimer()}});
   }catch(e){document.getElementById('tp').classList.remove('show');addM('ai','Connection error');enableInp()}}

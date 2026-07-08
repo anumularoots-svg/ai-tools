@@ -9,7 +9,34 @@ export default async function handler(req,res){
   if(req.method==="OPTIONS")return res.status(200).end();
   if(req.method!=="POST")return res.status(405).json({error:"POST only"});
   try{
-    var b=req.body,providers=getProviders();
+    var b=req.body;
+    
+    // IP-based free trial (1/day) — exclude dev IP
+    var userIP = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.connection.remoteAddress || '';
+    userIP = userIP.split(',')[0].trim();
+    var DEV_IPS = ['YOUR_IP_HERE']; // Add your IP to exclude
+    
+    if(b.action==='checkLimit'){
+      if(DEV_IPS.includes(userIP))return res.status(200).json({limited:false,dev:true});
+      var today=new Date().toISOString().split('T')[0];
+      var key='usage_'+today+'_'+userIP.replace(/[^a-zA-Z0-9]/g,'');
+      // Use global variable for in-memory tracking (resets on cold start)
+      if(!global._zkUsage)global._zkUsage={};
+      var used=!!global._zkUsage[key];
+      return res.status(200).json({limited:used,ip:userIP.substring(0,8)+'...'});
+    }
+    
+    if(b.action==='recordUsage'){
+      var today2=new Date().toISOString().split('T')[0];
+      var key2='usage_'+today2+'_'+userIP.replace(/[^a-zA-Z0-9]/g,'');
+      if(!global._zkUsage)global._zkUsage={};
+      global._zkUsage[key2]=true;
+      // Clean old entries (keep only today)
+      Object.keys(global._zkUsage).forEach(function(k){if(!k.includes(today2))delete global._zkUsage[k]});
+      return res.status(200).json({recorded:true});
+    }
+    
+    var providers=getProviders();
     if(!providers.length)return res.status(500).json({error:"No AI provider"});
 
     if(b.action==="evaluate"){
