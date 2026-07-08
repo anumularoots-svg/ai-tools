@@ -180,8 +180,7 @@ function payRound(amt){
   S.totalQs=amt===9?30:55;
 }
 async function begin(){
-  if(checkFreeLimit()>=3){alert('Free Trial Limit Reached! You used 1 free interview today. Try tomorrow or upgrade to Premium (25 Questions @ \u20b99/$1)');return}
-  S.resume=document.getElementById('inp_r').value.trim();S.role=document.getElementById('inp_role').value.trim()||'Software Engineer';S.co=document.getElementById('inp_co').value.trim()||S.co;S.jd=document.getElementById('inp_jd').value.trim();
+    S.resume=document.getElementById('inp_r').value.trim();S.role=document.getElementById('inp_role').value.trim()||'Software Engineer';S.co=document.getElementById('inp_co').value.trim()||S.co;S.jd=document.getElementById('inp_jd').value.trim();
   if(!S.resume||S.resume.length<30){alert('Paste or upload your resume first');return}
   recordUsage();S.qNum=0;S.transcript='';S.qas=[];
   document.getElementById('setup').classList.add('hide');document.getElementById('iv').classList.add('show');
@@ -306,7 +305,6 @@ function micOff(){isRec=false;if(recog)try{recog.stop()}catch(e){};document.getE
 function toggleMic(){if(!recog)initVoice();if(!recog)return;if(isRec)micOff();else autoMicOn()}
 initVoice();if(window.speechSynthesis)speechSynthesis.onvoiceschanged=function(){speechSynthesis.getVoices()};
 try{var sr=localStorage.getItem('zk_last_resume_text');if(sr)document.getElementById('inp_r').value=sr}catch(e){}
-var fl=checkFreeLimit(),rem=1-fl;
 if(rem>0)document.querySelector('.go').textContent='Start Mock Interview ('+rem+' left today)';
 else{document.querySelector('.go').textContent='Free interview used today - try tomorrow or go Premium';document.querySelector('.go').disabled=true}
 </script></body></html>

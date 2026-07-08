@@ -14,7 +14,7 @@ export default async function handler(req,res){
     // IP-based free trial (1/day) — exclude dev IP
     var userIP = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.connection.remoteAddress || '';
     userIP = userIP.split(',')[0].trim();
-    var DEV_IPS = ['YOUR_IP_HERE']; // Add your IP to exclude
+    var DEV_IPS = ['192.168.29.187']; // Dev IPs excluded from limit // Add your IP to exclude
     
     if(b.action==='checkLimit'){
       if(DEV_IPS.includes(userIP))return res.status(200).json({limited:false,dev:true});
