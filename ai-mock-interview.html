@@ -214,9 +214,9 @@ async function begin(){
   recordUsage();S.qNum=0;S.transcript='';S.qas=[];
   document.getElementById('setup').classList.add('hide');document.getElementById('iv').classList.add('show');
   S.secs=0;S.timer=setInterval(function(){S.secs++;var m=Math.floor(S.secs/60),s=S.secs%60;document.getElementById('t_tm').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s},1000);
-  var intro=S.co?'Good morning! I am from '+S.co+' and I will be conducting your interview for the '+S.role+' position.':'Welcome! I will be your interviewer for the '+S.role+' position.';
-  addM('ai','<div class="sn">\ud83c\udf99 Interviewer'+(S.co?' \u2014 '+S.co:'')+'</div>'+intro+' Let us begin.');
-  speak(intro+' Let us begin.',function(){setTimeout(ask,500)});
+  var intro=S.co?'Good morning. I\'m AI, Senior Engineering Manager at '+S.co+'. Today I\'ll be conducting your technical interview for the '+S.role+' position.':'Good morning. I\'m AI, your interviewer for the '+S.role+' position today.';
+  addM('ai','<div class="sn">\ud83c\udf99 Interviewer'+(S.co?' \u2014 '+S.co:'')+'</div>'+intro+' Let\'s begin.');
+  speak(intro+' Let\'s begin.',function(){setTimeout(ask,500)});
 }
 
 async function ask(){
