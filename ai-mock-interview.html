@@ -158,7 +158,7 @@ async function ask(){
   S.qNum++;if(S.qNum>S.totalQs){if(!S.paid&&S.plan==='premium'){showPW();return}showRes();return}
   document.getElementById('t_pr').textContent='Q '+S.qNum+'/'+S.totalQs;var tp=document.getElementById('tp');tp.classList.add('show');
   try{var r=await fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:S.qNum===1?'start':'answer',resume:S.resume+(S.jd?'\nJD:\n'+S.jd:''),role:S.role,company:S.co,difficulty:S.diff,round:'mixed',questionNum:S.qNum,totalQs:S.totalQs,history:S.history,answer:S.results.length?S.results[S.results.length-1].answer:''})});
-  var data=await r.json();tp.classList.remove('show');if(!data.success){addM('ai','Error — try again.');en();return}
+  var data=await r.json();tp.classList.remove('show');if(!data.success){addM('ai','Error: '+(data.error||'Unknown error. Please try again.'));en();return}
   var d=data.data;if(d.question==='INTERVIEW_COMPLETE'){showRes();return}
   var html='<div class="sn">🎙 AI Interviewer</div>';
   if(d.scores&&d.scores.overall>0){var sc=d.scores;['overall','technical','communication','confidence','star','grammar'].forEach(function(k){S.scores[k].push(sc[k]||0)});updA();
@@ -172,7 +172,7 @@ async function ask(){
   if(d.is_followup)html+='<div style="font-size:9px;color:#7c3aed;margin-top:2px">↳ Follow-up</div>';
   addM('ai',html);S.history.push({role:'assistant',content:JSON.stringify(d)});
   S.results.push({q:d.question,scores:d.scores,fb:d.feedback,wl:d.why_lost,ideal:d.ideal_answer,answer:''});en()
-  }catch(e){tp.classList.remove('show');addM('ai','Connection error.');en()}}
+  }catch(e){tp.classList.remove('show');addM('ai','Connection error: '+e.message+'. Check internet and try again.');en()}}
 
 function si(l,v){v=v||0;var c=v>=7?'g1':v>=5?'g2':'g3';return '<div class="si"><div class="sv '+c+'">'+v+'</div><div class="sl">'+l+'</div></div>'}
 function addM(t,h){var c=document.getElementById('chat'),d=document.createElement('div');d.className='m '+(t==='ai'?'ai':'u');d.innerHTML=h;c.appendChild(d);c.scrollTop=c.scrollHeight}

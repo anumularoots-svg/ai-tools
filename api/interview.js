@@ -1,5 +1,5 @@
-// ZapKitt AI Mock Interview API — Phase 1
-// Conversational interviewer: follows up on answers like a real interviewer
+// ZapKitt AI Mock Interview API
+// Conversational interviewer with follow-up questions
 
 function pickKey(env) {
   if (!env) return null;
@@ -25,72 +25,63 @@ async function callAI(prov, msgs) {
     var body = {contents:gm,generationConfig:{maxOutputTokens:1500,temperature:0.75}};
     if (sys) body.systemInstruction = {parts:[{text:sys.content}]};
     var r = await fetch(prov.url+"/models/"+prov.model+":generateContent?key="+prov.key,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-    if (!r.ok) throw new Error(r.status);
+    if (!r.ok) throw new Error("Gemini " + r.status);
     var d = await r.json(); return d.candidates[0].content.parts[0].text;
   } else {
     var h = {"Content-Type":"application/json","Authorization":"Bearer "+prov.key};
     if (prov.name==="openrouter"){h["HTTP-Referer"]="https://zapkitt.com";h["X-Title"]="ZapKitt"}
     var r2 = await fetch(prov.url,{method:"POST",headers:h,body:JSON.stringify({model:prov.model,messages:msgs,max_tokens:1500,temperature:0.75})});
-    if (!r2.ok) throw new Error(r2.status);
+    if (!r2.ok) throw new Error(prov.name + " " + r2.status);
     var d2 = await r2.json(); return d2.choices[0].message.content;
   }
 }
 
-module.exports = async function(req, res) {
-  if (req.method==="OPTIONS"){res.setHeader("Access-Control-Allow-Origin","*");res.setHeader("Access-Control-Allow-Methods","POST");res.setHeader("Access-Control-Allow-Headers","Content-Type");return res.status(200).end()}
-  if (req.method!=="POST") return res.status(405).json({error:"POST only"});
+export default async function handler(req, res) {
+  const origins = ["https://zapkitt.com", "https://www.zapkitt.com"];
+  const o = req.headers.origin || "";
+  res.setHeader("Access-Control-Allow-Origin", origins.includes(o) ? o : origins[0]);
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
 
   try {
     var b = req.body;
     var providers = getProviders();
-    if (!providers.length) return res.status(500).json({error:"No AI provider"});
+    if (!providers.length) return res.status(500).json({error:"No AI provider configured"});
 
     var resume = b.resume||"";
     var role = b.role||"Software Engineer";
     var company = b.company||"";
     var difficulty = b.difficulty||"intermediate";
-    var round = b.round||"mixed";
     var questionNum = b.questionNum||1;
     var totalQs = b.totalQs||5;
     var history = b.history||[];
     var action = b.action||"start";
 
-    var companyLine = company ? "You are a "+company+" interviewer. Match "+company+"'s known interview style and culture." : "You are a professional interviewer.";
-    var diffLine = {fresher:"Entry-level (0-2 yrs). Ask foundational questions.",intermediate:"Mid-level (2-5 yrs). Mix conceptual and practical.",senior:"Senior (5+ yrs). Ask architecture, leadership, deep technical."}[difficulty]||"";
+    var companyLine = company ? "You are a "+company+" interviewer. Match "+company+"'s interview style." : "You are a professional interviewer.";
+    var diffLine = {fresher:"entry-level (0-2 yrs)",intermediate:"mid-level (2-5 yrs)",senior:"senior (5+ yrs)"}[difficulty]||"mid-level";
 
-    var sys = companyLine+"\n";
-    sys += "You are conducting a REAL mock interview for: "+role+"\n";
-    sys += "Difficulty: "+diffLine+"\n\n";
-    sys += "CANDIDATE RESUME:\n"+resume+"\n\n";
-    sys += "CRITICAL RULES:\n";
-    sys += "1. This is question "+questionNum+" of "+totalQs+".\n";
-    sys += "2. BEHAVE LIKE A REAL INTERVIEWER — NOT a quiz bot.\n";
-    sys += "3. After the candidate answers, FOLLOW UP on what they said. Dig deeper.\n";
-    sys += "   Example flow:\n";
-    sys += "   - Q1: 'Tell me about yourself'\n";
-    sys += "   - User mentions SAP implementation\n";
-    sys += "   - Q2: 'You mentioned SAP. What was the biggest challenge during that implementation?'\n";
-    sys += "   - User says data migration\n";
-    sys += "   - Q3: 'Which migration approach did you use? Why that one?'\n";
-    sys += "   - Q4: 'If the client rejected that approach, what would you do differently?'\n";
-    sys += "4. Mix question types naturally: start with 'tell me about yourself', then drill into resume details, then scenarios, then behavioral.\n";
-    sys += "5. For question 1, always start with a warm intro and 'Tell me about yourself'.\n";
-    sys += "6. EVALUATE every answer (except Q1 start) with detailed scores.\n";
-    sys += "7. Show WHY marks were lost — be specific: 'Missing quantified impact', 'No STAR structure', 'Too vague'.\n";
-    sys += "8. Show the IDEAL answer — what a perfect candidate would say.\n";
-    sys += "9. If questionNum > totalQs, set question to 'INTERVIEW_COMPLETE' and provide overall summary.\n\n";
-    sys += "RESPOND ONLY IN THIS JSON (no markdown, no backticks, no extra text):\n";
-    sys += '{"question":"your question based on their previous answer","feedback":"detailed feedback on previous answer (empty for Q1)","scores":{"overall":0,"technical":0,"communication":0,"confidence":0,"star":0,"grammar":0},"why_lost":"specific reasons marks were deducted (empty for Q1)","ideal_answer":"what the perfect answer would be (empty for Q1)","tip":"one actionable improvement tip","category":"hr|technical|behavioral|scenario","is_followup":true}\n';
-    sys += "Scores are 1-10. For Q1 (action=start), all scores=0, feedback/why_lost/ideal_answer=empty.\n";
+    var sys = companyLine + " Conducting a real mock interview for: " + role + ". Difficulty: " + diffLine + ".\n\n";
+    sys += "RESUME:\n" + resume + "\n\n";
+    sys += "RULES:\n";
+    sys += "1. Question " + questionNum + " of " + totalQs + ".\n";
+    sys += "2. BEHAVE LIKE A REAL INTERVIEWER. Follow up on what the candidate said.\n";
+    sys += "3. Example: User mentions SAP → ask about SAP challenges → ask about migration approach → ask what-if scenarios.\n";
+    sys += "4. Q1 is always 'Tell me about yourself' with warm intro.\n";
+    sys += "5. Evaluate every answer with 6 scores (1-10 each).\n";
+    sys += "6. Show WHY marks lost and IDEAL answer.\n";
+    sys += "7. If questionNum > totalQs, set question to 'INTERVIEW_COMPLETE'.\n";
+    sys += "8. RESPOND ONLY IN JSON:\n";
+    sys += '{"question":"...","feedback":"...","scores":{"overall":0,"technical":0,"communication":0,"confidence":0,"star":0,"grammar":0},"why_lost":"...","ideal_answer":"...","tip":"...","is_followup":false}\n';
+    sys += "9. For Q1: scores all 0, feedback/why_lost/ideal_answer empty.\n";
 
     var messages = [{role:"system",content:sys}];
-
     if (action === "start") {
-      messages.push({role:"user",content:"Start the interview. Introduce yourself"+(company?" as a "+company+" interviewer":"")+" and ask the first question. RESPOND ONLY IN JSON."});
+      messages.push({role:"user",content:"Start interview. Ask question 1. JSON only."});
     } else {
-      // Add full conversation history for context (enables follow-ups)
       for (var i=0;i<history.length;i++) messages.push(history[i]);
-      messages.push({role:"user",content:b.answer+"\n\nEvaluate my answer with scores (1-10 each: overall, technical, communication, confidence, star, grammar). Show why I lost marks. Show ideal answer. Then ask a FOLLOW-UP question based on what I just said (question "+questionNum+" of "+totalQs+"). RESPOND ONLY IN JSON."});
+      messages.push({role:"user",content:b.answer+"\n\nScore my answer (1-10 each: overall,technical,communication,confidence,star,grammar). Show why I lost marks. Show ideal answer. Then ask follow-up question "+questionNum+"/"+totalQs+". JSON only."});
     }
 
     var lastErr = null;
@@ -104,6 +95,6 @@ module.exports = async function(req, res) {
         return res.status(200).json({success:true,data:parsed});
       } catch(e){lastErr=e;continue}
     }
-    return res.status(500).json({error:"All providers failed: "+(lastErr?lastErr.message:"")});
+    return res.status(500).json({error:"All providers failed: "+(lastErr?lastErr.message:"unknown")});
   } catch(e){return res.status(500).json({error:e.message})}
-};
+}
