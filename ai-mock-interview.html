@@ -1,0 +1,291 @@
+<!DOCTYPE html><html lang="en"><head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3VLGB81N09"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-3VLGB81N09");</script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Mock Interview — Real-Time Practice with Scoring | ZapKitt</title>
+<meta name="description" content="Practice real mock interviews with AI. Resume-based conversational questions, follow-ups, detailed scoring. Free 5 questions.">
+<link rel="canonical" href="https://zapkitt.com/ai-mock-interview">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:Inter,system-ui,sans-serif;background:#0a0612;color:#e2e8f0;min-height:100vh}
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,6,18,.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(124,58,237,.15)}.nav-in{max-width:1100px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}.logo{display:flex;align-items:center;gap:8px;text-decoration:none;font-weight:800;font-size:18px;color:#fff}.logo span{color:#a855f7}.logo svg{width:28px;height:28px}.nl a{text-decoration:none;color:#94a3b8;font-size:13px;font-weight:500;margin-left:16px}.nl a:hover{color:#a855f7}
+
+/* SETUP */
+.setup{max-width:640px;margin:0 auto;padding:30px 20px}.setup.hide{display:none}
+h1{font-size:28px;font-weight:900;text-align:center;background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+.sub{text-align:center;color:#94a3b8;font-size:13px;margin-bottom:20px}
+.flow{display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:24px;flex-wrap:wrap}.flow div{padding:5px 10px;border-radius:7px;font-size:10px;font-weight:700;background:rgba(124,58,237,.08);color:#a78bfa;border:1px solid rgba(124,58,237,.15)}.flow div.cur{background:rgba(124,58,237,.2);color:#fff;border-color:#a855f7}.flow span{color:#4a3a6a;font-size:12px}
+.card{background:rgba(124,58,237,.04);border:1.5px solid rgba(124,58,237,.12);border-radius:13px;padding:22px;margin-bottom:14px}
+.card h3{font-size:14px;font-weight:800;color:#c4b5fd;margin-bottom:10px}
+.f{margin-bottom:12px}.f label{display:block;font-size:11px;font-weight:600;color:#a78bfa;margin-bottom:4px}
+.f textarea,.f input,.f select{width:100%;padding:10px 12px;background:rgba(255,255,255,.04);border:1.5px solid rgba(124,58,237,.18);border-radius:8px;color:#e2e8f0;font-size:13px;font-family:inherit;outline:0;transition:.2s}.f textarea:focus,.f input:focus,.f select:focus{border-color:#a855f7}
+.f textarea{min-height:90px;resize:vertical}.f select option{background:#1a1025}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint{font-size:10px;color:#4a3a6a;margin-top:3px}
+/* Difficulty */
+.diff{display:flex;gap:6px;margin-bottom:12px}.diff button{flex:1;padding:10px 6px;border:2px solid rgba(124,58,237,.12);border-radius:9px;background:0 0;cursor:pointer;text-align:center;font-family:inherit;transition:.2s}.diff button:hover{border-color:rgba(124,58,237,.3)}.diff button.on{border-color:#a855f7;background:rgba(124,58,237,.1)}.diff .em{font-size:18px;display:block;margin-bottom:2px}.diff .dl{font-size:11px;font-weight:700;color:#e2e8f0}.diff .ds{font-size:9px;color:#64748b}
+/* Company chips */
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}.ch{padding:5px 12px;border-radius:18px;font-size:11px;font-weight:600;border:1.5px solid rgba(124,58,237,.15);background:0 0;color:#a78bfa;cursor:pointer;font-family:inherit;transition:.2s}.ch:hover{border-color:#a855f7}.ch.on{border-color:#a855f7;background:rgba(124,58,237,.12);color:#fff}
+/* Plans */
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}.pl{border:2px solid rgba(124,58,237,.12);border-radius:11px;padding:14px;text-align:center;cursor:pointer;transition:.2s;position:relative}.pl:hover{border-color:rgba(124,58,237,.3)}.pl.on{border-color:#a855f7;background:rgba(124,58,237,.06)}.pl.pop::after{content:"RECOMMENDED";position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#a855f7;color:#fff;font-size:8px;font-weight:800;padding:2px 8px;border-radius:8px}.pl .pn{font-size:12px;font-weight:800;color:#c4b5fd}.pl .pp{font-size:20px;font-weight:900;color:#fff;margin:4px 0}.pl .pp small{font-size:10px;color:#94a3b8;font-weight:500}.pl .pf{text-align:left;font-size:10px;color:#94a3b8;line-height:1.6;margin-top:6px}.pl .pf b{color:#86efac}
+.go{width:100%;padding:14px;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;box-shadow:0 4px 18px rgba(124,58,237,.25);transition:.2s}.go:hover{transform:translateY(-2px)}.go:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* INTERVIEW */
+.iv{display:none;max-width:760px;margin:0 auto;padding:14px 20px}.iv.show{display:block}
+.bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;padding:10px 14px;background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.1);border-radius:9px;margin-bottom:12px}.tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px}.tag.rd{background:rgba(168,85,247,.12);color:#c4b5fd}.tag.pr{background:rgba(34,197,94,.1);color:#86efac}.tag.tm{background:rgba(245,158,11,.1);color:#fcd34d;font-variant-numeric:tabular-nums}.tag.av{background:rgba(59,130,246,.1);color:#93c5fd}
+.chat{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;max-height:450px;overflow-y:auto;padding-right:4px;scroll-behavior:smooth}
+.m{max-width:88%;padding:12px 14px;border-radius:13px;font-size:13px;line-height:1.6;animation:fi .3s}@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.m.ai{align-self:flex-start;background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.12);border-bottom-left-radius:3px}.m.ai .sn{font-size:10px;font-weight:700;color:#a855f7;margin-bottom:4px}
+.m.u{align-self:flex-end;background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.12);border-bottom-right-radius:3px;color:#93c5fd}
+/* Score breakdown */
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:8px 0}.si{background:rgba(0,0,0,.2);border-radius:7px;padding:5px 6px;text-align:center}.sv{font-size:15px;font-weight:800}.sl{font-size:8px;font-weight:600;color:#94a3b8;margin-top:1px}.sg1{color:#86efac}.sg2{color:#fcd34d}.sg3{color:#fca5a5}
+.wl{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.12);border-radius:7px;padding:7px 9px;margin:6px 0;font-size:11px;color:#fca5a5}
+.ia{background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.1);border-radius:7px;padding:7px 9px;margin:6px 0;font-size:11px;color:#86efac}.ia summary{cursor:pointer;font-weight:700;font-size:10px}
+.tp{display:none;padding:7px 12px;background:rgba(124,58,237,.07);border-radius:12px;font-size:11px;color:#a855f7;align-self:flex-start}.tp.show{display:block}.tp span{animation:bl 1.4s infinite}.tp span:nth-child(2){animation-delay:.2s}.tp span:nth-child(3){animation-delay:.4s}@keyframes bl{0%,100%{opacity:.2}50%{opacity:1}}
+.ab{display:flex;gap:7px;align-items:flex-end}.ai-in{flex:1;padding:11px 13px;background:rgba(255,255,255,.04);border:1.5px solid rgba(124,58,237,.18);border-radius:9px;color:#e2e8f0;font-size:13px;font-family:inherit;outline:0;resize:none;min-height:42px;max-height:120px;transition:.2s}.ai-in:focus{border-color:#a855f7}
+.sb{padding:11px 16px;border:none;border-radius:9px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:.2s}.sb:disabled{opacity:.3;cursor:not-allowed}
+
+/* Paywall */
+.pw{display:none;text-align:center;padding:24px;background:rgba(124,58,237,.06);border:1.5px solid rgba(124,58,237,.2);border-radius:14px;margin-top:14px}.pw.show{display:block}
+.pw h3{font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:6px}.pw p{font-size:12px;color:#94a3b8;margin-bottom:12px}
+.pb{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.pb a,.pb button{padding:10px 20px;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+
+/* RESULTS */
+.rs{display:none;max-width:760px;margin:0 auto;padding:20px}.rs.show{display:block}
+.rs h2{font-size:22px;font-weight:900;text-align:center;color:#fff;margin-bottom:4px}.rs .rsub{text-align:center;color:#94a3b8;font-size:12px;margin-bottom:16px}
+.bs{width:120px;height:120px;border-radius:50%;border:5px solid;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 18px}.bs .bn{font-size:34px;font-weight:900}.bs .bp{font-size:10px;font-weight:600;opacity:.7}
+.cs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}.ci{background:rgba(124,58,237,.04);border:1px solid rgba(124,58,237,.08);border-radius:9px;padding:12px;text-align:center}.ci .cv{font-size:20px;font-weight:800}.ci .cl{font-size:9px;color:#94a3b8;font-weight:600;margin-top:2px}.br{height:3px;border-radius:2px;background:rgba(124,58,237,.08);margin-top:5px;overflow:hidden}.bf{height:100%;border-radius:2px}
+.ib{background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.12);border-radius:9px;padding:14px;margin-bottom:14px}.ib h4{font-size:12px;font-weight:700;color:#fcd34d;margin-bottom:6px}.ib li{font-size:11px;color:#e2e8f0;margin-bottom:3px;line-height:1.5}
+.ql{margin-top:14px}.qi{background:rgba(255,255,255,.02);border:1px solid rgba(124,58,237,.06);border-radius:8px;padding:10px;margin-bottom:7px}.qi .qh{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}.qi .qq{font-size:11px;font-weight:600;color:#c4b5fd}.qi .qs{font-size:15px;font-weight:800}.qi .qf{font-size:10px;color:#94a3b8;margin-top:3px;line-height:1.4}
+.rb{display:flex;gap:7px;margin-top:14px;flex-wrap:wrap}.rb button,.rb a{flex:1;padding:12px;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;text-align:center;text-decoration:none;min-width:100px}
+.foot{text-align:center;padding:20px;border-top:1px solid rgba(124,58,237,.06);color:#4a3a6a;font-size:10px;margin-top:24px}.foot a{color:#a855f7;text-decoration:none}
+@media(max-width:640px){h1{font-size:22px}.r2{grid-template-columns:1fr}.plans{grid-template-columns:1fr}.cs{grid-template-columns:1fr 1fr}.diff{flex-direction:column}.sg{grid-template-columns:repeat(2,1fr)}.ab{flex-direction:column}.sb{width:100%}.flow{display:none}}
+</style></head><body>
+<nav class="nav"><div class="nav-in"><a href="/" class="logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="url(#g)"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/><defs><linearGradient id="g" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs></svg><div>Zap<span>Kitt</span></div></a><div class="nl"><a href="/ai-resume-builder">Resume Builder</a><a href="/">All Tools</a></div></div></nav>
+
+<!-- SETUP -->
+<div class="setup" id="setup">
+<h1>AI Mock Interview</h1>
+<p class="sub">Real conversational interview — AI follows up on YOUR answers, just like a real interviewer</p>
+<div class="flow"><div>Resume</div><span>→</span><div>ATS Score</div><span>→</span><div class="cur">Mock Interview</div><span>→</span><div>Get Scored</div><span>→</span><div>Interview Ready</div></div>
+
+<div class="card"><h3>📄 Your Resume</h3>
+<div class="f"><label>Paste Resume</label><textarea id="inp_resume" placeholder="Paste your full resume..."></textarea><div class="hint"><a href="/ai-resume-builder" style="color:#a855f7">Build resume first →</a></div></div>
+<div class="r2"><div class="f"><label>Target Role</label><input id="inp_role" placeholder="e.g. QA Automation Engineer"></div>
+<div class="f"><label>Job Description (optional)</label><input id="inp_jd" placeholder="Key requirements from JD"></div></div></div>
+
+<div class="card"><h3>🏢 Company (optional)</h3>
+<div class="chips" id="chips">
+<button class="ch on" onclick="pickCo(this,'')">Any</button>
+<button class="ch" onclick="pickCo(this,'Google')">Google</button>
+<button class="ch" onclick="pickCo(this,'Amazon')">Amazon</button>
+<button class="ch" onclick="pickCo(this,'Microsoft')">Microsoft</button>
+<button class="ch" onclick="pickCo(this,'TCS')">TCS</button>
+<button class="ch" onclick="pickCo(this,'Infosys')">Infosys</button>
+<button class="ch" onclick="pickCo(this,'Accenture')">Accenture</button>
+<button class="ch" onclick="pickCo(this,'Deloitte')">Deloitte</button>
+<button class="ch" onclick="pickCo(this,'Wipro')">Wipro</button>
+<button class="ch" onclick="pickCo(this,'Meta')">Meta</button>
+</div>
+<div class="f"><label>Or type</label><input id="inp_co" placeholder="e.g. Razorpay, Netflix"></div></div>
+
+<div class="card"><h3>📊 Difficulty</h3>
+<div class="diff">
+<button onclick="pickDf(this,'fresher')"><span class="em">🟢</span><span class="dl">Fresher</span><span class="ds">0-2 yrs</span></button>
+<button class="on" onclick="pickDf(this,'intermediate')"><span class="em">🟡</span><span class="dl">Mid-Level</span><span class="ds">2-5 yrs</span></button>
+<button onclick="pickDf(this,'senior')"><span class="em">🔴</span><span class="dl">Senior</span><span class="ds">5+ yrs</span></button></div></div>
+
+<div class="card"><h3>💳 Plan</h3>
+<div class="plans">
+<div class="pl on" onclick="pickPl(this,'free')"><div class="pn">Free</div><div class="pp">₹0</div><div class="pf"><b>✓</b> 5 Questions<br><b>✓</b> AI Scoring<br><b>✓</b> Basic Report</div></div>
+<div class="pl pop" onclick="pickPl(this,'premium')"><div class="pn">Premium</div><div class="pp">₹29 <small>/ $2</small></div><div class="pf"><b>✓</b> 25 Questions<br><b>✓</b> Follow-up Drilling<br><b>✓</b> Company-Specific<br><b>✓</b> Full Report<br><b>✓</b> Ideal Answers<br><b>✓</b> Weak Area Analysis</div></div>
+</div></div>
+
+<button class="go" onclick="begin()">🎤 Start Mock Interview</button>
+</div>
+
+<!-- INTERVIEW -->
+<div class="iv" id="iv">
+<div class="bar"><span class="tag rd" id="t_rd">Interview</span><span class="tag pr" id="t_pr">Q 1/5</span><span class="tag tm" id="t_tm">00:00</span><span class="tag av" id="t_av">Avg: --</span></div>
+<div class="chat" id="chat"></div>
+<div class="tp" id="tp"><span>.</span><span>.</span><span>.</span> AI is thinking</div>
+<div class="ab" id="ab">
+<textarea class="ai-in" id="ainp" placeholder="Type your answer... (Enter to send, Shift+Enter for new line)" rows="2" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
+<button class="sb" id="sbtn" onclick="send()">Send ↵</button></div>
+<div class="pw" id="pw">
+<h3>Free demo complete!</h3>
+<p>You scored <span id="pw_score"></span>/10 avg. Unlock the full 25-question interview with detailed feedback.</p>
+<div class="pb">
+<a href="#" onclick="document.getElementById('upiM').style.display='flex';return false" style="background:#2563eb;color:#fff">₹29 — UPI Pay</a>
+<a href="https://ko-fi.com/zapkitt" target="_blank" style="background:#FF5E5B;color:#fff">$2 — Ko-fi</a>
+</div>
+<p style="margin-top:10px;font-size:10px;color:#64748b">After payment:</p>
+<button onclick="unlock()" style="margin-top:6px;padding:9px 20px;background:#22c55e;color:#fff;border:none;border-radius:7px;font-weight:700;cursor:pointer;font-family:inherit;font-size:12px">I've Paid — Continue Interview →</button>
+</div>
+</div>
+
+<!-- UPI Modal -->
+<div id="upiM" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:999;align-items:center;justify-content:center">
+<div style="background:#1a1025;border-radius:14px;padding:24px;max-width:320px;width:90%;text-align:center;border:1px solid rgba(124,58,237,.2)">
+<div style="font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:10px">Pay ₹29 via UPI</div>
+<div style="background:rgba(124,58,237,.08);border:2px dashed #7c3aed;border-radius:10px;padding:14px;margin-bottom:12px">
+<div style="font-size:11px;color:#94a3b8">UPI ID</div>
+<div style="font-size:16px;font-weight:700;color:#a855f7;margin:4px 0">9985933964-3@ybl</div>
+<button onclick="navigator.clipboard.writeText('9985933964-3@ybl');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy UPI ID',1500)" style="padding:5px 14px;background:#7c3aed;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;margin-top:4px">Copy UPI ID</button></div>
+<a href="upi://pay?pa=9985933964-3@ybl&pn=ZapKitt&am=29&cu=INR&tn=MockInterview" style="display:block;padding:10px;background:#2563eb;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;margin-bottom:6px">Open UPI App</a>
+<div style="font-size:10px;color:#64748b">Pay → Come back → Click "I've Paid"</div>
+</div></div>
+
+<!-- RESULTS -->
+<div class="rs" id="rs">
+<h2>Interview Complete!</h2>
+<div class="rsub" id="rsub"></div>
+<div class="bs" id="bscore"><span class="bn" id="bnum">--</span><span class="bp">/ 100</span></div>
+<div class="cs" id="cs"></div>
+<div class="ib" id="ib"><h4>🎯 Recommended Practice</h4><ul id="il"></ul></div>
+<div class="ql" id="ql"></div>
+<div class="rb">
+<button onclick="location.reload()" style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff">New Interview</button>
+<button onclick="dlReport()" style="background:rgba(255,255,255,.05);color:#e2e8f0;border:1px solid rgba(124,58,237,.15)">Download Report</button>
+<a href="/ai-resume-builder" style="background:rgba(34,197,94,.08);color:#86efac;border:1px solid rgba(34,197,94,.15)">Improve Resume</a></div>
+</div>
+
+<footer class="foot"><p>ZapKitt — <a href="/">All Tools</a> | <a href="/ai-resume-builder">Resume Builder</a> | <a href="https://ko-fi.com/zapkitt" target="_blank">Support Us ☕</a></p></footer>
+
+<script>
+var S={resume:"",role:"",co:"",jd:"",diff:"intermediate",plan:"free",qNum:0,totalQs:5,history:[],results:[],scores:{overall:[],technical:[],communication:[],confidence:[],star:[],grammar:[]},timer:null,secs:0,paid:false};
+
+function pickCo(el,v){document.querySelectorAll('.ch').forEach(function(c){c.classList.remove('on')});el.classList.add('on');S.co=v;document.getElementById('inp_co').value=v}
+function pickDf(el,v){document.querySelectorAll('.diff button').forEach(function(b){b.classList.remove('on')});el.classList.add('on');S.diff=v}
+function pickPl(el,v){document.querySelectorAll('.pl').forEach(function(b){b.classList.remove('on')});el.classList.add('on');S.plan=v;S.totalQs=v==='free'?5:25}
+
+function begin(){
+  S.resume=document.getElementById('inp_resume').value.trim();
+  S.role=document.getElementById('inp_role').value.trim()||"Software Engineer";
+  S.co=document.getElementById('inp_co').value.trim()||S.co;
+  S.jd=document.getElementById('inp_jd').value.trim();
+  if(!S.resume||S.resume.length<30){alert("Paste your resume first (at least 30 characters)");return}
+  S.qNum=0;S.history=[];S.results=[];S.scores={overall:[],technical:[],communication:[],confidence:[],star:[],grammar:[]};
+  S.paid=S.plan==='free'?true:!!localStorage.getItem('zk_iv_paid');
+  if(S.plan==='premium'&&!S.paid)S.totalQs=5; // free demo first
+
+  document.getElementById('setup').classList.add('hide');
+  document.getElementById('iv').classList.add('show');
+
+  S.secs=0;S.timer=setInterval(function(){S.secs++;var m=Math.floor(S.secs/60),s=S.secs%60;document.getElementById('t_tm').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s},1000);
+
+  var intro=S.co?"Welcome! I'm your "+S.co+" interviewer today for the "+S.role+" role.":"Welcome! I'll be interviewing you today for the "+S.role+" position.";
+  intro+=" This will feel like a real interview — I'll ask follow-up questions based on your answers. Let's begin.";
+  addM('ai','<div class="sn">🎙 AI Interviewer'+(S.co?' — '+S.co:'')+'</div>'+intro);
+  setTimeout(ask,700);
+}
+
+async function ask(){
+  S.qNum++;
+  if(S.qNum>S.totalQs){
+    if(!S.paid&&S.plan==='premium'){showPaywall();return}
+    showResults();return;
+  }
+  document.getElementById('t_pr').textContent='Q '+S.qNum+'/'+S.totalQs;
+  var tp=document.getElementById('tp');tp.classList.add('show');
+
+  try{
+    var body={action:S.qNum===1?'start':'answer',resume:S.resume+(S.jd?'\nJOB DESCRIPTION:\n'+S.jd:''),role:S.role,company:S.co,difficulty:S.diff,round:'mixed',questionNum:S.qNum,totalQs:S.totalQs,history:S.history,answer:S.results.length?S.results[S.results.length-1].answer:''};
+    var r=await fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    var data=await r.json();tp.classList.remove('show');
+    if(!data.success){addM('ai','Error — please try again.');enable();return}
+    var d=data.data;
+    if(d.question==='INTERVIEW_COMPLETE'){showResults();return}
+
+    var html='<div class="sn">🎙 AI Interviewer</div>';
+
+    // Scores from previous answer
+    if(d.scores&&d.scores.overall>0){
+      var sc=d.scores;
+      ['overall','technical','communication','confidence','star','grammar'].forEach(function(k){S.scores[k].push(sc[k]||0)});
+      updAvg();
+      html+='<div class="sg">';
+      html+=si('Overall',sc.overall)+si('Technical',sc.technical)+si('Comm.',sc.communication);
+      html+=si('Confidence',sc.confidence)+si('STAR',sc.star)+si('Grammar',sc.grammar);
+      html+='</div>';
+      if(d.feedback)html+='<div style="font-size:12px;margin-bottom:5px">'+d.feedback+'</div>';
+      if(d.why_lost)html+='<div class="wl">❌ '+d.why_lost+'</div>';
+      if(d.ideal_answer)html+='<details class="ia"><summary>✅ Ideal Answer</summary><div style="margin-top:5px">'+d.ideal_answer+'</div></details>';
+      if(d.tip)html+='<div style="font-size:10px;color:#fcd34d;margin:4px 0">💡 '+d.tip+'</div>';
+      html+='<hr style="border:0;border-top:1px solid rgba(124,58,237,.08);margin:8px 0">';
+    }
+
+    html+='<div style="font-size:13px;font-weight:500">'+d.question+'</div>';
+    if(d.is_followup)html+='<div style="font-size:9px;color:#a855f7;margin-top:3px">↳ Follow-up question</div>';
+
+    addM('ai',html);
+    S.history.push({role:'assistant',content:JSON.stringify(d)});
+    S.results.push({q:d.question,cat:d.category||'',scores:d.scores,fb:d.feedback,wl:d.why_lost,ideal:d.ideal_answer,answer:''});
+    enable();
+  }catch(e){tp.classList.remove('show');addM('ai','Connection error. Try again.');enable()}
+}
+
+function si(l,v){v=v||0;var c=v>=7?'sg1':v>=5?'sg2':'sg3';return '<div class="si"><div class="sv '+c+'">'+v+'</div><div class="sl">'+l+'</div></div>'}
+
+function addM(t,h){var c=document.getElementById('chat'),d=document.createElement('div');d.className='m '+t;d.innerHTML=h;c.appendChild(d);c.scrollTop=c.scrollHeight}
+function enable(){document.getElementById('sbtn').disabled=false;document.getElementById('ainp').disabled=false;document.getElementById('ainp').focus()}
+
+function send(){
+  var inp=document.getElementById('ainp'),a=inp.value.trim();if(!a)return;
+  addM('u',a);
+  if(S.results.length)S.results[S.results.length-1].answer=a;
+  S.history.push({role:'user',content:a});
+  inp.value='';inp.disabled=true;document.getElementById('sbtn').disabled=true;
+  ask();
+}
+
+function updAvg(){var s=S.scores.overall,sum=0;for(var i=0;i<s.length;i++)sum+=s[i];document.getElementById('t_av').textContent='Avg: '+(s.length?(sum/s.length).toFixed(1):'--')+'/10'}
+
+function showPaywall(){
+  document.getElementById('ab').style.display='none';
+  var avg=S.scores.overall,sum=0;for(var i=0;i<avg.length;i++)sum+=avg[i];
+  document.getElementById('pw_score').textContent=avg.length?(sum/avg.length).toFixed(1):'--';
+  document.getElementById('pw').classList.add('show');
+}
+
+function unlock(){S.paid=true;localStorage.setItem('zk_iv_paid','1');S.totalQs=25;document.getElementById('pw').classList.remove('show');document.getElementById('ab').style.display='flex';enable();ask()}
+
+function showResults(){
+  clearInterval(S.timer);document.getElementById('iv').classList.remove('show');document.getElementById('rs').classList.add('show');
+  var avg=function(a){if(!a.length)return 0;var s=0;for(var i=0;i<a.length;i++)s+=a[i];return Math.round(s/a.length*10)};
+  var ov=avg(S.scores.overall),te=avg(S.scores.technical),co=avg(S.scores.communication),cn=avg(S.scores.confidence),st=avg(S.scores.star),gr=avg(S.scores.grammar);
+  document.getElementById('rsub').textContent=S.role+(S.co?' at '+S.co:'')+' | '+Math.floor(S.secs/60)+'m '+(S.secs%60)+'s | '+S.results.length+' questions';
+  var cl=ov>=70?'#22c55e':ov>=50?'#f59e0b':'#ef4444';
+  document.getElementById('bscore').style.borderColor=cl;document.getElementById('bnum').textContent=ov;document.getElementById('bnum').style.color=cl;
+
+  var ch='';[['Technical',te],['Communication',co],['Confidence',cn],['STAR',st],['Grammar',gr]].forEach(function(c){var cl2=c[1]>=70?'#22c55e':c[1]>=50?'#f59e0b':'#ef4444';ch+='<div class="ci"><div class="cv" style="color:'+cl2+'">'+c[1]+'%</div><div class="cl">'+c[0]+'</div><div class="br"><div class="bf" style="width:'+c[1]+'%;background:'+cl2+'"></div></div></div>'});
+  document.getElementById('cs').innerHTML=ch;
+
+  var imps=[];
+  if(st<60)imps.push('Practice STAR format — structure answers with Situation, Task, Action, Result');
+  if(cn<60)imps.push('Build confidence — use specific examples, avoid "I think" or "maybe"');
+  if(co<60)imps.push('Improve communication — be concise, avoid filler, use clear language');
+  if(te<60)imps.push('Strengthen technical depth — review core concepts in your domain');
+  if(gr<70)imps.push('Polish grammar and professional language');
+  if(!imps.length)imps.push('Great performance! Keep practicing to stay sharp.');
+  document.getElementById('il').innerHTML=imps.map(function(i){return '<li>'+i+'</li>'}).join('');
+
+  var ql='';S.results.forEach(function(r,i){var sc=r.scores?r.scores.overall||0:0;var cl3=sc>=7?'#86efac':sc>=5?'#fcd34d':'#fca5a5';
+    ql+='<div class="qi"><div class="qh"><span class="qq">Q'+(i+1)+(r.cat?' ['+r.cat+']':'')+'</span><span class="qs" style="color:'+cl3+'">'+sc+'/10</span></div>';
+    ql+='<div class="qq">'+r.q+'</div>';
+    if(r.answer)ql+='<div class="qf" style="color:#93c5fd">You: '+r.answer.substring(0,100)+(r.answer.length>100?'...':'')+'</div>';
+    if(r.fb)ql+='<div class="qf">'+r.fb+'</div>';ql+='</div>'});
+  document.getElementById('ql').innerHTML=ql;
+}
+
+function dlReport(){
+  var t='AI MOCK INTERVIEW REPORT\n========================\n\nRole: '+S.role+(S.co?' | Company: '+S.co:'')+'\nDuration: '+Math.floor(S.secs/60)+'m '+(S.secs%60)+'s\nQuestions: '+S.results.length+'\nDifficulty: '+S.diff+'\n\n';
+  var avg=function(a){if(!a.length)return 0;var s=0;for(var i=0;i<a.length;i++)s+=a[i];return Math.round(s/a.length*10)};
+  t+='INTERVIEW READINESS: '+avg(S.scores.overall)+'/100\nTechnical: '+avg(S.scores.technical)+'/100\nCommunication: '+avg(S.scores.communication)+'/100\nConfidence: '+avg(S.scores.confidence)+'/100\nSTAR: '+avg(S.scores.star)+'/100\nGrammar: '+avg(S.scores.grammar)+'/100\n\n---\n\n';
+  S.results.forEach(function(r,i){t+='Q'+(i+1)+' [Score: '+(r.scores?r.scores.overall:'-')+'/10]\n'+r.q+'\nYour Answer: '+(r.answer||'-')+'\n';if(r.fb)t+='Feedback: '+r.fb+'\n';if(r.wl)t+='Why lost: '+r.wl+'\n';if(r.ideal)t+='Ideal: '+r.ideal+'\n';t+='\n---\n\n'});
+  t+='Generated by ZapKitt — zapkitt.com/ai-mock-interview\n';
+  var b=new Blob([t],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='Interview_Report_'+S.role.replace(/\s+/g,'_')+'.txt';a.click()
+}
+
+try{var sr=localStorage.getItem('zk_last_resume_text');if(sr)document.getElementById('inp_resume').value=sr}catch(e){}
+</script></body></html>
