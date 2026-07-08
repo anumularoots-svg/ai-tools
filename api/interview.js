@@ -36,6 +36,13 @@ export default async function handler(req,res){
       return res.status(200).json({recorded:true});
     }
     
+    if(b.action==='feedback'){
+      if(!global._zkFeedback)global._zkFeedback=[];
+      global._zkFeedback.push({time:new Date().toISOString(),ip:userIP.substring(0,8),rating:b.rating||0,text:b.text||'',role:b.role||'',company:b.company||'',score:b.score||0});
+      console.log('FEEDBACK:',JSON.stringify({rating:b.rating,text:b.text,role:b.role,score:b.score}));
+      return res.status(200).json({saved:true});
+    }
+    
     var providers=getProviders();
     if(!providers.length)return res.status(500).json({error:"No AI provider"});
 

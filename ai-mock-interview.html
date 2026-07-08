@@ -124,19 +124,49 @@ h1{font-size:28px;font-weight:900;text-align:center;background:linear-gradient(1
 <div class="ib" id="weakBox"><h4>🎯 Areas to Improve</h4><ul id="weakList"></ul></div>
 <div id="qReview"></div>
 <div style="background:#f3f0ff;border:1.5px solid #ddd6fe;border-radius:12px;padding:16px;text-align:center;margin-top:16px">
-<div style="font-size:16px;font-weight:800;color:#7c3aed;margin-bottom:8px">You completed Round 1. Ready for the real challenge?</div>
-<div style="font-size:13px;color:#374151;margin-bottom:6px;line-height:1.6">Premium unlocks <b>25 advanced questions</b> covering:</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;font-size:12px;color:#374151;text-align:left;max-width:400px;margin-left:auto;margin-right:auto">
-<div>&#10004; Deep Technical (5 different technologies)</div>
-<div>&#10004; Real-time Scenarios (production issues)</div>
-<div>&#10004; System Design &amp; Architecture</div>
-<div>&#10004; Coding Challenges</div>
-<div>&#10004; Company-specific questions</div>
-<div>&#10004; Detailed ideal answers</div></div>
-<div style="font-size:11px;color:#64748b;margin-bottom:10px">Most candidates improve 40% after practicing Round 2</div>
+<div style="font-size:16px;font-weight:800;color:#7c3aed;margin-bottom:12px">Unlock Advanced Rounds</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+<div style="background:#faf8ff;border:2px solid #ede9fe;border-radius:12px;padding:16px;text-align:left">
+<div style="font-size:14px;font-weight:800;color:#7c3aed;margin-bottom:4px">Round 2 — Technical + Scenario</div>
+<div style="font-size:20px;font-weight:900;color:#1a1a2e;margin-bottom:8px">&#8377;9 <span style="font-size:12px;color:#64748b;font-weight:500">/ $2</span></div>
+<div style="font-size:11px;color:#374151;line-height:1.7">
+&#10004; 25 Unique Questions<br>
+&#10004; Advanced Technical (5 different technologies)<br>
+&#10004; Real-time Production Scenarios<br>
+&#10004; System Design &amp; Architecture<br>
+&#10004; Company-specific standards<br>
+&#10004; Detailed ideal answers with code</div>
+<a href="#" onclick="payRound(9);return false" style="display:block;text-align:center;margin-top:10px;padding:10px;background:#2563eb;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">Start Round 2 — &#8377;9</a>
+</div>
+<div style="background:#faf8ff;border:2px solid #7c3aed;border-radius:12px;padding:16px;text-align:left;position:relative">
+<div style="position:absolute;top:-10px;right:12px;background:#7c3aed;color:#fff;font-size:9px;font-weight:800;padding:2px 10px;border-radius:10px">BEST VALUE</div>
+<div style="font-size:14px;font-weight:800;color:#7c3aed;margin-bottom:4px">Round 3 — Coding + HR</div>
+<div style="font-size:20px;font-weight:900;color:#1a1a2e;margin-bottom:8px">&#8377;29 <span style="font-size:12px;color:#64748b;font-weight:500">/ $5</span></div>
+<div style="font-size:11px;color:#374151;line-height:1.7">
+&#10004; 25 Unique Questions<br>
+&#10004; 10 Coding Problems (code editor)<br>
+&#10004; 10 Cross-domain Scenarios<br>
+&#10004; 5 HR Questions (salary, leadership)<br>
+&#10004; MNC interview standards<br>
+&#10004; Working code in ideal answers</div>
+<a href="#" onclick="payRound(29);return false" style="display:block;text-align:center;margin-top:10px;padding:10px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">Start Round 3 — &#8377;29</a>
+</div></div>
 <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
 <a href="#" onclick="document.getElementById('upiM').style.display='flex';return false" style="padding:10px 20px;background:#2563eb;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">₹9 — UPI</a>
 <a href="https://ko-fi.com/zapkitt" target="_blank" style="padding:10px 20px;background:#FF5E5B;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">$1 — Ko-fi</a></div></div>
+<div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:20px;margin-top:16px;text-align:center">
+<div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:8px">How was your interview experience?</div>
+<div style="display:flex;justify-content:center;gap:8px;margin-bottom:12px" id="ratingBtns">
+<button onclick="rateFeedback(1)" style="font-size:28px;background:0 0;border:2px solid #e5e7eb;border-radius:10px;padding:8px 12px;cursor:pointer" title="Poor">&#128542;</button>
+<button onclick="rateFeedback(2)" style="font-size:28px;background:0 0;border:2px solid #e5e7eb;border-radius:10px;padding:8px 12px;cursor:pointer" title="OK">&#128528;</button>
+<button onclick="rateFeedback(3)" style="font-size:28px;background:0 0;border:2px solid #e5e7eb;border-radius:10px;padding:8px 12px;cursor:pointer" title="Good">&#128578;</button>
+<button onclick="rateFeedback(4)" style="font-size:28px;background:0 0;border:2px solid #e5e7eb;border-radius:10px;padding:8px 12px;cursor:pointer" title="Great">&#128525;</button>
+<button onclick="rateFeedback(5)" style="font-size:28px;background:0 0;border:2px solid #e5e7eb;border-radius:10px;padding:8px 12px;cursor:pointer" title="Amazing">&#129321;</button>
+</div>
+<textarea id="fbText" placeholder="Any suggestions to improve? (optional)" style="width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;min-height:60px;resize:vertical;outline:0;margin-bottom:8px"></textarea>
+<button onclick="submitFeedback()" id="fbBtn" style="padding:10px 24px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">Submit Feedback</button>
+<div id="fbDone" style="display:none;color:#16a34a;font-size:13px;font-weight:600;margin-top:8px">Thank you for your feedback!</div>
+</div>
 <div class="rb">
 <button onclick="location.reload()" style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff">New Interview</button>
 <button onclick="dlReport()" style="background:#f1f5f9;color:#374151">📥 Download Report</button>
@@ -288,6 +318,15 @@ function submitCode(){
   S.transcript+='Candidate A'+S.qNum+': [Code]\n'+code+'\n';
   document.getElementById('codeInp').value='';disableInp();setStatus('');ask()}
 function attachCode(inp){if(!inp.files||!inp.files[0])return;var r=new FileReader();r.onload=function(e){document.getElementById('codeInp').value=e.target.result};r.readAsText(inp.files[0])}
+
+
+var fbRating=0;
+function rateFeedback(r){fbRating=r;document.querySelectorAll('#ratingBtns button').forEach(function(b,i){b.style.borderColor=i<r?'#7c3aed':'#e5e7eb';b.style.background=i<r?'#f3f0ff':'transparent'})}
+function submitFeedback(){
+  var text=document.getElementById('fbText').value.trim();
+  fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'feedback',rating:fbRating,text:text,role:S.role,company:S.co,score:S.evalData?S.evalData.overall_score:0})}).catch(function(){});
+  document.getElementById('fbBtn').style.display='none';document.getElementById('fbDone').style.display='block';document.getElementById('fbText').disabled=true;
+}
 
 // VOICE
 var recog=null,isRec=false;
