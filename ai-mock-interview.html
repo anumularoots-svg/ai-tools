@@ -228,8 +228,17 @@ async function evaluate(){clearInterval(S.timer);stopTimer();micOff();
   document.getElementById('ab').style.display='none';document.getElementById('evalBox').classList.add('show');setStatus('');
   speak('Thank you for completing the interview. Please wait while I prepare your evaluation report.');
   try{var r=await fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'evaluate',transcript:S.transcript})});
-    var data=await r.json();if(!data.success){alert('Error: '+(data.error||''));return}showResults(data.data)}catch(e){alert('Failed: '+e.message)}}
+    var data=await r.json();if(!data.success){showLocalResults();return}showResults(data.data)}catch(e){showLocalResults()}}
 
+
+function showLocalResults(){
+  // Build basic results from local transcript if API eval fails
+  var d={overall_score:0,overall_verdict:"Evaluation Error - Manual Review Needed",
+    categories:{technical:0,communication:0,confidence:0,star_format:0,problem_solving:0},
+    questions:S.qas.map(function(qa,i){return{q:qa.q,answer:qa.a,score:0,mistakes:"Could not evaluate - API timeout",ideal_answer:"Please retry the interview for AI evaluation",how_to_improve:"Practice answering clearly and specifically"}}),
+    strong_areas:[],weak_areas:["Evaluation could not complete"],practice_topics:["Retry interview"]};
+  showResults(d)
+}
 function showResults(d){document.getElementById('iv').classList.remove('show');document.getElementById('rs').classList.add('show');
   document.getElementById('rsub').textContent=S.role+(S.co?' at '+S.co:'')+' | '+Math.floor(S.secs/60)+'m '+(S.secs%60)+'s';
   var sc=d.overall_score||0,cl=sc>=70?'#16a34a':sc>=50?'#d97706':'#dc2626';
