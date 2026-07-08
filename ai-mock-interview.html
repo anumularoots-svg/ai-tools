@@ -49,6 +49,7 @@ h1{font-size:30px;font-weight:900;text-align:center;background:linear-gradient(1
 .tp{display:none;padding:7px 12px;background:#f3f0ff;border-radius:12px;font-size:11px;color:#7c3aed;align-self:flex-start}.tp.show{display:block}.tp span{animation:bl 1.4s infinite}.tp span:nth-child(2){animation-delay:.2s}.tp span:nth-child(3){animation-delay:.4s}@keyframes bl{0%,100%{opacity:.2}50%{opacity:1}}
 .ab{display:flex;gap:7px;align-items:flex-end}.ai-in{flex:1;padding:11px 13px;border:1.5px solid #e5e7eb;border-radius:9px;color:#1a1a2e;font-size:13px;font-family:inherit;outline:0;resize:none;min-height:42px;max-height:120px;background:#fff}.ai-in:focus{border-color:#7c3aed}
 .sb{padding:11px 16px;border:none;border-radius:9px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}.sb:disabled{opacity:.3;cursor:not-allowed}
+.mic-btn{width:44px;height:44px;border:none;border-radius:50%;background:#f3f0ff;color:#7c3aed;font-size:20px;cursor:pointer;transition:.2s;flex-shrink:0}.mic-btn:hover{background:#ede9fe}.mic-btn.recording{background:#dc2626;color:#fff;animation:pulse2 1s infinite}@keyframes pulse2{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
 /* Paywall */
 .pw{display:none;text-align:center;padding:22px;background:#faf8ff;border:1.5px solid #ede9fe;border-radius:13px;margin-top:14px}.pw.show{display:block}
 .pw h3{font-size:17px;font-weight:800;color:#7c3aed;margin-bottom:6px}.pw p{font-size:12px;color:#64748b;margin-bottom:10px}
@@ -98,7 +99,8 @@ h1{font-size:30px;font-weight:900;text-align:center;background:linear-gradient(1
 <div class="bar"><span class="tag rd" id="t_rd">Interview</span><span class="tag pr" id="t_pr">Q 1/5</span><span class="tag tm" id="t_tm">00:00</span><span class="tag av" id="t_av">Avg: --</span></div>
 <div class="chat" id="chat"></div>
 <div class="tp" id="tp"><span>.</span><span>.</span><span>.</span> AI Interviewer is thinking</div>
-<div class="ab" id="ab"><textarea class="ai-in" id="ainp" placeholder="Type your answer... (Enter to send)" rows="2" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea><button class="sb" id="sbtn" onclick="send()">Send ↵</button></div>
+<div class="ab" id="ab"><textarea class="ai-in" id="ainp" placeholder="Type or tap 🎤 to speak..." rows="2" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea><button class="mic-btn" id="micBtn" onclick="toggleMic()" title="Speak your answer">🎤</button><button class="sb" id="sbtn" onclick="send()">Send ↵</button></div>
+<div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:6px"><label style="font-size:11px;color:#64748b;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" id="voiceMode" onchange="toggleVoice()" style="accent-color:#7c3aed"> 🔊 AI speaks questions aloud</label><span id="micStatus" style="font-size:10px;color:#94a3b8"></span></div>
 <div class="pw" id="pw"><h3>Free demo complete!</h3><p>You scored <span id="pw_score"></span>/10 avg. Unlock full 25-question interview.</p>
 <div class="pb">
 <a href="#" onclick="document.getElementById('upiM').style.display='flex';return false" style="background:#2563eb;color:#fff">₹9 — UPI Pay</a>
@@ -171,6 +173,7 @@ async function ask(){
   html+='<div style="font-size:13px;font-weight:500">'+d.question+'</div>';
   if(d.is_followup)html+='<div style="font-size:9px;color:#7c3aed;margin-top:2px">↳ Follow-up</div>';
   addM('ai',html);S.history.push({role:'assistant',content:JSON.stringify(d)});
+  speakText(d.question);
   S.results.push({q:d.question,scores:d.scores,fb:d.feedback,wl:d.why_lost,ideal:d.ideal_answer,answer:''});en()
   }catch(e){tp.classList.remove('show');addM('ai','Connection error: '+e.message+'. Check internet and try again.');en()}}
 
@@ -190,6 +193,33 @@ function showRes(){clearInterval(S.timer);document.getElementById('iv').classLis
   var imps=[];if(st<60)imps.push('Practice STAR answers — Situation, Task, Action, Result');if(cn<60)imps.push('Build confidence — use specific examples');if(co<60)imps.push('Be concise and clear in communication');if(te<60)imps.push('Review technical fundamentals');if(!imps.length)imps.push('Great job! Keep practicing.');document.getElementById('il').innerHTML=imps.map(function(i){return '<li>'+i+'</li>'}).join('');
   var ql='';S.results.forEach(function(r,i){var sc=r.scores?r.scores.overall||0:0;var cl3=sc>=7?'#16a34a':sc>=5?'#d97706':'#dc2626';ql+='<div class="qi"><div class="qh"><span class="qq">Q'+(i+1)+'</span><span class="qs" style="color:'+cl3+'">'+sc+'/10</span></div><div class="qq">'+r.q+'</div>';if(r.answer)ql+='<div class="qf" style="color:#2563eb">You: '+r.answer.substring(0,100)+(r.answer.length>100?'...':'')+'</div>';if(r.fb)ql+='<div class="qf">'+r.fb+'</div>';ql+='</div>'});document.getElementById('ql').innerHTML=ql}
 function dlReport(){var t='AI MOCK INTERVIEW REPORT\n========================\n\nRole: '+S.role+(S.co?' | Company: '+S.co:'')+'\nDuration: '+Math.floor(S.secs/60)+'m '+(S.secs%60)+'s\nQuestions: '+S.results.length+'\n\n';var avg=function(a){if(!a.length)return 0;var s=0;for(var i=0;i<a.length;i++)s+=a[i];return Math.round(s/a.length*10)};t+='READINESS: '+avg(S.scores.overall)+'/100\nTechnical: '+avg(S.scores.technical)+'/100\nCommunication: '+avg(S.scores.communication)+'/100\nConfidence: '+avg(S.scores.confidence)+'/100\nSTAR: '+avg(S.scores.star)+'/100\n\n';S.results.forEach(function(r,i){t+='Q'+(i+1)+': '+r.q+'\nAnswer: '+(r.answer||'-')+'\n';if(r.fb)t+='Feedback: '+r.fb+'\n';if(r.wl)t+='Lost marks: '+r.wl+'\n';if(r.ideal)t+='Ideal: '+r.ideal+'\n';t+='\n---\n\n'});t+='zapkitt.com/ai-mock-interview\n';var b=new Blob([t],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='Interview_'+S.role.replace(/\s+/g,'_')+'.txt';a.click()}
+
+// Voice: Speech Recognition (mic) + Text-to-Speech (speaker)
+var recognition=null,isRecording=false,voiceEnabled=false;
+function initSpeech(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){document.getElementById('micBtn').style.display='none';return}
+  recognition=new SR();recognition.continuous=false;recognition.interimResults=true;recognition.lang='en-US';
+  recognition.onresult=function(e){var t='';for(var i=e.resultIndex;i<e.results.length;i++){t+=e.results[i][0].transcript}document.getElementById('ainp').value=t;document.getElementById('micStatus').textContent='Listening...'};
+  recognition.onend=function(){isRecording=false;document.getElementById('micBtn').classList.remove('recording');document.getElementById('micBtn').textContent='🎤';document.getElementById('micStatus').textContent=''};
+  recognition.onerror=function(e){isRecording=false;document.getElementById('micBtn').classList.remove('recording');document.getElementById('micBtn').textContent='🎤';document.getElementById('micStatus').textContent='Mic error: '+e.error}
+}
+function toggleMic(){
+  if(!recognition)initSpeech();if(!recognition)return;
+  if(isRecording){recognition.stop();isRecording=false}
+  else{try{recognition.start();isRecording=true;document.getElementById('micBtn').classList.add('recording');document.getElementById('micBtn').textContent='⏹';document.getElementById('micStatus').textContent='🎤 Listening...'}catch(e){document.getElementById('micStatus').textContent='Mic blocked. Allow microphone access.'}}
+}
+function toggleVoice(){voiceEnabled=document.getElementById('voiceMode').checked}
+function speakText(text){
+  if(!voiceEnabled||!window.speechSynthesis)return;
+  window.speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(text);u.rate=0.95;u.pitch=1;u.lang='en-US';
+  var voices=window.speechSynthesis.getVoices();
+  var pref=voices.find(function(v){return v.name.includes('Google')&&v.lang.startsWith('en')})||voices.find(function(v){return v.lang.startsWith('en')});
+  if(pref)u.voice=pref;
+  window.speechSynthesis.speak(u)
+}
+initSpeech();
 
 // Auto-load resume from resume builder
 try{var sr=localStorage.getItem('zk_last_resume_text');if(sr)document.getElementById('inp_resume').value=sr}catch(e){}
