@@ -371,6 +371,11 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 <button onclick="rateFeedback(5)" title="Amazing">&#129321;</button>
 </div>
 <textarea id="fbText" placeholder="Any suggestions to improve? (optional)" style="width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;min-height:60px;resize:vertical;outline:0;margin-bottom:8px"></textarea>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+<input type="text" id="fbName" placeholder="Your Name (optional)" style="padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;outline:0">
+<input type="tel" id="fbPhone" placeholder="WhatsApp Number (optional)" style="padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;outline:0">
+</div>
+<div style="font-size:10px;color:#9ca3af;margin-bottom:8px">Name & number only for follow-up — never shared or stored permanently.</div>
 <button onclick="submitFeedback()" id="fbBtn" style="padding:10px 24px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">Submit Feedback</button>
 <div id="fbDone" style="display:none;color:#16a34a;font-size:13px;font-weight:600;margin-top:8px">Thank you for your feedback!</div>
 </div>
@@ -539,8 +544,10 @@ var fbRating=0;
 function rateFeedback(r){fbRating=r;document.querySelectorAll('.rating-btns button').forEach(function(b,i){b.style.borderColor=i<r?'#2563eb':'#e5e7eb';b.style.background=i<r?'#eff6ff':'transparent'})}
 function submitFeedback(){
   var text=document.getElementById('fbText').value.trim();
-  fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'feedback',rating:fbRating,text:text,role:S.role,company:S.co,score:S.evalData?S.evalData.overall_score:0})}).catch(function(){});
-  document.getElementById('fbBtn').style.display='none';document.getElementById('fbDone').style.display='block';document.getElementById('fbText').disabled=true;
+  var name=document.getElementById('fbName').value.trim();
+  var phone=document.getElementById('fbPhone').value.trim();
+  fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'feedback',rating:fbRating,text:text,name:name,phone:phone,role:S.role,company:S.co,score:S.evalData?S.evalData.overall_score:0})}).catch(function(){});
+  document.getElementById('fbBtn').style.display='none';document.getElementById('fbDone').style.display='block';document.getElementById('fbText').disabled=true;document.getElementById('fbName').disabled=true;document.getElementById('fbPhone').disabled=true;
 }
 
 var recog=null,isRec=false;

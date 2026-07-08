@@ -37,10 +37,59 @@ export default async function handler(req,res){
     }
     
     if(b.action==='feedback'){
+      var fbData={time:new Date().toISOString(),rating:b.rating||0,text:b.text||'',name:b.name||'',phone:b.phone||'',role:b.role||'',company:b.company||'',score:b.score||0};
+      console.log('=== INTERVIEW FEEDBACK ===');
+      console.log('Name: '+(fbData.name||'Anonymous'));
+      console.log('Phone: '+(fbData.phone||'Not provided'));
+      console.log('Rating: '+fbData.rating+'/5');
+      console.log('Role: '+fbData.role+' | Company: '+fbData.company);
+      console.log('Interview Score: '+fbData.score+'%');
+      console.log('Feedback: '+(fbData.text||'No text'));
+      console.log('=========================');
+      
       if(!global._zkFeedback)global._zkFeedback=[];
-      global._zkFeedback.push({time:new Date().toISOString(),ip:userIP.substring(0,8),rating:b.rating||0,text:b.text||'',role:b.role||'',company:b.company||'',score:b.score||0});
-      console.log('FEEDBACK:',JSON.stringify({rating:b.rating,text:b.text,role:b.role,score:b.score}));
+      global._zkFeedback.push(fbData);
+      
+      // WhatsApp notification
+      var waPhone=process.env.CALLMEBOT_PHONE||'';
+      var waKey=process.env.CALLMEBOT_KEY||'';
+      if(waPhone&&waKey){
+        try{
+          var waMsg='🎤 *ZapKitt Interview Feedback*%0A'+
+            '👤 Name: '+(fbData.name||'Anonymous')+'%0A'+
+            '📱 Phone: '+(fbData.phone||'Not provided')+'%0A'+
+            '⭐ Rating: '+fbData.rating+'/5%0A'+
+            '🧑‍💻 Role: '+fbData.role+'%0A'+
+            '🏢 Company: '+(fbData.company||'Any')+'%0A'+
+            '📊 Score: '+fbData.score+'%25%0A'+
+            '💬 Feedback: '+(fbData.text||'No text')+'%0A'+
+            '🕐 '+new Date(fbData.time).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'});
+          await fetch('https://api.callmebot.com/whatsapp.php?phone='+waPhone+'&text='+waMsg+'&apikey='+waKey);
+        }catch(waErr){console.log('WhatsApp failed:',waErr.message)}
+      }
+      
+      // Email notification backup (Web3Forms)
+      if(process.env.WEB3FORMS_KEY){
+        try{
+          await fetch('https://api.web3forms.com/submit',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+              access_key:process.env.WEB3FORMS_KEY,
+              subject:'ZapKitt Feedback - Rating '+fbData.rating+'/5',
+              from_name:'ZapKitt Bot',
+              message:'Rating: '+fbData.rating+'/5\nRole: '+fbData.role+'\nCompany: '+fbData.company+'\nScore: '+fbData.score+'%\nFeedback: '+(fbData.text||'None')
+            })
+          });
+        }catch(emailErr){console.log('Email failed:',emailErr.message)}
+      }
+      
       return res.status(200).json({saved:true});
+    }
+    
+    // Admin endpoint
+    if(b.action==='adminFeedback'&&b.key===(process.env.ADMIN_KEY||'zapkitt2026')){
+      return res.status(200).json({feedback:global._zkFeedback||[],count:(global._zkFeedback||[]).length});
     }
     
     var providers=getProviders();

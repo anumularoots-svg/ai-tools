@@ -1,0 +1,87 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin — Interview Feedback</title>
+<meta name="robots" content="noindex,nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,sans-serif;background:#f9fafb;color:#111827;padding:20px}
+h1{font-size:22px;font-weight:800;margin-bottom:16px}
+.login{max-width:360px;margin:80px auto;text-align:center}
+.login input{width:100%;padding:12px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;margin-bottom:10px;outline:0}
+.login input:focus{border-color:#2563eb}
+.login button{width:100%;padding:12px;background:#2563eb;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{background:#fff;border:1.5px solid #e5e7eb;border-radius:12px;padding:16px;text-align:center}
+.stat .n{font-size:28px;font-weight:800}
+.stat .l{font-size:11px;color:#6b7280;margin-top:2px}
+.card{background:#fff;border:1.5px solid #e5e7eb;border-radius:12px;padding:16px;margin-bottom:10px}
+.card .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.card .rating{font-size:20px}
+.card .time{font-size:11px;color:#6b7280}
+.card .meta{font-size:12px;color:#374151;margin-bottom:6px}
+.card .text{font-size:13px;color:#111827;background:#f9fafb;padding:10px;border-radius:8px;margin-top:8px}
+.empty{text-align:center;padding:40px;color:#6b7280}
+#dash{display:none}
+.refresh{padding:8px 16px;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:16px}
+</style></head><body>
+
+<div class="login" id="loginBox">
+<h1>Admin Access</h1>
+<p style="font-size:13px;color:#6b7280;margin-bottom:16px">Enter admin key to view feedback</p>
+<input type="password" id="keyInp" placeholder="Admin Key" onkeydown="if(event.key==='Enter')doLogin()">
+<button onclick="doLogin()">View Feedback</button>
+</div>
+
+<div id="dash">
+<h1>Interview Feedback Dashboard</h1>
+<button class="refresh" onclick="loadFeedback()">Refresh</button>
+<div class="stats" id="statsGrid"></div>
+<div id="feedList"></div>
+</div>
+
+<script>
+var adminKey='';
+
+function doLogin(){
+  adminKey=document.getElementById('keyInp').value.trim();
+  if(!adminKey){alert('Enter admin key');return}
+  document.getElementById('loginBox').style.display='none';
+  document.getElementById('dash').style.display='block';
+  loadFeedback();
+}
+
+async function loadFeedback(){
+  try{
+    var r=await fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'adminFeedback',key:adminKey})});
+    var d=await r.json();
+    if(!d.feedback){document.getElementById('feedList').innerHTML='<div class="empty">Invalid key or no access</div>';return}
+    
+    var fb=d.feedback.reverse();
+    var total=fb.length;
+    var avgRating=total?Math.round(fb.reduce(function(s,f){return s+f.rating},0)/total*10)/10:0;
+    var avgScore=total?Math.round(fb.reduce(function(s,f){return s+f.score},0)/total):0;
+    var fiveStars=fb.filter(function(f){return f.rating===5}).length;
+    
+    document.getElementById('statsGrid').innerHTML=
+      '<div class="stat"><div class="n">'+total+'</div><div class="l">Total Feedback</div></div>'+
+      '<div class="stat"><div class="n">'+avgRating+'</div><div class="l">Avg Rating /5</div></div>'+
+      '<div class="stat"><div class="n">'+avgScore+'%</div><div class="l">Avg Interview Score</div></div>'+
+      '<div class="stat"><div class="n">'+fiveStars+'</div><div class="l">5-Star Ratings</div></div>';
+    
+    if(!total){document.getElementById('feedList').innerHTML='<div class="empty">No feedback yet. Feedback will appear here after users complete interviews.</div>';return}
+    
+    var stars=['','&#128542;','&#128528;','&#128578;','&#128525;','&#129321;'];
+    var html='';
+    fb.forEach(function(f){
+      html+='<div class="card"><div class="top"><div class="rating">'+(stars[f.rating]||'')+ ' '+f.rating+'/5</div><div class="time">'+new Date(f.time).toLocaleString()+'</div></div>';
+      html+='<div class="meta"><strong>'+f.role+'</strong>'+(f.company?' at '+f.company:'')+ ' — Score: '+f.score+'%</div>';
+      if(f.name||f.phone)html+='<div class="meta" style="color:#2563eb">👤 '+(f.name||'Anonymous')+' | 📱 '+(f.phone||'No phone')+'</div>';
+      if(f.text)html+='<div class="text">'+f.text+'</div>';
+      html+='</div>';
+    });
+    document.getElementById('feedList').innerHTML=html;
+  }catch(e){document.getElementById('feedList').innerHTML='<div class="empty">Error loading feedback: '+e.message+'</div>'}
+}
+</script>
+</body></html>
