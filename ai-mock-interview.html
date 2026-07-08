@@ -112,8 +112,16 @@ h1{font-size:28px;font-weight:900;text-align:center;background:linear-gradient(1
 <div class="ib" id="weakBox"><h4>🎯 Areas to Improve</h4><ul id="weakList"></ul></div>
 <div id="qReview"></div>
 <div style="background:#f3f0ff;border:1.5px solid #ddd6fe;border-radius:12px;padding:16px;text-align:center;margin-top:16px">
-<div style="font-size:14px;font-weight:700;color:#7c3aed;margin-bottom:6px">Want deeper practice? Unlock Premium Interview</div>
-<div style="font-size:12px;color:#64748b;margin-bottom:10px">25 questions across Technical, Scenario, Architecture, Team & Problem Solving rounds</div>
+<div style="font-size:16px;font-weight:800;color:#7c3aed;margin-bottom:8px">You completed Round 1. Ready for the real challenge?</div>
+<div style="font-size:13px;color:#374151;margin-bottom:6px;line-height:1.6">Premium unlocks <b>25 advanced questions</b> covering:</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;font-size:12px;color:#374151;text-align:left;max-width:400px;margin-left:auto;margin-right:auto">
+<div>&#10004; Deep Technical (5 different technologies)</div>
+<div>&#10004; Real-time Scenarios (production issues)</div>
+<div>&#10004; System Design &amp; Architecture</div>
+<div>&#10004; Coding Challenges</div>
+<div>&#10004; Company-specific questions</div>
+<div>&#10004; Detailed ideal answers</div></div>
+<div style="font-size:11px;color:#64748b;margin-bottom:10px">Most candidates improve 40% after practicing Round 2</div>
 <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
 <a href="#" onclick="document.getElementById('upiM').style.display='flex';return false" style="padding:10px 20px;background:#2563eb;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">₹9 — UPI</a>
 <a href="https://ko-fi.com/zapkitt" target="_blank" style="padding:10px 20px;background:#FF5E5B;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px">$1 — Ko-fi</a></div></div>
@@ -129,7 +137,7 @@ h1{font-size:28px;font-weight:900;text-align:center;background:linear-gradient(1
 <footer class="foot"><p>ZapKitt — <a href="/">All Tools</a> | <a href="/ai-resume-builder">Resume Builder</a> | <a href="https://ko-fi.com/zapkitt">Support ☕</a></p></footer>
 
 <script>
-var S={resume:'',role:'',co:'',jd:'',diff:'intermediate',qNum:0,totalQs:5,transcript:'',qas:[],timer:null,secs:0,answerTimer:null,answerSecs:30};
+var S={resume:'',role:'',co:'',jd:'',diff:'intermediate',qNum:0,totalQs:5,transcript:'',qas:[],timer:null,secs:0,answerTimer:null,answerSecs:60};
 
 function checkFreeLimit(){var d=new Date().toISOString().split('T')[0];return parseInt(localStorage.getItem('zk_free_'+d)||'0')}
 function incFree(){var d=new Date().toISOString().split('T')[0],k='zk_free_'+d;localStorage.setItem(k,(parseInt(localStorage.getItem(k)||'0')+1).toString())}
@@ -171,15 +179,15 @@ async function ask(){
     S.transcript+='Interviewer Q'+S.qNum+': '+q+'\n';
     S.qas.push({q:q,a:''});
     setStatus('Speaker reading question...');
-    speak(q,function(){setStatus('Your turn - speak or type (30s)');enableInp();autoMicOn();startTimer()});
+    speak(q,function(){setStatus('Your turn - speak or type (60s)');enableInp();autoMicOn();startTimer()});
   }catch(e){document.getElementById('tp').classList.remove('show');addM('ai','Connection error');enableInp()}}
 
-function startTimer(){S.answerSecs=30;var tag=document.getElementById('t_ans');tag.style.display='inline-block';
+function startTimer(){S.answerSecs=60;var tag=document.getElementById('t_ans');tag.style.display='inline-block';
   S.answerTimer=setInterval(function(){S.answerSecs--;tag.textContent='\u23f1 '+S.answerSecs+'s';
     tag.style.background=S.answerSecs<=10?'#dc2626':'#fef2f2';tag.style.color=S.answerSecs<=10?'#fff':'#dc2626';
     if(S.answerSecs<=0){stopTimer();micOff();addM('u','[No answer - skipped]');
       if(S.qas.length)S.qas[S.qas.length-1].a='[No Answer - Timeout]';
-      S.transcript+='Candidate A'+S.qNum+': [No Answer - 30s timeout]\n';
+      S.transcript+='Candidate A'+S.qNum+': [No Answer - 60s timeout]\n';
       speak('Moving to next question.',function(){document.getElementById('ainp').value='';ask()})}
   },1000)}
 function stopTimer(){if(S.answerTimer){clearInterval(S.answerTimer);S.answerTimer=null}document.getElementById('t_ans').style.display='none'}
