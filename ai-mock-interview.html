@@ -60,6 +60,11 @@ h1{font-size:28px;font-weight:900;text-align:center;background:linear-gradient(1
 .qc .tbox{background:#fff7ed;border-radius:8px;padding:8px 10px;font-size:11px;color:#d97706}
 
 .rb{display:flex;gap:7px;margin-top:16px;flex-wrap:wrap}.rb button,.rb a{flex:1;padding:13px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;text-align:center;text-decoration:none;min-width:100px}
+.code-box{display:none;margin-top:8px}.code-box.show{display:block}
+.code-editor{width:100%;min-height:120px;padding:12px;background:#1e1e2e;color:#a6e3a1;font-family:'Courier New',monospace;font-size:13px;border:2px solid #7c3aed;border-radius:10px;resize:vertical;line-height:1.5;outline:0;tab-size:4}
+.code-editor::placeholder{color:#6c7086}
+.code-label{font-size:11px;color:#7c3aed;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.code-timer{font-size:11px;color:#d97706;font-weight:700}
 .foot{text-align:center;padding:24px;border-top:1px solid #f0eef5;color:#94a3b8;font-size:11px;margin-top:30px}.foot a{color:#7c3aed;text-decoration:none}
 @media(max-width:640px){h1{font-size:22px}.r2{grid-template-columns:1fr}.cs{grid-template-columns:1fr 1fr}.diff{flex-direction:column}.ab{flex-direction:column}.sb{width:100%}}
 </style></head><body>
@@ -84,7 +89,7 @@ h1{font-size:28px;font-weight:900;text-align:center;background:linear-gradient(1
 <div class="card"><h3>📊 Difficulty</h3>
 <div class="diff"><button onclick="pickDf(this,'fresher')"><span class="em">🟢</span><span class="dl">Fresher</span><span class="ds">0-2 yrs</span></button><button class="on" onclick="pickDf(this,'intermediate')"><span class="em">🟡</span><span class="dl">Mid-Level</span><span class="ds">2-5 yrs</span></button><button onclick="pickDf(this,'senior')"><span class="em">🔴</span><span class="dl">Senior</span><span class="ds">5+ yrs</span></button></div></div>
 
-<button class="go" onclick="begin()">🎤 Start Free Mock Interview (5 Questions)</button>
+<button class="go" onclick="begin()">🎤 Start Mock Interview (5 Questions)</button>
 <div style="text-align:center;margin-top:8px;font-size:11px;color:#94a3b8">No payment needed for Round 1. Full report at the end.</div>
 </div>
 
@@ -97,6 +102,13 @@ h1{font-size:28px;font-weight:900;text-align:center;background:linear-gradient(1
 <textarea class="ai-in" id="ainp" placeholder="Type or speak your answer..." rows="2" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
 <button class="mic" id="micBtn" onclick="toggleMic()" title="Speak">🎤</button>
 <button class="sb" id="sbtn" onclick="send()">Send ↵</button></div>
+<div class="code-box" id="codeBox">
+<div class="code-label">&#128187; Write your code below <span class="code-timer" id="codeTimer"></span></div>
+<textarea class="code-editor" id="codeInp" placeholder="// Write your solution here...&#10;// Use any language you prefer&#10;&#10;function solution() {&#10;  // your code&#10;}" rows="8"></textarea>
+<div style="display:flex;gap:6px;margin-top:6px">
+<button class="sb" onclick="submitCode()" style="flex:1">Submit Code</button>
+<label style="display:flex;align-items:center;gap:4px;padding:8px 12px;background:#f3f0ff;border-radius:8px;cursor:pointer;font-size:11px;color:#7c3aed;font-weight:600"><input type="file" id="codeFile" accept=".py,.js,.java,.sh,.txt,.ts,.go,.rs" style="display:none" onchange="attachCode(this)">&#128206; Attach File</label>
+</div></div>
 <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:6px"><span id="voiceStatus" style="font-size:11px;color:#7c3aed;font-weight:600"></span></div>
 <div class="eval-box" id="evalBox"><h3>🔍 AI is evaluating your interview...</h3><div style="margin-top:10px"><span class="tp show" style="display:inline-block"><span>.</span><span>.</span><span>.</span></span></div><p style="font-size:12px;color:#64748b;margin-top:8px">Analyzing all answers, generating detailed report...</p></div>
 </div>
@@ -150,8 +162,16 @@ else if(n.endsWith('.pdf')){r.onload=function(e){pdfjsLib.GlobalWorkerOptions.wo
 function pickCo(el,v){document.querySelectorAll('.ch').forEach(function(c){c.classList.remove('on')});el.classList.add('on');S.co=v;document.getElementById('inp_co').value=v}
 function pickDf(el,v){document.querySelectorAll('.diff button').forEach(function(b){b.classList.remove('on')});el.classList.add('on');S.diff=v}
 
+
+function payRound(amt){
+  document.getElementById('upiM').style.display='flex';
+  document.querySelector('#upiM [style*="font-size:18px"]').textContent='Pay \u20b9'+amt+' via UPI';
+  var link=document.querySelector('#upiM a[href*="upi://"]');
+  link.href='upi://pay?pa=9985933964-3@ybl&pn=ZapKitt&am='+amt+'&cu=INR&tn=MockInterview';
+  S.totalQs=amt===9?30:55;
+}
 function begin(){
-  if(checkFreeLimit()>=3){alert('Free Trial Limit Reached! You used 3 free interviews today. Try tomorrow or upgrade to Premium (25 Questions @ \u20b99/$1)');return}
+  if(checkFreeLimit()>=3){alert('Free Trial Limit Reached! You used 1 free interview today. Try tomorrow or upgrade to Premium (25 Questions @ \u20b99/$1)');return}
   S.resume=document.getElementById('inp_r').value.trim();S.role=document.getElementById('inp_role').value.trim()||'Software Engineer';S.co=document.getElementById('inp_co').value.trim()||S.co;S.jd=document.getElementById('inp_jd').value.trim();
   if(!S.resume||S.resume.length<30){alert('Paste or upload your resume first');return}
   incFree();S.qNum=0;S.transcript='';S.qas=[];
@@ -179,11 +199,14 @@ async function ask(){
     S.transcript+='Interviewer Q'+S.qNum+': '+q+'\n';
     S.qas.push({q:q,a:''});
     setStatus('Speaker reading question...');
-    speak(q,function(){setStatus('Your turn - speak or type (60s)');enableInp();autoMicOn();startTimer()});
+    speak(q,function(){
+      if(S.qNum===4||(S.qNum>=16&&S.qNum<=20)||(S.qNum>=21&&S.qNum<=25)||q.toLowerCase().indexOf('write')>=0||q.toLowerCase().indexOf('code')>=0||q.toLowerCase().indexOf('script')>=0||q.toLowerCase().indexOf('implement')>=0||q.toLowerCase().indexOf('function')>=0){
+        setStatus('Coding question - write your code (2 min)');S.answerSecs=120;showCodeEditor();startTimer()
+      }else{setStatus('Your turn - speak or type (60s)');enableInp();autoMicOn();startTimer()}});
   }catch(e){document.getElementById('tp').classList.remove('show');addM('ai','Connection error');enableInp()}}
 
 function startTimer(){S.answerSecs=60;var tag=document.getElementById('t_ans');tag.style.display='inline-block';
-  S.answerTimer=setInterval(function(){S.answerSecs--;tag.textContent='\u23f1 '+S.answerSecs+'s';
+  S.answerTimer=setInterval(function(){S.answerSecs--;tag.textContent=S.answerSecs>60?'\u23f1 '+(Math.floor(S.answerSecs/60))+'m '+(S.answerSecs%60)+'s':'\u23f1 '+S.answerSecs+'s';
     tag.style.background=S.answerSecs<=10?'#dc2626':'#fef2f2';tag.style.color=S.answerSecs<=10?'#fff':'#dc2626';
     if(S.answerSecs<=0){stopTimer();micOff();addM('u','[No answer - skipped]');
       if(S.qas.length)S.qas[S.qas.length-1].a='[No Answer - Timeout]';
@@ -234,6 +257,21 @@ function dlReport(){var d=S.evalData;if(!d)return;
   t+='zapkitt.com/ai-mock-interview\n';
   var b=new Blob([t],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='Interview_Report_'+S.role.replace(/\s+/g,'_')+'.txt';a.click()}
 
+
+// CODING QUESTION SUPPORT
+var isCodingQ = false;
+function showCodeEditor(){isCodingQ=true;document.getElementById('codeBox').classList.add('show');document.getElementById('codeInp').focus();document.getElementById('ab').style.display='none'}
+function hideCodeEditor(){isCodingQ=false;document.getElementById('codeBox').classList.remove('show');document.getElementById('ab').style.display='flex'}
+function submitCode(){
+  var code=document.getElementById('codeInp').value.trim();
+  if(!code){alert('Write or paste your code first');return}
+  stopTimer();micOff();hideCodeEditor();
+  addM('u','<pre style="background:#1e1e2e;color:#a6e3a1;padding:10px;border-radius:8px;font-size:11px;overflow-x:auto;white-space:pre-wrap">'+code.replace(/</g,'&lt;')+'</pre>');
+  if(S.qas.length)S.qas[S.qas.length-1].a='[CODE SUBMISSION]\n'+code;
+  S.transcript+='Candidate A'+S.qNum+': [Code]\n'+code+'\n';
+  document.getElementById('codeInp').value='';disableInp();setStatus('');ask()}
+function attachCode(inp){if(!inp.files||!inp.files[0])return;var r=new FileReader();r.onload=function(e){document.getElementById('codeInp').value=e.target.result};r.readAsText(inp.files[0])}
+
 // VOICE
 var recog=null,isRec=false;
 function speak(text,cb){if(!window.speechSynthesis){if(cb)cb();return}speechSynthesis.cancel();
@@ -250,7 +288,7 @@ function micOff(){isRec=false;if(recog)try{recog.stop()}catch(e){};document.getE
 function toggleMic(){if(!recog)initVoice();if(!recog)return;if(isRec)micOff();else autoMicOn()}
 initVoice();if(window.speechSynthesis)speechSynthesis.onvoiceschanged=function(){speechSynthesis.getVoices()};
 try{var sr=localStorage.getItem('zk_last_resume_text');if(sr)document.getElementById('inp_r').value=sr}catch(e){}
-var fl=checkFreeLimit(),rem=3-fl;
-if(rem>0)document.querySelector('.go').textContent='Start Free Mock Interview ('+rem+' left today)';
-else{document.querySelector('.go').textContent='Free limit reached - try tomorrow';document.querySelector('.go').disabled=true}
+var fl=checkFreeLimit(),rem=1-fl;
+if(rem>0)document.querySelector('.go').textContent='Start Mock Interview ('+rem+' left today)';
+else{document.querySelector('.go').textContent='Free interview used today - try tomorrow or go Premium';document.querySelector('.go').disabled=true}
 </script></body></html>

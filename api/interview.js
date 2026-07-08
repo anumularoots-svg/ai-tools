@@ -15,7 +15,7 @@ export default async function handler(req,res){
     if(b.action==="evaluate"){
       var evalSys="You are an expert interview evaluator. Analyze this interview transcript.\n\nTRANSCRIPT:\n"+b.transcript+"\n\n";
       evalSys+='Respond ONLY in JSON:\n{"overall_score":78,"overall_verdict":"Pass/Fail/Strong Hire","categories":{"technical":70,"communication":80,"confidence":65,"star_format":50,"problem_solving":75},"questions":[{"q":"question","answer":"candidate answer","score":7,"mistakes":"what went wrong specifically","ideal_answer":"the EXACT technical answer a strong candidate would give - include specific tools, commands, architecture details, code snippets where relevant","how_to_improve":"actionable tip"}],"strong_areas":["area1"],"weak_areas":["area1"],"practice_topics":["topic1"],"hiring_readiness":"Ready/Needs Work/Not Ready"}\n';
-      evalSys+="IMPORTANT: ideal_answer must be DETAILED and TECHNICAL - like a real senior engineer would answer. Include specific tool names, commands, architecture patterns, code examples.";
+      evalSys+="IMPORTANT: For coding questions, ideal_answer MUST include actual working code. For other questions, ideal_answer must be DETAILED and TECHNICAL - like a real senior engineer would answer. Include specific tool names, commands, architecture patterns, code examples.";
       var evalMsgs=[{role:"system",content:evalSys},{role:"user",content:"Evaluate this interview. JSON only."}];
       for(var i=0;i<providers.length;i++){try{var t=await callAI(providers[i],evalMsgs);t=t.replace(/```json/g,"").replace(/```/g,"").trim();var j1=t.indexOf("{"),j2=t.lastIndexOf("}");if(j1>=0&&j2>j1)t=t.substring(j1,j2+1);return res.status(200).json({success:true,data:JSON.parse(t)})}catch(e){continue}}
       return res.status(500).json({error:"Eval failed"});
@@ -29,18 +29,23 @@ export default async function handler(req,res){
     var sys=companyLine+" Role: "+role+". Level: "+diffLine+".\n\nRESUME:\n"+resume+"\n\n";
     if(transcript)sys+="INTERVIEW SO FAR:\n"+transcript+"\n\n";
 
-    sys+="STRICT QUESTION PATTERN FOR FREE ROUND (5 questions):\n";
-    sys+="Q1: COMMON - 'Tell me about yourself and walk me through your resume'\n";
-    sys+="Q2: TECHNICAL - Deep question on ONE specific technology from resume. NOT CI/CD. Pick from: cloud (AWS/Azure), containers (Docker/K8s), IaC (Terraform), monitoring (Prometheus/Grafana), security, databases, programming. Ask about a DIFFERENT tech than Q1 discussed.\n";
-    sys+="Q3: SCENARIO - Real-world scenario based on their experience. 'Your production Kubernetes cluster has a memory leak...' or 'A deployment failed at 2am...' Make it realistic.\n";
-    sys+="Q4: CODING/ARCHITECTURE - Ask them to explain how they would write a script, design a system, or solve a specific technical problem. E.g., 'Write a shell script to...' or 'Design the architecture for...'\n";
-    sys+="Q5: BEHAVIORAL (STAR) - 'Tell me about a time when you had to deal with [conflict/deadline/failure]' based on their experience.\n\n";
-
-    sys+="FOR PAID ROUND (Q6-Q25), distribute across ALL resume technologies:\n";
-    sys+="Q6-Q10: Advanced technical (each DIFFERENT technology)\n";
-    sys+="Q11-Q15: Real-time scenarios covering different tools/services\n";
-    sys+="Q16-Q20: System design and architecture\n";
-    sys+="Q21-Q25: Coding challenges and problem-solving\n\n";
+    sys+="STRICT QUESTION PATTERNS:\n\n";
+    sys+="=== ROUND 1 (FREE - 5 Questions) ===\n";
+    sys+="Q1: INTRODUCTION - 'Hi, Good morning! I am your AI Interview Assistant. Please introduce yourself and walk me through your experience.'\n";
+    sys+="Q2: TECHNICAL DEEP DIVE - Pick ONE specific technology from resume (NOT the most obvious one). Ask a deep, unique question that real interviewers at top MNCs ask. Cover: cloud services, containers, IaC, monitoring, security, databases, or programming.\n";
+    sys+="Q3: SCENARIO - Real-world production scenario. 'Your Kubernetes cluster is experiencing OOM kills at 3am...' or 'A Terraform apply destroyed production resources...' Make it realistic and specific to their experience.\n";
+    sys+="Q4: SCENARIO - Different real-time challenge. 'Your CI/CD pipeline is taking 45 minutes. How would you optimize it?' or 'A security vulnerability was found in production. Walk me through your incident response.' MUST be different topic than Q3.\n";
+    sys+="Q5: CODING (MANDATORY) - Give a specific coding problem. 'Write a shell script that...' or 'Write a Python function to...' or 'Write a Terraform module for...' Based on resume stack. Candidate will write actual code.\n\n";
+    sys+="=== ROUND 2 (PAID Rs.9/$2 - 25 Questions) ===\n";
+    sys+="Real-time scenario + technical, based on resume/JD, company standards, experience level:\n";
+    sys+="Q6-Q10: Advanced technical questions (each on DIFFERENT technology from resume)\n";
+    sys+="Q11-Q15: Real-time production scenarios (deployments, outages, scaling)\n";
+    sys+="Q16-Q20: Architecture and system design (HLD/LLD based on experience)\n";
+    sys+="Q21-Q25: Advanced troubleshooting and cross-technology integration\n\n";
+    sys+="=== ROUND 3 (PAID Rs.29/$5 - 25 Questions) ===\n";
+    sys+="Q26-Q35: CODING questions (10) - actual programming problems, scripts, automation\n";
+    sys+="Q36-Q45: SCENARIO questions (10) - complex multi-system failure scenarios\n";
+    sys+="Q46-Q50: HR questions (5) - leadership, conflict, career goals, salary negotiation\n\n";
 
     sys+="ABSOLUTE RULES:\n";
     sys+="1. Question "+questionNum+" of "+totalQs+"\n";
