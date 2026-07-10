@@ -1,4 +1,12 @@
-import { kvReady, kvGet, kvDel, kvSetEx, kvSAdd, kvSMembers, kvExpire } from './_kv.js';
+import { kvReady, kvGet, kvDel, kvSetEx, kvSAdd, kvSMembers, kvExpire, kvLPush, kvLTrim, kvLRange } from './_kv.js';
+
+// Reliable feedback alert — Telegram (replaces the unreliable CallMeBot). Plain text = no escaping needed.
+async function sendTelegram(text){
+  var tok=process.env.TELEGRAM_BOT_TOKEN||"",chat=process.env.TELEGRAM_CHAT_ID||"";
+  if(!tok||!chat)return false;
+  try{var r=await fetch("https://api.telegram.org/bot"+tok+"/sendMessage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:chat,text:text,disable_web_page_preview:true})});return r.ok}
+  catch(e){return false}
+}
 function pickKey(env){if(!env)return null;var k=env.split(",").map(function(k){return k.trim()}).filter(Boolean);return k.length?k[Math.floor(Math.random()*k.length)]:null}
 
 // Exact question-slot plan per round (Phase 1 structured interview).
@@ -79,7 +87,7 @@ export default async function handler(req,res){
     }
     
     if(b.action==='feedback'){
-      var fbData={time:new Date().toISOString(),rating:b.rating||0,text:b.text||'',name:b.name||'',phone:b.phone||'',role:b.role||'',company:b.company||'',score:b.score||0};
+      var fbData={time:new Date().toISOString(),source:(b.source||b.tool||'AI Mock Interview'),rating:b.rating||0,text:b.text||'',name:b.name||'',phone:b.phone||'',email:b.email||'',role:b.role||'',company:b.company||'',score:b.score||0};
       console.log('=== INTERVIEW FEEDBACK ===');
       console.log('Name: '+(fbData.name||'Anonymous'));
       console.log('Phone: '+(fbData.phone||'Not provided'));
@@ -92,24 +100,22 @@ export default async function handler(req,res){
       if(!global._zkFeedback)global._zkFeedback=[];
       global._zkFeedback.push(fbData);
       
-      // WhatsApp notification
-      var waPhone=process.env.CALLMEBOT_PHONE||'';
-      var waKey=process.env.CALLMEBOT_KEY||'';
-      if(waPhone&&waKey){
-        try{
-          var waMsg='🎤 *ZapKitt Interview Feedback*%0A'+
-            '👤 Name: '+(fbData.name||'Anonymous')+'%0A'+
-            '📱 Phone: '+(fbData.phone||'Not provided')+'%0A'+
-            '⭐ Rating: '+fbData.rating+'/5%0A'+
-            '🧑‍💻 Role: '+fbData.role+'%0A'+
-            '🏢 Company: '+(fbData.company||'Any')+'%0A'+
-            '📊 Score: '+fbData.score+'%25%0A'+
-            '💬 Feedback: '+(fbData.text||'No text')+'%0A'+
-            '🕐 '+new Date(fbData.time).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'});
-          await fetch('https://api.callmebot.com/whatsapp.php?phone='+waPhone+'&text='+waMsg+'&apikey='+waKey);
-        }catch(waErr){console.log('WhatsApp failed:',waErr.message)}
-      }
-      
+      // Persist to Upstash so feedback survives serverless cold starts (admin dashboard reads this).
+      if(kvReady()){try{await kvLPush('zk_feedback',JSON.stringify(fbData));await kvLTrim('zk_feedback',0,499)}catch(e){}}
+
+      // Instant alert via Telegram (reliable — replaces CallMeBot).
+      var tgMsg='ZapKitt Feedback\n'+
+        'Source: '+fbData.source+'\n'+
+        'Name: '+(fbData.name||'Anonymous')+'\n'+
+        'Phone: '+(fbData.phone||'Not provided')+'\n'+
+        (fbData.email?'Email: '+fbData.email+'\n':'')+
+        'Rating: '+fbData.rating+'/5\n'+
+        (fbData.role?'Role: '+fbData.role+' | Company: '+(fbData.company||'Any')+'\n':'')+
+        (fbData.score?'Score: '+fbData.score+'%\n':'')+
+        'Message: '+(fbData.text||'No text')+'\n'+
+        new Date(fbData.time).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'});
+      await sendTelegram(tgMsg);
+
       // Email notification backup (Web3Forms)
       if(process.env.WEB3FORMS_KEY){
         try{
@@ -129,9 +135,10 @@ export default async function handler(req,res){
       return res.status(200).json({saved:true});
     }
     
-    // Admin endpoint
+    // Admin endpoint — prefer persistent Upstash list, fall back to in-memory.
     if(b.action==='adminFeedback'&&b.key===(process.env.ADMIN_KEY||'zapkitt2026')){
-      return res.status(200).json({feedback:global._zkFeedback||[],count:(global._zkFeedback||[]).length});
+      if(kvReady()){try{var raw=await kvLRange('zk_feedback',0,499);var list=raw.map(function(x){try{return JSON.parse(x)}catch(e){return null}}).filter(Boolean);return res.status(200).json({feedback:list,count:list.length,store:'upstash'})}catch(e){}}
+      return res.status(200).json({feedback:global._zkFeedback||[],count:(global._zkFeedback||[]).length,store:'memory'});
     }
     
     // Verify a Ko-fi payment and consume it (one-time) to unlock a paid round.
@@ -187,7 +194,7 @@ export default async function handler(req,res){
 
     var resume=b.resume||"",role=b.role||"Software Engineer",company=b.company||"",difficulty=b.difficulty||"intermediate";
     var questionNum=b.questionNum||1,totalQs=b.totalQs||5,transcript=b.transcript||"";
-    var companyLine=company?"You are a "+company+" interviewer.":"You are a professional MNC interviewer.";
+    var companyLine=company?"You are a warm, experienced human interviewer at "+company+".":"You are a warm, experienced human interviewer at a top MNC.";
     var diffLine={fresher:"fresher (0-2 yrs)",intermediate:"mid-level (2-5 yrs)",senior:"senior (5+ yrs)"}[difficulty]||"mid-level";
 
     var sys=companyLine+" Role: "+role+". Level: "+diffLine+".\n\nRESUME:\n"+resume+"\n\n";
@@ -202,29 +209,37 @@ export default async function handler(req,res){
     var askedList=[];
     if(kvReady()&&resumeHash){try{askedList=await kvSMembers("asked:"+resumeHash+":"+tier)}catch(e){}}
 
-    sys+="ROUND: "+roundName+".\n";
-    sys+="Question Q"+questionNum+" of "+totalQs+" MUST be: "+slot.instr+".\n";
-    sys+="Base it strictly on the resume tech stack, the job description, the candidate's experience, and "+(company||"a top MNC")+"'s engineering standards.\n";
-    sys+=(slot.coding?'This IS a coding question — set "type":"coding".\n':'Set "type":"normal".\n');
+    var allowFollowup=!!b.allowFollowup;
+    var nextSlot=slotFor(tier,questionNum+1);
+
+    sys+="ROUND: "+roundName+".\n\n";
+    if(allowFollowup){
+      sys+="YOU HAVE A CHOICE this turn. Read the candidate's last answer carefully like a real interviewer:\n";
+      sys+='- If it was incomplete, vague, or they mentioned something specific worth digging into, ask ONE natural FOLLOW-UP on the SAME topic that references what they actually said. Set "followup":true and "type":"normal".\n';
+      sys+='- If their answer was already clear and complete, briefly appreciate it, then ask the NEXT question which MUST be: '+nextSlot.instr+'. Set "followup":false and "type":"'+(nextSlot.coding?"coding":"normal")+'".\n\n';
+    }else{
+      sys+="This question (Q"+questionNum+" of "+totalQs+") MUST be: "+slot.instr+".\n";
+      sys+='Set "followup":false and "type":"'+(slot.coding?"coding":"normal")+'".\n\n';
+    }
+    sys+="Base every question strictly on the resume, the job description, the candidate's experience, and "+(company||"a top MNC")+"'s engineering standards.\n";
     if(askedList&&askedList.length){
       sys+="\nALREADY ASKED to this candidate before — do NOT repeat any of these or a close variant; choose a different sub-topic:\n";
       askedList.slice(-40).forEach(function(x){sys+="- "+x+"\n"});
     }
-    sys+="\nVARIETY (session seed "+(b.seed||0)+"): fresh session — avoid the most obvious/textbook phrasing; go one level deeper or pick an adjacent sub-topic so repeated attempts never get identical questions.\n";
-    sys+="ABSOLUTE RULES:\n";
-    sys+="1. Ask exactly ONE question, matching the required type above.\n";
-    sys+="2. NEVER repeat a topic already in the transcript or the ALREADY ASKED list. Cover a DIFFERENT technology/area each time.\n";
-    sys+="3. In 'response', give a SHORT, natural, human reaction to the candidate's last answer (e.g. 'Got it, thanks for that.'). 1-2 sentences max. No scoring.\n";
-    sys+="4. If answer is '[No Answer - Timeout]', acknowledge briefly and move on.\n";
-    sys+="5. If questionNum > totalQs, set question to 'INTERVIEW_COMPLETE'.\n";
-    sys+='6. Respond ONLY with JSON: {"response":"brief acknowledge","question":"your question","type":"'+(slot.coding?'coding':'normal')+'"}\n';
+    sys+="\nVARIETY (session seed "+(b.seed||0)+"): fresh session — avoid the most obvious/textbook phrasing; go one level deeper so repeated attempts never get identical questions.\n\n";
+    sys+="INTERVIEWER STYLE — behave like a real, warm human recruiter (NOT a form):\n";
+    sys+="1. In 'response', react naturally and SPECIFICALLY to what the candidate just said — reference a real detail from their answer (e.g. 'Got it — so at Infosys you owned the Selenium framework.'). If the resume shows their name, use their first name occasionally ('Thanks, Anil.'). Human touches like 'Take your time.' or 'That's a solid point.' are welcome. 1-2 sentences, warm. NO scoring.\n";
+    sys+="2. Keep the question concise and conversational — spoken English, not a written exam.\n";
+    sys+="3. NEVER repeat a topic already in the transcript or the ALREADY ASKED list.\n";
+    sys+="4. If the answer is '[No Answer - Timeout]' or empty, gently say 'No problem, let's move on.' and continue (do NOT follow up).\n";
+    sys+='5. Respond ONLY with JSON: {"response":"natural human reaction referencing their answer","question":"your question","type":"normal","followup":false}\n';
 
     var msgs=[{role:"system",content:sys}];
     if(questionNum===1){
-      if(tier==="free")msgs.push({role:"user",content:"Start. Ask Q1 (Tell me about yourself). type normal. JSON only."});
-      else msgs.push({role:"user",content:"Start this "+(tier==="r3"?"elite":"advanced")+" round. Ask Q1 following the pattern above. JSON only."});
+      if(tier==="free")msgs.push({role:"user",content:"Start the interview warmly. Ask Q1 — invite them to tell you about themselves and walk through their resume. type normal, followup false. JSON only."});
+      else msgs.push({role:"user",content:"Start this "+(tier==="r3"?"elite":"advanced")+" round. Ask Q1 following the pattern above. followup false. JSON only."});
     }
-    else{msgs.push({role:"user",content:"Answer: "+b.answer+"\n\nAcknowledge briefly, then ask Q"+questionNum+" following the pattern. DIFFERENT topic than before. Set the correct \"type\". JSON only."})}
+    else{msgs.push({role:"user",content:"The candidate just answered: \""+b.answer+"\"\n\nRespond as instructed — react to their ACTUAL answer, then "+(allowFollowup?"decide follow-up vs next question":"ask the required question")+". JSON only."})}
 
     // Streaming path — stream raw JSON tokens so the client can speak the acknowledgement early.
     if(b.stream){

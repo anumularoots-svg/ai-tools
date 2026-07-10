@@ -202,16 +202,31 @@ body{font-family:Inter,system-ui,sans-serif;background:#fff;color:#111827;-webki
 /* VIDEO-CALL STAGE */
 .stage{position:relative;height:300px;border-radius:16px;background:linear-gradient(160deg,#0f172a,#1e293b);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:12px}
 .interviewer{text-align:center;z-index:1}
-.orb{width:104px;height:104px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#60a5fa,#2563eb);display:flex;align-items:center;justify-content:center;position:relative;margin:0 auto;transition:background .3s,box-shadow .3s;box-shadow:0 8px 34px rgba(37,99,235,.4)}
-.orb-core{color:#fff;font-weight:800;font-size:26px;letter-spacing:.5px}
-.orb::before,.orb::after{content:'';position:absolute;inset:-2px;border-radius:50%;border:2px solid rgba(96,165,250,.55);opacity:0}
+.orb{width:104px;height:104px;border-radius:50%;background:#eaf2ff;display:flex;align-items:center;justify-content:center;position:relative;margin:0 auto;overflow:hidden;transition:box-shadow .3s;box-shadow:0 8px 34px rgba(37,99,235,.4)}
+.ava-svg{width:100%;height:100%;display:block}
+/* eyes blink continuously; look up slightly while thinking */
+.ava-eyes{transform-box:fill-box;transform-origin:center;animation:avaBlink 4.4s infinite}
+@keyframes avaBlink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+/* mouth talks while speaking, gentle smile otherwise */
+.ava-mouth{transform-box:fill-box;transform-origin:center;transition:transform .2s}
+.orb.speaking .ava-mouth{animation:avaTalk .26s ease-in-out infinite}
+@keyframes avaTalk{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(3.2)}}
+/* subtle head-nod while listening */
+.orb.listening .ava-svg{animation:avaNod 2.8s ease-in-out infinite}
+@keyframes avaNod{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(1.5px) rotate(-1.2deg)}}
+/* thinking: eyes glance up, brows raise */
+.orb.thinking .ava-eyes{transform:translateY(-1.6px)}
+.orb.thinking .ava-brow{transform:translateY(-1px);transform-box:fill-box}
+/* halo rings + glow convey the phase (blue/green/amber) around the avatar */
+.orb::before,.orb::after{content:'';position:absolute;inset:-2px;border-radius:50%;border:2px solid rgba(96,165,250,.55);opacity:0;pointer-events:none}
 .orb.speaking::before{animation:ring 1.5s ease-out infinite}
 .orb.speaking::after{animation:ring 1.5s ease-out .75s infinite}
 @keyframes ring{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.8);opacity:0}}
-.orb.listening{background:radial-gradient(circle at 35% 30%,#4ade80,#16a34a);box-shadow:0 8px 34px rgba(22,163,74,.4)}
-.orb.listening::before{border-color:rgba(74,222,128,.6);animation:ring 1.5s ease-out infinite}
-.orb.thinking{background:radial-gradient(circle at 35% 30%,#fbbf24,#d97706);box-shadow:0 8px 34px rgba(217,119,6,.35);animation:pulse 1.2s ease-in-out infinite}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.orb.listening{box-shadow:0 8px 34px rgba(22,163,74,.45)}
+.orb.listening::before{border-color:rgba(74,222,128,.65);animation:ring 1.5s ease-out infinite}
+.orb.thinking{box-shadow:0 8px 34px rgba(217,119,6,.4)}
+.orb.thinking::before{border-color:rgba(251,191,36,.6);animation:ring 1.8s ease-out infinite}
+@media(prefers-reduced-motion:reduce){.ava-eyes,.ava-mouth,.orb.listening .ava-svg,.orb::before,.orb::after{animation:none}}
 .iv-name{color:#e2e8f0;font-weight:700;font-size:15px;margin-top:18px}
 .iv-state{font-size:12px;font-weight:700;margin-top:3px;color:#94a3b8}
 .selfwrap{position:absolute;right:12px;bottom:12px;width:140px;height:104px;border-radius:12px;overflow:hidden;background:#0b1220;border:2px solid rgba(255,255,255,.18);z-index:2;box-shadow:0 4px 16px rgba(0,0,0,.4)}
@@ -344,7 +359,7 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 
 <div class="stage">
 <div class="interviewer">
-<div class="orb idle" id="orb"><div class="orb-core">AI</div></div>
+<div class="orb idle" id="orb"><svg class="ava-svg" viewBox="0 0 100 100" aria-label="AI Interviewer"><defs><clipPath id="avaClip"><circle cx="50" cy="50" r="50"/></clipPath></defs><g clip-path="url(#avaClip)"><rect width="100" height="100" fill="#eaf2ff"/><path d="M18 100 Q20 77 50 77 Q80 77 82 100 Z" fill="#1e3a8a"/><path d="M50 77 L45 91 L50 95 L55 91 Z" fill="#e2e8f0"/><rect x="44" y="64" width="12" height="16" rx="6" fill="#e8b48c"/><ellipse cx="50" cy="45" rx="22" ry="24" fill="#f4c6a0"/><path d="M27 44 Q26 19 50 19 Q74 19 73 44 Q66 31 50 31 Q34 31 27 44 Z" fill="#2b2320"/><ellipse cx="28" cy="47" rx="3.2" ry="4.6" fill="#f0b892"/><ellipse cx="72" cy="47" rx="3.2" ry="4.6" fill="#f0b892"/><path class="ava-brow" d="M38 39 Q43 37 48 39" stroke="#3a2f2a" stroke-width="1.6" fill="none" stroke-linecap="round"/><path class="ava-brow" d="M52 39 Q57 37 62 39" stroke="#3a2f2a" stroke-width="1.6" fill="none" stroke-linecap="round"/><g class="ava-eyes"><ellipse cx="43" cy="45.5" rx="3.4" ry="4" fill="#fff"/><circle cx="43" cy="46" r="1.9" fill="#2a2320"/><ellipse cx="57" cy="45.5" rx="3.4" ry="4" fill="#fff"/><circle cx="57" cy="46" r="1.9" fill="#2a2320"/></g><g stroke="#334155" stroke-width="1.2" fill="none" opacity=".8"><circle cx="43" cy="46" r="5.4"/><circle cx="57" cy="46" r="5.4"/><path d="M48.4 46 h3.2"/></g><path d="M50 47 Q49 52 47 53" stroke="#d9a077" stroke-width="1.3" fill="none" stroke-linecap="round"/><ellipse class="ava-mouth" cx="50" cy="60" rx="5" ry="1.6" fill="#8a4b3a"/></g></svg></div>
 <div class="iv-name" id="ivName">AI Interviewer</div>
 <div class="iv-state" id="ivState">Connecting&hellip;</div>
 </div>
@@ -446,11 +461,11 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 <div class="fb-box">
 <h4>How was your experience?</h4>
 <div class="rating-btns" id="ratingBtns">
-<button onclick="rateFeedback(1)" title="Poor"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="9" cy="10" r="0.6" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="0.6" fill="currentColor" stroke="none"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/></svg></button>
-<button onclick="rateFeedback(2)" title="OK"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="9" cy="10" r="0.6" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="0.6" fill="currentColor" stroke="none"/><line x1="8.5" y1="15" x2="15.5" y2="15"/></svg></button>
-<button onclick="rateFeedback(3)" title="Good"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="9" cy="10" r="0.6" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="0.6" fill="currentColor" stroke="none"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg></button>
-<button onclick="rateFeedback(4)" title="Great"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="9" cy="10" r="0.6" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="0.6" fill="currentColor" stroke="none"/><path d="M8 13.5s1.5 2.5 4 2.5 4-2.5 4-2.5"/></svg></button>
-<button onclick="rateFeedback(5)" title="Amazing"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="9" cy="10" r="0.6" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="0.6" fill="currentColor" stroke="none"/><path d="M7 13s2 3.5 5 3.5 5-3.5 5-3.5"/></svg></button>
+<button onclick="rateFeedback(1)" title="Poor"><span style="font-size:26px;line-height:1">😞</span></button>
+<button onclick="rateFeedback(2)" title="OK"><span style="font-size:26px;line-height:1">😐</span></button>
+<button onclick="rateFeedback(3)" title="Good"><span style="font-size:26px;line-height:1">🙂</span></button>
+<button onclick="rateFeedback(4)" title="Great"><span style="font-size:26px;line-height:1">😊</span></button>
+<button onclick="rateFeedback(5)" title="Amazing"><span style="font-size:26px;line-height:1">🤩</span></button>
 </div>
 <textarea id="fbText" placeholder="Any suggestions to improve? (optional)" style="width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;min-height:60px;resize:vertical;outline:0;margin-bottom:8px"></textarea>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
@@ -475,11 +490,24 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 <footer class="foot"><p>ZapKitt &mdash; <a href="/">All Tools</a> | <a href="/ai-resume-builder">Resume Builder</a> | <a href="/about">About</a></p></footer>
 
 <script>
-var S={resume:'',role:'',co:'',jd:'',diff:'intermediate',tier:'free',seed:0,resumeHash:'',qNum:0,totalQs:5,transcript:'',qas:[],timer:null,secs:0,answerTimer:null,answerSecs:60};
+var S={resume:'',role:'',co:'',jd:'',diff:'intermediate',tier:'free',seed:0,resumeHash:'',name:'',qNum:0,totalQs:5,transcript:'',qas:[],timer:null,secs:0,answerTimer:null,answerSecs:60,followupUsed:false,pendingFollowup:false,lastType:'normal'};
 // Stable resume hash (for cross-session question de-dup) + browser fingerprint (for daily free limit).
 function zkHash(s){s=String(s||'');var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))>>>0;return h.toString(36)}
 function zkFingerprint(){try{return zkHash(navigator.userAgent+'|'+screen.width+'x'+screen.height+'|'+(navigator.language||'')+'|'+(new Date().getTimezoneOffset()))}catch(e){return zkHash('zk')}}
 var ZK_FP=zkFingerprint();
+// Pull the candidate's first name from the resume so the interviewer can greet them personally.
+function zkName(r){r=(r||'');
+  var stop=/^(summary|objective|profile|resume|curriculum|cv|experience|skills|education|contact|about|name|professional|senior|junior|software|engineer|developer|devops)$/i;
+  var m=r.match(/(?:^|\n)\s*(?:name|full name)\s*[:\-]\s*([A-Z][a-z]+)/i);
+  if(m&&!stop.test(m[1]))return m[1];
+  var first=(r.split(/\n/)[0]||'').trim().replace(/[|,].*$/,'').trim();var w=first.split(/\s+/);
+  if(first&&first.length<=40&&w.length>=1&&w.length<=4&&/^[A-Z][a-z]+$/.test(w[0])&&!stop.test(w[0])&&!/[\d@]/.test(first))return w[0];
+  return '';}
+// Human-like "thinking" — rotate natural pause messages while the AI prepares the next turn.
+var THINK_MSGS=['Let me look at your answer…','Analyzing your response…','Hmm, interesting…','Okay, let me think…'];
+var _thinkT=null;
+function startThinking(){var i=0;setCaption(THINK_MSGS[0]);if(_thinkT)clearInterval(_thinkT);_thinkT=setInterval(function(){i=(i+1)%THINK_MSGS.length;setCaption(THINK_MSGS[i])},1500)}
+function stopThinking(){if(_thinkT){clearInterval(_thinkT);_thinkT=null}}
 
 // Randomize live count
 var base=2400+Math.floor(Math.random()*800);
@@ -532,7 +560,7 @@ async function unlockTier(tier){
 
 // Step 3: reset into a fresh paid interview session.
 function startPaidRound(tier){
-  S.tier=tier;S.totalQs=TIER_QS[tier]||25;S.qNum=0;S.transcript='';S.qas=[];S.evalData=null;S.seed=Math.floor(Math.random()*100000);S.resumeHash=zkHash(S.resume);
+  S.tier=tier;S.totalQs=TIER_QS[tier]||25;S.qNum=0;S.transcript='';S.qas=[];S.evalData=null;S.seed=Math.floor(Math.random()*100000);S.resumeHash=zkHash(S.resume);S.followupUsed=false;S.pendingFollowup=false;S.lastType='normal';
   document.getElementById('rs').classList.remove('show');
   document.getElementById('chat').innerHTML='';
   document.querySelector('.controls').style.display='';document.querySelector('.stage').style.display='';document.getElementById('evalBox').classList.remove('show');
@@ -548,25 +576,32 @@ function startPaidRound(tier){
 async function begin(){
   S.resume=document.getElementById('inp_r').value.trim();S.role=document.getElementById('inp_role').value.trim()||'Software Engineer';S.co=document.getElementById('inp_co').value.trim()||S.co;S.jd=document.getElementById('inp_jd').value.trim();
   if(!S.resume||S.resume.length<30){alert('Please paste or upload your resume first');return}
-  recordUsage();S.qNum=0;S.transcript='';S.qas=[];S.seed=Math.floor(Math.random()*100000);S.resumeHash=zkHash(S.resume);
+  recordUsage();S.qNum=0;S.transcript='';S.qas=[];S.seed=Math.floor(Math.random()*100000);S.resumeHash=zkHash(S.resume);S.followupUsed=false;S.pendingFollowup=false;S.lastType='normal';
   document.getElementById('landing').style.display='none';
   document.getElementById('setup').classList.add('hide');document.getElementById('iv').classList.add('show');
   document.getElementById('ivName').textContent='AI Interviewer'+(S.co?' \u2014 '+S.co:'');
   initCam();
   S.secs=0;S.timer=setInterval(function(){S.secs++;var m=Math.floor(S.secs/60),s=S.secs%60;document.getElementById('t_tm').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s},1000);
-  var intro=S.co?'Good morning. I\'m your interviewer from '+S.co+'. Today I\'ll be conducting your technical interview for the '+S.role+' position.':'Good morning. I\'m your interviewer for the '+S.role+' position today.';
-  setCaption(intro+' Let\'s begin.');
-  addM('ai','<div class="sn">Interviewer'+(S.co?' \u2014 '+S.co:'')+'</div>'+intro+' Let\'s begin.');
+  S.name=zkName(S.resume);var nm=S.name?', '+S.name:'';
+  var intro='Good morning'+nm+'. I hope you\'re doing well today. I\'ll be your interviewer for the '+S.role+' position'+(S.co?' at '+S.co:'')+'. Let\'s begin with a simple introduction.';
+  setCaption(intro);
+  addM('ai','<div class="sn">Interviewer'+(S.co?' \u2014 '+S.co:'')+'</div>'+intro);
   setPhase('speaking');
-  speak(intro+' Let\'s begin.',function(){setTimeout(ask,400)});
+  speak(intro,function(){setTimeout(ask,400)});
 }
 
 async function ask(){
-  S.qNum++;if(S.qNum>S.totalQs){evaluate();return}
+  // Decide: ask a fresh MAIN question (advance) OR allow the AI to follow up on the current one.
+  var advancing=(S.qNum===0)||S.pendingFollowup||S.followupUsed||(S.lastType==='coding')||(S.qNum>=S.totalQs);
+  var allowFollowup=!advancing; // implies S.qNum>=1 and S.qNum<S.totalQs
+  if(advancing){
+    S.qNum++;if(S.qNum>S.totalQs){evaluate();return}
+    S.followupUsed=false;S.pendingFollowup=false;
+  }
   document.getElementById('t_pr').textContent='Q '+S.qNum+'/'+S.totalQs;
   setPhase('thinking');stopTimer();disableInp();
-  setCaption('Interviewer is preparing your next question…');
-  var payload={action:'ask',stream:true,tier:S.tier,seed:S.seed,resumeHash:S.resumeHash,resume:S.resume+(S.jd?'\nJD:\n'+S.jd:''),role:S.role,company:S.co,difficulty:S.diff,questionNum:S.qNum,totalQs:S.totalQs,transcript:S.transcript,answer:S.qas.length?S.qas[S.qas.length-1].a:''};
+  if(S.qas.length)startThinking();else setCaption('Preparing your first question…');
+  var payload={action:'ask',stream:true,tier:S.tier,seed:S.seed,resumeHash:S.resumeHash,allowFollowup:allowFollowup,resume:S.resume+(S.jd?'\nJD:\n'+S.jd:''),role:S.role,company:S.co,difficulty:S.diff,questionNum:S.qNum,totalQs:S.totalQs,transcript:S.transcript,answer:S.qas.length?S.qas[S.qas.length-1].a:''};
   var ackSpoken=false,ackText='';
   try{
     var r=await fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
@@ -574,44 +609,51 @@ async function ask(){
     var reader=r.body.getReader(),dec=new TextDecoder(),raw='';
     for(;;){var rd=await reader.read();if(rd.done)break;raw+=dec.decode(rd.value,{stream:true});
       // As soon as the interviewer's acknowledgement line is complete, speak it — kills the dead-air wait.
-      if(!ackSpoken&&S.qNum>1){var am=raw.replace(/```json/g,'').replace(/```/g,'').match(/"response"\s*:\s*"((?:[^"\\]|\\.)*)"\s*,/);
-        if(am){ackText=unesc(am[1]);ackSpoken=true;if(ackText){try{speechSynthesis.cancel()}catch(e){}setPhase('speaking');speakChain(ackText)}}}}
-    finishAsk(parseAsk(raw),ackSpoken);
+      if(!ackSpoken&&S.qas.length){var am=raw.replace(/```json/g,'').replace(/```/g,'').match(/"response"\s*:\s*"((?:[^"\\]|\\.)*)"\s*,/);
+        if(am){ackText=unesc(am[1]);ackSpoken=true;stopThinking();if(ackText){try{speechSynthesis.cancel()}catch(e){}setPhase('speaking');speakChain(ackText)}}}}
+    finishAsk(parseAsk(raw),ackSpoken,allowFollowup);
   }catch(e){
     // Streaming unsupported (older browser / proxy buffering) — fall back to the plain JSON call.
     try{
       var r2=await fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({},payload,{stream:false}))});
       var data=await r2.json();
-      if(!data.success){setPhase('idle');setCaption('Something went wrong. Please try again.');addM('ai','Error: '+(data.error||'Try again'));toggleType(true);return}
-      finishAsk(data.data,ackSpoken);
-    }catch(e2){setPhase('idle');setCaption('Connection error. Switch to typing to continue.');addM('ai','Connection error');toggleType(true)}
+      if(!data.success){stopThinking();setPhase('idle');setCaption('Something went wrong. Please try again.');addM('ai','Error: '+(data.error||'Try again'));toggleType(true);return}
+      finishAsk(data.data,ackSpoken,allowFollowup);
+    }catch(e2){stopThinking();setPhase('idle');setCaption('Connection error. Switch to typing to continue.');addM('ai','Connection error');toggleType(true)}
   }}
 
 function unesc(s){try{return JSON.parse('"'+s.replace(/\r?\n/g,'\\n')+'"')}catch(e){return s.replace(/\\"/g,'"').replace(/\\n/g,' ').replace(/\\\\/g,'\\')}}
 function parseAsk(raw){var t=(raw||'').replace(/```json/g,'').replace(/```/g,'').trim();var j1=t.indexOf('{'),j2=t.lastIndexOf('}');if(j1>=0&&j2>j1)t=t.substring(j1,j2+1);
   try{return JSON.parse(t)}catch(e){try{return JSON.parse(t.replace(/[\x00-\x1f]/g,' ').replace(/,\s*}/g,'}').replace(/,\s*]/g,']'))}catch(e2){return{response:'',question:''}}}}
-function finishAsk(d,ackSpoken){
-  d=d||{};
+function finishAsk(d,ackSpoken,allowFollowup){
+  d=d||{};stopThinking();
   // Tolerate both shapes: raw {response,question} (streamed) OR wrapped {success,data:{...}} (demo / non-stream).
   if(d.success===false){setPhase('idle');setCaption('Something went wrong. Please try again.');addM('ai','Error: '+(d.error||'server error'));toggleType(true);return}
   if(d.data&&d.question===undefined&&d.response===undefined)d=d.data;
   var resp=d.response||'',q=d.question||'';
-  if(!q){setPhase('idle');setCaption('Something went wrong. Please try again.');addM('ai','Error: '+(d.error||'empty response'));toggleType(true);return}
+  if(!q||/^\s*INTERVIEW_COMPLETE\s*$/i.test(q)){evaluate();return}
+  // Follow-up state machine: a follow-up stays on the same question; otherwise advance to the next main question.
+  var isFollowup=allowFollowup&&d.followup===true;
+  if(isFollowup){S.followupUsed=true;S.pendingFollowup=true;}
+  else if(allowFollowup){S.qNum++;S.followupUsed=false;S.pendingFollowup=false;if(S.qNum>S.totalQs){evaluate();return}}
+  S.lastType=(d.type==='coding')?'coding':'normal';
+  document.getElementById('t_pr').textContent='Q '+S.qNum+'/'+S.totalQs+(isFollowup?' · follow-up':'');
+  var hasAck=(resp&&(S.qas.length>0||isFollowup));
   var html='<div class="sn">Interviewer</div>';
-  if(resp&&S.qNum>1)html+='<div style="font-size:12px;color:#6b7280;margin-bottom:6px">'+resp+'</div>';
+  if(hasAck)html+='<div style="font-size:12px;color:#6b7280;margin-bottom:6px">'+resp+'</div>';
   html+='<div style="font-size:14px;font-weight:500">'+q+'</div>';
   addM('ai',html);
   setCaption(q);
-  S.transcript+='Interviewer Q'+S.qNum+': '+q+'\n';
+  S.transcript+='Interviewer Q'+S.qNum+(isFollowup?' (follow-up)':'')+': '+q+'\n';
   S.qas.push({q:q,a:''});
   setPhase('speaking');
   var afterSpeak=function(){
-    var isCode=(d.type==='coding')||(S.tier==='free'&&S.qNum===5);
+    var isCode=(d.type==='coding'&&!isFollowup);
     if(isCode){setPhase('listening');document.getElementById('capLive').textContent='Write your code below (2 min)';showCodeEditor();startTimer(120)}
     else if(typeMode){setPhase('idle');document.getElementById('ab').style.display='flex';enableInp();startTimer()}
     else{startListening();startTimer()}};
   if(ackSpoken){speakChain(q,afterSpeak)}  // ack is already playing — queue the question right after it
-  else{speak((resp&&S.qNum>1?resp+' ':'')+q,afterSpeak)}}
+  else{speak((hasAck?resp+' ':'')+q,afterSpeak)}}
 
 function startTimer(secs){S.answerSecs=secs||60;var tag=document.getElementById('t_ans');tag.style.display='inline-block';
   if(S.answerTimer)clearInterval(S.answerTimer);

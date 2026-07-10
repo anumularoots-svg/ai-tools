@@ -28,3 +28,7 @@ export function kvExpire(key, seconds) { return cmd(['EXPIRE', key, String(secon
 // Hash — used for the per-resume Interview Memory (topics, weak/strong, scores).
 export function kvHSet(key, field, val) { return cmd(['HSET', key, field, val]); }
 export function kvHGetAll(key) { return cmd(['HGETALL', key]); }
+// List — used to persist feedback/support messages so they survive cold starts.
+export function kvLPush(key, val) { return cmd(['LPUSH', key, val]); }
+export function kvLTrim(key, start, stop) { return cmd(['LTRIM', key, String(start), String(stop)]); }
+export async function kvLRange(key, start, stop) { const r = await cmd(['LRANGE', key, String(start), String(stop)]); return Array.isArray(r) ? r : []; }
