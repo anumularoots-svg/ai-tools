@@ -147,5 +147,120 @@
     };
   }
 
-  window.ZapKittFeedback = { render: render };
+  // ---- Auto-attach: wrap a page's existing generate() so feedback appears
+  // automatically after every generation, with zero changes to page internals.
+  //   ZapKittFeedback.attach({
+  //     fn: "generate",          // global function name the page already uses
+  //     result: "result",        // id of the element holding the output
+  //     tool: "cover-letter",    // lens key (api/feedback.js LENSES)
+  //     toolLabel: "AI Cover Letter",
+  //     inputs: ["jobDesc"],     // OPTIONAL field ids for context (else auto-collected)
+  //     improve: true,           // OPTIONAL Improve-Again button (default true)
+  //     endpoint: "/api/ai"      // OPTIONAL rewrite endpoint for Improve (default /api/ai)
+  //   });
+  function readOut(el) {
+    if (!el) return "";
+    var tag = (el.tagName || "").toUpperCase();
+    return (tag === "TEXTAREA" || tag === "INPUT") ? (el.value || "") : (el.innerText || el.textContent || "");
+  }
+  function writeOut(el, txt) {
+    if (!el) return;
+    var tag = (el.tagName || "").toUpperCase();
+    if (tag === "TEXTAREA" || tag === "INPUT") el.value = txt; else el.textContent = txt;
+  }
+  function collectInputs(cfg, resultEl) {
+    var parts = [];
+    if (cfg.inputs && cfg.inputs.length) {
+      cfg.inputs.forEach(function (id) { var el = document.getElementById(id); if (el && el.value && el.value.trim()) parts.push((el.getAttribute("placeholder") || id) + ": " + el.value.trim()); });
+    } else {
+      var els = document.querySelectorAll("textarea, input, select");
+      for (var i = 0; i < els.length && parts.length < 12; i++) {
+        var e = els[i];
+        if (e === resultEl) continue;
+        var ty = (e.type || "").toLowerCase();
+        if (ty === "hidden" || ty === "button" || ty === "submit" || ty === "checkbox" || ty === "radio" || ty === "file") continue;
+        var v = (e.value || "").trim();
+        if (!v || v.length > 1500) continue;
+        parts.push((e.getAttribute("placeholder") || e.id || "field") + ": " + v);
+      }
+    }
+    return parts.join("\n").slice(0, 3500);
+  }
+
+  function attach(cfg) {
+    cfg = cfg || {};
+    var orig = window[cfg.fn];
+    var mountId = "zkfMount_" + (cfg.fn || cfg.result);
+    var lastSeen = "";
+
+    function ensureMount(resultEl) {
+      var m = document.getElementById(mountId);
+      if (m) return m;
+      m = document.createElement("div");
+      m.id = mountId;
+      m.style.display = "none";
+      var anchor = resultEl.closest ? (resultEl.closest(".output") || resultEl.closest(".output-box") || resultEl.parentNode) : resultEl.parentNode;
+      if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(m, anchor.nextSibling);
+      else document.body.appendChild(m);
+      return m;
+    }
+
+    function afterGen() {
+      var resultEl = document.getElementById(cfg.result);
+      if (!resultEl) return;
+      var out = readOut(resultEl).trim();
+      if (!out || out === lastSeen) return; // nothing new (e.g. generation failed)
+      lastSeen = out;
+      var mount = ensureMount(resultEl);
+      var improveEnabled = cfg.improve !== false;
+      render(mount, {
+        tool: cfg.tool || "",
+        toolLabel: cfg.toolLabel || "",
+        input: collectInputs(cfg, resultEl),
+        output: out,
+        fileName: (cfg.tool || "zapkitt") + ".txt",
+        onImprove: improveEnabled ? function (fb) {
+          var fixes = (fb.suggestions || []).concat(fb.issues || []);
+          var mnt = document.getElementById(mountId);
+          mnt.innerHTML = '<div class="zkf-load"><span class="zkf-sp"></span> Improving your result…</div>';
+          var prompt = "Improve the following " + (cfg.toolLabel || "output") + ". Fix these specific issues: "
+            + fixes.join("; ") + ".\nKeep the same intent, tone, language and format. Return ONLY the improved version, nothing else.\n\nCURRENT VERSION:\n" + out;
+          fetch(cfg.endpoint || "/api/ai", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt: prompt, system: "You are an expert editor. Improve the given text; output only the improved text.", max_tokens: 2000 })
+          }).then(function (r) { return r.json(); }).then(function (d) {
+            var better = (d.result || d.text || "").trim();
+            if (better) { writeOut(resultEl, better); lastSeen = better; afterGen(); }
+            else afterGen();
+          }).catch(function () { afterGen(); });
+        } : null
+      });
+    }
+
+    // Two hook strategies:
+    //  - observe: watch the output element for DOM changes (best for div/innerHTML
+    //    outputs and fire-and-forget generators). Debounced so multi-step renders settle.
+    //  - wrap: replace the global generate fn and run after it resolves (best for
+    //    textarea .value outputs, which don't trigger MutationObserver).
+    var resultEl0 = document.getElementById(cfg.result);
+    var isField = resultEl0 && ["TEXTAREA", "INPUT"].indexOf((resultEl0.tagName || "").toUpperCase()) >= 0;
+    var useObserve = cfg.observe || (!isField && typeof orig !== "function");
+
+    if (useObserve) {
+      if (!resultEl0) { console.warn("ZapKittFeedback.attach: no element '" + cfg.result + "'"); return; }
+      var t = null;
+      new MutationObserver(function () { clearTimeout(t); t = setTimeout(afterGen, 400); })
+        .observe(resultEl0, { childList: true, subtree: true, characterData: true });
+    } else {
+      if (typeof orig !== "function") { console.warn("ZapKittFeedback.attach: no global fn '" + cfg.fn + "'"); return; }
+      window[cfg.fn] = function () {
+        var ret;
+        try { ret = orig.apply(this, arguments); } catch (e) { throw e; }
+        Promise.resolve(ret).then(function () { setTimeout(afterGen, 30); }, function () {});
+        return ret;
+      };
+    }
+  }
+
+  window.ZapKittFeedback = { render: render, attach: attach };
 })();
