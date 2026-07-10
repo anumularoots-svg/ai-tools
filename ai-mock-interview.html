@@ -470,7 +470,48 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 <textarea id="fbText" placeholder="Any suggestions to improve? (optional)" style="width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;min-height:60px;resize:vertical;outline:0;margin-bottom:8px"></textarea>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
 <input type="text" id="fbName" placeholder="Your Name (optional)" style="padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;outline:0">
-<input type="tel" id="fbPhone" placeholder="WhatsApp Number (optional)" style="padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;outline:0">
+<div style="display:flex;gap:4px">
+<select id="fbCountry" title="Country code" style="flex:0 0 auto;max-width:120px;padding:10px 4px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;outline:0;background:#fff;cursor:pointer">
+<option value="+91">🇮🇳 +91</option>
+<option value="+1">🇺🇸 +1</option>
+<option value="+44">🇬🇧 +44</option>
+<option value="+971">🇦🇪 +971</option>
+<option value="+966">🇸🇦 +966</option>
+<option value="+65">🇸🇬 +65</option>
+<option value="+60">🇲🇾 +60</option>
+<option value="+61">🇦🇺 +61</option>
+<option value="+64">🇳🇿 +64</option>
+<option value="+1">🇨🇦 +1</option>
+<option value="+49">🇩🇪 +49</option>
+<option value="+33">🇫🇷 +33</option>
+<option value="+34">🇪🇸 +34</option>
+<option value="+39">🇮🇹 +39</option>
+<option value="+351">🇵🇹 +351</option>
+<option value="+31">🇳🇱 +31</option>
+<option value="+7">🇷🇺 +7</option>
+<option value="+90">🇹🇷 +90</option>
+<option value="+380">🇺🇦 +380</option>
+<option value="+48">🇵🇱 +48</option>
+<option value="+86">🇨🇳 +86</option>
+<option value="+81">🇯🇵 +81</option>
+<option value="+82">🇰🇷 +82</option>
+<option value="+62">🇮🇩 +62</option>
+<option value="+66">🇹🇭 +66</option>
+<option value="+84">🇻🇳 +84</option>
+<option value="+880">🇧🇩 +880</option>
+<option value="+92">🇵🇰 +92</option>
+<option value="+94">🇱🇰 +94</option>
+<option value="+977">🇳🇵 +977</option>
+<option value="+20">🇪🇬 +20</option>
+<option value="+234">🇳🇬 +234</option>
+<option value="+27">🇿🇦 +27</option>
+<option value="+254">🇰🇪 +254</option>
+<option value="+55">🇧🇷 +55</option>
+<option value="+52">🇲🇽 +52</option>
+<option value="+54">🇦🇷 +54</option>
+</select>
+<input type="tel" id="fbPhone" placeholder="WhatsApp Number (optional)" style="flex:1;min-width:0;padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;outline:0">
+</div>
 </div>
 <div style="font-size:10px;color:#9ca3af;margin-bottom:8px">Name & number only for follow-up — never shared or stored permanently.</div>
 <button onclick="submitFeedback()" id="fbBtn" style="padding:10px 24px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">Submit Feedback</button>
@@ -756,9 +797,11 @@ function rateFeedback(r){fbRating=r;document.querySelectorAll('.rating-btns butt
 function submitFeedback(){
   var text=document.getElementById('fbText').value.trim();
   var name=document.getElementById('fbName').value.trim();
-  var phone=document.getElementById('fbPhone').value.trim();
+  var cc=document.getElementById('fbCountry').value;
+  var rawPhone=document.getElementById('fbPhone').value.trim().replace(/^0+/,'');
+  var phone=rawPhone?(cc+' '+rawPhone):'';
   fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'feedback',rating:fbRating,text:text,name:name,phone:phone,role:S.role,company:S.co,score:S.evalData?S.evalData.overall_score:0})}).catch(function(){});
-  document.getElementById('fbBtn').style.display='none';document.getElementById('fbDone').style.display='block';document.getElementById('fbText').disabled=true;document.getElementById('fbName').disabled=true;document.getElementById('fbPhone').disabled=true;
+  document.getElementById('fbBtn').style.display='none';document.getElementById('fbDone').style.display='block';document.getElementById('fbText').disabled=true;document.getElementById('fbName').disabled=true;document.getElementById('fbPhone').disabled=true;document.getElementById('fbCountry').disabled=true;
 }
 
 /* ===== Real-time interview engine (Tier 1: browser voice) ===== */
