@@ -1,6 +1,47 @@
+import { kvReady, kvGet, kvDel, kvSetEx, kvSAdd, kvSMembers, kvExpire } from './_kv.js';
 function pickKey(env){if(!env)return null;var k=env.split(",").map(function(k){return k.trim()}).filter(Boolean);return k.length?k[Math.floor(Math.random()*k.length)]:null}
+
+// Exact question-slot plan per round (Phase 1 structured interview).
+function slotFor(tier,qn){
+  if(tier==="r2"){
+    if(qn<=5)return{instr:"a DEEP TECHNICAL question about ONE specific technology from the resume (e.g. AWS, Docker, Kubernetes, Terraform, Linux, Jenkins, Git, Monitoring, CI/CD)"};
+    if(qn<=15)return{instr:"a real-world PRODUCTION SCENARIO question ('What would you do if...' about an incident, outage, scaling, or deployment problem)"};
+    if(qn<=20)return{instr:"a hands-on TROUBLESHOOTING question (something is broken/failing — how do you diagnose and fix it step by step)"};
+    return{instr:"a RESUME DEEP-DIVE question drilling into a specific project, decision, or achievement listed on the resume"};
+  }
+  if(tier==="r3"){
+    if(qn<=10)return{coding:true,instr:"a CODING / hands-on problem — ask the candidate to WRITE code or config (debug an issue, fix a CI/CD pipeline, write a Dockerfile, Terraform, Bash, Python, YAML, or a Kubernetes manifest)"};
+    if(qn<=20)return{instr:"a CROSS-DOMAIN scenario combining TWO technologies (e.g. AWS+Kubernetes, Jenkins+Docker, Terraform+VPC, Monitoring+Incident, IAM+Security)"};
+    if(qn<=25)return{instr:"a SYSTEM DESIGN question (design, scale, or architect a system relevant to the role)"};
+    return{instr:"an HR question (salary expectations, leadership, handling conflict, client handling, or career goals)"};
+  }
+  if(qn<=1)return{instr:"an INTRODUCTION — greet warmly and ask 'Tell me about yourself and walk me through your resume'"};
+  if(qn===2)return{instr:"a DEEP TECHNICAL question about one specific technology from the resume (no code writing)"};
+  if(qn===3)return{instr:"a production SCENARIO question ('What would you do if...', no code)"};
+  if(qn===4)return{instr:"a DEEP-DIVE SCENARIO question on a DIFFERENT area than the previous one (no code)"};
+  return{coding:true,instr:"a CODING problem — ask the candidate to write a function/script"};
+}
+// Store an asked question's text so the same resume never gets it again (30-day memory).
+async function storeAsked(rh,tier,raw){
+  if(!kvReady()||!rh||!raw)return;
+  try{var t=String(raw).replace(/```json/g,"").replace(/```/g,"");var m=t.match(/"question"\s*:\s*"((?:[^"\\]|\\.)*)"/);if(!m)return;
+    var q=m[1].slice(0,160);if(!q||/INTERVIEW_COMPLETE/i.test(q))return;
+    var key="asked:"+rh+":"+tier;await kvSAdd(key,q);await kvExpire(key,30*24*3600);}catch(e){}
+}
 function getProviders(){var p=[],k;k=pickKey(process.env.GROQ_API_KEY);if(k)p.push({name:"groq",url:"https://api.groq.com/openai/v1/chat/completions",key:k,model:"llama-3.3-70b-versatile"});k=pickKey(process.env.GEMINI_API_KEY);if(k)p.push({name:"gemini",url:"https://generativelanguage.googleapis.com/v1beta",key:k,model:"gemini-2.5-flash",format:"gemini"});k=pickKey(process.env.OPENROUTER_API_KEY);if(k)p.push({name:"openrouter",url:"https://openrouter.ai/api/v1/chat/completions",key:k,model:"meta-llama/llama-3.3-70b-instruct:free"});return p}
-async function callAI(prov,msgs){if(prov.format==="gemini"){var gm=msgs.filter(function(m){return m.role!=="system"}).map(function(m){return{role:m.role==="assistant"?"model":"user",parts:[{text:m.content}]}});var sys=msgs.find(function(m){return m.role==="system"});var body={contents:gm,generationConfig:{maxOutputTokens:1500,temperature:0.7}};if(sys)body.systemInstruction={parts:[{text:sys.content}]};var r=await fetch(prov.url+"/models/"+prov.model+":generateContent?key="+prov.key,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});if(!r.ok)throw new Error("Gemini "+r.status);var d=await r.json();return d.candidates[0].content.parts[0].text}else{var h={"Content-Type":"application/json","Authorization":"Bearer "+prov.key};if(prov.name==="openrouter"){h["HTTP-Referer"]="https://zapkitt.com";h["X-Title"]="ZapKitt"}var r2=await fetch(prov.url,{method:"POST",headers:h,body:JSON.stringify({model:prov.model,messages:msgs,max_tokens:1500,temperature:0.7})});if(!r2.ok)throw new Error(prov.name+" "+r2.status);var d2=await r2.json();return d2.choices[0].message.content}}
+async function callAIStream(prov,msgs,onChunk){
+  var h={"Content-Type":"application/json","Authorization":"Bearer "+prov.key};
+  if(prov.name==="openrouter"){h["HTTP-Referer"]="https://zapkitt.com";h["X-Title"]="ZapKitt"}
+  var r=await fetch(prov.url,{method:"POST",headers:h,body:JSON.stringify({model:prov.model,messages:msgs,max_tokens:1500,temperature:0.7,stream:true})});
+  if(!r.ok||!r.body||!r.body.getReader)throw new Error(prov.name+" "+r.status);
+  var reader=r.body.getReader(),dec=new TextDecoder(),buf="",got=false;
+  for(;;){var rd=await reader.read();if(rd.done)break;buf+=dec.decode(rd.value,{stream:true});
+    var lines=buf.split("\n");buf=lines.pop();
+    for(var i=0;i<lines.length;i++){var line=lines[i].trim();if(line.indexOf("data:")!==0)continue;var pl=line.slice(5).trim();if(!pl||pl==="[DONE]")continue;
+      try{var j=JSON.parse(pl);var dc=j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content;if(dc){got=true;onChunk(dc)}}catch(e){}}}
+  if(!got)throw new Error(prov.name+" empty stream");
+  return true}
+async function callAI(prov,msgs,maxTok){maxTok=maxTok||1500;if(prov.format==="gemini"){var gm=msgs.filter(function(m){return m.role!=="system"}).map(function(m){return{role:m.role==="assistant"?"model":"user",parts:[{text:m.content}]}});var sys=msgs.find(function(m){return m.role==="system"});var body={contents:gm,generationConfig:{maxOutputTokens:maxTok,temperature:0.7}};if(sys)body.systemInstruction={parts:[{text:sys.content}]};var r=await fetch(prov.url+"/models/"+prov.model+":generateContent?key="+prov.key,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});if(!r.ok)throw new Error("Gemini "+r.status);var d=await r.json();return d.candidates[0].content.parts[0].text}else{var h={"Content-Type":"application/json","Authorization":"Bearer "+prov.key};if(prov.name==="openrouter"){h["HTTP-Referer"]="https://zapkitt.com";h["X-Title"]="ZapKitt"}var r2=await fetch(prov.url,{method:"POST",headers:h,body:JSON.stringify({model:prov.model,messages:msgs,max_tokens:maxTok,temperature:0.7})});if(!r2.ok)throw new Error(prov.name+" "+r2.status);var d2=await r2.json();return d2.choices[0].message.content}}
 
 export default async function handler(req,res){
   const origins=["https://zapkitt.com","https://www.zapkitt.com"];const o=req.headers.origin||"";
@@ -19,20 +60,21 @@ export default async function handler(req,res){
     if(b.action==='checkLimit'){
       if(DEV_IPS.includes(userIP))return res.status(200).json({limited:false,dev:true});
       var today=new Date().toISOString().split('T')[0];
-      var key='usage_'+today+'_'+userIP.replace(/[^a-zA-Z0-9]/g,'');
-      // Use global variable for in-memory tracking (resets on cold start)
+      var fp=(b.fp||'').replace(/[^a-zA-Z0-9]/g,'').slice(0,24); // browser fingerprint (optional, from client)
+      var key='used:'+today+':'+userIP.replace(/[^a-zA-Z0-9]/g,'')+(fp?':'+fp:'');
+      if(kvReady()){try{var uv=await kvGet(key);return res.status(200).json({limited:!!uv,ip:userIP.substring(0,8)+'...'})}catch(e){}}
       if(!global._zkUsage)global._zkUsage={};
-      var used=!!global._zkUsage[key];
-      return res.status(200).json({limited:used,ip:userIP.substring(0,8)+'...'});
+      return res.status(200).json({limited:!!global._zkUsage[key],ip:userIP.substring(0,8)+'...'});
     }
-    
+
     if(b.action==='recordUsage'){
       var today2=new Date().toISOString().split('T')[0];
-      var key2='usage_'+today2+'_'+userIP.replace(/[^a-zA-Z0-9]/g,'');
+      var fp2=(b.fp||'').replace(/[^a-zA-Z0-9]/g,'').slice(0,24);
+      var key2='used:'+today2+':'+userIP.replace(/[^a-zA-Z0-9]/g,'')+(fp2?':'+fp2:'');
+      if(kvReady()){try{await kvSetEx(key2,2*24*3600,'1');return res.status(200).json({recorded:true})}catch(e){}}
       if(!global._zkUsage)global._zkUsage={};
       global._zkUsage[key2]=true;
-      // Clean old entries (keep only today)
-      Object.keys(global._zkUsage).forEach(function(k){if(!k.includes(today2))delete global._zkUsage[k]});
+      Object.keys(global._zkUsage).forEach(function(k){if(k.indexOf(today2)<0)delete global._zkUsage[k]});
       return res.status(200).json({recorded:true});
     }
     
@@ -92,18 +134,53 @@ export default async function handler(req,res){
       return res.status(200).json({feedback:global._zkFeedback||[],count:(global._zkFeedback||[]).length});
     }
     
+    // Verify a Ko-fi payment and consume it (one-time) to unlock a paid round.
+    if(b.action==="verifyUnlock"){
+      var vEmail=String(b.email||"").trim().toLowerCase();
+      var vTier=b.tier==="r3"?"r3":"r2";
+      if(!vEmail||vEmail.indexOf("@")<1)return res.status(400).json({unlocked:false,error:"Enter the email you paid with on Ko-fi."});
+      if(!kvReady())return res.status(200).json({unlocked:false,error:"Payment verification is not set up yet."});
+      try{
+        var vKey="kofi:"+vEmail+":"+vTier;
+        var vVal=await kvGet(vKey);
+        if(!vVal)return res.status(200).json({unlocked:false,error:"No matching payment found yet. It can take up to a minute after paying — please wait and retry."});
+        await kvDel(vKey); // consume: one payment = one round
+        return res.status(200).json({unlocked:true,tier:vTier});
+      }catch(ue){return res.status(200).json({unlocked:false,error:"Could not verify right now. Please retry."})}
+    }
+
     var providers=getProviders();
     if(!providers.length)return res.status(500).json({error:"No AI provider"});
 
     if(b.action==="evaluate"){
-      var evalSys="You are an expert interview evaluator. Analyze this interview transcript.\n\nTRANSCRIPT:\n"+b.transcript+"\n\n";
-      evalSys+='Respond ONLY in JSON:\n{"overall_score":78,"overall_verdict":"Pass/Fail/Strong Hire","categories":{"technical":70,"communication":80,"confidence":65,"star_format":50,"problem_solving":75},"questions":[{"q":"question","answer":"candidate answer","score":7,"mistakes":"what went wrong specifically","ideal_answer":"the EXACT technical answer a strong candidate would give - include specific tools, commands, architecture details, code snippets where relevant","how_to_improve":"actionable tip"}],"strong_areas":["area1"],"weak_areas":["area1"],"practice_topics":["topic1"],"hiring_readiness":"Ready/Needs Work/Not Ready"}\n';
-      evalSys+="IMPORTANT: For coding questions, ideal_answer MUST include actual working code. For other questions, ideal_answer must be DETAILED and TECHNICAL - like a real senior engineer would answer. Include specific tool names, commands, architecture patterns, code examples.";
-      var evalMsgs=[{role:"system",content:evalSys},{role:"user",content:"Evaluate this interview. JSON only."}];
-      for(var i=0;i<providers.length;i++){try{var t=await callAI(providers[i],evalMsgs);t=t.replace(/```json/g,"").replace(/```/g,"").trim();var j1=t.indexOf("{"),j2=t.lastIndexOf("}");if(j1>=0&&j2>j1)t=t.substring(j1,j2+1);var parsed;try{parsed=JSON.parse(t)}catch(pe){
-          // Try to fix common JSON issues
+      // Prefer the structured Q&A pairs (exact question + exact answer) — no reconstruction, no missed questions.
+      var qas=Array.isArray(b.qas)?b.qas.filter(function(x){return x&&x.q}):[];
+      var evalRole=b.role||"the role",evalCo=b.company?" at "+b.company:"";
+      var evalSys="You are a strict senior interviewer"+evalCo+" evaluating a candidate for "+evalRole+".\n\n";
+      if(qas.length){
+        evalSys+="You MUST evaluate EXACTLY these "+qas.length+" question-answer pairs, in order. Do not skip, merge, or invent any.\n\n";
+        for(var qi=0;qi<qas.length;qi++){
+          var aTxt=(qas[qi].a&&String(qas[qi].a).trim())?qas[qi].a:"[No answer given]";
+          evalSys+="Q"+(qi+1)+": "+qas[qi].q+"\nCANDIDATE ANSWER "+(qi+1)+": "+aTxt+"\n\n";
+        }
+      }else{
+        evalSys+="INTERVIEW TRANSCRIPT:\n"+(b.transcript||"")+"\n\n";
+      }
+      evalSys+='Return ONLY valid JSON with the "questions" array containing EXACTLY '+(qas.length||5)+' objects, one per question above, in the same order:\n';
+      evalSys+='{"overall_score":78,"overall_verdict":"Strong Hire/Hire/Lean Hire/No Hire","categories":{"technical":70,"production_thinking":68,"problem_solving":72,"communication":80,"resume_knowledge":65,"confidence":70},"questions":[{"q":"the exact question","answer":"the candidate\'s exact answer (verbatim, or [No answer given])","score":7,"mistakes":"specifically what was missing or wrong; if no answer, say so","ideal_answer":"the exact, correct answer a strong candidate would give","how_to_improve":"one concrete, actionable tip"}],"strong_areas":["..."],"weak_areas":["..."],"practice_topics":["..."],"hiring_readiness":"Ready/Needs Work/Not Ready"}\n';
+      evalSys+="SCORING RULES: Score each answer 0-10 honestly against what the question actually asked. [No answer given] or empty/irrelevant answers MUST score 0-1. Vague answers 2-4. Solid answers 6-8. Excellent, specific, metric-backed answers 9-10. Never inflate.\n";
+      evalSys+="overall_score (0-100) is the WEIGHTED average of the categories using these exact weights: technical 35%, production_thinking 20%, problem_solving 15%, communication 10%, resume_knowledge 10%, confidence 10%.\n";
+      evalSys+="IDEAL ANSWER RULES: For coding questions, ideal_answer MUST include complete working code. For technical/scenario questions, give the concrete correct answer with specific tools, commands, and architecture — like a real senior engineer. Keep each ideal_answer focused, not padded.";
+      var evalMsgs=[{role:"system",content:evalSys},{role:"user",content:"Evaluate now. Output ONLY the JSON object, nothing else."}];
+      for(var i=0;i<providers.length;i++){try{var t=await callAI(providers[i],evalMsgs,6000);t=t.replace(/```json/g,"").replace(/```/g,"").trim();var j1=t.indexOf("{"),j2=t.lastIndexOf("}");if(j1>=0&&j2>j1)t=t.substring(j1,j2+1);var parsed;try{parsed=JSON.parse(t)}catch(pe){
+          // Try to fix common JSON issues (control chars, trailing commas)
           t=t.replace(/[\x00-\x1f]/g,' ').replace(/,\s*}/g,'}').replace(/,\s*]/g,']');
           try{parsed=JSON.parse(t)}catch(pe2){continue}}
+        // Safety net: if the model returned fewer question objects than asked, backfill from the exact pairs so nothing is missed.
+        if(qas.length){if(!Array.isArray(parsed.questions))parsed.questions=[];
+          for(var qk=0;qk<qas.length;qk++){if(!parsed.questions[qk])parsed.questions[qk]={q:qas[qk].q,answer:qas[qk].a||"[No answer given]",score:0,mistakes:"Not evaluated",ideal_answer:"",how_to_improve:""};
+            else{if(!parsed.questions[qk].q)parsed.questions[qk].q=qas[qk].q;if(parsed.questions[qk].answer===undefined)parsed.questions[qk].answer=qas[qk].a||"";}}
+          parsed.questions=parsed.questions.slice(0,qas.length);}
         return res.status(200).json({success:true,data:parsed})}catch(e){continue}}
       return res.status(500).json({error:"Evaluation failed. Please try again."});
     }
@@ -116,26 +193,55 @@ export default async function handler(req,res){
     var sys=companyLine+" Role: "+role+". Level: "+diffLine+".\n\nRESUME:\n"+resume+"\n\n";
     if(transcript)sys+="INTERVIEW SO FAR:\n"+transcript+"\n\n";
 
-    sys+="STRICT QUESTION PATTERN (5 Questions):\n";
-    sys+="Q1: INTRODUCTION - Greet and ask 'Tell me about yourself and walk me through your resume'\n";
-    sys+="Q2: TECHNICAL THEORY - Ask about ONE specific technology from resume. Deep conceptual question. NO code writing.\n";
-    sys+="Q3: SCENARIO - Production situation. 'What would you do if...' NO code. Example: 'Users report 500 errors after deployment. How do you debug?'\n";
-    sys+="Q4: SCENARIO - Behavioral/team situation. 'Tell me about a time when...' NO code. Different topic than Q3.\n";
-    sys+="Q5: CODING ONLY - Give ONE coding problem. 'Write a function/script to...' This is the ONLY coding question.\n";
-    sys+="CRITICAL: Q3 and Q4 must NOT be coding questions. They are scenario/behavioral ONLY. ONLY Q5 asks for code.\n\n";
+    var tier=b.tier==="r2"?"r2":(b.tier==="r3"?"r3":"free");
+    var resumeHash=(b.resumeHash||"").replace(/[^a-z0-9]/gi,"").slice(0,32);
+    var slot=slotFor(tier,questionNum);
+    var roundName={free:"Free Screening (5 questions)",r2:"Round 2 — Technical + Scenario (25 questions)",r3:"Round 3 — Coding + Cross-Scenario + HR (30 questions)"}[tier];
+
+    // Cross-session de-dup: fetch questions already asked to THIS resume in THIS round.
+    var askedList=[];
+    if(kvReady()&&resumeHash){try{askedList=await kvSMembers("asked:"+resumeHash+":"+tier)}catch(e){}}
+
+    sys+="ROUND: "+roundName+".\n";
+    sys+="Question Q"+questionNum+" of "+totalQs+" MUST be: "+slot.instr+".\n";
+    sys+="Base it strictly on the resume tech stack, the job description, the candidate's experience, and "+(company||"a top MNC")+"'s engineering standards.\n";
+    sys+=(slot.coding?'This IS a coding question — set "type":"coding".\n':'Set "type":"normal".\n');
+    if(askedList&&askedList.length){
+      sys+="\nALREADY ASKED to this candidate before — do NOT repeat any of these or a close variant; choose a different sub-topic:\n";
+      askedList.slice(-40).forEach(function(x){sys+="- "+x+"\n"});
+    }
+    sys+="\nVARIETY (session seed "+(b.seed||0)+"): fresh session — avoid the most obvious/textbook phrasing; go one level deeper or pick an adjacent sub-topic so repeated attempts never get identical questions.\n";
     sys+="ABSOLUTE RULES:\n";
-    sys+="1. Question "+questionNum+" of "+totalQs+"\n";
-    sys+="2. NEVER repeat a question topic. Check transcript - if CI/CD was asked, ask about Kubernetes. If K8s was asked, ask about Terraform. Cover ALL technologies.\n";
-    sys+="3. NO feedback/scoring between questions. Brief acknowledge only.\n";
-    sys+="4. If answer is '[No Answer - Timeout]', skip silently to next question.\n";
+    sys+="1. Ask exactly ONE question, matching the required type above.\n";
+    sys+="2. NEVER repeat a topic already in the transcript or the ALREADY ASKED list. Cover a DIFFERENT technology/area each time.\n";
+    sys+="3. In 'response', give a SHORT, natural, human reaction to the candidate's last answer (e.g. 'Got it, thanks for that.'). 1-2 sentences max. No scoring.\n";
+    sys+="4. If answer is '[No Answer - Timeout]', acknowledge briefly and move on.\n";
     sys+="5. If questionNum > totalQs, set question to 'INTERVIEW_COMPLETE'.\n";
-    sys+='6. Respond ONLY: {"response":"brief acknowledge","question":"your question"}\n';
+    sys+='6. Respond ONLY with JSON: {"response":"brief acknowledge","question":"your question","type":"'+(slot.coding?'coding':'normal')+'"}\n';
 
     var msgs=[{role:"system",content:sys}];
-    if(questionNum===1){msgs.push({role:"user",content:"Start. Ask Q1 (Tell me about yourself). JSON only."})}
-    else{msgs.push({role:"user",content:"Answer: "+b.answer+"\n\nAcknowledge briefly, ask Q"+questionNum+" following STRICT PATTERN. DIFFERENT technology than previous. JSON only."})}
+    if(questionNum===1){
+      if(tier==="free")msgs.push({role:"user",content:"Start. Ask Q1 (Tell me about yourself). type normal. JSON only."});
+      else msgs.push({role:"user",content:"Start this "+(tier==="r3"?"elite":"advanced")+" round. Ask Q1 following the pattern above. JSON only."});
+    }
+    else{msgs.push({role:"user",content:"Answer: "+b.answer+"\n\nAcknowledge briefly, then ask Q"+questionNum+" following the pattern. DIFFERENT topic than before. Set the correct \"type\". JSON only."})}
 
-    for(var pi=0;pi<providers.length;pi++){try{var text=await callAI(providers[pi],msgs);text=text.replace(/```json/g,"").replace(/```/g,"").trim();var j1=text.indexOf("{"),j2=text.lastIndexOf("}");if(j1>=0&&j2>j1)text=text.substring(j1,j2+1);return res.status(200).json({success:true,data:JSON.parse(text)})}catch(e){continue}}
+    // Streaming path — stream raw JSON tokens so the client can speak the acknowledgement early.
+    if(b.stream){
+      res.setHeader("Content-Type","text/plain; charset=utf-8");
+      res.setHeader("Cache-Control","no-cache, no-transform");
+      res.setHeader("X-Accel-Buffering","no");
+      var sProvs=providers.filter(function(p){return p.format!=="gemini"});
+      for(var si=0;si<sProvs.length;si++){var started={v:false},acc="";
+        try{await callAIStream(sProvs[si],msgs,function(chunk){started.v=true;acc+=chunk;res.write(chunk)});await storeAsked(resumeHash,tier,acc);return res.end()}
+        catch(e){if(started.v){await storeAsked(resumeHash,tier,acc);return res.end()}}}
+      // No streamable provider produced output before writing — fall back to a full non-stream response.
+      for(var fi=0;fi<providers.length;fi++){try{var full=await callAI(providers[fi],msgs);await storeAsked(resumeHash,tier,full);res.write(full);return res.end()}catch(e){}}
+      res.write('{"response":"","question":"Could you walk me through a challenging problem you recently solved?"}');
+      return res.end();
+    }
+
+    for(var pi=0;pi<providers.length;pi++){try{var text=await callAI(providers[pi],msgs);await storeAsked(resumeHash,tier,text);text=text.replace(/```json/g,"").replace(/```/g,"").trim();var j1=text.indexOf("{"),j2=text.lastIndexOf("}");if(j1>=0&&j2>j1)text=text.substring(j1,j2+1);return res.status(200).json({success:true,data:JSON.parse(text)})}catch(e){continue}}
     return res.status(500).json({error:"All providers failed"});
   }catch(e){return res.status(500).json({error:e.message})}
 }

@@ -71,12 +71,13 @@ async function loadFeedback(){
     
     if(!total){document.getElementById('feedList').innerHTML='<div class="empty">No feedback yet. Feedback will appear here after users complete interviews.</div>';return}
     
-    var stars=['','&#128542;','&#128528;','&#128578;','&#128525;','&#129321;'];
+    function fc(m){return "<svg width='1em' height='1em' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round' style='vertical-align:-0.14em'><circle cx='12' cy='12' r='10'/><circle cx='9' cy='10' r='0.6' fill='currentColor' stroke='none'/><circle cx='15' cy='10' r='0.6' fill='currentColor' stroke='none'/>"+m+"</svg>"}
+    var stars=['',fc("<path d='M16 16s-1.5-2-4-2-4 2-4 2'/>"),fc("<line x1='8.5' y1='15' x2='15.5' y2='15'/>"),fc("<path d='M8 14s1.5 2 4 2 4-2 4-2'/>"),fc("<path d='M8 13.5s1.5 2.5 4 2.5 4-2.5 4-2.5'/>"),fc("<path d='M7 13s2 3.5 5 3.5 5-3.5 5-3.5'/>")];
     var html='';
     fb.forEach(function(f){
       html+='<div class="card"><div class="top"><div class="rating">'+(stars[f.rating]||'')+ ' '+f.rating+'/5</div><div class="time">'+new Date(f.time).toLocaleString()+'</div></div>';
       html+='<div class="meta"><strong>'+f.role+'</strong>'+(f.company?' at '+f.company:'')+ ' — Score: '+f.score+'%</div>';
-      if(f.name||f.phone)html+='<div class="meta" style="color:#2563eb">👤 '+(f.name||'Anonymous')+' | 📱 '+(f.phone||'No phone')+'</div>';
+      if(f.name||f.phone)html+='<div class="meta" style="color:#2563eb"><svg width=\'1em\' height=\'1em\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1.9\' stroke-linecap=\'round\' stroke-linejoin=\'round\' style=\'vertical-align:-0.14em\'><path d=\'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\'/><circle cx=\'12\' cy=\'7\' r=\'4\'/></svg> '+(f.name||'Anonymous')+' | <svg width=\'1em\' height=\'1em\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1.9\' stroke-linecap=\'round\' stroke-linejoin=\'round\' style=\'vertical-align:-0.14em\'><rect x=\'5\' y=\'2\' width=\'14\' height=\'20\' rx=\'2\'/><line x1=\'12\' y1=\'18\' x2=\'12.01\' y2=\'18\'/></svg> '+(f.phone||'No phone')+'</div>';
       if(f.text)html+='<div class="text">'+f.text+'</div>';
       html+='</div>';
     });
