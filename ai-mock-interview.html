@@ -469,7 +469,7 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 </div>
 <textarea id="fbText" placeholder="Any suggestions to improve? (optional)" style="width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;min-height:60px;resize:vertical;outline:0;margin-bottom:8px"></textarea>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-<input type="text" id="fbName" placeholder="Your Name (optional)" style="padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;outline:0">
+<input type="text" id="fbName" placeholder="Your Name *" style="padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;outline:0">
 <div style="display:flex;gap:4px">
 <select id="fbCountry" title="Country code" style="flex:0 0 auto;max-width:120px;padding:10px 4px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;outline:0;background:#fff;cursor:pointer">
 <option value="+91">🇮🇳 +91</option>
@@ -510,7 +510,7 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 <option value="+52">🇲🇽 +52</option>
 <option value="+54">🇦🇷 +54</option>
 </select>
-<input type="tel" id="fbPhone" placeholder="WhatsApp Number (optional)" style="flex:1;min-width:0;padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;outline:0">
+<input type="tel" id="fbPhone" placeholder="Mobile Number *" style="flex:1;min-width:0;padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;outline:0">
 </div>
 </div>
 <div style="font-size:10px;color:#9ca3af;margin-bottom:8px">Name & number only for follow-up — never shared or stored permanently.</div>
@@ -794,12 +794,17 @@ function attachCode(inp){if(!inp.files||!inp.files[0])return;var r=new FileReade
 
 var fbRating=0;
 function rateFeedback(r){fbRating=r;document.querySelectorAll('.rating-btns button').forEach(function(b,i){b.style.borderColor=i<r?'#2563eb':'#e5e7eb';b.style.background=i<r?'#eff6ff':'transparent'})}
+window.FB_LEN={'+91':[10,10],'+1':[10,10],'+44':[10,10],'+971':[9,9],'+966':[9,9],'+65':[8,8],'+60':[9,10],'+61':[9,9],'+49':[10,11],'+33':[9,9],'+34':[9,9],'+39':[9,10],'+31':[9,9],'+7':[10,10],'+90':[10,10],'+92':[10,10],'+880':[10,10],'+94':[9,9],'+977':[10,10],'+62':[9,11],'+63':[10,10],'+66':[9,9],'+84':[9,10],'+86':[11,11],'+81':[10,10],'+82':[9,10],'+20':[10,10],'+234':[10,10],'+27':[9,9],'+254':[9,9],'+55':[10,11],'+52':[10,10]};
 function submitFeedback(){
   var text=document.getElementById('fbText').value.trim();
   var name=document.getElementById('fbName').value.trim();
   var cc=document.getElementById('fbCountry').value;
-  var rawPhone=document.getElementById('fbPhone').value.trim().replace(/^0+/,'');
-  var phone=rawPhone?(cc+' '+rawPhone):'';
+  var rawPhone=document.getElementById('fbPhone').value.replace(/D/g,'').replace(/^0+/,'');
+  if(!name){alert('Please enter your name.');document.getElementById('fbName').focus();return;}
+  if(!rawPhone){alert('Please enter your mobile number.');document.getElementById('fbPhone').focus();return;}
+  var rng=window.FB_LEN[cc]||[7,13];
+  if(rawPhone.length<rng[0]||rawPhone.length>rng[1]){alert('Enter a valid mobile number ('+(rng[0]===rng[1]?rng[0]:rng[0]+'-'+rng[1])+' digits).');document.getElementById('fbPhone').focus();return;}
+  var phone=cc+' '+rawPhone;
   fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'feedback',rating:fbRating,text:text,name:name,phone:phone,role:S.role,company:S.co,score:S.evalData?S.evalData.overall_score:0})}).catch(function(){});
   document.getElementById('fbBtn').style.display='none';document.getElementById('fbDone').style.display='block';document.getElementById('fbText').disabled=true;document.getElementById('fbName').disabled=true;document.getElementById('fbPhone').disabled=true;document.getElementById('fbCountry').disabled=true;
 }

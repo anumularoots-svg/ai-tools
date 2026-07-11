@@ -2,25 +2,30 @@
  * ZapKitt Experience Rating Widget — reusable across all tools.
  * Compact "How was your experience?" strip that expands on rating and posts
  * to the existing Telegram feedback pipeline (/api/interview action:'feedback').
+ * Name + Mobile are REQUIRED (real leads). Country picker shows flags and
+ * validates the mobile length for the selected country.
  *
- * Zero-config: just add on any tool page —
- *   <script src="/zapkitt-rating.js"></script>
- * Source is auto-derived from <title> (text before — or |). Override with:
- *   <script src="/zapkitt-rating.js" data-source="AI Cover Letter"></script>
- * Disable auto-mount (to place manually) with data-auto="off", then call:
- *   ZapKittRating.render(mountEl, { source: "AI Cover Letter" });
+ * Zero-config: <script src="/zapkitt-rating.js"></script>
+ * Source auto-derived from <title>. Override: data-source="AI Cover Letter".
+ * Manual: ZapKittRating.render(el, { source: "AI Cover Letter" });
  */
 (function () {
   "use strict";
   if (window.ZapKittRating) return;
 
+  // flag, iso, dial, min/max local mobile digits (after country code).
   var CC = [
-    ["IN", "+91"], ["US", "+1"], ["GB", "+44"], ["AE", "+971"], ["SA", "+966"], ["SG", "+65"],
-    ["MY", "+60"], ["AU", "+61"], ["DE", "+49"], ["FR", "+33"], ["ES", "+34"], ["IT", "+39"],
-    ["NL", "+31"], ["RU", "+7"], ["TR", "+90"], ["PL", "+48"], ["CN", "+86"], ["JP", "+81"],
-    ["KR", "+82"], ["ID", "+62"], ["TH", "+66"], ["VN", "+84"], ["BD", "+880"], ["PK", "+92"],
-    ["LK", "+94"], ["NP", "+977"], ["EG", "+20"], ["NG", "+234"], ["ZA", "+27"], ["BR", "+55"],
-    ["MX", "+52"]
+    ["🇮🇳", "IN", "+91", 10, 10], ["🇺🇸", "US", "+1", 10, 10], ["🇬🇧", "GB", "+44", 10, 10],
+    ["🇦🇪", "AE", "+971", 9, 9], ["🇸🇦", "SA", "+966", 9, 9], ["🇸🇬", "SG", "+65", 8, 8],
+    ["🇲🇾", "MY", "+60", 9, 10], ["🇦🇺", "AU", "+61", 9, 9], ["🇨🇦", "CA", "+1", 10, 10],
+    ["🇩🇪", "DE", "+49", 10, 11], ["🇫🇷", "FR", "+33", 9, 9], ["🇪🇸", "ES", "+34", 9, 9],
+    ["🇮🇹", "IT", "+39", 9, 10], ["🇳🇱", "NL", "+31", 9, 9], ["🇷🇺", "RU", "+7", 10, 10],
+    ["🇹🇷", "TR", "+90", 10, 10], ["🇵🇰", "PK", "+92", 10, 10], ["🇧🇩", "BD", "+880", 10, 10],
+    ["🇱🇰", "LK", "+94", 9, 9], ["🇳🇵", "NP", "+977", 10, 10], ["🇮🇩", "ID", "+62", 9, 11],
+    ["🇵🇭", "PH", "+63", 10, 10], ["🇹🇭", "TH", "+66", 9, 9], ["🇻🇳", "VN", "+84", 9, 10],
+    ["🇨🇳", "CN", "+86", 11, 11], ["🇯🇵", "JP", "+81", 10, 10], ["🇰🇷", "KR", "+82", 9, 10],
+    ["🇪🇬", "EG", "+20", 10, 10], ["🇳🇬", "NG", "+234", 10, 10], ["🇿🇦", "ZA", "+27", 9, 9],
+    ["🇰🇪", "KE", "+254", 9, 9], ["🇧🇷", "BR", "+55", 10, 11], ["🇲🇽", "MX", "+52", 10, 10]
   ];
 
   var CSS = "" +
@@ -32,13 +37,17 @@
     ".zkr-emo.on{border-color:#2563eb;background:#eff6ff}" +
     ".zkr-more{display:none;margin-top:14px}" +
     ".zkr-more.show{display:block}" +
-    ".zkr-ta{width:100%;padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:13px;min-height:56px;resize:vertical;outline:0;margin-bottom:8px;background:#fff}" +
-    ".zkr-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}" +
+    ".zkr-ta{width:100%;padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:13px;min-height:52px;resize:vertical;outline:0;margin-bottom:8px;background:#fff}" +
+    ".zkr-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}" +
     "@media(max-width:520px){.zkr-row{grid-template-columns:1fr}}" +
     ".zkr-row input{padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:13px;outline:0;background:#fff;width:100%}" +
+    ".zkr-lbl{font-size:11px;font-weight:600;color:#374151;margin:2px 0 4px}" +
+    ".zkr-lbl b{color:#dc2626}" +
     ".zkr-phone{display:flex;gap:4px}" +
-    ".zkr-phone select{flex:0 0 auto;max-width:104px;padding:10px 4px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:13px;outline:0;background:#fff;cursor:pointer}" +
+    ".zkr-phone select{flex:0 0 auto;max-width:110px;padding:10px 4px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:13px;outline:0;background:#fff;cursor:pointer}" +
     ".zkr-phone input{flex:1;min-width:0}" +
+    ".zkr-invalid{border-color:#dc2626!important;background:#fef2f2!important}" +
+    ".zkr-err{font-size:12px;color:#dc2626;font-weight:600;min-height:15px;margin:2px 0 8px}" +
     ".zkr-note{font-size:10px;color:#9ca3af;text-align:center;margin-bottom:10px}" +
     ".zkr-sub{display:block;margin:0 auto;padding:10px 28px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}" +
     ".zkr-sub:hover{background:#1d4ed8}.zkr-sub:disabled{opacity:.5;cursor:default}" +
@@ -46,8 +55,7 @@
 
   function injectCSS() {
     if (document.getElementById("zkr-css")) return;
-    var s = document.createElement("style");
-    s.id = "zkr-css"; s.textContent = CSS;
+    var s = document.createElement("style"); s.id = "zkr-css"; s.textContent = CSS;
     document.head.appendChild(s);
   }
 
@@ -61,27 +69,38 @@
     injectCSS();
     mount.className = (mount.className.indexOf("zkr") < 0 ? (mount.className + " zkr").trim() : mount.className);
 
-    var ccOpts = CC.map(function (c) { return '<option value="' + c[1] + '">' + c[0] + " " + c[1] + "</option>"; }).join("");
+    var ccOpts = CC.map(function (c, i) { return '<option value="' + i + '">' + c[0] + " " + c[2] + "</option>"; }).join("");
     mount.innerHTML = "" +
       '<div class="zkr-t">How was your experience?</div>' +
       '<div class="zkr-emos">' +
         EMOS.map(function (e, i) { return '<button type="button" class="zkr-emo" data-r="' + (i + 1) + '" title="' + e[1] + '">' + e[0] + '</button>'; }).join("") +
       '</div>' +
       '<div class="zkr-more">' +
-        '<textarea class="zkr-ta" placeholder="Any suggestions to improve? (optional)"></textarea>' +
-        '<div class="zkr-row">' +
-          '<input class="zkr-name" type="text" placeholder="Your Name (optional)">' +
-          '<div class="zkr-phone"><select class="zkr-cc" title="Country code">' + ccOpts + '</select>' +
-          '<input class="zkr-num" type="tel" placeholder="WhatsApp Number (optional)"></div>' +
+        '<div class="zkr-lbl">What issue did you face, or how can we improve?</div>' +
+        '<textarea class="zkr-ta" placeholder="Tell us what went wrong or what to add (optional)"></textarea>' +
+        '<div class="zkr-lbl">Your Name <b>*</b></div>' +
+        '<div class="zkr-row" style="grid-template-columns:1fr">' +
+          '<input class="zkr-name" type="text" placeholder="Your full name" required>' +
         '</div>' +
-        '<div class="zkr-note">Name &amp; number only for follow-up — never shared or stored permanently.</div>' +
+        '<div class="zkr-lbl">Mobile Number <b>*</b></div>' +
+        '<div class="zkr-phone" style="margin-bottom:6px">' +
+          '<select class="zkr-cc" title="Country">' + ccOpts + '</select>' +
+          '<input class="zkr-num" type="tel" inputmode="numeric" maxlength="10" placeholder="10-digit mobile" required>' +
+        '</div>' +
+        '<div class="zkr-err"></div>' +
+        '<div class="zkr-note">Name &amp; number only for follow-up — never shared or sold.</div>' +
         '<button type="button" class="zkr-sub">Submit Feedback</button>' +
       '</div>' +
-      '<div class="zkr-done">Thank you for your feedback!</div>';
+      '<div class="zkr-done">Thank you! We\'ll use this to improve.</div>';
 
     var rating = 0;
     var emos = mount.querySelectorAll(".zkr-emo");
     var more = mount.querySelector(".zkr-more");
+    var ccSel = mount.querySelector(".zkr-cc");
+    var numEl = mount.querySelector(".zkr-num");
+    var nameEl = mount.querySelector(".zkr-name");
+    var errEl = mount.querySelector(".zkr-err");
+
     for (var i = 0; i < emos.length; i++) {
       (function (btn) {
         btn.onclick = function () {
@@ -92,13 +111,35 @@
       })(emos[i]);
     }
 
+    // Keep only digits; cap length to the selected country's max.
+    function maxLen() { return CC[parseInt(ccSel.value, 10) || 0][4]; }
+    numEl.addEventListener("input", function () {
+      var v = numEl.value.replace(/\D/g, "").slice(0, maxLen());
+      if (v !== numEl.value) numEl.value = v;
+    });
+    ccSel.addEventListener("change", function () {
+      var c = CC[parseInt(ccSel.value, 10) || 0];
+      numEl.setAttribute("maxlength", String(c[4]));
+      numEl.placeholder = (c[3] === c[4] ? c[3] : c[3] + "-" + c[4]) + "-digit mobile";
+      numEl.value = numEl.value.replace(/\D/g, "").slice(0, c[4]);
+    });
+
     mount.querySelector(".zkr-sub").onclick = function () {
       var btn = this;
+      errEl.textContent = "";
+      nameEl.classList.remove("zkr-invalid"); numEl.classList.remove("zkr-invalid");
+      var name = nameEl.value.trim();
+      var c = CC[parseInt(ccSel.value, 10) || 0];
+      var digits = numEl.value.replace(/\D/g, "").replace(/^0+/, "");
+      // Validation
+      if (!name) { errEl.textContent = "Please enter your name."; nameEl.classList.add("zkr-invalid"); nameEl.focus(); return; }
+      if (!digits) { errEl.textContent = "Please enter your mobile number."; numEl.classList.add("zkr-invalid"); numEl.focus(); return; }
+      if (digits.length < c[3] || digits.length > c[4]) {
+        errEl.textContent = "Enter a valid " + c[1] + " mobile number (" + (c[3] === c[4] ? c[3] : c[3] + "-" + c[4]) + " digits).";
+        numEl.classList.add("zkr-invalid"); numEl.focus(); return;
+      }
       var text = mount.querySelector(".zkr-ta").value.trim();
-      var name = mount.querySelector(".zkr-name").value.trim();
-      var cc = mount.querySelector(".zkr-cc").value;
-      var num = mount.querySelector(".zkr-num").value.trim().replace(/^0+/, "");
-      var phone = num ? (cc + " " + num) : "";
+      var phone = c[2] + " " + digits;
       btn.disabled = true;
       fetch("/api/interview", {
         method: "POST", headers: { "Content-Type": "application/json" },
@@ -109,7 +150,6 @@
     };
   }
 
-  // Auto-derive a friendly source name from the page title.
   function sourceFromTitle() {
     var t = (document.title || "").split(/[—\-|]/)[0].trim();
     return t || "ZapKitt Tool";
@@ -127,7 +167,6 @@
 
   window.ZapKittRating = { render: render, autoMount: autoMount };
 
-  // Zero-config auto-mount unless disabled.
   var cs = document.currentScript;
   var auto = !cs || cs.getAttribute("data-auto") !== "off";
   var src = cs ? cs.getAttribute("data-source") : "";
