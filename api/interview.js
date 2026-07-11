@@ -143,10 +143,21 @@ export default async function handler(req,res){
     
     // Verify a Ko-fi payment and consume it (one-time) to unlock a paid round.
     if(b.action==="verifyUnlock"){
-      var vEmail=String(b.email||"").trim().toLowerCase();
+      var entered=String(b.email||"").trim();
+      var vEmail=entered.toLowerCase();
       var vTier=b.tier==="r3"?"r3":"r2";
-      if(!vEmail||vEmail.indexOf("@")<1)return res.status(400).json({unlocked:false,error:"Enter the email you paid with on Ko-fi."});
-      if(!kvReady())return res.status(200).json({unlocked:false,error:"Payment verification is not set up yet."});
+      // (1) Dev/test master key — unlocks any tier without paying. Remove env after testing.
+      if(process.env.TEST_UNLOCK_KEY&&entered===process.env.TEST_UNLOCK_KEY)return res.status(200).json({unlocked:true,tier:vTier,test:true});
+      // (2) Manual WhatsApp unlock codes. Env UNLOCK_CODES="r2:AB12CD,r3:EF34GH,r2:JK56LM".
+      //     After a UPI payment you verify the screenshot on WhatsApp, then send the user one
+      //     code for their tier. Tier is enforced (an r2 code can't unlock r3). Needs no Upstash.
+      if(entered&&process.env.UNLOCK_CODES){
+        var okCodes=process.env.UNLOCK_CODES.split(",").map(function(x){return x.trim()});
+        if(okCodes.indexOf(vTier+":"+entered)>=0)return res.status(200).json({unlocked:true,tier:vTier,manual:true});
+      }
+      // (3) Ko-fi auto path (optional — needs Upstash + KOFI_VERIFICATION_TOKEN).
+      if(!vEmail||vEmail.indexOf("@")<1)return res.status(400).json({unlocked:false,error:"Enter your unlock code (from WhatsApp) or the email you paid with on Ko-fi."});
+      if(!kvReady())return res.status(200).json({unlocked:false,error:"That code wasn't recognised. Please enter the exact unlock code we sent you on WhatsApp."});
       try{
         var vKey="kofi:"+vEmail+":"+vTier;
         var vVal=await kvGet(vKey);
