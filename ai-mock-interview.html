@@ -274,7 +274,7 @@ body{font-family:Inter,system-ui,sans-serif;background:#fff;color:#111827;-webki
   .sample-score{flex-direction:column}
 }
 </style></head><body>
-<nav class="nav"><div class="nav-in"><a href="/" class="logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="#2563EB"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/></svg><div>Zap<span>Kitt</span></div></a><div class="nl"><a href="javascript:history.back()" class="back">&larr; Back</a><a href="/ai-resume-builder">Resume Builder</a><a href="/">All Tools</a><a href="/about">About</a></div></div></nav>
+<nav class="nav"><div class="nav-in"><a href="/" class="logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="#2563EB"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/></svg><div>Zap<span>Kitt</span></div></a><div class="nl"><a href="/ai-resume-builder">Resume Builder</a><a href="/">All Tools</a><a href="/about">About</a></div></div></nav>
 
 <!-- HERO -->
 <div id="landing">
@@ -882,4 +882,4 @@ function endInterview(){if(!confirm('End the interview now and see your report?'
 if(window.speechSynthesis){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){speechSynthesis.getVoices()}}
 (function(){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){typeMode=true;var mb=document.getElementById('micBtn');if(mb)mb.style.display='none'}})();
 try{var sr=localStorage.getItem('zk_last_resume_text');if(sr)document.getElementById('inp_r').value=sr}catch(e){}
-</script><script src="/zapkitt-upi.js"></script></body></html>
+</script><script src="/zapkitt-upi.js"></script><script src="/zapkitt-back.js"></script></body></html>
