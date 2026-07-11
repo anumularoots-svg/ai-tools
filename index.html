@@ -370,4 +370,14 @@ if(window.matchMedia('(prefers-reduced-motion:no-preference)').matches){
   document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
 }
 </script>
-<a href="/ai-mock-interview" id="mockFloat" style="position:fixed;bottom:20px;right:20px;z-index:90;display:flex;align-items:center;gap:6px;padding:10px 18px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border-radius:30px;text-decoration:none;font-weight:700;font-size:13px;box-shadow:0 4px 16px rgba(124,58,237,.3);transition:.2s;font-family:Inter,sans-serif" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg> Real-Time AI Mock Interview</a><script src="/zapkitt-upi.js"></script><script>(function(){if(window.__zkHomeGuard)return;window.__zkHomeGuard=1;var push=function(){try{history.pushState(null,document.title,location.href)}catch(e){}};push();window.addEventListener('popstate',function(){push()});window.addEventListener('load',push);}());</script></body></html>
+<a href="/ai-mock-interview" id="mockFloat" style="position:fixed;bottom:20px;right:20px;z-index:90;display:flex;align-items:center;gap:6px;padding:10px 18px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border-radius:30px;text-decoration:none;font-weight:700;font-size:13px;box-shadow:0 4px 16px rgba(124,58,237,.3);transition:.2s;font-family:Inter,sans-serif" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg> Real-Time AI Mock Interview</a><script src="/zapkitt-upi.js"></script><script>(function(){if(window.__zkHomeGuard)return;window.__zkHomeGuard=1;
+  // Keep visitors on the landing page when they hit the browser Back button (instead of leaving to Google).
+  // Chrome's "history manipulation" intervention SKIPS pushState entries that were added without a real
+  // user gesture — so the trap must be armed only AFTER the visitor interacts with the page.
+  var push=function(){try{history.pushState(null,document.title,location.href)}catch(e){}};
+  var armed=false,arm=function(){if(armed)return;armed=true;push();};
+  ['pointerdown','mousedown','keydown','touchstart','scroll','click'].forEach(function(ev){
+    window.addEventListener(ev,arm,{once:true,passive:true});
+  });
+  window.addEventListener('popstate',function(){push();});
+}());</script></body></html>

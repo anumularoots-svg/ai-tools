@@ -467,7 +467,7 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 <button onclick="rateFeedback(4)" title="Great"><span style="font-size:26px;line-height:1">😊</span></button>
 <button onclick="rateFeedback(5)" title="Amazing"><span style="font-size:26px;line-height:1">🤩</span></button>
 </div>
-<textarea id="fbText" placeholder="Any suggestions to improve? (optional)" style="width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;min-height:60px;resize:vertical;outline:0;margin-bottom:8px"></textarea>
+<textarea id="fbText" placeholder="What did you like, or how can we improve? *" style="width:100%;padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;min-height:60px;resize:vertical;outline:0;margin-bottom:8px"></textarea>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
 <input type="text" id="fbName" placeholder="Your Name *" style="padding:10px;border:1.5px solid #e5e7eb;border-radius:8px;font-family:inherit;font-size:12px;outline:0">
 <div style="display:flex;gap:4px">
@@ -624,7 +624,7 @@ async function begin(){
   initCam();
   S.secs=0;S.timer=setInterval(function(){S.secs++;var m=Math.floor(S.secs/60),s=S.secs%60;document.getElementById('t_tm').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s},1000);
   S.name=zkName(S.resume);var nm=S.name?', '+S.name:'';
-  var intro='Good morning'+nm+'. I hope you\'re doing well today. I\'ll be your interviewer for the '+S.role+' position'+(S.co?' at '+S.co:'')+'. Let\'s begin with a simple introduction.';
+  var intro='Good morning'+nm+'. I hope you\'re doing well today. I\'ll be your interviewer for the '+S.role+' position'+(S.co?' at '+S.co:'')+'. Let\'s get started.';
   setCaption(intro);
   addM('ai','<div class="sn">Interviewer'+(S.co?' \u2014 '+S.co:'')+'</div>'+intro);
   setPhase('speaking');
@@ -633,7 +633,9 @@ async function begin(){
 
 async function ask(){
   // Decide: ask a fresh MAIN question (advance) OR allow the AI to follow up on the current one.
-  var advancing=(S.qNum===0)||S.pendingFollowup||S.followupUsed||(S.lastType==='coding')||(S.qNum>=S.totalQs);
+  // Never follow up on the intro (Q1): a follow-up there re-asks "tell me about yourself", so
+  // after the introduction we always advance straight to Q2.
+  var advancing=(S.qNum===0)||(S.qNum===1)||S.pendingFollowup||S.followupUsed||(S.lastType==='coding')||(S.qNum>=S.totalQs);
   var allowFollowup=!advancing; // implies S.qNum>=1 and S.qNum<S.totalQs
   if(advancing){
     S.qNum++;if(S.qNum>S.totalQs){evaluate();return}
@@ -799,7 +801,9 @@ function submitFeedback(){
   var text=document.getElementById('fbText').value.trim();
   var name=document.getElementById('fbName').value.trim();
   var cc=document.getElementById('fbCountry').value;
-  var rawPhone=document.getElementById('fbPhone').value.replace(/D/g,'').replace(/^0+/,'');
+  var rawPhone=document.getElementById('fbPhone').value.replace(/\D/g,'').replace(/^0+/,'');
+  if(!fbRating){alert('Please pick a rating (how was your experience?).');return;}
+  if(!text){alert('Please share your suggestions or feedback.');document.getElementById('fbText').focus();return;}
   if(!name){alert('Please enter your name.');document.getElementById('fbName').focus();return;}
   if(!rawPhone){alert('Please enter your mobile number.');document.getElementById('fbPhone').focus();return;}
   var rng=window.FB_LEN[cc]||[7,13];

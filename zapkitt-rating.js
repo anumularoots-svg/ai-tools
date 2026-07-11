@@ -76,8 +76,8 @@
         EMOS.map(function (e, i) { return '<button type="button" class="zkr-emo" data-r="' + (i + 1) + '" title="' + e[1] + '">' + e[0] + '</button>'; }).join("") +
       '</div>' +
       '<div class="zkr-more">' +
-        '<div class="zkr-lbl">What issue did you face, or how can we improve?</div>' +
-        '<textarea class="zkr-ta" placeholder="Tell us what went wrong or what to add (optional)"></textarea>' +
+        '<div class="zkr-lbl">What issue did you face, or how can we improve? <b>*</b></div>' +
+        '<textarea class="zkr-ta" placeholder="Tell us what went wrong or what to add" required></textarea>' +
         '<div class="zkr-lbl">Your Name <b>*</b></div>' +
         '<div class="zkr-row" style="grid-template-columns:1fr">' +
           '<input class="zkr-name" type="text" placeholder="Your full name" required>' +
@@ -128,10 +128,15 @@
       var btn = this;
       errEl.textContent = "";
       nameEl.classList.remove("zkr-invalid"); numEl.classList.remove("zkr-invalid");
+      var taEl = mount.querySelector(".zkr-ta");
+      taEl.classList.remove("zkr-invalid");
       var name = nameEl.value.trim();
+      var suggestion = taEl.value.trim();
       var c = CC[parseInt(ccSel.value, 10) || 0];
       var digits = numEl.value.replace(/\D/g, "").replace(/^0+/, "");
-      // Validation
+      // Validation — rating, suggestion, name and mobile are all required.
+      if (!rating) { errEl.textContent = "Please pick a rating above first."; return; }
+      if (!suggestion) { errEl.textContent = "Please share your suggestions or feedback."; taEl.classList.add("zkr-invalid"); taEl.focus(); return; }
       if (!name) { errEl.textContent = "Please enter your name."; nameEl.classList.add("zkr-invalid"); nameEl.focus(); return; }
       if (!digits) { errEl.textContent = "Please enter your mobile number."; numEl.classList.add("zkr-invalid"); numEl.focus(); return; }
       if (digits.length < c[3] || digits.length > c[4]) {
