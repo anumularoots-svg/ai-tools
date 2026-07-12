@@ -1,19 +1,19 @@
 /* ZapKitt — Shared styles for all pages */
-/* Updated to match new blue (#2563EB) design system */
+/* Updated to match new blue (#D4920B) design system */
 
 /* Nav */
 .fp-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E5E7EB}
 .fp-nav-inner{max-width:1120px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
 .fp-logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:20px;color:#111827;letter-spacing:-0.5px}
 .fp-logo svg{width:32px;height:32px}
-.fp-logo span{color:#2563EB}
+.fp-logo span{color:#D4920B}
 .fp-nav-links{display:flex;gap:28px}
 .fp-nav-links a{text-decoration:none;color:#6B7280;font-size:14px;font-weight:500;transition:color .15s}
 .fp-nav-links a:hover{color:#111827}
 
 /* Footer */
 .fp-footer{text-align:center;padding:40px 24px;border-top:1px solid #E5E7EB;color:#6B7280;font-size:13px;margin-top:40px}
-.fp-footer a{color:#2563EB;text-decoration:none;font-weight:500}
+.fp-footer a{color:#D4920B;text-decoration:none;font-weight:500}
 .fp-footer a:hover{text-decoration:underline}
 
 /* Mobile */
