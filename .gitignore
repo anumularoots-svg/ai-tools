@@ -6,3 +6,6 @@
 
 .env*
 dev-server.mjs
+
+.vercel
+.env*
