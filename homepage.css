@@ -166,6 +166,33 @@ a{text-decoration:none;color:inherit}
 .why-card h4{font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px}
 .why-card p{font-size:14px;color:var(--text-2);line-height:1.65}
 
+/* ── FEATURE GRID (pastel cards + apt icons) ── */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feat-card{border-radius:20px;padding:28px 26px;display:block;transition:transform .2s ease,box-shadow .25s ease}
+.feat-card:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(26,26,24,.12)}
+.feat-top{display:flex;align-items:center;gap:15px;margin-bottom:16px}
+.feat-ic{width:52px;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 16px rgba(26,26,24,.18)}
+.feat-ic svg{width:25px;height:25px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.feat-card h3{font-family:'Fraunces',Georgia,serif;font-size:20px;font-weight:600;color:#1A1A18;line-height:1.15;margin-bottom:3px}
+.feat-eyebrow2{font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:#7c7a74}
+.feat-card p{font-size:14px;line-height:1.6;color:#4a4844;margin-bottom:18px}
+.feat-link{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:#1A1A18}
+.feat-link svg{width:15px;height:15px;transition:transform .15s}
+.feat-card:hover .feat-link svg{transform:translateX(4px)}
+/* pastel palettes (light) */
+.feat-violet{background:#EEE8FB}.feat-violet .feat-ic{background:#8B5CF6}
+.feat-peach{background:#FCEADD}.feat-peach .feat-ic{background:#E87F45}
+.feat-pink{background:#FBE2EB}.feat-pink .feat-ic{background:#E86A94}
+.feat-mint{background:#DBF1E8}.feat-mint .feat-ic{background:#2FAE82}
+.feat-blue{background:#E4EDFB}.feat-blue .feat-ic{background:#5486EC}
+.feat-amber{background:#FBEDD3}.feat-amber .feat-ic{background:#D4920B}
+@media(prefers-color-scheme:dark){
+  .feat-violet{background:#241C38}.feat-peach{background:#33241A}.feat-pink{background:#331E28}
+  .feat-mint{background:#152C24}.feat-blue{background:#182338}.feat-amber{background:#332711}
+  .feat-card h3,.feat-link{color:#EDEDEB}.feat-card p{color:#B8B6B1}.feat-eyebrow2{color:#8f8d88}
+  .feat-card:hover{box-shadow:0 16px 36px rgba(0,0,0,.45)}
+}
+
 /* ── FAQ ── */
 .faq-section{max-width:680px;margin:0 auto;padding:64px 24px}
 .faq-section h2{font-family:'Fraunces',Georgia,serif;font-size:28px;font-weight:600;margin-bottom:36px;text-align:center;color:var(--text)}
@@ -200,6 +227,7 @@ a{text-decoration:none;color:inherit}
   .feature-block.reverse .feature-text,.feature-block.reverse .feature-visual{order:unset}
   .feature-text{max-width:none}
   .why-grid{grid-template-columns:repeat(2,1fr)}
+  .feat-grid{grid-template-columns:repeat(2,1fr)}
   .explore-inner{flex-direction:column;gap:12px;text-align:center}
 }
 @media(max-width:768px){
@@ -222,6 +250,7 @@ a{text-decoration:none;color:inherit}
   .stat-item{min-width:40%}
   .stat-item+.stat-item::before{display:none}
   .why-grid{grid-template-columns:1fr}
+  .feat-grid{grid-template-columns:1fr}
   .footer{padding:36px 20px 20px}
   .footer-inner{grid-template-columns:1fr 1fr;gap:24px}
   .faq-section{padding:56px 20px}

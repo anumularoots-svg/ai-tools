@@ -4,55 +4,55 @@
       "id": "resume",
       "name": "Resume & Career",
       "icon": "resume",
-      "color": "#D4920B"
+      "color": "#8B5CF6"
     },
     {
       "id": "writing",
       "name": "AI Writing",
       "icon": "writing",
-      "color": "#D4920B"
+      "color": "#5486EC"
     },
     {
       "id": "marketing",
       "name": "Marketing & SEO",
       "icon": "marketing",
-      "color": "#D4920B"
+      "color": "#E8834A"
     },
     {
       "id": "social",
       "name": "Social Media",
       "icon": "social",
-      "color": "#D4920B"
+      "color": "#E86A94"
     },
     {
       "id": "business",
       "name": "Business",
       "icon": "business",
-      "color": "#D4920B"
+      "color": "#14B8A6"
     },
     {
       "id": "student",
       "name": "Student",
       "icon": "student",
-      "color": "#D4920B"
+      "color": "#2FAE82"
     },
     {
       "id": "pdf",
       "name": "PDF Tools",
       "icon": "pdf",
-      "color": "#D4920B"
+      "color": "#E5484D"
     },
     {
       "id": "image",
       "name": "Image Tools",
       "icon": "image",
-      "color": "#D4920B"
+      "color": "#C15BD6"
     },
     {
       "id": "developer",
       "name": "Developer",
       "icon": "developer",
-      "color": "#D4920B"
+      "color": "#6366F1"
     },
     {
       "id": "productivity",
