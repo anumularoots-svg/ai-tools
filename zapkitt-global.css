@@ -1,0 +1,107 @@
+/* ZapKitt — Global Design System (all pages) */
+/* This file provides: nav, footer, typography, colors, dark mode, accessibility */
+/* Link this from EVERY page: <link rel="stylesheet" href="/zapkitt-global.css"> */
+
+:root{
+  --zk-bg:#FAFAF8;--zk-bg2:#F5F4F0;--zk-surface:#FFFFFF;--zk-surface-alt:#F5F4F0;
+  --zk-accent:#D4920B;--zk-accent-hover:#B87A00;--zk-accent-light:#FFF8EB;--zk-accent-dark:#8B5E00;
+  --zk-text:#1A1A18;--zk-text2:#52514E;--zk-text3:#898781;
+  --zk-border:#E5E4DF;--zk-border-strong:#CDCCC7;
+  --zk-radius:8px;
+  --zk-purple:#6B4FBB;--zk-purple-bg:#F5F0FF;
+  --zk-success:#0F7B3E;--zk-success-bg:#EDFCF2;
+  --zk-danger:#D03B3B;
+  color-scheme:light dark;
+}
+@media(prefers-color-scheme:dark){:root{
+  --zk-bg:#0F0F0E;--zk-bg2:#1A1A18;--zk-surface:#1A1A18;--zk-surface-alt:#222220;
+  --zk-accent:#EBA832;--zk-accent-hover:#D4920B;--zk-accent-light:#1E1A0F;--zk-accent-dark:#EBA832;
+  --zk-text:#EDEDEB;--zk-text2:#A8A7A3;--zk-text3:#6B6A66;
+  --zk-border:#2A2A27;--zk-border-strong:#3A3A36;
+  --zk-purple-bg:#1A162A;--zk-success-bg:#0F1E15;
+}}
+
+/* Global typography */
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.7}
+
+/* === UNIFIED NAV === */
+.zk-nav{position:sticky;top:0;z-index:100;background:rgba(250,250,248,.78);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border-bottom:1px solid var(--zk-border);font-family:'Inter',system-ui,sans-serif}
+@media(prefers-color-scheme:dark){.zk-nav{background:rgba(15,15,14,.78)}}
+.zk-nav-inner{max-width:1120px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.zk-logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.zk-logo svg{width:28px;height:28px}
+.zk-logo-text{font-family:'Fraunces',Georgia,serif;font-weight:700;font-size:20px;color:var(--zk-text);letter-spacing:-.5px}
+.zk-logo-text span{color:var(--zk-accent)}
+.zk-nav-links{display:flex;align-items:center;gap:4px}
+.zk-nav-links a{color:var(--zk-text2);font-size:14px;font-weight:500;padding:8px 14px;border-radius:6px;transition:all .15s;text-decoration:none}
+.zk-nav-links a:hover{color:var(--zk-text);background:var(--zk-surface-alt)}
+.zk-nav-cta{background:var(--zk-accent)!important;color:#fff!important;font-weight:600!important;border-radius:var(--zk-radius)!important;padding:8px 20px!important}
+.zk-nav-cta:hover{background:var(--zk-accent-hover)!important}
+.zk-ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border:none;background:none}
+.zk-ham span{width:20px;height:2px;background:var(--zk-text);border-radius:2px}
+@media(max-width:768px){
+  .zk-nav-links{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:var(--zk-bg);flex-direction:column;padding:16px 20px;z-index:99}
+  .zk-nav-links.open{display:flex}
+  .zk-nav-links a{padding:16px 0;border-bottom:1px solid var(--zk-border);width:100%;border-radius:0;font-size:16px}
+  .zk-ham{display:flex}
+}
+
+/* === UNIFIED FOOTER === */
+.zk-footer{border-top:1px solid var(--zk-border);padding:40px 24px 20px;background:var(--zk-bg2);font-family:'Inter',system-ui,sans-serif;color:var(--zk-text2)}
+.zk-footer-inner{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+.zk-footer-brand p{font-size:13px;line-height:1.7;margin-top:10px;max-width:260px;color:var(--zk-text2)}
+.zk-footer-col h4{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--zk-text3);margin-bottom:14px}
+.zk-footer-col a{display:block;font-size:13px;color:var(--zk-text2);padding:4px 0;text-decoration:none;transition:color .15s}
+.zk-footer-col a:hover{color:var(--zk-accent)}
+.zk-footer-bottom{max-width:1120px;margin:20px auto 0;padding-top:16px;border-top:1px solid var(--zk-border);font-size:12px;color:var(--zk-text3);text-align:center}
+@media(max-width:768px){.zk-footer-inner{grid-template-columns:1fr 1fr;gap:20px}}
+@media(max-width:480px){.zk-footer-inner{grid-template-columns:1fr;gap:16px}}
+
+/* === FOCUS + ACCESSIBILITY === */
+*:focus-visible{outline:2px solid var(--zk-accent);outline-offset:2px;border-radius:4px}
+a:focus:not(:focus-visible),button:focus:not(:focus-visible){outline:none}
+.zk-skip{position:absolute;top:-100%;left:16px;z-index:999;padding:8px 16px;background:var(--zk-accent);color:#fff;border-radius:var(--zk-radius);font-size:14px;font-weight:600;text-decoration:none}
+.zk-skip:focus{top:8px}
+
+/* === TOOL PAGE SHARED STYLES === */
+.zk-tool-hero{text-align:center;padding:48px 24px 32px;max-width:680px;margin:0 auto}
+.zk-tool-hero h1{font-family:'Fraunces',Georgia,serif;font-size:34px;font-weight:700;letter-spacing:-1px;margin-bottom:12px;color:var(--zk-text)}
+.zk-tool-hero p{color:var(--zk-text2);font-size:16px;line-height:1.6}
+.zk-tool-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:4px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:14px}
+.zk-tool-badge-amber{background:var(--zk-accent-light);color:var(--zk-accent-dark)}
+.zk-tool-badge-purple{background:var(--zk-purple-bg);color:var(--zk-purple)}
+.zk-tool-badge-green{background:var(--zk-success-bg);color:var(--zk-success)}
+
+/* Tool card container */
+.zk-tool-card{max-width:800px;margin:0 auto;padding:0 24px 60px}
+.zk-tool-card .card{background:var(--zk-surface);border:1px solid var(--zk-border);border-radius:12px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+
+/* Buttons */
+.zk-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;font-size:15px;font-weight:600;border:none;border-radius:var(--zk-radius);cursor:pointer;transition:all .15s;font-family:inherit;width:100%}
+.zk-btn-primary{background:var(--zk-accent);color:#fff}
+.zk-btn-primary:hover{background:var(--zk-accent-hover);transform:translateY(-1px)}
+.zk-btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* Form fields */
+.zk-field{margin-bottom:16px}
+.zk-field label{display:block;font-size:13px;font-weight:600;color:var(--zk-text);margin-bottom:6px}
+.zk-field input,.zk-field select,.zk-field textarea{width:100%;padding:12px 14px;border:1px solid var(--zk-border);border-radius:var(--zk-radius);font-size:14px;font-family:inherit;outline:0;transition:border-color .2s;background:var(--zk-surface);color:var(--zk-text)}
+.zk-field input:focus,.zk-field select:focus,.zk-field textarea:focus{border-color:var(--zk-accent)}
+.zk-field textarea{min-height:80px;resize:vertical;line-height:1.6}
+
+/* Output area */
+.zk-output textarea{width:100%;min-height:280px;padding:16px;border:1px solid var(--zk-border);border-radius:var(--zk-radius);font-size:14px;font-family:inherit;line-height:1.7;background:var(--zk-surface-alt);color:var(--zk-text);outline:0;resize:vertical}
+
+/* SEO section */
+.zk-seo{max-width:800px;margin:0 auto;padding:0 24px 60px}
+.zk-seo h2{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:600;margin-bottom:12px;color:var(--zk-text)}
+.zk-seo p{color:var(--zk-text2);line-height:1.7;font-size:14px;margin-bottom:8px}
+.zk-seo details{border:1px solid var(--zk-border);border-radius:var(--zk-radius);padding:14px 16px;margin-bottom:8px;background:var(--zk-surface)}
+.zk-seo summary{font-weight:600;cursor:pointer;font-size:14px;color:var(--zk-text)}
+.zk-seo details p{margin-top:8px}
+
+/* Related tools */
+.zk-related{max-width:800px;margin:0 auto;padding:0 24px 40px}
+.zk-related h3{font-size:16px;font-weight:600;margin-bottom:12px;color:var(--zk-text)}
+.zk-related a{display:inline-block;padding:8px 16px;border:1px solid var(--zk-border);border-radius:var(--zk-radius);text-decoration:none;color:var(--zk-accent);font-size:13px;font-weight:600;margin:0 8px 8px 0;transition:all .15s}
+.zk-related a:hover{border-color:var(--zk-accent);background:var(--zk-accent-light)}

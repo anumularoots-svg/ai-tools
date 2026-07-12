@@ -273,8 +273,15 @@ body{font-family:Inter,system-ui,sans-serif;background:#fff;color:#111827;-webki
   .upgrade-grid{grid-template-columns:1fr}
   .sample-score{flex-direction:column}
 }
-</style></head><body>
-<nav class="nav"><div class="nav-in"><a href="/" class="logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="#2563EB"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/></svg><div>Zap<span>Kitt</span></div></a><div class="nl"><a href="/ai-resume-builder">Resume Builder</a><a href="/">All Tools</a><a href="/about">About</a></div></div></nav>
+</style><link rel="stylesheet" href="/zapkitt-global.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head><body>
+<a href="#main" class="zk-skip">Skip to main content</a>
+<nav class="zk-nav"><div class="zk-nav-inner">
+<a href="/" class="zk-logo"><svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#D4920B"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/></svg><div class="zk-logo-text">Zap<span>Kitt</span></div></a>
+<div class="zk-nav-links" id="zkNav"><a href="/ai-resume-builder">Resume builder</a><a href="/ai-mock-interview">Mock interview</a><a href="/all-tools">All tools</a><a href="/blog">Blog</a><a href="/ai-resume-builder" class="zk-nav-cta">Get started</a></div>
+<button class="zk-ham" aria-label="Menu" onclick="document.getElementById('zkNav').classList.toggle('open')"><span></span><span></span><span></span></button>
+</div></nav>
 
 <!-- HERO -->
 <div id="landing">
@@ -526,9 +533,16 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 </div>
 
 <!-- UPI Modal -->
-<div id="upiM" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:999;align-items:center;justify-content:center"><div style="background:#fff;border-radius:16px;padding:28px;max-width:340px;width:90%;text-align:center"><span onclick="document.getElementById('upiM').style.display='none'" style="position:absolute;top:12px;right:16px;font-size:20px;cursor:pointer;color:#9ca3af">&times;</span><div style="font-size:18px;font-weight:800;color:#111827;margin-bottom:12px">Pay via UPI</div><div style="background:#f9fafb;border:2px dashed #d1d5db;border-radius:12px;padding:16px;margin-bottom:14px"><div style="font-size:11px;color:#6b7280">UPI ID</div><div style="font-size:16px;font-weight:700;color:#2563eb;margin:4px 0">9985933964-3@ybl</div><button onclick="navigator.clipboard.writeText('9985933964-3@ybl');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy UPI ID',1500)" style="padding:6px 16px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;margin-top:4px">Copy UPI ID</button></div><a href="upi://pay?pa=9985933964-3@ybl&pn=ZapKitt&am=9&cu=INR&tn=MockInterview" style="display:block;padding:12px;background:#111827;color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px">Open UPI App</a><div style="font-size:11px;color:#9ca3af;margin-top:8px">Works on mobile with any UPI app</div></div></div>
 
-<footer class="foot"><p>ZapKitt &mdash; <a href="/">All Tools</a> | <a href="/ai-resume-builder">Resume Builder</a> | <a href="/about">About</a></p></footer>
+<footer class="zk-footer" role="contentinfo">
+<div class="zk-footer-inner">
+<div class="zk-footer-brand"><a href="/" class="zk-logo"><svg viewBox="0 0 32 32" fill="none" width="28" height="28"><rect width="32" height="32" rx="8" fill="#D4920B"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/></svg><div class="zk-logo-text">Zap<span>Kitt</span></div></a><p>AI career tools for resumes, interviews, and job preparation. Free to start.</p></div>
+<div class="zk-footer-col"><h4>Product</h4><a href="/ai-resume-builder">Resume builder</a><a href="/ai-mock-interview">Mock interview</a><a href="/ai-cover-letter">Cover letter</a><a href="/all-tools">All tools</a></div>
+<div class="zk-footer-col"><h4>Resources</h4><a href="/blog">Blog</a><a href="mailto:hello@zapkitt.com">Suggest a tool</a></div>
+<div class="zk-footer-col"><h4>Company</h4><a href="/about">About</a><a href="/privacy">Privacy policy</a><a href="mailto:hello@zapkitt.com">Contact</a></div>
+</div>
+<div class="zk-footer-bottom">&copy; 2026 ZapKitt. AI-powered career tools for job seekers.</div>
+</footer>
 
 <script>
 var S={resume:'',role:'',co:'',jd:'',diff:'intermediate',tier:'free',seed:0,resumeHash:'',name:'',qNum:0,totalQs:5,transcript:'',qas:[],timer:null,secs:0,answerTimer:null,answerSecs:60,followupUsed:false,pendingFollowup:false,lastType:'normal'};
@@ -891,4 +905,4 @@ function endInterview(){if(!confirm('End the interview now and see your report?'
 if(window.speechSynthesis){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){speechSynthesis.getVoices()}}
 (function(){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){typeMode=true;var mb=document.getElementById('micBtn');if(mb)mb.style.display='none'}})();
 try{var sr=localStorage.getItem('zk_last_resume_text');if(sr)document.getElementById('inp_r').value=sr}catch(e){}
-</script><script src="/zapkitt-upi.js"></script><script src="/zapkitt-back.js"></script></body></html>
+</script></body></html>

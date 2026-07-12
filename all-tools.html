@@ -15,34 +15,34 @@ body{font-family:Inter,system-ui,sans-serif;background:#fafafe;color:#1a1a2e}
 .logo svg{width:32px;height:32px}
 .logo span{color:#2563EB}
 .nav-links{display:flex;gap:20px;font-size:13px;font-weight:600;color:#888}
-.nav-links a{text-decoration:none;color:#888}.nav-links a:hover{color:#7c3aed}
+.nav-links a{text-decoration:none;color:#888}.nav-links a:hover{color:var(--zk-accent)}
 .page{max-width:1100px;margin:0 auto;padding:40px 32px 80px}
 .hero{text-align:center;margin-bottom:40px}
 .hero h1{font-size:36px;font-weight:900;letter-spacing:-1px;margin-bottom:8px}
 .hero h1 em{font-style:normal;background:linear-gradient(135deg,#7c3aed,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .hero p{color:#64748b;font-size:15px}
-.counter{display:inline-block;background:#f3f0ff;color:#7c3aed;font-weight:700;font-size:13px;padding:6px 16px;border-radius:20px;margin-bottom:16px}
+.counter{display:inline-block;background:var(--zk-accent-light);color:var(--zk-accent);font-weight:700;font-size:13px;padding:6px 16px;border-radius:20px;margin-bottom:16px}
 .filters{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:32px}
 .fbtn{padding:8px 18px;border:1.5px solid #e8e6f0;border-radius:10px;background:#fff;font-size:13px;font-weight:600;cursor:pointer;color:#64748b;font-family:inherit;transition:.2s}
-.fbtn:hover{border-color:#c4b5fd;color:#7c3aed}
-.fbtn.on{background:#7c3aed;color:#fff;border-color:#7c3aed}
-.cat-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:28px 0 14px;padding-left:4px;color:#7c3aed}
+.fbtn:hover{border-color:#c4b5fd;color:var(--zk-accent)}
+.fbtn.on{background:var(--zk-accent);color:#fff;border-color:var(--zk-accent)}
+.cat-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:28px 0 14px;padding-left:4px;color:var(--zk-accent)}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .card{background:#fff;border:1.5px solid #eee;border-radius:14px;padding:20px 18px;text-decoration:none;color:inherit;transition:.2s;display:flex;flex-direction:column}
 .card:hover{border-color:#c4b5fd;box-shadow:0 4px 20px rgba(124,58,237,.08);transform:translateY(-2px)}
 .card-icon{font-size:24px;margin-bottom:8px}
 .card h3{font-size:14px;font-weight:700;margin-bottom:4px;color:#1a1a2e}
 .card p{font-size:12px;color:#64748b;line-height:1.5}
-.card-tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;margin-top:8px;background:#f3f0ff;color:#7c3aed}
+.card-tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;margin-top:8px;background:var(--zk-accent-light);color:var(--zk-accent)}
 .existing-tools{margin-top:40px;padding-top:32px;border-top:1px solid #f0f0f0}
 .existing-tools h2{font-size:20px;font-weight:800;margin-bottom:16px}
 .foot{text-align:center;padding:40px 24px;font-size:13px;color:#ccc;border-top:1px solid #f5f5f5;margin-top:60px}
-.foot a{color:#7c3aed;text-decoration:none}
+.foot a{color:var(--zk-accent);text-decoration:none}
 .search-wrap{position:relative;max-width:560px;margin:0 auto 22px}
 .search{width:100%;padding:14px 44px;border:1.5px solid #e8e6f0;border-radius:14px;font-size:15px;font-family:inherit;background:#fff;color:#1a1a2e;transition:.2s;outline:none}
 .search:focus{border-color:#a855f7;box-shadow:0 4px 20px rgba(124,58,237,.12)}
 .search-ic{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;opacity:.55}
-.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:#f1eefc;color:#7c3aed;align-items:center;justify-content:center;cursor:pointer;font-size:16px;line-height:1}
+.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:#f1eefc;color:var(--zk-accent);align-items:center;justify-content:center;cursor:pointer;font-size:16px;line-height:1}
 .feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:26px}
 .feat{display:flex;align-items:center;gap:16px;padding:20px;border-radius:16px;text-decoration:none;color:#fff;transition:.2s}
 .feat:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(124,58,237,.25)}
@@ -58,12 +58,16 @@ body{font-family:Inter,system-ui,sans-serif;background:#fafafe;color:#1a1a2e}
 @media(max-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.grid{grid-template-columns:repeat(2,1fr);gap:10px}.card{padding:14px 12px}.hero h1{font-size:26px}.feat-grid{grid-template-columns:1fr}.feat-go{display:none}}
 </style>
+<link rel="stylesheet" href="/zapkitt-global.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-<nav class="nav"><div class="nav-in">
-<a href="/" class="logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="#2563EB"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/><defs><linearGradient id="g" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs></svg><div>Zap<span>Kitt</span></div></a>
-<div class="nav-links"><a href="/">Home</a><a href="/blog">Blog</a><a href="/about">About</a><a href="/privacy">Privacy</a></div>
-</div></nav><div id="topSupport" style="background:#f9fafb;border-bottom:1px solid #e5e7eb;padding:8px 40px 8px 16px;text-align:center;position:relative;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap"><span style="color:#374151;font-size:14px;font-weight:500">ZapKitt is 100% free — no ads, no signup.</span><a href="https://ko-fi.com/zapkitt" target="_blank" rel="noopener" style="color:#7c3aed;font-weight:700;font-size:13px;text-decoration:none;background:#f3f0ff;padding:5px 12px;border-radius:6px;border:1px solid #ddd6fe"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg> Support on Ko-fi</a><a href="#" onclick="document.getElementById(&quot;upiModal&quot;).style.display=&quot;flex&quot;;return false;" style="color:#2563eb;font-weight:700;font-size:13px;text-decoration:none;background:#eff6ff;padding:5px 12px;border-radius:6px;border:1px solid #bfdbfe">₹ UPI Donate</a><a href="/ai-mock-interview" style="color:#7c3aed;font-weight:700;font-size:13px;text-decoration:none;background:#f3f0ff;padding:5px 12px;border-radius:6px;border:1px solid #ddd6fe"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg> Interview</a><span onclick="this.parentElement.style.display=&quot;none&quot;" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#9ca3af;cursor:pointer;font-size:18px;line-height:1">×</span></div><div id="upiModal" onclick="if(event.target===this)this.style.display=&quot;none&quot;" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center"><div style="background:#fff;border-radius:16px;padding:28px;max-width:360px;width:90%;text-align:center;position:relative"><span onclick="document.getElementById(&quot;upiModal&quot;).style.display=&quot;none&quot;" style="position:absolute;top:10px;right:14px;font-size:22px;cursor:pointer;color:#9ca3af">×</span><div style="font-size:20px;font-weight:800;color:#1a1a2e;margin-bottom:4px">Support ZapKitt</div><div style="font-size:13px;color:#6b7280;margin-bottom:16px">Scan QR or use UPI ID below</div><div style="background:#f3f0ff;border:2px dashed #c4b5fd;border-radius:12px;padding:16px;margin-bottom:14px"><div style="font-size:12px;color:#6b7280;margin-bottom:4px">UPI ID</div><div style="font-size:18px;font-weight:700;color:#7c3aed;word-break:break-all" id="upiId">9985933964-3@ybl</div><button onclick="navigator.clipboard.writeText(&quot;9985933964-3@ybl&quot;);this.textContent=&quot;Copied!&quot;;setTimeout(()=>this.textContent=&quot;Copy UPI ID&quot;,1500)" style="margin-top:8px;padding:6px 16px;background:#7c3aed;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">Copy UPI ID</button></div><a href="upi://pay?pa=9985933964-3@ybl&pn=ZapKitt&cu=INR" style="display:block;padding:10px;background:#2563eb;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;margin-bottom:8px">Open UPI App</a><div style="font-size:11px;color:#9ca3af">Works on mobile with any UPI app</div></div></div></nav>
+<a href="#main" class="zk-skip">Skip to main content</a>
+<nav class="zk-nav"><div class="zk-nav-inner">
+<a href="/" class="zk-logo"><svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#D4920B"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/></svg><div class="zk-logo-text">Zap<span>Kitt</span></div></a>
+<div class="zk-nav-links" id="zkNav"><a href="/ai-resume-builder">Resume builder</a><a href="/ai-mock-interview">Mock interview</a><a href="/all-tools">All tools</a><a href="/blog">Blog</a><a href="/ai-resume-builder" class="zk-nav-cta">Get started</a></div>
+<button class="zk-ham" aria-label="Menu" onclick="document.getElementById('zkNav').classList.toggle('open')"><span></span><span></span><span></span></button>
+</div></nav>
 
 <div class="page">
 <div class="hero">
@@ -91,7 +95,7 @@ body{font-family:Inter,system-ui,sans-serif;background:#fafafe;color:#1a1a2e}
 <div style="max-width:1100px;margin:40px auto 0;padding:0 32px">
 <h2 style="font-size:20px;font-weight:800;margin-bottom:16px">Guides & Tips</h2>
 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:40px">
-<a href="/blog-best-free-ai-tools" style="padding:16px;border:1px solid #f0eef5;border-radius:10px;text-decoration:none;color:inherit;transition:.2s"><strong style="color:#7c3aed;font-size:14px">110+ Best Free AI Tools (2026)</strong><p style="font-size:12px;color:#64748b;margin-top:4px">Complete guide to every free tool on ZapKitt</p></a>
+<a href="/blog-best-free-ai-tools" style="padding:16px;border:1px solid #f0eef5;border-radius:10px;text-decoration:none;color:inherit;transition:.2s"><strong style="color:var(--zk-accent);font-size:14px">110+ Best Free AI Tools (2026)</strong><p style="font-size:12px;color:#64748b;margin-top:4px">Complete guide to every free tool on ZapKitt</p></a>
 <a href="/blog-free-ai-tools-for-students" style="padding:16px;border:1px solid #f0eef5;border-radius:10px;text-decoration:none;color:inherit;transition:.2s"><strong style="color:#0EA5E9;font-size:14px">16 Free AI Tools for Students</strong><p style="font-size:12px;color:#64748b;margin-top:4px">Homework helper, exam prep, essays, flashcards</p></a>
 <a href="/blog-free-developer-tools" style="padding:16px;border:1px solid #f0eef5;border-radius:10px;text-decoration:none;color:inherit;transition:.2s"><strong style="color:#10B981;font-size:14px">12 Free Developer Tools</strong><p style="font-size:12px;color:#64748b;margin-top:4px">Code explainer, regex builder, SQL generator</p></a>
 <a href="/blog-ai-writing-tools-free" style="padding:16px;border:1px solid #f0eef5;border-radius:10px;text-decoration:none;color:inherit;transition:.2s"><strong style="color:#2563EB;font-size:14px">18 Free AI Writing Tools</strong><p style="font-size:12px;color:#64748b;margin-top:4px">Essay writer, humanizer, speech writer, bio writer</p></a>
@@ -100,10 +104,14 @@ body{font-family:Inter,system-ui,sans-serif;background:#fafafe;color:#1a1a2e}
 </div>
 </div>
 
-<footer class="foot"><div style="max-width:480px;margin:0 auto 24px;padding:28px 24px;background:#F9FAFB;border-radius:16px;border:1px solid #E5E7EB;text-align:center"><p style="font-size:18px;font-weight:700;margin-bottom:8px;color:#111827">Support ZapKitt</p><p style="font-size:14px;color:#6B7280;margin-bottom:16px;line-height:1.6">ZapKitt is 100% free with no ads, no signup, no limits. Help us keep it that way.</p><div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap"><a href="https://ko-fi.com/zapkitt" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#FF5E5B;color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg> Support on Ko-fi</a><a href="upi://pay?pa=9985933964-3@ybl&pn=ZapKitt&cu=INR" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:#2563EB;color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px">UPI Donate</a><a href="/ai-mock-interview" style="color:#7c3aed;font-weight:700;font-size:13px;text-decoration:none;background:#f3f0ff;padding:5px 12px;border-radius:6px;border:1px solid #ddd6fe"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg> Interview</a></div></div>
-<p><a href="/">Home</a> · <a href="/all-tools">All Tools</a> · <a href="/blog">Blog</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
-<p style="margin-top:8px;font-size:12px"><a href="/writing-tools">Writing</a> · <a href="/student-tools">Student</a> · <a href="/developer-tools">Developer</a> · <a href="/marketing-tools">Marketing</a> · <a href="/social-media-tools">Social Media</a> · <a href="/business-tools">Business</a> · <a href="/productivity-tools">Productivity</a> · <a href="/resume-tools">Resume</a></p>
-<p style="margin-top:8px">© 2026 ZapKitt — Free AI-powered tools.</p>
+<footer class="zk-footer" role="contentinfo">
+<div class="zk-footer-inner">
+<div class="zk-footer-brand"><a href="/" class="zk-logo"><svg viewBox="0 0 32 32" fill="none" width="28" height="28"><rect width="32" height="32" rx="8" fill="#D4920B"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/></svg><div class="zk-logo-text">Zap<span>Kitt</span></div></a><p>AI career tools for resumes, interviews, and job preparation. Free to start.</p></div>
+<div class="zk-footer-col"><h4>Product</h4><a href="/ai-resume-builder">Resume builder</a><a href="/ai-mock-interview">Mock interview</a><a href="/ai-cover-letter">Cover letter</a><a href="/all-tools">All tools</a></div>
+<div class="zk-footer-col"><h4>Resources</h4><a href="/blog">Blog</a><a href="mailto:hello@zapkitt.com">Suggest a tool</a></div>
+<div class="zk-footer-col"><h4>Company</h4><a href="/about">About</a><a href="/privacy">Privacy policy</a><a href="mailto:hello@zapkitt.com">Contact</a></div>
+</div>
+<div class="zk-footer-bottom">&copy; 2026 ZapKitt. AI-powered career tools for job seekers.</div>
 </footer>
 
 <script>
@@ -210,4 +218,4 @@ function clearSearch() {
 
 loadTools();
 </script>
-<a href="/ai-mock-interview" id="mockFloat" style="position:fixed;bottom:20px;right:20px;z-index:90;display:flex;align-items:center;gap:6px;padding:10px 18px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border-radius:30px;text-decoration:none;font-weight:700;font-size:13px;box-shadow:0 4px 16px rgba(124,58,237,.3);transition:.2s;font-family:Inter,sans-serif" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg> Real-Time AI Mock Interview</a><script src="/zapkitt-upi.js"></script></body></html>
+</body></html>
