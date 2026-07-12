@@ -185,8 +185,8 @@ body{font-family:Inter,system-ui,sans-serif;background:#fff;color:#111827;-webki
 .code-editor::placeholder{color:#6c7086}
 .code-label{font-size:11px;color:#D4920B;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px}
 .code-timer{font-size:11px;color:#d97706;font-weight:700}
-.foot{text-align:center;padding:24px;border-top:1px solid #e5e7eb;color:#9ca3af;font-size:11px;margin-top:30px}
-.foot a{color:#D4920B;text-decoration:none}
+.foot{text-align:center;padding:48px 32px 40px;font-size:13px;color:#52514E;background:#F5F4F0;border-top:1px solid #E5E4DF;margin-top:64px}
+.foot a{color:#6B6A66;text-decoration:none;transition:color .15s}.foot a:hover{color:#B87A00}
 
 /* SAMPLE PREVIEW */
 .sample-section{max-width:600px;margin:0 auto;padding:0 24px 48px}
@@ -528,7 +528,7 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 <!-- UPI Modal -->
 <div id="upiM" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:999;align-items:center;justify-content:center"><div style="background:#fff;border-radius:16px;padding:28px;max-width:340px;width:90%;text-align:center"><span onclick="document.getElementById('upiM').style.display='none'" style="position:absolute;top:12px;right:16px;font-size:20px;cursor:pointer;color:#9ca3af">&times;</span><div style="font-size:18px;font-weight:800;color:#111827;margin-bottom:12px">Pay via UPI</div><div style="background:#f9fafb;border:2px dashed #d1d5db;border-radius:12px;padding:16px;margin-bottom:14px"><div style="font-size:11px;color:#6b7280">UPI ID</div><div style="font-size:16px;font-weight:700;color:#D4920B;margin:4px 0">9985933964-3@ybl</div><button onclick="navigator.clipboard.writeText('9985933964-3@ybl');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy UPI ID',1500)" style="padding:6px 16px;background:#D4920B;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;margin-top:4px">Copy UPI ID</button></div><a href="upi://pay?pa=9985933964-3@ybl&pn=ZapKitt&am=9&cu=INR&tn=MockInterview" style="display:block;padding:12px;background:#111827;color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px">Open UPI App</a><div style="font-size:11px;color:#9ca3af;margin-top:8px">Works on mobile with any UPI app</div></div></div>
 
-<footer class="foot"><p>ZapKitt &mdash; <a href="/">All Tools</a> | <a href="/ai-resume-builder">Resume Builder</a> | <a href="/about">About</a></p></footer>
+<footer class="foot"><div class="foot-brand" style="margin-bottom:18px"><a href="/" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;justify-content:center"><svg width="26" height="26" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#D4920B"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/></svg><span style="font-family:Fraunces,Georgia,serif;font-weight:700;font-size:19px;color:#1A1A18;letter-spacing:-.3px">Zap<span style="color:#D4920B">Kitt</span></span></a></div><p>ZapKitt &mdash; <a href="/">All Tools</a> | <a href="/ai-resume-builder">Resume Builder</a> | <a href="/about">About</a></p></footer>
 
 <script>
 var S={resume:'',role:'',co:'',jd:'',diff:'intermediate',tier:'free',seed:0,resumeHash:'',name:'',qNum:0,totalQs:5,transcript:'',qas:[],timer:null,secs:0,answerTimer:null,answerSecs:60,followupUsed:false,pendingFollowup:false,lastType:'normal'};
@@ -891,4 +891,4 @@ function endInterview(){if(!confirm('End the interview now and see your report?'
 if(window.speechSynthesis){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){speechSynthesis.getVoices()}}
 (function(){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){typeMode=true;var mb=document.getElementById('micBtn');if(mb)mb.style.display='none'}})();
 try{var sr=localStorage.getItem('zk_last_resume_text');if(sr)document.getElementById('inp_r').value=sr}catch(e){}
-</script><script src="/zapkitt-upi.js"></script><script src="/zapkitt-back.js"></script></body></html>
+</script><script src="/zapkitt-back.js"></script></body></html>
