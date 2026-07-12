@@ -4,7 +4,7 @@
 <title>ZapKitt — AI Resume Builder & Mock Interview Platform | Get Hired Faster</title>
 <meta name="description" content="Build ATS-optimized resumes and practice company-specific mock interviews for Google, Amazon, TCS. Free, no signup. Used by 12,000+ job seekers.">
 <link rel="canonical" href="https://zapkitt.com/">
-<meta property="og:type" content="website"><meta property="og:title" content="ZapKitt — AI Resume Builder & Mock Interview Platform"><meta property="og:description" content="Build ATS-optimized resumes and practice company-specific mock interviews for Google, Amazon, TCS. Free, no signup."><meta property="og:url" content="https://zapkitt.com/"><meta property="og:site_name" content="ZapKitt"><meta property="og:image" content="https://zapkitt.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:type" content="website"><meta property="og:title" content="ZapKitt — AI Resume Builder & Mock Interview Platform"><meta property="og:description" content="Build ATS-optimized resumes and practice mock interviews for Google, Amazon, TCS. Free, no signup."><meta property="og:url" content="https://zapkitt.com/"><meta property="og:site_name" content="ZapKitt"><meta property="og:image" content="https://zapkitt.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="ZapKitt — AI Resume Builder & Mock Interview Platform"><meta name="twitter:description" content="Build ATS resumes and practice mock interviews for Google, Amazon, TCS. Free, no signup."><meta name="twitter:image" content="https://zapkitt.com/og-image.png">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png"><link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
 
 <a href="#main" class="skip-nav">Skip to main content</a>
 
-<!-- ═══ NAV ═══ -->
+<!-- NAV -->
 <div class="nav-wrap"><nav class="nav" aria-label="Main navigation">
 <a href="/" class="logo"><svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#D4920B"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/></svg><div class="logo-text">Zap<span>Kitt</span></div></a>
 <div class="nav-links" id="navMenu">
@@ -31,31 +31,37 @@
 <button class="ham" id="hamBtn" aria-label="Toggle menu" onclick="document.getElementById('navMenu').classList.toggle('open')"><span></span><span></span><span></span></button>
 </nav></div>
 
-<!-- ═══ HERO ═══ -->
-<section class="hero-section" id="main">
+<!-- HERO -->
+<section class="hero-section" id="main" role="banner">
+<div class="hero-grid-bg" aria-hidden="true"></div>
+<div class="hero-glow" aria-hidden="true"></div>
 <div class="hero">
-  <div class="hero-eyebrow fade-in">AI-powered career tools</div>
-  <h1 class="fade-in">Land your next role.</h1>
-  <p class="hero-sub fade-in">Build an ATS-optimized resume in 2 minutes. Practice with AI interviewers trained on real company questions. No signup required.</p>
-  <div class="hero-btns fade-in">
+  <div class="hero-eyebrow fade-up">AI-powered career tools</div>
+  <h1 class="fade-up d1">Land your next role.</h1>
+  <p class="hero-sub fade-up d2">Build an ATS-optimized resume in 2 minutes. Practice with AI interviewers trained on real company questions. No signup required.</p>
+  <div class="hero-btns fade-up d3">
     <a href="/ai-resume-builder" class="btn-primary">Build my resume <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
     <a href="/ai-mock-interview" class="btn-secondary">Practice an interview</a>
   </div>
-  <div class="trust-bar fade-in">
+  <div class="trust-bar fade-up d4">
     <span class="trust-bar-text">Trusted by job seekers preparing for</span>
     <div class="trust-logos">
-      <span>Google</span><span>Amazon</span><span>TCS</span><span>Microsoft</span><span>Infosys</span><span>Accenture</span>
+      <svg viewBox="0 0 74 24" fill="var(--text)" aria-label="Google"><path d="M31.2 12.7c0 3.5-2.7 6-6.1 6s-6.1-2.6-6.1-6c0-3.5 2.7-6.1 6.1-6.1s6.1 2.6 6.1 6.1zm-2.7 0c0-2.2-1.6-3.7-3.4-3.7S21.7 10.5 21.7 12.7c0 2.1 1.6 3.7 3.4 3.7s3.4-1.6 3.4-3.7zM43.4 12.7c0 3.5-2.7 6-6.1 6s-6.1-2.6-6.1-6c0-3.5 2.7-6.1 6.1-6.1s6.1 2.6 6.1 6.1zm-2.7 0c0-2.2-1.6-3.7-3.4-3.7s-3.4 1.5-3.4 3.7c0 2.1 1.6 3.7 3.4 3.7s3.4-1.6 3.4-3.7zM55.3 7v10.7c0 4.4-2.6 6.2-5.7 6.2-2.9 0-4.6-1.9-5.3-3.5l2.3-1c.4 1 1.4 2.2 3 2.2 1.9 0 3.1-1.2 3.1-3.4v-.8h-.1c-.6.7-1.7 1.3-3 1.3-2.9 0-5.5-2.5-5.5-5.8 0-3.3 2.6-5.9 5.5-5.9 1.4 0 2.5.6 3 1.3h.1V7h2.6zm-2.4 5.7c0-2.1-1.4-3.6-3.2-3.6-1.8 0-3.3 1.5-3.3 3.6 0 2.1 1.5 3.6 3.3 3.6 1.8 0 3.2-1.6 3.2-3.6zM58.4 1.5h2.6v17h-2.6v-17zm10.8 13.7l2 1.4c-.7 1-2.3 2.7-5.1 2.7-3.5 0-6.1-2.7-6.1-6.1 0-3.6 2.6-6.1 5.8-6.1 3.2 0 4.7 2.5 5.2 3.9l.3.7-8.1 3.4c.6 1.2 1.6 1.8 2.9 1.8 1.4 0 2.3-.7 3.1-1.7zm-6.4-2.2l5.4-2.3c-.3-.8-1.2-1.3-2.3-1.3-1.4 0-3.3 1.2-3.1 3.6zM7.7 11.2V8.6h8c.1.4.1 1 .1 1.6 0 1.9-.5 4.3-2.2 6-1.6 1.7-3.6 2.6-6.3 2.6C3.3 18.8 0 15.6 0 11.5S3.3 4.3 7.3 4.3c2.2 0 3.8.9 5 2l-1.4 1.4c-.8-.8-2-1.4-3.6-1.4-2.9 0-5.2 2.4-5.2 5.3s2.3 5.3 5.2 5.3c1.9 0 3-.8 3.7-1.4.5-.5.9-1.3 1-2.3H7.7z"/></svg>
+      <svg viewBox="0 0 90 28" fill="var(--text)" aria-label="Amazon"><path d="M55.2 21.5c-5.1 3.7-12.4 5.7-18.7 5.7-8.8 0-16.8-3.3-22.9-8.7-.5-.4 0-1 .5-.7 6.5 3.8 14.5 6.1 22.8 6.1 5.6 0 11.8-1.2 17.4-3.6.9-.4 1.6.6.9 1.2z"/><path d="M57.3 19.1c-.6-.8-4.2-.4-5.8-.2-.5.1-.6-.4-.1-.7 2.8-2 7.5-1.4 8-.7.5.6-.1 5.1-2.8 7.2-.4.3-.8.2-.6-.3.6-1.5 1.9-4.8 1.3-5.5z"/><path d="M51.6 3.4V1.2c0-.3.2-.6.6-.6h9.6c.3 0 .6.2.6.6v1.9c0 .3-.3.8-.8 1.4l-5 7.1c1.9 0 3.8.2 5.5 1.2.4.2.5.5.5.9v2.3c0 .4-.4.8-.8.6-3.4-1.8-7.9-2-11.7 0-.4.2-.8-.2-.8-.6v-2.2c0-.4 0-1 .4-1.6l5.8-8.3h-5c-.3 0-.6-.3-.6-.6zm-35.3 13h-2.9c-.3 0-.5-.2-.6-.5V1.3c0-.3.3-.6.6-.6h2.7c.3 0 .5.2.6.5V3.5h.1c.8-2 2.2-2.9 4.2-2.9 2 0 3.3.9 4.2 2.9.8-2 2.6-2.9 4.5-2.9 1.4 0 2.9.6 3.8 1.9 1 1.5.8 3.6.8 5.5v8.4c0 .3-.3.6-.6.6h-2.9c-.3 0-.6-.3-.6-.6V9c0-.7.1-2.6-.1-3.3-.3-1.1-1-1.5-2-1.5-.8 0-1.7.6-2 1.5-.3.9-.3 2.5-.3 3.3v7.3c0 .3-.3.6-.6.6h-2.9c-.3 0-.6-.3-.6-.6V9c0-1.9.3-4.8-2.1-4.8-2.4 0-2.3 2.8-2.3 4.8v7.3c0 .3-.3.6-.6.6zm54.3-15.8c4.3 0 6.7 3.7 6.7 8.4 0 4.6-2.6 8.2-6.7 8.2-4.3 0-6.6-3.7-6.6-8.3 0-4.7 2.3-8.3 6.6-8.3zm0 3.1c-2.2 0-2.3 3-2.3 4.8 0 1.9 0 5.2 2.3 5.2 2.2 0 2.3-2.9 2.3-4.6 0-1.2 0-2.5-.4-3.6-.3-.9-.9-1.8-1.9-1.8zM82 16.4h-2.9c-.3 0-.6-.3-.6-.6V1.2c0-.3.3-.5.6-.5h2.7c.3 0 .5.2.5.5v2.5h.1c.9-2.2 2.1-3.2 4.3-3.2 1.5 0 2.9.5 3.8 2 .9 1.4.9 3.7.9 5.4v8.5c0 .3-.3.5-.6.5h-2.9c-.3 0-.5-.2-.6-.5V8.8c0-1.9.2-4.6-2.1-4.6-.8 0-1.6.6-2 1.4-.5 1.1-.5 2.2-.5 3.3v7.4c0 .3-.3.6-.7.6zm-40-11c0 1.3.1 2.4-.6 3.6-.6.9-1.5 1.5-2.5 1.5-1.4 0-2.2-1.1-2.2-2.6 0-3.1 2.8-3.7 5.3-3.7V8.4zm3.6 8.6c-.2.2-.5.2-.8.1-.9-.8-1.1-1.4-1.7-2.4-1.6 1.6-2.7 2.1-4.7 2.1-2.4 0-4.3-1.5-4.3-4.5 0-2.3 1.3-3.9 3.1-4.7 1.6-.7 3.8-.8 5.5-1V6.3c0-.7.1-1.5-.3-2.1-.4-.5-1.1-.8-1.7-.8-1.2 0-2.2.6-2.5 1.8-.1.3-.2.5-.5.5l-2.7-.3c-.2-.1-.5-.2-.4-.6C36 1.6 39 .6 41.7.6c1.4 0 3.2.4 4.3 1.4 1.4 1.3 1.3 3 1.3 4.9v4.5c0 1.3.6 1.9 1.1 2.6.2.3.2.6 0 .8l-1.8 1.5-.1-.3z"/></svg>
+      <svg viewBox="0 0 44 20" fill="var(--text)" aria-label="TCS"><text x="0" y="16" font-family="Inter,sans-serif" font-weight="700" font-size="17">TCS</text></svg>
+      <svg viewBox="0 0 90 20" fill="var(--text)" aria-label="Microsoft"><text x="0" y="16" font-family="Inter,sans-serif" font-weight="700" font-size="14">Microsoft</text></svg>
+      <svg viewBox="0 0 62 20" fill="var(--text)" aria-label="Infosys"><text x="0" y="16" font-family="Inter,sans-serif" font-weight="700" font-size="14">Infosys</text></svg>
     </div>
   </div>
 </div>
 </section>
 
-<!-- ═══ FEATURE: RESUME BUILDER ═══ -->
-<div class="section section-line fade-in">
+<!-- FEATURE: RESUME BUILDER -->
+<div class="section section-line">
 <div class="feature-block">
-  <div class="feature-text">
+  <div class="feature-text fade-up">
     <span class="badge badge-amber">Resume builder</span>
-    <h2 style="font-family:'Fraunces',Georgia,serif;font-size:28px;font-weight:600;letter-spacing:-.3px;margin-bottom:12px">Build resumes that pass ATS filters.</h2>
+    <h2>Build resumes that pass ATS filters.</h2>
     <p>Paste your existing resume and a job description. The AI rewrites every bullet using the STAR method, matches keywords to the JD, and scores your resume out of 100.</p>
     <ul class="feature-list">
       <li><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9l3 3 7-7"/></svg>STAR method bullet points optimized for each role</li>
@@ -64,17 +70,17 @@
     </ul>
     <a href="/ai-resume-builder" class="btn-primary">Build resume <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
   </div>
-  <div class="feature-visual">
+  <div class="feature-visual fade-up d2">
     <div class="feature-visual-inner">
       <div class="dash-mock">
         <div class="dash-bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span class="url">zapkitt.com/resume</span></div>
         <div class="dash-content">
           <div class="ats-row">
-            <div class="ats-ring"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="var(--border)" stroke-width="5"/><circle cx="32" cy="32" r="27" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="156 170"/></svg><b>92</b></div>
+            <div class="ats-ring"><svg width="68" height="68" viewBox="0 0 68 68"><circle cx="34" cy="34" r="29" fill="none" stroke="var(--border)" stroke-width="5"/><circle cx="34" cy="34" r="29" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="167 182"/></svg><b>92</b></div>
             <div class="ats-info"><h4>ATS score</h4><p>Strong match — keywords and format optimized for the role.</p></div>
           </div>
-          <div class="dash-lines"><i style="width:100%"></i><i style="width:82%"></i><i style="width:90%"></i><i style="width:64%"></i></div>
-          <button class="dash-btn" disabled>Generate <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+          <div class="dash-lines"><i class="dash-line-fill" style="width:100%"></i><i class="dash-line-fill" style="width:82%"></i><i class="dash-line-fill" style="width:90%"></i><i class="dash-line-muted" style="width:64%"></i></div>
+          <button class="dash-btn" aria-disabled="true">Generate <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
         </div>
       </div>
     </div>
@@ -82,12 +88,12 @@
 </div>
 </div>
 
-<!-- ═══ FEATURE: MOCK INTERVIEW ═══ -->
-<div class="section fade-in">
+<!-- FEATURE: MOCK INTERVIEW -->
+<div class="section">
 <div class="feature-block reverse">
-  <div class="feature-text">
+  <div class="feature-text fade-up">
     <span class="badge badge-purple">Mock interview</span>
-    <h2 style="font-family:'Fraunces',Georgia,serif;font-size:28px;font-weight:600;letter-spacing:-.3px;margin-bottom:12px">Practice for Google, Amazon, TCS — with voice.</h2>
+    <h2>Practice for Google, Amazon, TCS — with voice.</h2>
     <p>Upload your resume, pick a target company, and start a voice interview. The AI asks questions based on your experience, scores every answer, and tells you exactly what to improve.</p>
     <ul class="feature-list">
       <li><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9l3 3 7-7"/></svg>Resume-based, company-specific questions</li>
@@ -96,16 +102,20 @@
     </ul>
     <a href="/ai-mock-interview" class="btn-primary">Start interview <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
   </div>
-  <div class="feature-visual">
+  <div class="feature-visual fade-up d2">
     <div class="feature-visual-inner">
-      <div style="text-align:center;padding:16px 0">
-        <div style="font-size:13px;font-weight:600;color:var(--text-3);margin-bottom:20px">How it works</div>
-        <div class="interview-steps">
-          <div class="int-step"><div class="int-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div><h4>Upload</h4><p>Drop your PDF</p></div>
-          <div class="int-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-          <div class="int-step"><div class="int-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/></svg></div><h4>Interview</h4><p>Voice Q&A</p></div>
-          <div class="int-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-          <div class="int-step"><div class="int-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg></div><h4>Report</h4><p>Scored feedback</p></div>
+      <div class="interview-mock">
+        <div class="im-header">
+          <div class="im-header-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/></svg>Mock interview</div>
+          <span class="im-badge">Google · SDE-2</span>
+        </div>
+        <div class="im-body">
+          <div class="im-q">"Tell me about a time you led a project that had significant technical challenges. How did you approach the problem and what was the outcome?"</div>
+          <div class="im-scores">
+            <div class="im-score"><div class="im-score-num">8.5</div><div class="im-score-label">Relevance</div></div>
+            <div class="im-score"><div class="im-score-num">7.8</div><div class="im-score-label">Depth</div></div>
+            <div class="im-score"><div class="im-score-num">9.1</div><div class="im-score-label">Clarity</div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -113,50 +123,60 @@
 </div>
 </div>
 
-<!-- ═══ STATS ═══ -->
-<div class="stats-row fade-in">
-  <div class="stat-item"><div class="stat-num" data-count="110" data-suffix="+">110+</div><div class="stat-label">AI tools</div></div>
-  <div class="stat-item"><div class="stat-num" data-count="12500" data-suffix="+">12.5K+</div><div class="stat-label">Job seekers</div></div>
-  <div class="stat-item"><div class="stat-num" data-count="250000" data-suffix="+">250K+</div><div class="stat-label">AI generations</div></div>
+<!-- EXPLORE ALL TOOLS -->
+<div class="explore-banner fade-up">
+<div class="explore-inner">
+  <p>Looking for more? <strong>110+ free AI tools</strong> — writing, image generation, PDF, developer utilities, and more.</p>
+  <a href="/all-tools" class="btn-ghost">Browse all tools <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+</div>
 </div>
 
-<!-- ═══ WHY ZAPKITT ═══ -->
-<section class="section fade-in">
+<!-- STATS -->
+<div style="max-width:1120px;margin:0 auto;padding:0 24px">
+<div class="stats-row fade-up">
+  <div class="stat-item"><div class="stat-num" data-count="110" data-suffix="+">0</div><div class="stat-label">AI tools</div></div>
+  <div class="stat-item"><div class="stat-num" data-count="12500" data-suffix="+">0</div><div class="stat-label">Job seekers</div></div>
+  <div class="stat-item"><div class="stat-num" data-count="250000" data-suffix="+">0</div><div class="stat-label">AI generations</div></div>
+</div>
+</div>
+
+<!-- WHY ZAPKITT -->
+<section class="section fade-up">
 <div class="section-header center">
   <div class="section-eyebrow">Why ZapKitt</div>
   <h2>Built for job seekers, not corporations.</h2>
 </div>
 <div class="why-grid">
-  <div class="why-card">
+  <div class="why-card fade-up d1">
     <div class="why-card-icon"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="9" cy="9" r="7"/><path d="M6 9h6"/></svg></div>
     <h4>Free to start</h4>
-    <p>Every tool has a free tier. No hidden trials, no bait-and-switch. Premium features for power users.</p>
+    <p>Every tool has a free tier. No hidden trials, no bait-and-switch. Premium features available for power users.</p>
   </div>
-  <div class="why-card">
+  <div class="why-card fade-up d2">
     <div class="why-card-icon"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="8" width="12" height="8" rx="2"/><path d="M6 8V6a3 3 0 016 0v2"/><circle cx="9" cy="12" r="1"/></svg></div>
     <h4>Your data stays yours</h4>
-    <p>Resumes process in your browser. Nothing is stored after your session. No account means no data to leak.</p>
+    <p>Resumes process in your browser. Nothing stored after your session. No account means no data to leak.</p>
   </div>
-  <div class="why-card">
+  <div class="why-card fade-up d3">
     <div class="why-card-icon"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M11 2L3 11h5l-1 5 8-9h-5z"/></svg></div>
     <h4>Real AI, not templates</h4>
-    <p>Powered by Llama 3.3 70B. Content that reads human, tailored to your specific experience and target role.</p>
+    <p>Powered by Llama 3.3 70B. Content that reads human, tailored to your experience and target role.</p>
   </div>
 </div>
 </section>
 
-<!-- ═══ FAQ ═══ -->
-<section class="faq-section fade-in">
-<h2>Questions</h2>
-<div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is ZapKitt free?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></button><div class="faq-a"><div class="faq-a-inner">Yes. Every tool has a free tier you can use immediately with no signup. Some advanced features like premium interview rounds have optional paid upgrades.</div></div></div>
-<div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">What happens to my resume data?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></button><div class="faq-a"><div class="faq-a-inner">File tools process everything in your browser — files never leave your device. AI tools send text for processing only, and nothing is stored after your session ends.</div></div></div>
-<div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does the mock interview work?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></button><div class="faq-a"><div class="faq-a-inner">Upload your resume, pick a company (Amazon, Google, TCS, etc.), and start a voice or text mock interview. The AI asks company-specific questions based on your experience, then gives you a scored report with per-question feedback and ideal answers.</div></div></div>
-<div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">What AI model powers ZapKitt?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></button><div class="faq-a"><div class="faq-a-inner">Llama 3.3 70B for resume writing, interview questions, and content tools. FLUX and Stable Diffusion for image generation.</div></div></div>
-<div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Does ZapKitt work on mobile?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></button><div class="faq-a"><div class="faq-a-inner">Yes. Fully responsive on phone, tablet, and desktop. For mock interviews with coding questions, we recommend using a laptop for the best experience.</div></div></div>
+<!-- FAQ -->
+<section class="faq-section">
+<h2 class="fade-up">Questions</h2>
+<div class="faq-item fade-up"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is ZapKitt free?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></button><div class="faq-a"><div class="faq-a-inner">Yes. Every tool has a free tier you can use immediately with no signup. Some advanced features like premium interview rounds have optional paid upgrades.</div></div></div>
+<div class="faq-item fade-up"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">What happens to my resume data?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></button><div class="faq-a"><div class="faq-a-inner">File tools process everything in your browser — files never leave your device. AI tools send text for processing only, and nothing is stored after your session ends.</div></div></div>
+<div class="faq-item fade-up"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does the mock interview work?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></button><div class="faq-a"><div class="faq-a-inner">Upload your resume, pick a company (Amazon, Google, TCS, etc.), and start a voice or text mock interview. The AI asks company-specific questions based on your experience, then gives you a scored report with per-question feedback and ideal answers.</div></div></div>
+<div class="faq-item fade-up"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">What AI model powers ZapKitt?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></button><div class="faq-a"><div class="faq-a-inner">Llama 3.3 70B for resume writing, interview questions, and content tools. FLUX and Stable Diffusion for image generation.</div></div></div>
+<div class="faq-item fade-up"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Does ZapKitt work on mobile?<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></button><div class="faq-a"><div class="faq-a-inner">Yes. Fully responsive on phone, tablet, and desktop. For mock interviews with coding questions, we recommend using a laptop for the best experience.</div></div></div>
 </section>
 
-<!-- ═══ FINAL CTA ═══ -->
-<div class="final-cta fade-in">
+<!-- FINAL CTA -->
+<div class="final-cta fade-up">
 <div class="final-cta-card">
   <h2>Ready to land your next role?</h2>
   <p>Build your resume in 2 minutes. No signup needed.</p>
@@ -167,8 +187,8 @@
 </div>
 </div>
 
-<!-- ═══ FOOTER ═══ -->
-<footer class="footer">
+<!-- FOOTER -->
+<footer class="footer" role="contentinfo">
 <div class="footer-inner">
   <div class="footer-brand">
     <a href="/" class="logo"><svg viewBox="0 0 32 32" fill="none" width="28" height="28"><rect width="32" height="32" rx="8" fill="#D4920B"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/></svg><div class="logo-text">Zap<span>Kitt</span></div></a>
@@ -182,18 +202,18 @@
 </footer>
 
 <script>
-// Fade-in on scroll
+// Staggered fade-up on scroll
 if(window.matchMedia('(prefers-reduced-motion:no-preference)').matches){
-  const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}})},{threshold:.1});
-  document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+  const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}})},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
 }
-// Count-up on stats
+// Count-up animation on stats
 (function(){
   var els=document.querySelectorAll('.stat-num[data-count]');
-  if(!els.length||!window.matchMedia('(prefers-reduced-motion:no-preference)').matches)return;
+  if(!els.length)return;
   function fmt(n){n=Math.round(n);return n>=1000?(n/1000).toFixed(n%1000?1:0).replace(/\.0$/,'')+'K':''+n}
   function run(el){var to=+el.getAttribute('data-count'),suf=el.getAttribute('data-suffix')||'',t0=null;
-    function step(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/1200,1),e=1-Math.pow(1-p,3);el.textContent=fmt(to*e)+suf;if(p<1)requestAnimationFrame(step)}
+    function step(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/1400,1),e=1-Math.pow(1-p,3);el.textContent=fmt(to*e)+suf;if(p<1)requestAnimationFrame(step)}
     requestAnimationFrame(step)}
   var co=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){run(e.target);co.unobserve(e.target)}})},{threshold:.4});
   els.forEach(function(el){co.observe(el)});
