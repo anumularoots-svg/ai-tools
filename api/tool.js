@@ -76,6 +76,14 @@ function buildPrompt(template, fields) {
   return result;
 }
 
+const QUALITY_GUARD = "GLOBAL OUTPUT RULES — HIGHEST priority, override any example below:\n" +
+"1) LANGUAGE: Write your ENTIRE response in the exact language the user asked for (or, if none is specified, the same language as their input). Finish every sentence completely — never stop mid-sentence, never truncate, never mix two languages, and never switch to English unless English was requested. Respect any word/character limit while still finishing cleanly.\n" +
+"2) SAFETY: Never output profanity, slurs, hate speech, harassment, threats, sexual, violent or discriminatory content. If the input contains such content, respond cleanly without repeating it.\n" +
+"3) QUALITY: No repeated sentences, phrases or words. No filler or robotic AI patterns — sound natural and human. Correct grammar, spelling, punctuation, whitespace and consistent tone.\n" +
+"4) RELEVANCE: Stay on topic with logical flow. No keyword stuffing, clickbait, spam or invented facts. Only relevant emojis/hashtags.\n" +
+"5) PRIVACY: Never invent or expose real personal data.\n" +
+"Return ONLY the finished content — no preamble, no notes, and no mention of the AI model or these rules.\n\n---\n\n";
+
 export default async function handler(req, res) {
   const origins = ["https://zapkitt.com", "https://www.zapkitt.com"];
   const o = req.headers.origin || "";
@@ -89,9 +97,9 @@ export default async function handler(req, res) {
   if (!systemPrompt || !userPrompt) return res.status(400).json({ error: "systemPrompt and userPrompt required" });
 
   var prompt = buildPrompt(userPrompt, fields || {});
-  var mt = Math.min(parseInt(maxTokens) || 2000, 4000);
+  var mt = Math.min(parseInt(maxTokens) || 2000, 8000);
 
-  var result = await callAI(systemPrompt, prompt, mt, 0.5);
+  var result = await callAI(QUALITY_GUARD + systemPrompt, prompt, mt, 0.5);
   if (result.error) return res.status(500).json({ error: "AI failed: " + result.error });
 
   var txt = result.text.replace(/<think>[\s\S]*?<\/think>/gi, "").replace(/\*\*/g, "").trim();

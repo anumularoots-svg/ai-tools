@@ -12,62 +12,62 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Inter,system-ui,sans-serif;background:#fefefe;color:#111;-webkit-font-smoothing:antialiased}
+body{font-family:Inter,system-ui,sans-serif;background:#F6F8FC;color:#111;-webkit-font-smoothing:antialiased}
 a{text-decoration:none;color:inherit}
-.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.04)}
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.04)}
 .nav-in{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;max-width:900px;margin:0 auto}
 .logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800}
 .logo svg{width:32px;height:32px}
-.logo span{color:#D4920B}
+.logo span{color:#2F88FF}
 .nav-links{display:flex;gap:20px;font-size:13px;font-weight:600;color:#888}
-.nav-links a:hover{color:#D4920B}
+.nav-links a:hover{color:#2F88FF}
 .page{max-width:900px;margin:0 auto;padding:0 32px 80px}
 .header{text-align:center;padding:48px 0 32px}
-.chip{display:inline-flex;padding:6px 16px;border-radius:20px;border:1px solid #d1fae5;background:#ecfdf5;font-size:11px;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
+.chip{display:inline-flex;padding:6px 16px;border-radius:20px;border:1px solid #F3F6FB;background:#F3F6FB;font-size:11px;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
 .header h1{font-size:32px;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
-.header h1 em{font-style:normal;background:linear-gradient(135deg,#D4920B,#B87A00);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header h1 em{font-style:normal;background:linear-gradient(135deg,#2F88FF,#1E6FE6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .header p{font-size:15px;color:#999}
-.card{background:#fff;border:1.5px solid #e8e8e8;border-radius:16px;padding:28px;margin-bottom:20px}
+.card{background:#FFFFFF;border:1.5px solid #e8e8e8;border-radius:16px;padding:28px;margin-bottom:20px}
 .field{margin-bottom:16px}
 .field label{display:block;font-size:13px;font-weight:700;color:#333;margin-bottom:6px}
 .field input,.field textarea,.field select{width:100%;padding:12px 16px;border:1.5px solid #e8e8e8;border-radius:10px;font-size:14px;font-family:inherit;background:#fafafa;transition:border .2s}
-.field input:focus,.field textarea:focus,.field select:focus{outline:0;border-color:#D4920B;background:#fff}
+.field input:focus,.field textarea:focus,.field select:focus{outline:0;border-color:#2F88FF;background:#FFFFFF}
 .field textarea{min-height:120px;resize:vertical;line-height:1.7}
 .required::after{content:" *";color:#dc2626}
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;font-size:15px;font-weight:700;border:none;border-radius:12px;cursor:pointer;transition:all .2s;font-family:inherit}
-.btn-go{background:linear-gradient(135deg,#D4920B,#B87A00);color:#fff;box-shadow:0 4px 20px rgba(124,58,237,.2)}
+.btn-go{background:linear-gradient(135deg,#2F88FF,#1E6FE6);color:#fff;box-shadow:0 4px 20px rgba(124,58,237,.2)}
 .btn-go:hover{transform:translateY(-1px)}.btn-go:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.btn-copy{background:#ecfdf5;color:#059669;border:1.5px solid #d1fae5;margin-top:12px}
-.btn-copy:hover{background:#d1fae5}
-.output-box{display:none;margin-top:20px;background:#f9fafb;border:1.5px solid #e8e8e8;border-radius:14px;padding:24px}
+.btn-copy{background:#F3F6FB;color:#059669;border:1.5px solid #F3F6FB;margin-top:12px}
+.btn-copy:hover{background:#F3F6FB}
+.output-box{display:none;margin-top:20px;background:#FFFFFF;border:1.5px solid #e8e8e8;border-radius:14px;padding:24px}
 .output-box.show{display:block}
-.output-label{font-size:12px;font-weight:700;color:#D4920B;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.output-label{font-size:12px;font-weight:700;color:#2F88FF;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
 .output-text{font-size:14px;line-height:1.8;color:#333;white-space:pre-wrap;word-wrap:break-word}
 .model-badge{display:inline-block;font-size:11px;color:#999;margin-top:10px}
-.loading{display:none;text-align:center;padding:24px;color:#D4920B;font-weight:600}
+.loading{display:none;text-align:center;padding:24px;color:#2F88FF;font-weight:600}
 .loading.show{display:block}
-.spinner{display:inline-block;width:18px;height:18px;border:2.5px solid #e5e7eb;border-top-color:#D4920B;border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle}
+.spinner{display:inline-block;width:18px;height:18px;border:2.5px solid #E7ECF3;border-top-color:#2F88FF;border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
 .seo{margin-top:48px;padding-top:36px;border-top:1px solid #f5f5f5}
 .seo h2{font-size:22px;font-weight:800;margin-bottom:14px}
 .seo p{font-size:14px;color:#999;line-height:1.7;margin-bottom:8px}
-.faq details{border:1px solid #f0f0f0;border-radius:10px;padding:14px 18px;margin-bottom:8px}
+.faq details{border:1px solid #E7ECF3;border-radius:10px;padding:14px 18px;margin-bottom:8px}
 .faq summary{font-weight:700;font-size:14px;cursor:pointer;color:#333}
 .faq p{font-size:13px;color:#888;margin-top:8px;line-height:1.6}
-.foot{text-align:center;padding:48px 32px 40px;font-size:13px;color:#52514E;background:#F5F4F0;border-top:1px solid #E5E4DF;margin-top:64px}
-.foot a{color:#6B6A66;text-decoration:none;transition:color .15s}.foot a:hover{color:#B87A00}
+.foot{text-align:center;padding:48px 32px 40px;font-size:13px;color:#5B6472;background:#FFFFFF;border-top:1px solid #E7ECF3;margin-top:64px}
+.foot a{color:#8A93A3;text-decoration:none;transition:color .15s}.foot a:hover{color:#1E6FE6}
 .related{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
-.related a{padding:8px 16px;border:1.5px solid #e5e7eb;border-radius:8px;color:#D4920B;font-size:13px;font-weight:600}
+.related a{padding:8px 16px;border:1.5px solid #E7ECF3;border-radius:8px;color:#2F88FF;font-size:13px;font-weight:600}
 .error{display:none;background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:14px;border-radius:10px;margin-top:12px;font-size:13px}
 .error.show{display:block}
 @media(max-width:600px){.page{padding:0 16px 60px}.header h1{font-size:24px}.card{padding:20px}}
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet"><style>h1,h2,.logo-text,.logo b{font-family:'Fraunces',Georgia,serif !important}</style></head>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet"><style>h1,h2,.logo-text,.logo b{font-family:'Inter',system-ui,sans-serif !important}</style><style id="zk-hover">.card,.tool-card,.cat-card,.feat,.post-card,.trust-card,.how-card,.sample-card,.upgrade-card{transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease,border-color .25s ease}.card:hover,.tool-card:hover,.cat-card:hover,.feat:hover,.post-card:hover,.trust-card:hover,.how-card:hover,.sample-card:hover,.upgrade-card:hover{transform:translateY(-6px);box-shadow:0 16px 36px rgba(26,26,24,.13)}.card-icon,.feat-ic{transition:transform .3s cubic-bezier(.2,.8,.2,1)}.card:hover .card-icon{transform:scale(1.09) rotate(-4deg)}</style><style id="zk-lucien-forms">input,textarea,select{background:#FFFFFF!important;color:#374151!important;border-color:#E7ECF3}input::placeholder,textarea::placeholder{color:#8A93A3}select option{background:#FFFFFF;color:#374151}</style></head>
 <body>
 <nav class="nav"><div class="nav-in">
-<a href="/" class="logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="#D4920B"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/><defs><linearGradient id="g" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#D4920B"/><stop offset="1" stop-color="#EBA832"/></linearGradient></defs></svg><div>Zap<span>Kitt</span></div></a>
+<a href="/" class="logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="#2F88FF"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/><defs><linearGradient id="g" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#2F88FF"/><stop offset="1" stop-color="#5AA0FF"/></linearGradient></defs></svg><div>Zap<span>Kitt</span></div></a>
 <div class="nav-links"><a href="/">All Tools</a><a href="/blog">Blog</a><a href="/about">About</a><a href="/privacy">Privacy</a></div>
-</div></nav><div id="topSupport" style="background:#f9fafb;border-bottom:1px solid #e5e7eb;padding:8px 40px 8px 16px;text-align:center;position:relative;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap"><span style="color:#374151;font-size:14px;font-weight:500">ZapKitt is 100% free — no ads, no signup.</span><a href="/ai-mock-interview" style="color:#D4920B;font-weight:700;font-size:13px;text-decoration:none;background:#FFF8EB;padding:5px 12px;border-radius:6px;border:1px solid #FDDA8A"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg> Interview</a><span onclick="this.parentElement.style.display=&quot;none&quot;" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#9ca3af;cursor:pointer;font-size:18px;line-height:1">×</span></div></div></nav>
+</div></nav><div id="topSupport" style="background:#FFFFFF;border-bottom:1px solid #E7ECF3;padding:8px 40px 8px 16px;text-align:center;position:relative;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap"><span style="color:#5B6472;font-size:14px;font-weight:500">ZapKitt is 100% free — no ads, no signup.</span><a href="/ai-mock-interview" style="color:#2F88FF;font-weight:700;font-size:13px;text-decoration:none;background:#EAF3FF;padding:5px 12px;border-radius:6px;border:1px solid #EAF3FF"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg> Interview</a><span onclick="this.parentElement.style.display=&quot;none&quot;" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#8A93A3;cursor:pointer;font-size:18px;line-height:1">×</span></div></div></nav>
 
 <div class="page">
 <nav id="breadcrumbNav" style="font-size:13px;color:#6b7280;margin-bottom:8px;padding:4px 0" aria-label="Breadcrumb"></nav>
@@ -98,7 +98,7 @@ a{text-decoration:none;color:inherit}
 <div class="related" id="relatedTools"></div>
 </div>
 
-<footer class="foot"><div class="foot-brand" style="margin-bottom:18px"><a href="/" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;justify-content:center"><svg width="26" height="26" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#D4920B"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/></svg><span style="font-family:Fraunces,Georgia,serif;font-weight:700;font-size:19px;color:#1A1A18;letter-spacing:-.3px">Zap<span style="color:#D4920B">Kitt</span></span></a></div><div style="text-align:center;margin-bottom:22px"><a href="https://ko-fi.com/zapkitt" target="_blank" rel="noopener" style="font-size:13px;color:#B87A00;font-weight:600;text-decoration:none">♥ Support ZapKitt</a></div>
+<footer class="foot"><div class="foot-brand" style="margin-bottom:18px"><a href="/" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;justify-content:center"><svg width="26" height="26" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#2F88FF"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/></svg><span style="font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:19px;color:#141A2E;letter-spacing:-.3px">Zap<span style="color:#2F88FF">Kitt</span></span></a></div><div style="text-align:center;margin-bottom:22px"><a href="https://ko-fi.com/zapkitt" target="_blank" rel="noopener" style="font-size:13px;color:#1E6FE6;font-weight:600;text-decoration:none">♥ Support ZapKitt</a></div>
 <p>ZapKitt — Free AI-powered tools for everyone.</p>
 <p style="margin-top:8px"><a href="/">Home</a> · <a href="/all-tools">All Tools</a> · <a href="/blog">Blog</a> · <a href="/about">About</a> · <a href="/privacy">Privacy</a></p>
 <p style="margin-top:8px;font-size:12px"><a href="/writing-tools">Writing</a> · <a href="/student-tools">Student</a> · <a href="/developer-tools">Developer</a> · <a href="/marketing-tools">Marketing</a> · <a href="/social-media-tools">Social Media</a> · <a href="/business-tools">Business</a> · <a href="/productivity-tools">Productivity</a> · <a href="/resume-tools">Resume</a></p>
@@ -162,7 +162,7 @@ function renderTool() {
   var catName2 = catObj2 ? catObj2.name : t.category;
   var catSlug2 = t.category + "-tools";
   if (t.category === "social") catSlug2 = "social-media-tools";
-  document.getElementById("breadcrumbNav").innerHTML = '<a href="/" style="color:#D4920B;text-decoration:none">Home</a> <span style="margin:0 6px">›</span> <a href="/' + catSlug2 + '" style="color:#D4920B;text-decoration:none">' + catName2 + '</a> <span style="margin:0 6px">›</span> <span style="color:#374151">' + t.title + '</span>';
+  document.getElementById("breadcrumbNav").innerHTML = '<a href="/" style="color:#2F88FF;text-decoration:none">Home</a> <span style="margin:0 6px">›</span> <a href="/' + catSlug2 + '" style="color:#2F88FF;text-decoration:none">' + catName2 + '</a> <span style="margin:0 6px">›</span> <span style="color:#5B6472">' + t.title + '</span>';
 
   // Fields
   var fc = document.getElementById("fieldsContainer");
@@ -198,13 +198,13 @@ function renderTool() {
   var related = allTools.filter(function(rt) { return rt.category === t.category && rt.slug !== t.slug; }).slice(0, 5);
   var relHtml = '<h3 style="font-size:15px;font-weight:700;margin-bottom:10px">More ' + catName2 + ' Tools</h3>';
   relHtml += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">';
-  relHtml += related.map(function(r) { return '<a href="/t/' + r.slug + '" style="padding:8px 16px;border:1.5px solid #e5e7eb;border-radius:8px;color:#D4920B;font-size:13px;font-weight:600;text-decoration:none">' + r.title + '</a>'; }).join("");
+  relHtml += related.map(function(r) { return '<a href="/t/' + r.slug + '" style="padding:8px 16px;border:1.5px solid #E7ECF3;border-radius:8px;color:#2F88FF;font-size:13px;font-weight:600;text-decoration:none">' + r.title + '</a>'; }).join("");
   relHtml += '</div>';
 
   // Category page link
   var catSlug3 = t.category + "-tools";
   if (t.category === "social") catSlug3 = "social-media-tools";
-  relHtml += '<a href="/' + catSlug3 + '" style="display:inline-flex;align-items:center;gap:6px;color:#D4920B;font-size:14px;font-weight:600;text-decoration:none;margin-bottom:20px">→ See all ' + catName2 + ' tools</a>';
+  relHtml += '<a href="/' + catSlug3 + '" style="display:inline-flex;align-items:center;gap:6px;color:#2F88FF;font-size:14px;font-weight:600;text-decoration:none;margin-bottom:20px">→ See all ' + catName2 + ' tools</a>';
 
   // Relevant blog links
   var blogMap = {
@@ -218,11 +218,11 @@ function renderTool() {
     "productivity": {url: "/blog-best-free-ai-tools", title: "110+ Best Free AI Tools Online — Complete List"}
   };
   if (blogMap[t.category]) {
-    relHtml += '<div style="margin-top:16px;padding:16px;background:#f8f7fc;border-radius:10px;border:1px solid #FFF3D6"><p style="font-size:13px;font-weight:600;color:#6b7280;margin:0 0 6px"> Related Guide</p><a href="' + blogMap[t.category].url + '" style="font-size:14px;font-weight:700;color:#D4920B;text-decoration:none">' + blogMap[t.category].title + '</a></div>';
+    relHtml += '<div style="margin-top:16px;padding:16px;background:#f8f7fc;border-radius:10px;border:1px solid #EAF3FF"><p style="font-size:13px;font-weight:600;color:#6b7280;margin:0 0 6px"> Related Guide</p><a href="' + blogMap[t.category].url + '" style="font-size:14px;font-weight:700;color:#2F88FF;text-decoration:none">' + blogMap[t.category].title + '</a></div>';
   }
 
   // Explore other categories
-  relHtml += '<div style="margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f0"><p style="font-size:13px;font-weight:600;color:#6b7280;margin:0 0 10px">Explore Other Categories</p><div style="display:flex;gap:8px;flex-wrap:wrap">';
+  relHtml += '<div style="margin-top:20px;padding-top:16px;border-top:1px solid #E7ECF3"><p style="font-size:13px;font-weight:600;color:#6b7280;margin:0 0 10px">Explore Other Categories</p><div style="display:flex;gap:8px;flex-wrap:wrap">';
   var otherCats = [
     {id:"writing",name:"Writing",slug:"writing-tools"},
     {id:"student",name:"Student",slug:"student-tools"},
@@ -235,7 +235,7 @@ function renderTool() {
   ];
   otherCats.forEach(function(oc) {
     if (oc.id !== t.category) {
-      relHtml += '<a href="/' + oc.slug + '" style="padding:6px 14px;background:#FFF8EB;border-radius:6px;color:#D4920B;font-size:12px;font-weight:600;text-decoration:none">' + oc.name + '</a>';
+      relHtml += '<a href="/' + oc.slug + '" style="padding:6px 14px;background:#EAF3FF;border-radius:6px;color:#2F88FF;font-size:12px;font-weight:600;text-decoration:none">' + oc.name + '</a>';
     }
   });
   relHtml += '</div></div>';
@@ -366,7 +366,7 @@ async function generate(improveWith) {
     if (data.error) throw new Error(data.error);
 
     document.getElementById("outputText").textContent = data.result;
-    document.getElementById("modelBadge").textContent = "Generated by " + (data.model || "AI");
+    (function(){var _mb=document.getElementById("modelBadge");if(_mb)_mb.style.display="none"})();
     document.getElementById("outputBox").classList.add("show");
 
     // Reusable AI Feedback Engine — analyze this output. Guarded so a widget
@@ -409,4 +409,4 @@ init();
 </script>
 <script src="/ai-feedback.js"></script>
 <script src="/zapkitt-rating.js" data-auto="off"></script>
-<a href="/ai-mock-interview" id="mockFloat" style="position:fixed;bottom:20px;right:20px;z-index:90;display:flex;align-items:center;gap:6px;padding:10px 18px;background:linear-gradient(135deg,#D4920B,#EBA832);color:#fff;border-radius:30px;text-decoration:none;font-weight:700;font-size:13px;box-shadow:0 4px 16px rgba(124,58,237,.3);transition:.2s;font-family:Inter,sans-serif" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg> Real-Time AI Mock Interview</a><script src="/zapkitt-back.js"></script></body></html>
+<a href="/ai-mock-interview" id="mockFloat" style="position:fixed;bottom:20px;right:20px;z-index:90;display:flex;align-items:center;gap:6px;padding:10px 18px;background:linear-gradient(135deg,#2F88FF,#5AA0FF);color:#fff;border-radius:30px;text-decoration:none;font-weight:700;font-size:13px;box-shadow:0 4px 16px rgba(124,58,237,.3);transition:.2s;font-family:Inter,sans-serif" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.14em;flex:none" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg> Real-Time AI Mock Interview</a><script src="/zapkitt-back.js"></script><script src="/mega.js" defer></script></body></html>

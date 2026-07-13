@@ -31,9 +31,9 @@
     ".zku-qr img,.zku-qr canvas{width:180px!important;height:180px!important}" +
     ".zku-idbox{background:#f3f0ff;border:2px dashed #c4b5fd;border-radius:12px;padding:12px;margin-bottom:12px}" +
     ".zku-idlbl{font-size:11px;color:#6b7280;margin-bottom:3px}" +
-    ".zku-id{font-size:16px;font-weight:700;color:#7c3aed;word-break:break-all}" +
-    ".zku-copy{margin-top:8px;padding:6px 16px;background:#7c3aed;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}" +
-    ".zku-open{display:block;padding:11px;background:#2563eb;color:#fff;border-radius:9px;text-decoration:none;font-weight:700;font-size:14px;margin-bottom:8px}" +
+    ".zku-id{font-size:16px;font-weight:700;color:#2F88FF;word-break:break-all}" +
+    ".zku-copy{margin-top:8px;padding:6px 16px;background:#2F88FF;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}" +
+    ".zku-open{display:block;padding:11px;background:#2F88FF;color:#fff;border-radius:9px;text-decoration:none;font-weight:700;font-size:14px;margin-bottom:8px}" +
     ".zku-hint{font-size:11px;color:#9ca3af}";
 
   var modal = null, qrHost = null, titleEl = null, subEl = null, openEl = null, idEl = null;
