@@ -151,10 +151,22 @@ export default async function handler(req,res){
       if(process.env.TEST_UNLOCK_KEY&&entered===process.env.TEST_UNLOCK_KEY)return res.status(200).json({unlocked:true,tier:vTier,test:true});
       // (2) Manual WhatsApp unlock codes. Env UNLOCK_CODES="r2:AB12CD,r3:EF34GH,r2:JK56LM".
       //     After a UPI payment you verify the screenshot on WhatsApp, then send the user one
-      //     code for their tier. Tier is enforced (an r2 code can't unlock r3). Needs no Upstash.
+      //     code for their tier. Tier is enforced (an r2 code can't unlock r3).
+      //     SINGLE-USE: if Upstash is configured, each code redeems ONCE (leak-proof).
+      //     Without Upstash it degrades to reusable membership (still works).
       if(entered&&process.env.UNLOCK_CODES){
         var okCodes=process.env.UNLOCK_CODES.split(",").map(function(x){return x.trim()});
-        if(okCodes.indexOf(vTier+":"+entered)>=0)return res.status(200).json({unlocked:true,tier:vTier,manual:true});
+        if(okCodes.indexOf(vTier+":"+entered)>=0){
+          if(kvReady()){
+            try{
+              var usedKey="usedcode:"+vTier+":"+entered;
+              var alreadyUsed=await kvGet(usedKey);
+              if(alreadyUsed)return res.status(200).json({unlocked:false,error:"This code has already been used. Each code works once — please contact us on WhatsApp for a new one."});
+              await kvSetEx(usedKey,180*24*3600,"1"); // mark redeemed (180-day record)
+            }catch(e){ /* Upstash hiccup: never block a paying user — allow through */ }
+          }
+          return res.status(200).json({unlocked:true,tier:vTier,manual:true});
+        }
       }
       // (3) Ko-fi auto path (optional — needs Upstash + KOFI_VERIFICATION_TOKEN).
       if(!vEmail||vEmail.indexOf("@")<1)return res.status(400).json({unlocked:false,error:"Enter your unlock code (from WhatsApp) or the email you paid with on Ko-fi."});
