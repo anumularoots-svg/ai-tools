@@ -46,6 +46,15 @@
       ],
       others: [["Background Remover","/all-tools"],["Image Upscaler","/all-tools"],["Image Converter","/jpg-to-png"],["Watermark Remover","/image-watermark-remover"],["Video Watermark Remover","/video-watermark-remover"],["JPG to PNG","/jpg-to-png"],["PNG to JPG","/png-to-jpg"],["QR Generator","/qr-generator"],["QR Scanner","/all-tools"]] },
 
+    { key: "media", label: "Audio & Video", all: "/all-tools",
+      featured: [
+        ["Voice Recorder", "/voice-recorder", "Record voice in your browser", "🎙️", "#FDEAF0"],
+        ["Screen Recorder", "/screen-recorder", "Record screen, no watermark", "🖥️", "#EAF3FF"],
+        ["Audio Cutter", "/audio-cutter", "Trim MP3, WAV, M4A & OGG", "✂️", "#FFF1E6"],
+        ["Video to GIF", "/video-to-gif", "Turn clips into animated GIFs", "🎬", "#F1ECFF"]
+      ],
+      others: [["Audio Converter","/audio-converter"],["Audio Joiner","/audio-joiner"],["Video Cutter","/video-cutter"],["ZIP Extractor & Maker","/zip-extractor"],["MP3 Converter","/audio-converter"],["Merge Audio","/audio-joiner"],["Trim Video","/video-cutter"],["Video Watermark Remover","/video-watermark-remover"]] },
+
     { key: "dev", label: "Developer", all: "/developer-tools",
       featured: [
         ["JSON Formatter", "/json-formatter", "Format & validate JSON", "💻", "#E4F7F4"],

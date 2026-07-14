@@ -95,6 +95,66 @@ const QUALITY_GUARD = [
 ""
 ].join("\n");
 
+// ── Language enforcement ──────────────────────────────────────────────
+// For languages that use a non-Latin script we can verify the AI actually
+// wrote in that script (models often silently fall back to English for
+// low-resource languages). If the check fails, we retry once with a much
+// stronger instruction. Latin-script languages are trusted (no reliable
+// automatic check) and skipped.
+var SCRIPTS = {
+  hindi:     { label: "Devanagari",  re: /[ऀ-ॿ]/g },
+  marathi:   { label: "Devanagari",  re: /[ऀ-ॿ]/g },
+  nepali:    { label: "Devanagari",  re: /[ऀ-ॿ]/g },
+  telugu:    { label: "Telugu",      re: /[ఀ-౿]/g },
+  tamil:     { label: "Tamil",       re: /[஀-௿]/g },
+  kannada:   { label: "Kannada",     re: /[ಀ-೿]/g },
+  malayalam: { label: "Malayalam",   re: /[ഀ-ൿ]/g },
+  bengali:   { label: "Bengali",     re: /[ঀ-৿]/g },
+  gujarati:  { label: "Gujarati",    re: /[઀-૿]/g },
+  punjabi:   { label: "Gurmukhi",    re: /[਀-੿]/g },
+  arabic:    { label: "Arabic",      re: /[؀-ۿ]/g },
+  urdu:      { label: "Arabic",      re: /[؀-ۿ]/g },
+  persian:   { label: "Arabic",      re: /[؀-ۿ]/g },
+  chinese:   { label: "Chinese",     re: /[一-鿿]/g },
+  japanese:  { label: "Japanese",    re: /[぀-ヿ一-鿿]/g },
+  korean:    { label: "Hangul",      re: /[가-힯]/g },
+  russian:   { label: "Cyrillic",    re: /[Ѐ-ӿ]/g },
+  ukrainian: { label: "Cyrillic",    re: /[Ѐ-ӿ]/g },
+  thai:      { label: "Thai",        re: /[฀-๿]/g },
+  greek:     { label: "Greek",       re: /[Ͱ-Ͽ]/g },
+  hebrew:    { label: "Hebrew",      re: /[֐-׿]/g }
+};
+
+function scriptInfo(language) {
+  if (!language) return null;
+  var key = String(language).toLowerCase().trim().split(/[\s(]/)[0];
+  return SCRIPTS[key] || null;
+}
+
+// Returns true when the text is dominantly in the expected script.
+function passesScript(text, si) {
+  if (!si || !text) return true;
+  var target = (text.match(si.re) || []).length;
+  if (target === 0) return false;
+  var latin = (text.match(/[A-Za-z]/g) || []).length;
+  return target >= Math.max(6, latin * 0.5);
+}
+
+function buildLangLock(language) {
+  if (!language || String(language).toLowerCase().trim() === "english") return "";
+  var si = scriptInfo(language);
+  var scriptNote = si ? (" Use the native " + si.label + " script — do NOT transliterate into Latin letters.") : "";
+  return "ABSOLUTE LANGUAGE REQUIREMENT (highest priority, overrides everything else): Write the ENTIRE response — every single word, heading, list item and sentence — ONLY in " + language + "." + scriptNote +
+    " Do NOT use English or any other language anywhere in the output (proper nouns and brand names may stay in their original form). Do not add translations, notes or explanations in another language. If you cannot fully comply, still write everything in " + language + ".\n\n---\n\n";
+}
+
+function cleanOutput(text) {
+  return text.replace(/<think>[\s\S]*?<\/think>/gi, "").replace(/\*\*/g, "").trim();
+}
+
+// Exported for tests (harmless alongside the default serverless handler).
+export { scriptInfo, passesScript, buildLangLock };
+
 export default async function handler(req, res) {
   const origins = ["https://zapkitt.com", "https://www.zapkitt.com"];
   const o = req.headers.origin || "";
@@ -104,15 +164,35 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
 
-  const { systemPrompt, userPrompt, fields, maxTokens } = req.body;
+  const { systemPrompt, userPrompt, fields, maxTokens, language } = req.body;
   if (!systemPrompt || !userPrompt) return res.status(400).json({ error: "systemPrompt and userPrompt required" });
+
+  // Resolve requested language: explicit param, then a tool's own language field, else English.
+  var lang = (language || (fields && fields.language) || "English").toString().trim() || "English";
+  var langLock = buildLangLock(lang);
 
   var prompt = buildPrompt(userPrompt, fields || {});
   var mt = Math.min(parseInt(maxTokens) || 2000, 8000);
 
-  var result = await callAI(QUALITY_GUARD + systemPrompt, prompt, mt, 0.5);
+  var result = await callAI(langLock + QUALITY_GUARD + systemPrompt, prompt, mt, 0.5);
   if (result.error) return res.status(500).json({ error: "AI failed: " + result.error });
 
-  var txt = result.text.replace(/<think>[\s\S]*?<\/think>/gi, "").replace(/\*\*/g, "").trim();
-  return res.status(200).json({ result: txt, model: result.model });
+  var txt = cleanOutput(result.text);
+  var model = result.model;
+
+  // Verify script for non-Latin languages; retry once, harder, if it fell back to English.
+  var si = scriptInfo(lang);
+  if (si && !passesScript(txt, si)) {
+    var hardSystem = langLock +
+      "YOUR PREVIOUS ATTEMPT WAS REJECTED because it was not written in " + lang + " (" + si.label + " script). This is your final attempt: output EVERY word in " + lang + " using the " + si.label + " script, with zero English.\n\n---\n\n" +
+      QUALITY_GUARD + systemPrompt;
+    var retryPrompt = prompt + "\n\n(Respond ONLY in " + lang + ", using " + si.label + " script — no English.)";
+    var r2 = await callAI(hardSystem, retryPrompt, mt, 0.4);
+    if (r2 && r2.text) {
+      var t2 = cleanOutput(r2.text);
+      if (passesScript(t2, si)) { txt = t2; model = r2.model; }
+    }
+  }
+
+  return res.status(200).json({ result: txt, model: model });
 }

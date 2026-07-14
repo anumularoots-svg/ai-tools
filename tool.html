@@ -15,7 +15,7 @@
 body{font-family:Inter,system-ui,sans-serif;background:#F6F8FC;color:#111;-webkit-font-smoothing:antialiased}
 a{text-decoration:none;color:inherit}
 .nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,.04)}
-.nav-in{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;max-width:900px;margin:0 auto}
+.nav-in{display:flex;align-items:center;justify-content:space-between;padding:14px 44px;max-width:100%;margin:0 auto;gap:32px}
 .logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800}
 .logo svg{width:32px;height:32px}
 .logo span{color:#2F88FF}
@@ -62,8 +62,7 @@ a{text-decoration:none;color:inherit}
 .error.show{display:block}
 @media(max-width:600px){.page{padding:0 16px 60px}.header h1{font-size:24px}.card{padding:20px}}
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet"><style>h1,h2,.logo-text,.logo b{font-family:'Inter',system-ui,sans-serif !important}</style><style id="zk-hover">.card,.tool-card,.cat-card,.feat,.post-card,.trust-card,.how-card,.sample-card,.upgrade-card{transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease,border-color .25s ease}.card:hover,.tool-card:hover,.cat-card:hover,.feat:hover,.post-card:hover,.trust-card:hover,.how-card:hover,.sample-card:hover,.upgrade-card:hover{transform:translateY(-6px);box-shadow:0 16px 36px rgba(26,26,24,.13)}.card-icon,.feat-ic{transition:transform .3s cubic-bezier(.2,.8,.2,1)}.card:hover .card-icon{transform:scale(1.09) rotate(-4deg)}</style><style id="zk-lucien-forms">input,textarea,select{background:#FFFFFF!important;color:#374151!important;border-color:#E7ECF3}input::placeholder,textarea::placeholder{color:#8A93A3}select option{background:#FFFFFF;color:#374151}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js" defer></script><script>function zkExtractText(file,cb){var name=(file.name||"").toLowerCase(),fr=new FileReader();if(name.endsWith(".pdf")){fr.onload=function(e){if(!window.pdfjsLib){cb("");return}try{pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"}catch(x){}pdfjsLib.getDocument(new Uint8Array(e.target.result)).promise.then(function(pdf){var out=[],n=pdf.numPages,done=0;if(!n){cb("");return}for(var i=1;i<=n;i++){(function(pg){pdf.getPage(pg).then(function(page){page.getTextContent().then(function(tc){out[pg-1]=tc.items.map(function(it){return it.str}).join(" ");if(++done===n)cb(out.join("
-"))})})})(i)}}).catch(function(){cb("")})};fr.readAsArrayBuffer(file)}else if(name.endsWith(".docx")||name.endsWith(".doc")){fr.onload=function(e){if(!window.mammoth){cb("");return}mammoth.extractRawText({arrayBuffer:e.target.result}).then(function(r){cb(r.value||"")}).catch(function(){cb("")})};fr.readAsArrayBuffer(file)}else{fr.onload=function(e){cb(e.target.result||"")};fr.readAsText(file)}}</script><script src="/zk-toast.js"></script></head>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&display=swap" rel="stylesheet"><style>h1,h2,.logo-text,.logo b{font-family:'Inter',system-ui,sans-serif !important}</style><style id="zk-hover">.card,.tool-card,.cat-card,.feat,.post-card,.trust-card,.how-card,.sample-card,.upgrade-card{transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease,border-color .25s ease}.card:hover,.tool-card:hover,.cat-card:hover,.feat:hover,.post-card:hover,.trust-card:hover,.how-card:hover,.sample-card:hover,.upgrade-card:hover{transform:translateY(-6px);box-shadow:0 16px 36px rgba(26,26,24,.13)}.card-icon,.feat-ic{transition:transform .3s cubic-bezier(.2,.8,.2,1)}.card:hover .card-icon{transform:scale(1.09) rotate(-4deg)}</style><style id="zk-lucien-forms">input,textarea,select{background:#FFFFFF!important;color:#374151!important;border-color:#E7ECF3}input::placeholder,textarea::placeholder{color:#8A93A3}select option{background:#FFFFFF;color:#374151}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js" defer></script><script>function zkExtractText(file,cb){var name=(file.name||"").toLowerCase(),fr=new FileReader();if(name.endsWith(".pdf")){fr.onload=function(e){if(!window.pdfjsLib){cb("");return}try{pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"}catch(x){}pdfjsLib.getDocument(new Uint8Array(e.target.result)).promise.then(function(pdf){var out=[],n=pdf.numPages,done=0;if(!n){cb("");return}for(var i=1;i<=n;i++){(function(pg){pdf.getPage(pg).then(function(page){page.getTextContent().then(function(tc){out[pg-1]=tc.items.map(function(it){return it.str}).join(" ");if(++done===n)cb(out.join("\n"))})})})(i)}}).catch(function(){cb("")})};fr.readAsArrayBuffer(file)}else if(name.endsWith(".docx")||name.endsWith(".doc")){fr.onload=function(e){if(!window.mammoth){cb("");return}mammoth.extractRawText({arrayBuffer:e.target.result}).then(function(r){cb(r.value||"")}).catch(function(){cb("")})};fr.readAsArrayBuffer(file)}else{fr.onload=function(e){cb(e.target.result||"")};fr.readAsText(file)}}</script><script src="/zk-toast.js"></script></head>
 <body>
 <nav class="nav"><div class="nav-in">
 <a href="/" class="logo"><svg viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="#2F88FF"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/><defs><linearGradient id="g" x1="0" y1="0" x2="34" y2="34"><stop stop-color="#2F88FF"/><stop offset="1" stop-color="#5AA0FF"/></linearGradient></defs></svg><div>Zap<span>Kitt</span></div></a>
@@ -201,7 +200,7 @@ function renderTool() {
   var related = allTools.filter(function(rt) { return rt.category === t.category && rt.slug !== t.slug; }).slice(0, 5);
   var relHtml = '<h3 style="font-size:15px;font-weight:700;margin-bottom:10px">More ' + catName2 + ' Tools</h3>';
   relHtml += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">';
-  relHtml += related.map(function(r) { return '<a href="/t/' + r.slug + '" style="padding:8px 16px;border:1.5px solid #E7ECF3;border-radius:8px;color:#2F88FF;font-size:13px;font-weight:600;text-decoration:none">' + r.title + '</a>'; }).join("");
+  relHtml += related.map(function(r) { return '<a href="' + (r.url || ('/t/' + r.slug)) + '" style="padding:8px 16px;border:1.5px solid #E7ECF3;border-radius:8px;color:#2F88FF;font-size:13px;font-weight:600;text-decoration:none">' + r.title + '</a>'; }).join("");
   relHtml += '</div>';
 
   // Category page link
@@ -361,6 +360,7 @@ async function generate(improveWith) {
         systemPrompt: sysPrompt,
         userPrompt: t.userPrompt,
         fields: fields,
+        language: lang,
         maxTokens: t.maxTokens || 2000
       })
     });

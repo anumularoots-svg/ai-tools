@@ -37,7 +37,7 @@ html.tw-dark .zk-nav{background:rgba(15,52,96,.7)}
 
 /* === UNIFIED NAV === */
 .zk-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.85);backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);border-bottom:1px solid var(--zk-border);font-family:var(--zk-sans)}
-.zk-nav-inner{max-width:var(--zk-maxw);margin:0 auto;padding:0 32px;height:70px;display:flex;align-items:center;justify-content:space-between}
+.zk-nav-inner{max-width:100%;margin:0 auto;padding:0 44px;height:70px;display:flex;align-items:center;justify-content:space-between;gap:32px}
 .zk-logo{display:flex;align-items:center;gap:9px;text-decoration:none}
 .zk-logo svg{width:30px;height:30px;transition:transform .4s var(--zk-ease)}
 .zk-logo:hover svg{transform:rotate(-6deg) scale(1.05)}
