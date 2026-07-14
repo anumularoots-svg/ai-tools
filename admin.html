@@ -1,0 +1,101 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>ZapKitt — Code Admin</title><link rel="icon" type="image/svg+xml" href="/favicon.svg"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,system-ui,-apple-system,sans-serif;background:#0F1629;color:#E7ECF3;min-height:100vh;padding:20px;display:flex;flex-direction:column;align-items:center}
+.wrap{width:100%;max-width:440px}
+h1{font-size:22px;font-weight:800;margin:14px 0 4px;text-align:center}
+h1 span{color:#2F88FF}
+.sub{text-align:center;color:#8A93A3;font-size:13px;margin-bottom:22px}
+.card{background:#1A2338;border:1px solid #2A3550;border-radius:16px;padding:22px;margin-bottom:16px}
+label{display:block;font-size:12px;font-weight:600;color:#8A93A3;margin-bottom:6px}
+input{width:100%;padding:12px 14px;border:1.5px solid #2A3550;border-radius:10px;font-size:15px;font-family:inherit;background:#0F1629;color:#E7ECF3;outline:none}
+input:focus{border-color:#2F88FF}
+.btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;transition:.15s;color:#fff}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.b2{background:linear-gradient(135deg,#2F88FF,#1E6FE6);margin-bottom:12px}
+.b3{background:linear-gradient(135deg,#7C3AED,#6D28D9)}
+.bg{background:#2F88FF;margin-top:12px}
+.hint{font-size:12px;color:#8A93A3;margin-top:6px;text-align:center}
+.result{display:none;margin-top:18px;padding:18px;background:#0F1629;border:1.5px dashed #2F88FF;border-radius:12px;text-align:center}
+.result.show{display:block}
+.rtier{font-size:12px;color:#8A93A3;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.code{font-size:30px;font-weight:900;letter-spacing:2px;color:#2F88FF;margin:8px 0 14px;font-family:ui-monospace,Menlo,monospace}
+.cbtns{display:flex;gap:8px}
+.cbtn{flex:1;padding:11px;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;background:#243049;color:#E7ECF3;transition:.15s}
+.cbtn:active{transform:scale(.97)}
+.cbtn.ok{background:#16a34a}
+.err{color:#F87171;font-size:13px;text-align:center;margin-top:10px;min-height:18px}
+.hist{margin-top:6px}
+.hist h3{font-size:12px;color:#8A93A3;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+.hrow{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:#1A2338;border:1px solid #2A3550;border-radius:9px;margin-bottom:6px;font-size:13px}
+.hrow .hc{font-family:ui-monospace,monospace;font-weight:700;color:#E7ECF3}
+.hrow .ht{color:#8A93A3;font-size:11px}
+.hrow button{background:#243049;color:#8A93A3;border:none;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer}
+.logout{text-align:center;margin-top:18px}
+.logout a{color:#8A93A3;font-size:12px;text-decoration:none;cursor:pointer}
+</style></head><body><div class="wrap">
+<h1>Zap<span>Kitt</span> Code Admin</h1>
+<div class="sub">UPI payment vచ్చాక → tier button click → code copy → WhatsApp</div>
+
+<div class="card" id="authCard">
+<label>Admin password</label>
+<input id="pw" type="password" placeholder="Enter admin key" onkeydown="if(event.key==='Enter')saveKey()">
+<button class="btn bg" onclick="saveKey()">Unlock admin</button>
+<div class="hint">This page is private (noindex). Password = your ADMIN_KEY env.</div>
+</div>
+
+<div class="card" id="genCard" style="display:none">
+<button class="btn b2" onclick="gen('r2')">Generate Round 2 code — ₹9</button>
+<button class="btn b3" onclick="gen('r3')">Generate Round 3 code — ₹29</button>
+<div class="result" id="result">
+<div class="rtier" id="rtier"></div>
+<div class="code" id="code"></div>
+<div class="cbtns">
+<button class="cbtn" id="copyCode" onclick="copyCode()">Copy code</button>
+<button class="cbtn" id="copyMsg" onclick="copyMsg()">Copy WhatsApp msg</button>
+</div>
+</div>
+<div class="err" id="err"></div>
+</div>
+
+<div class="hist card" id="histCard" style="display:none">
+<h3>This session</h3>
+<div id="histList"></div>
+</div>
+
+<div class="logout"><a onclick="logout()" id="logoutLink" style="display:none">Lock admin</a></div>
+</div>
+<script>
+var KEY='';
+function saveKey(){var k=(document.getElementById('pw').value||'').trim();if(!k){return}KEY=k;sessionStorage.setItem('zk_admin_key',k);showGen();}
+function showGen(){document.getElementById('authCard').style.display='none';document.getElementById('genCard').style.display='block';document.getElementById('histCard').style.display='block';document.getElementById('logoutLink').style.display='inline';}
+function logout(){sessionStorage.removeItem('zk_admin_key');location.reload();}
+var lastCode='',lastTier='';
+async function gen(tier){
+  var err=document.getElementById('err');err.textContent='';
+  var btns=document.querySelectorAll('.b2,.b3');btns.forEach(function(b){b.disabled=true});
+  try{
+    var r=await fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'adminGenCode',key:KEY,tier:tier})});
+    var d=await r.json();
+    if(d.success&&d.code){
+      lastCode=d.code;lastTier=d.tier;
+      document.getElementById('rtier').textContent=(d.tier==='r3'?'Round 3 · ₹29':'Round 2 · ₹9');
+      document.getElementById('code').textContent=d.code;
+      document.getElementById('result').classList.add('show');
+      document.getElementById('copyCode').textContent='Copy code';document.getElementById('copyCode').classList.remove('ok');
+      document.getElementById('copyMsg').textContent='Copy WhatsApp msg';document.getElementById('copyMsg').classList.remove('ok');
+      addHist(d.code,d.tier);
+    } else { err.textContent=d.error||'Could not generate. Check password.'; }
+  }catch(e){err.textContent='Network error. Retry.';}
+  btns.forEach(function(b){b.disabled=false});
+}
+function copyCode(){navigator.clipboard.writeText(lastCode).then(function(){var b=document.getElementById('copyCode');b.textContent='Copied ✓';b.classList.add('ok');});}
+function waMsg(code,tier){var rn=tier==='r3'?'3':'2';return 'Payment received ✅ Thank you!\n\nYour Round '+rn+' unlock code: '+code+'\n\nHow to use:\n1. Go back to the ZapKitt interview page\n2. In the Pay via UPI popup, paste this code in the box\n3. Select Round '+rn+' and tap "Unlock my round"\n\nNote: this code works only once.';}
+function copyMsg(){navigator.clipboard.writeText(waMsg(lastCode,lastTier)).then(function(){var b=document.getElementById('copyMsg');b.textContent='Copied ✓';b.classList.add('ok');});}
+var hist=[];
+function addHist(code,tier){hist.unshift({code:code,tier:tier});renderHist();}
+function renderHist(){var h=document.getElementById('histList');if(!hist.length){h.innerHTML='<div style="color:#8A93A3;font-size:12px">No codes generated yet.</div>';return;}
+  h.innerHTML=hist.slice(0,20).map(function(x){return '<div class="hrow"><span class="hc">'+x.code+'</span><span class="ht">'+(x.tier==='r3'?'R3 ₹29':'R2 ₹9')+'</span><button onclick="navigator.clipboard.writeText(\''+x.code+'\');this.textContent=\'✓\'">Copy</button></div>';}).join('');}
+// auto-restore session key
+(function(){var k=sessionStorage.getItem('zk_admin_key');if(k){KEY=k;showGen();renderHist();}})();
+</script></body></html>

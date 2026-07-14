@@ -9,6 +9,8 @@ async function sendTelegram(text){
   catch(e){return false}
 }
 function pickKey(env){if(!env)return null;var k=env.split(",").map(function(k){return k.trim()}).filter(Boolean);return k.length?k[Math.floor(Math.random()*k.length)]:null}
+// Random unlock code (no ambiguous chars: no O/0/I/1). e.g. genCode(6) -> "7K4M2P".
+function genCode(n){var c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",s="";for(var i=0;i<(n||6);i++)s+=c[Math.floor(Math.random()*c.length)];return s}
 
 // Exact question-slot plan per round (Phase 1 structured interview).
 function slotFor(tier,qn){
@@ -143,12 +145,27 @@ export default async function handler(req,res){
     }
     
     // Verify a Ko-fi payment and consume it (one-time) to unlock a paid round.
+    // Admin: generate a FRESH single-use unlock code (from the secret /admin page).
+    // Stored in Upstash, consumed on redeem — no fixed pool to manage or run out.
+    if(b.action==="adminGenCode"){
+      if(b.key!==(process.env.ADMIN_KEY||"zapkitt2026"))return res.status(403).json({error:"Invalid admin key"});
+      if(!kvReady())return res.status(500).json({error:"Upstash not configured — set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN."});
+      var gTier=b.tier==="r3"?"r3":"r2";
+      var newCode=gTier.toUpperCase()+"-"+genCode(6);
+      try{await kvSetEx("unlock:"+gTier+":"+newCode,30*24*3600,"1");return res.status(200).json({success:true,tier:gTier,code:newCode})}
+      catch(e){return res.status(500).json({error:"Could not store code: "+e.message})}
+    }
+
     if(b.action==="verifyUnlock"){
       var entered=String(b.email||"").trim();
       var vEmail=entered.toLowerCase();
       var vTier=b.tier==="r3"?"r3":"r2";
       // (1) Dev/test master key — unlocks any tier without paying. Remove env after testing.
       if(process.env.TEST_UNLOCK_KEY&&entered===process.env.TEST_UNLOCK_KEY)return res.status(200).json({unlocked:true,tier:vTier,test:true});
+      // (1b) Admin-generated single-use code — valid in Upstash until redeemed, then deleted (consumed).
+      if(entered&&kvReady()){
+        try{var gk="unlock:"+vTier+":"+entered;var gv=await kvGet(gk);if(gv){await kvDel(gk);return res.status(200).json({unlocked:true,tier:vTier,generated:true})}}catch(e){}
+      }
       // (2) Manual WhatsApp unlock codes. Env UNLOCK_CODES="r2:AB12CD,r3:EF34GH,r2:JK56LM".
       //     After a UPI payment you verify the screenshot on WhatsApp, then send the user one
       //     code for their tier. Tier is enforced (an r2 code can't unlock r3).
