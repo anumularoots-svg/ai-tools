@@ -427,7 +427,7 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 </div>
 <a href="#" onclick="openTier('r2');return false" class="ubtn ubtn-blue">Unlock Round 2 — $2 on Ko-fi</a>
 <div id="unlock_r2" style="display:none;margin-top:10px">
-<input id="email_r2" type="email" placeholder="Email you paid with on Ko-fi" style="width:100%;padding:9px 12px;border:1.5px solid #E7ECF3;border-radius:8px;font-size:13px;font-family:inherit;margin-bottom:6px">
+<input id="email_r2" type="email" placeholder="Ko-fi email or UPI unlock code" style="width:100%;padding:9px 12px;border:1.5px solid #E7ECF3;border-radius:8px;font-size:13px;font-family:inherit;margin-bottom:6px">
 <button onclick="unlockTier('r2')" class="ubtn ubtn-blue" style="width:100%;border:none;cursor:pointer">I've paid — unlock</button>
 <div id="umsg_r2" style="font-size:12px;color:#6b7280;margin-top:6px;min-height:16px"></div>
 </div>
@@ -445,7 +445,7 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 </div>
 <a href="#" onclick="openTier('r3');return false" class="ubtn ubtn-purple">Unlock Round 3 — $5 on Ko-fi</a>
 <div id="unlock_r3" style="display:none;margin-top:10px">
-<input id="email_r3" type="email" placeholder="Email you paid with on Ko-fi" style="width:100%;padding:9px 12px;border:1.5px solid #E7ECF3;border-radius:8px;font-size:13px;font-family:inherit;margin-bottom:6px">
+<input id="email_r3" type="email" placeholder="Ko-fi email or UPI unlock code" style="width:100%;padding:9px 12px;border:1.5px solid #E7ECF3;border-radius:8px;font-size:13px;font-family:inherit;margin-bottom:6px">
 <button onclick="unlockTier('r3')" class="ubtn ubtn-purple" style="width:100%;border:none;cursor:pointer">I've paid — unlock</button>
 <div id="umsg_r3" style="font-size:12px;color:#6b7280;margin-top:6px;min-height:16px"></div>
 </div>
@@ -526,7 +526,7 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 </div>
 
 <!-- UPI Modal -->
-<div id="upiM" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:999;align-items:center;justify-content:center"><div style="background:#FFFFFF;border-radius:16px;padding:28px;max-width:340px;width:90%;text-align:center"><span onclick="document.getElementById('upiM').style.display='none'" style="position:absolute;top:12px;right:16px;font-size:20px;cursor:pointer;color:#8A93A3">&times;</span><div style="font-size:18px;font-weight:800;color:#111827;margin-bottom:12px">Pay via UPI</div><div style="background:#FFFFFF;border:2px dashed #d1d5db;border-radius:12px;padding:16px;margin-bottom:14px"><div style="font-size:11px;color:#6b7280">UPI ID</div><div style="font-size:16px;font-weight:700;color:#2F88FF;margin:4px 0">9985933964-3@ybl</div><button onclick="navigator.clipboard.writeText('9985933964-3@ybl');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy UPI ID',1500)" style="padding:6px 16px;background:#2F88FF;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;margin-top:4px">Copy UPI ID</button></div><a href="upi://pay?pa=9985933964-3@ybl&pn=ZapKitt&am=9&cu=INR&tn=MockInterview" style="display:block;padding:12px;background:#111827;color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px">Open UPI App</a><div style="font-size:11px;color:#8A93A3;margin-top:8px">Works on mobile with any UPI app</div></div></div>
+<div id="upiM" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:999;align-items:center;justify-content:center"><div style="background:#FFFFFF;border-radius:16px;padding:28px;max-width:340px;width:90%;text-align:center"><span onclick="document.getElementById('upiM').style.display='none'" style="position:absolute;top:12px;right:16px;font-size:20px;cursor:pointer;color:#8A93A3">&times;</span><div style="font-size:18px;font-weight:800;color:#111827;margin-bottom:12px">Pay via UPI</div><div style="background:#FFFFFF;border:2px dashed #d1d5db;border-radius:12px;padding:16px;margin-bottom:14px"><div style="font-size:11px;color:#6b7280">UPI ID</div><div style="font-size:16px;font-weight:700;color:#2F88FF;margin:4px 0">9985933964-3@ybl</div><button onclick="navigator.clipboard.writeText('9985933964-3@ybl');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy UPI ID',1500)" style="padding:6px 16px;background:#2F88FF;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;margin-top:4px">Copy UPI ID</button></div><div style="display:flex;gap:8px;margin-bottom:8px"><a href="upi://pay?pa=9985933964-3@ybl&pn=ZapKitt&am=9&cu=INR&tn=Round2" style="flex:1;padding:11px;background:#2F88FF;color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:12px">Pay &#8377;9 &middot; Round 2</a><a href="upi://pay?pa=9985933964-3@ybl&pn=ZapKitt&am=29&cu=INR&tn=Round3" style="flex:1;padding:11px;background:#111827;color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:12px">Pay &#8377;29 &middot; Round 3</a></div><div style="font-size:11px;color:#8A93A3;margin-bottom:14px">Works with any UPI app (PhonePe, GPay, Paytm).</div><div style="border-top:1px solid #E7ECF3;padding-top:14px;text-align:left"><div style="font-size:12.5px;font-weight:800;color:#111827;margin-bottom:8px">After paying, get your unlock code:</div><a href="https://wa.me/919182132309?text=Hi%2C%20I%20paid%20for%20ZapKitt%20mock%20interview.%20Screenshot%20attached%20%E2%80%94%20please%20send%20my%20unlock%20code." target="_blank" rel="noopener" style="display:block;padding:11px;background:#25D366;color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;text-align:center;margin-bottom:12px">Send screenshot on WhatsApp</a><div style="font-size:11px;color:#8A93A3;margin-bottom:6px">Which round did you pay for?</div><div style="display:flex;gap:6px;margin-bottom:8px"><button type="button" id="upiTb_r2" onclick="upiSetTier('r2')" style="flex:1;padding:8px;border:1.5px solid #2F88FF;background:#EAF3FF;color:#2F88FF;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Round 2 &#8377;9</button><button type="button" id="upiTb_r3" onclick="upiSetTier('r3')" style="flex:1;padding:8px;border:1.5px solid #E7ECF3;background:#fff;color:#6b7280;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Round 3 &#8377;29</button></div><input id="upiCode" type="text" placeholder="Enter unlock code from WhatsApp" style="width:100%;padding:9px 12px;border:1.5px solid #E7ECF3;border-radius:8px;font-size:13px;font-family:inherit;margin-bottom:6px"><button onclick="upiUnlock()" style="width:100%;padding:11px;background:#2F88FF;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Unlock my round</button><div id="upiMsg" style="font-size:12px;color:#6b7280;margin-top:6px;min-height:16px"></div></div></div></div>
 
 <footer class="foot"><div class="foot-brand" style="margin-bottom:18px"><a href="/" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;justify-content:center"><svg width="26" height="26" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#2F88FF"/><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"/></svg><span style="font-family:Inter,system-ui,sans-serif;font-weight:700;font-size:19px;color:#141A2E;letter-spacing:-.3px">Zap<span style="color:#2F88FF">Kitt</span></span></a></div><p>ZapKitt &mdash; <a href="/">All Tools</a> | <a href="/ai-resume-builder">Resume Builder</a> | <a href="/about">About</a></p></footer>
 
@@ -601,13 +601,33 @@ function openTier(tier){
 async function unlockTier(tier){
   var em=(document.getElementById('email_'+tier).value||'').trim();
   var msg=document.getElementById('umsg_'+tier);
-  if(!em||em.indexOf('@')<1){msg.style.color='#dc2626';msg.textContent='Enter the email you paid with on Ko-fi.';return}
+  if(!em||em.length<4){msg.style.color='#dc2626';msg.textContent='Enter your Ko-fi email or the unlock code you were sent.';return}
   msg.style.color='#6b7280';msg.textContent='Verifying your payment\u2026';
   try{
     var r=await fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'verifyUnlock',tier:tier,email:em})});
     var d=await r.json();
     if(d.unlocked){msg.style.color='#16a34a';msg.textContent='Verified! Starting your round\u2026';setTimeout(function(){startPaidRound(tier)},600)}
     else{msg.style.color='#dc2626';msg.textContent=d.error||'Payment not found yet. Wait a minute and retry.'}
+  }catch(e){msg.style.color='#dc2626';msg.textContent='Could not verify right now. Please retry.'}
+}
+
+// UPI unlock — user pays via UPI, sends screenshot on WhatsApp, receives a code
+// from UNLOCK_CODES, enters it here. Same verifyUnlock backend, tier-enforced.
+var upiTier='r2';
+function upiSetTier(t){upiTier=(t==='r3')?'r3':'r2';
+  var a=document.getElementById('upiTb_r2'),b=document.getElementById('upiTb_r3');
+  if(a){a.style.borderColor=upiTier==='r2'?'#2F88FF':'#E7ECF3';a.style.background=upiTier==='r2'?'#EAF3FF':'#fff';a.style.color=upiTier==='r2'?'#2F88FF':'#6b7280';}
+  if(b){b.style.borderColor=upiTier==='r3'?'#2F88FF':'#E7ECF3';b.style.background=upiTier==='r3'?'#EAF3FF':'#fff';b.style.color=upiTier==='r3'?'#2F88FF':'#6b7280';}}
+async function upiUnlock(){
+  var code=(document.getElementById('upiCode').value||'').trim();
+  var msg=document.getElementById('upiMsg');
+  if(!code||code.length<4){msg.style.color='#dc2626';msg.textContent='Enter the unlock code we sent you on WhatsApp.';return}
+  msg.style.color='#6b7280';msg.textContent='Verifying your code…';
+  try{
+    var r=await fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'verifyUnlock',tier:upiTier,email:code})});
+    var d=await r.json();
+    if(d.unlocked){msg.style.color='#16a34a';msg.textContent='Unlocked! Starting your round…';setTimeout(function(){document.getElementById('upiM').style.display='none';startPaidRound(upiTier)},600)}
+    else{msg.style.color='#dc2626';msg.textContent=d.error||'That code was not recognised. Please check it and retry.'}
   }catch(e){msg.style.color='#dc2626';msg.textContent='Could not verify right now. Please retry.'}
 }
 
