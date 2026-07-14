@@ -44,7 +44,7 @@
         ["Image Cropper", "/image-crop", "Crop images precisely", "✂️", "#FFF1E6"],
         ["Image to Text", "/image-to-text", "Extract text (OCR)", "🔤", "#E9FBF3"]
       ],
-      others: [["Background Remover","/all-tools"],["Image Upscaler","/all-tools"],["Image Converter","/jpg-to-png"],["Watermark Remover","/all-tools"],["JPG to PNG","/jpg-to-png"],["PNG to JPG","/png-to-jpg"],["QR Generator","/qr-generator"],["QR Scanner","/all-tools"]] },
+      others: [["Background Remover","/all-tools"],["Image Upscaler","/all-tools"],["Image Converter","/jpg-to-png"],["Watermark Remover","/image-watermark-remover"],["Video Watermark Remover","/video-watermark-remover"],["JPG to PNG","/jpg-to-png"],["PNG to JPG","/png-to-jpg"],["QR Generator","/qr-generator"],["QR Scanner","/all-tools"]] },
 
     { key: "dev", label: "Developer", all: "/developer-tools",
       featured: [
@@ -82,7 +82,7 @@
 
   function build() {
     if (document.querySelector(".zkm2-trigger")) return;
-    var host = document.querySelector(".zk-nav-links") || document.querySelector(".nl") || document.querySelector(".nav-links") || document.querySelector("nav .nav-in") || document.querySelector("nav");
+    var host = document.querySelector(".zk-nav-left") || document.querySelector(".zk-nav-links") || document.querySelector(".nl") || document.querySelector(".nav-links") || document.querySelector("nav .nav-in") || document.querySelector("nav");
     var navEl = document.querySelector(".zk-nav") || document.querySelector(".nav") || document.querySelector(".nav-wrap") || document.querySelector("nav");
     if (!host) return;
 

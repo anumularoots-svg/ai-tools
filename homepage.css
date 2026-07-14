@@ -9,7 +9,7 @@
   --text:#141A2E;--text-2:#5B6472;--text-3:#8A93A3;--white:#FFFFFF;
   --border:#E7ECF3;--border-strong:#D9E0EA;
   /* category colors (TinyWow-style) */
-  --cat-purple:#7C5CFC;--cat-orange:#FF6B35;--cat-crimson:#E8215B;--cat-blue:#2D6BE8;--cat-teal:#17A398;
+  --cat-purple:#8677E3;--cat-orange:#F0824F;--cat-crimson:#E15578;--cat-blue:#4F82E4;--cat-teal:#33A89D;
   --radius:10px;--radius-lg:14px;--radius-xl:20px;--radius-full:999px;
   --shadow-soft:0 1px 3px rgba(20,26,46,.05),0 1px 2px rgba(20,26,46,.04);
   --shadow-md:0 8px 24px rgba(20,26,46,.08);
@@ -127,6 +127,11 @@ a{text-decoration:none;color:inherit}
 .tw-cat-foot b{color:var(--cc,var(--accent));font-weight:700}
 .tw-cat-purple{--cc:var(--cat-purple)}.tw-cat-orange{--cc:var(--cat-orange)}.tw-cat-crimson{--cc:var(--cat-crimson)}
 .tw-cat-blue{--cc:var(--cat-blue)}.tw-cat-teal{--cc:var(--cat-teal)}
+/* highlighted flagship cards (Resume Builder + Real-Time Interview) */
+.tw-cat-featured{transform:translateY(-4px);box-shadow:0 0 0 3px #fff,0 0 0 6px color-mix(in srgb,var(--cc) 72%,#fff),0 22px 44px -14px color-mix(in srgb,var(--cc) 52%,transparent)}
+.tw-cat-featured .tw-cat-badge{background:#fff;color:var(--cc)}
+.tw-cat-featured:hover{transform:translateY(-10px);box-shadow:0 0 0 3px #fff,0 0 0 6px var(--cc),0 30px 58px -16px color-mix(in srgb,var(--cc) 58%,transparent)}
+@media(max-width:768px){.tw-cat-featured{transform:none}.tw-cat-featured:hover{transform:translateY(-6px)}}
 
 /* ── STATS (TinyWow strip) ── */
 .stats-row{max-width:var(--maxw);margin:clamp(28px,4vw,44px) auto 0;display:flex;justify-content:space-between;gap:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:28px 20px;box-shadow:var(--shadow-soft)}

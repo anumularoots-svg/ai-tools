@@ -1,0 +1,180 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Free Video Watermark Remover — Remove Watermarks from Video Online | ZapKitt</title>
+<meta name="description" content="Remove or blur watermarks from videos online for free. Draw a box over the watermark and download a clean video. No signup, processed in your browser.">
+<link rel="canonical" href="https://zapkitt.com/video-watermark-remover">
+<meta property="og:title" content="Free Video Watermark Remover | ZapKitt"><meta property="og:description" content="Draw a box over a video watermark and remove it — free, no signup, private (runs in your browser).">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/zapkitt-global.css">
+<style>
+body{background:#F6F8FC}
+.wm-hero{text-align:center;padding:clamp(40px,6vw,64px) 20px 20px;max-width:760px;margin:0 auto}
+.wm-hero h1{font-size:clamp(30px,4.6vw,46px);font-weight:800;letter-spacing:-.03em;color:#141A2E;margin-bottom:12px;line-height:1.06}
+.wm-hero h1 em{font-style:normal;color:#2F88FF}
+.wm-hero p{color:#5B6472;font-size:clamp(15px,1.6vw,17px);line-height:1.6}
+.wm-wrap{max-width:920px;margin:0 auto;padding:0 20px 60px}
+.wm-card{background:#fff;border:1px solid #E7ECF3;border-radius:20px;box-shadow:0 20px 48px -20px rgba(20,26,46,.18);overflow:hidden}
+.wm-drop{border:2px dashed #C7D6EA;border-radius:16px;margin:22px;padding:52px 20px;text-align:center;cursor:pointer;transition:.2s;background:#F7FAFF}
+.wm-drop:hover,.wm-drop.drag{border-color:#2F88FF;background:#EFF6FF}
+.wm-drop svg{width:44px;height:44px;color:#2F88FF;margin-bottom:12px}
+.wm-drop b{display:block;font-size:16px;font-weight:800;color:#141A2E;margin-bottom:4px}
+.wm-drop span{font-size:13px;color:#8A93A3}
+.wm-editor{display:none}.wm-editor.show{display:block}
+.wm-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:18px;padding:16px 22px;border-bottom:1px solid #E7ECF3;background:#FAFBFD}
+.wm-ctrl{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700;color:#5B6472}
+.wm-ctrl input[type=range]{width:120px;accent-color:#2F88FF}
+.wm-mode{display:inline-flex;border:1px solid #E7ECF3;border-radius:9px;overflow:hidden}
+.wm-mode button{border:none;background:#fff;color:#5B6472;font-size:12.5px;font-weight:700;padding:8px 14px;cursor:pointer;font-family:inherit}
+.wm-mode button.on{background:#2F88FF;color:#fff}
+.wm-stage{position:relative;background:#0B1120;display:flex;justify-content:center;padding:18px}
+#wmCanvas{max-width:100%;max-height:60vh;touch-action:none;border-radius:8px;cursor:crosshair}
+.wm-actions{display:flex;flex-wrap:wrap;gap:12px;padding:18px 22px;border-top:1px solid #E7ECF3;align-items:center}
+.wm-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:11px;font-size:14px;font-weight:800;cursor:pointer;border:none;font-family:inherit;transition:.2s}
+.wm-btn-primary{background:#2F88FF;color:#fff}.wm-btn-primary:hover{background:#1E6FE6;transform:translateY(-1px);box-shadow:0 10px 24px rgba(47,136,255,.3)}
+.wm-btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.wm-btn-ghost{background:#F3F6FB;color:#5B6472}.wm-btn-ghost:hover{background:#E9EEF6;color:#141A2E}
+.wm-hint{font-size:12.5px;color:#8A93A3;margin-left:auto}
+.wm-prog{display:none;height:6px;background:#E7ECF3;border-radius:6px;margin:0 22px 18px;overflow:hidden}
+.wm-prog.show{display:block}
+.wm-prog i{display:block;height:100%;width:0;background:#2F88FF;transition:width .2s}
+.wm-note{text-align:center;font-size:12.5px;color:#8A93A3;margin-top:16px}
+.wm-note b{color:#10B981}
+</style>
+</head><body>
+<a href="#main" class="zk-skip">Skip to main content</a>
+<nav class="zk-nav"><div class="zk-nav-inner">
+<a href="/" class="zk-logo"><svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#2F88FF"></rect><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"></path></svg><div class="zk-logo-text">Zap<span>Kitt</span></div></a>
+<div class="zk-nav-links" id="zkNav"><a href="/all-tools">All tools</a><a href="/blog">Blog</a><a href="/ai-resume-builder" class="zk-nav-cta">Get started</a></div>
+<button class="zk-ham" aria-label="Menu" onclick="document.getElementById('zkNav').classList.toggle('open')"><span></span><span></span><span></span></button>
+</div></nav>
+
+<main id="main">
+<section class="wm-hero">
+  <h1>Video <em>Watermark Remover</em></h1>
+  <p>Upload a video, draw a box over the watermark, and download a clean version. Free, no signup — the video is processed privately in your browser.</p>
+</section>
+
+<div class="wm-wrap">
+<div class="wm-card">
+  <div class="wm-drop" id="wmDrop">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+    <b>Upload a video</b>
+    <span>Drag &amp; drop or click — MP4, WEBM, MOV (short clips work best)</span>
+    <input type="file" id="wmFile" accept="video/*" style="display:none">
+  </div>
+
+  <div class="wm-editor" id="wmEditor">
+    <div class="wm-toolbar">
+      <div class="wm-mode" id="wmMode">
+        <button data-mode="pixel" class="on">Pixelate</button>
+        <button data-mode="blur">Blur</button>
+      </div>
+      <label class="wm-ctrl">Strength <input type="range" id="wmStrength" min="6" max="34" value="16"></label>
+      <span class="wm-hint">Drag on the video to draw a box over the watermark.</span>
+    </div>
+    <div class="wm-stage"><canvas id="wmCanvas"></canvas></div>
+    <div class="wm-prog" id="wmProg"><i></i></div>
+    <div class="wm-actions">
+      <button class="wm-btn wm-btn-primary" id="wmProcess"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Remove &amp; download</button>
+      <button class="wm-btn wm-btn-ghost" id="wmClear">Clear box</button>
+      <button class="wm-btn wm-btn-ghost" id="wmNew">New video</button>
+    </div>
+  </div>
+</div>
+<p class="wm-note"><b>Private:</b> everything runs in your browser — nothing is uploaded. Output is a .webm video.</p>
+</div>
+</main>
+
+<footer class="zk-footer"><div class="zk-footer-inner">
+<div class="zk-footer-brand"><a href="/" class="zk-logo"><svg viewBox="0 0 32 32" fill="none" width="28" height="28"><rect width="32" height="32" rx="8" fill="#2F88FF"></rect><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"></path></svg><div class="zk-logo-text">Zap<span>Kitt</span></div></a><p>Free AI tools for resumes, writing, images, PDFs and more.</p></div>
+<div class="zk-footer-col"><h4>Media tools</h4><a href="/video-watermark-remover">Video watermark remover</a><a href="/image-watermark-remover">Image watermark remover</a><a href="/all-tools">All tools</a></div>
+<div class="zk-footer-col"><h4>Company</h4><a href="/about">About</a><a href="/privacy">Privacy</a></div>
+</div><div class="zk-footer-bottom">© 2026 ZapKitt. Free AI-powered tools.</div></footer>
+
+<script>
+(function(){
+  var drop=document.getElementById('wmDrop'),file=document.getElementById('wmFile'),editor=document.getElementById('wmEditor');
+  var canvas=document.getElementById('wmCanvas'),ctx=canvas.getContext('2d');
+  var strEl=document.getElementById('wmStrength'),prog=document.getElementById('wmProg'),progBar=prog.querySelector('i');
+  var procBtn=document.getElementById('wmProcess');
+  var video=document.createElement('video');video.muted=true;video.playsInline=true;
+  var tmp=document.createElement('canvas'),tctx=tmp.getContext('2d');
+  var mode='pixel',rect=null,drag=null,fileName='video',processing=false;
+
+  document.querySelectorAll('#wmMode button').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#wmMode button').forEach(function(x){x.classList.remove('on')});b.classList.add('on');mode=b.dataset.mode})});
+  drop.addEventListener('click',function(){file.click()});
+  drop.addEventListener('dragover',function(e){e.preventDefault();drop.classList.add('drag')});
+  drop.addEventListener('dragleave',function(){drop.classList.remove('drag')});
+  drop.addEventListener('drop',function(e){e.preventDefault();drop.classList.remove('drag');if(e.dataTransfer.files[0])load(e.dataTransfer.files[0])});
+  file.addEventListener('change',function(){if(file.files[0])load(file.files[0])});
+
+  function load(f){
+    if(!/^video\//.test(f.type)){alert('Please choose a video file (MP4, WEBM or MOV).');return;}
+    fileName=(f.name||'video').replace(/\.[^.]+$/,'');
+    video.src=URL.createObjectURL(f);
+    video.onloadeddata=function(){
+      canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+      video.currentTime=Math.min(0.1,video.duration/2||0.1);
+    };
+    video.onseeked=function(){ if(!processing){ ctx.drawImage(video,0,0,canvas.width,canvas.height); if(rect)paintRect(); } };
+    drop.style.display='none';editor.classList.add('show');
+    if(window.zkToast)zkToast('Video loaded — drag a box over the watermark.','success');
+  }
+
+  function pos(e){var r=canvas.getBoundingClientRect(),sx=canvas.width/r.width,sy=canvas.height/r.height;var cx=(e.touches?e.touches[0].clientX:e.clientX),cy=(e.touches?e.touches[0].clientY:e.clientY);return{x:(cx-r.left)*sx,y:(cy-r.top)*sy}}
+  function down(e){if(processing)return;e.preventDefault();var p=pos(e);drag={x0:p.x,y0:p.y};}
+  function moveH(e){if(!drag||processing)return;e.preventDefault();var p=pos(e);rect={x:Math.min(drag.x0,p.x),y:Math.min(drag.y0,p.y),w:Math.abs(p.x-drag.x0),h:Math.abs(p.y-drag.y0)};redraw();}
+  function up(){drag=null}
+  canvas.addEventListener('mousedown',down);canvas.addEventListener('mousemove',moveH);window.addEventListener('mouseup',up);
+  canvas.addEventListener('touchstart',down,{passive:false});canvas.addEventListener('touchmove',moveH,{passive:false});window.addEventListener('touchend',up);
+
+  function redraw(){ctx.drawImage(video,0,0,canvas.width,canvas.height);if(rect&&rect.w>4&&rect.h>4){paintRect();ctx.save();ctx.strokeStyle='#2F88FF';ctx.lineWidth=Math.max(2,canvas.width/400);ctx.setLineDash([8,6]);ctx.strokeRect(rect.x,rect.y,rect.w,rect.h);ctx.restore();}}
+  function paintRect(){
+    if(!rect||rect.w<4||rect.h<4)return;
+    var s=parseInt(strEl.value)||16;
+    if(mode==='blur'){
+      tmp.width=canvas.width;tmp.height=canvas.height;tctx.filter='blur('+s+'px)';tctx.drawImage(canvas,0,0);tctx.filter='none';
+      ctx.save();ctx.beginPath();ctx.rect(rect.x,rect.y,rect.w,rect.h);ctx.clip();ctx.drawImage(tmp,0,0);ctx.restore();
+    }else{
+      var rw=Math.max(1,Math.round(rect.w/s)),rh=Math.max(1,Math.round(rect.h/s));
+      tmp.width=rw;tmp.height=rh;tctx.imageSmoothingEnabled=false;
+      tctx.drawImage(canvas,rect.x,rect.y,rect.w,rect.h,0,0,rw,rh);
+      ctx.imageSmoothingEnabled=false;ctx.drawImage(tmp,0,0,rw,rh,rect.x,rect.y,rect.w,rect.h);ctx.imageSmoothingEnabled=true;
+    }
+  }
+
+  document.getElementById('wmClear').addEventListener('click',function(){rect=null;ctx.drawImage(video,0,0,canvas.width,canvas.height)});
+  document.getElementById('wmNew').addEventListener('click',function(){try{video.pause()}catch(e){}editor.classList.remove('show');drop.style.display='block';file.value='';rect=null;});
+
+  function pickMime(){var t=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];for(var i=0;i<t.length;i++){if(window.MediaRecorder&&MediaRecorder.isTypeSupported(t[i]))return t[i]}return 'video/webm'}
+
+  procBtn.addEventListener('click',function(){
+    if(processing)return;
+    if(!rect||rect.w<6||rect.h<6){alert('Draw a box over the watermark first.');return;}
+    if(!window.MediaRecorder){alert('Your browser does not support video recording. Try Chrome or Edge.');return;}
+    processing=true;procBtn.disabled=true;prog.classList.add('show');
+    var stream=canvas.captureStream(30);
+    try{var vs=video.captureStream?video.captureStream():(video.mozCaptureStream?video.mozCaptureStream():null);if(vs)vs.getAudioTracks().forEach(function(tr){stream.addTrack(tr)});}catch(e){}
+    var chunks=[],rec=new MediaRecorder(stream,{mimeType:pickMime()});
+    rec.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data)};
+    rec.onstop=function(){var blob=new Blob(chunks,{type:'video/webm'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fileName+'-no-watermark.webm';a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1500);processing=false;procBtn.disabled=false;prog.classList.remove('show');progBar.style.width='0';if(window.zkToast)zkToast('Done — clean video downloaded.','success');};
+    video.muted=false;video.currentTime=0;
+    var dur=video.duration||1;
+    video.play().then(function(){
+      rec.start();
+      (function frame(){
+        if(video.ended||video.paused){if(rec.state!=='inactive')rec.stop();return;}
+        ctx.drawImage(video,0,0,canvas.width,canvas.height);paintRect();
+        progBar.style.width=Math.min(100,Math.round(video.currentTime/dur*100))+'%';
+        requestAnimationFrame(frame);
+      })();
+    }).catch(function(){processing=false;procBtn.disabled=false;prog.classList.remove('show');alert('Could not play the video for processing. Try a different file.');});
+    video.onended=function(){if(rec.state!=='inactive')rec.stop();};
+  });
+})();
+</script>
+<script src="/mega.js" defer></script>
+<script src="/zapkitt-back.js" defer></script>
+<script src="/zk-toast.js"></script>
+</body></html>

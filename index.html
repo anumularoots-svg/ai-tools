@@ -14,7 +14,7 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is ZapKitt free?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every tool has a free tier with no signup. Some advanced features have optional paid upgrades."}},{"@type":"Question","name":"What happens to my files and data?","acceptedAnswer":{"@type":"Answer","text":"File tools process in your browser. AI tools send text for processing only — nothing is stored after your session."}},{"@type":"Question","name":"How does the AI mock interview work?","acceptedAnswer":{"@type":"Answer","text":"Upload your resume, pick a company, and start a voice or text-based mock interview. Get a scored report with improvement tips."}},{"@type":"Question","name":"What AI model powers ZapKitt?","acceptedAnswer":{"@type":"Answer","text":"Llama 3.3 70B for writing and interviews. FLUX and Stable Diffusion for image generation."}},{"@type":"Question","name":"Does ZapKitt work on mobile?","acceptedAnswer":{"@type":"Answer","text":"Yes. Fully responsive. For coding questions, laptop recommended."}}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"ZapKitt","url":"https://zapkitt.com","logo":"https://zapkitt.com/android-chrome-512x512.png"}</script>
 <script defer="" src="https://cdn.vercel-insights.com/v1/script.js"></script>
-<link rel="stylesheet" href="/zapkitt-global.css"></head><body><a href="#main" class="zk-skip">Skip to main content</a><nav class="zk-nav"><div class="zk-nav-inner">
+<link rel="stylesheet" href="/zapkitt-global.css"><script src="/zk-toast.js"></script></head><body><a href="#main" class="zk-skip">Skip to main content</a><nav class="zk-nav"><div class="zk-nav-inner">
 <a href="/" class="zk-logo"><svg viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#2F88FF"></rect><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"></path></svg><div class="zk-logo-text">Zap<span>Kitt</span></div></a>
 <div class="zk-nav-links" id="zkNav"><a href="/all-tools">All tools</a><a href="/blog">Blog</a><span class="zk-nav-utils"><button class="zk-icon-btn" id="zkTheme" aria-label="Toggle dark mode" onclick="document.documentElement.classList.toggle('tw-dark')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button><button class="zk-icon-btn" aria-label="Share" onclick="if(navigator.share){navigator.share({title:document.title,url:location.href})}else{navigator.clipboard.writeText(location.href)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg></button></span><a href="/ai-resume-builder" class="zk-nav-cta">Get started</a></div>
 <button class="zk-ham" aria-label="Menu" onclick="document.getElementById('zkNav').classList.toggle('open')"><span></span><span></span><span></span></button>
@@ -46,7 +46,7 @@
 
 <!-- CATEGORY CARDS (TinyWow-style) -->
 <section class="tw-cats fade-up" aria-label="Tool categories">
-  <a href="/resume-tools" class="tw-cat tw-cat-purple">
+  <a href="/resume-tools" class="tw-cat tw-cat-purple tw-cat-featured">
     <div class="tw-cat-top">
       <div class="tw-cat-head">
         <div class="tw-cat-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15l2 2 4-4"></path></svg></div>
@@ -68,13 +68,13 @@
     </div>
     <div class="tw-cat-foot">Featured: <b>Paraphraser</b></div>
   </a>
-  <a href="/ai-mock-interview" class="tw-cat tw-cat-crimson">
+  <a href="/ai-mock-interview" class="tw-cat tw-cat-crimson tw-cat-featured">
     <div class="tw-cat-top">
       <div class="tw-cat-head">
         <div class="tw-cat-icon"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1"></path><line x1="12" y1="19" x2="12" y2="22"></line></svg></div>
         <span class="tw-cat-badge">Voice AI</span>
       </div>
-      <div class="tw-cat-title">Mock Interview</div>
+      <div class="tw-cat-title">Real-Time Interview</div>
       <div class="tw-cat-sub"><span>Solve Your Interview Problems</span><span class="tw-arrow"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"></path></svg></span></div>
     </div>
     <div class="tw-cat-foot">Featured: <b>Real-Time Interview</b></div>
