@@ -76,7 +76,7 @@
         '<div class="zkf-meta">' +
           '<div class="zkf-stars" style="color:' + col + '">' + stars(fb.rating) + '</div>' +
           '<div class="zkf-conf">Confidence: <b>' + fb.confidence + '%</b></div>' +
-          (fb.model ? '<div class="zkf-conf" style="color:#9ca3af">Analyzed by ' + esc(fb.model) + '</div>' : '') +
+          '' +
         '</div>' +
       '</div>' +
       '<div class="zkf-cols">' +

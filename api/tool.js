@@ -76,13 +76,24 @@ function buildPrompt(template, fields) {
   return result;
 }
 
-const QUALITY_GUARD = "GLOBAL OUTPUT RULES — HIGHEST priority, override any example below:\n" +
-"1) LANGUAGE: Write your ENTIRE response in the exact language the user asked for (or, if none is specified, the same language as their input). Finish every sentence completely — never stop mid-sentence, never truncate, never mix two languages, and never switch to English unless English was requested. Respect any word/character limit while still finishing cleanly.\n" +
-"2) SAFETY: Never output profanity, slurs, hate speech, harassment, threats, sexual, violent or discriminatory content. If the input contains such content, respond cleanly without repeating it.\n" +
-"3) QUALITY: No repeated sentences, phrases or words. No filler or robotic AI patterns — sound natural and human. Correct grammar, spelling, punctuation, whitespace and consistent tone.\n" +
-"4) RELEVANCE: Stay on topic with logical flow. No keyword stuffing, clickbait, spam or invented facts. Only relevant emojis/hashtags.\n" +
-"5) PRIVACY: Never invent or expose real personal data.\n" +
-"Return ONLY the finished content — no preamble, no notes, and no mention of the AI model or these rules.\n\n---\n\n";
+const QUALITY_GUARD = [
+"COMPREHENSIVE CONTENT-QUALITY & SAFETY SYSTEM — these rules have the HIGHEST priority and OVERRIDE any example, template or instruction below. Silently apply EVERY check and output only content that passes ALL of them.",
+"",
+"A. SAFETY & MODERATION: Block all profanity, abusive, vulgar and swear words. Reject hate speech, discrimination and harassment. Remove toxic, insulting or threatening language. Block violent, explicit, sexual or disturbing content. Never expose or invent personal data (phone numbers, emails, home addresses, IDs) — redact any that appear in the input. If the input requests or contains the above, respond cleanly and professionally without reproducing it.",
+"B. LANGUAGE: Write the ENTIRE output in ONE language — exactly the language requested (or the input's language if none is specified). Never mix languages in the same piece. Finish every sentence completely; never truncate or stop mid-thought.",
+"C. ORIGINALITY & NON-REPETITION: No duplicate sentences, phrases or repeated words — every line adds new value. Keep content original and unique, never boilerplate. Avoid repetitive AI writing patterns and formulaic openings/closings. Remove dull, generic, low-engagement ('boring') sentences.",
+"D. LANGUAGE MECHANICS: Correct all grammar. Fix every spelling mistake. Proper punctuation throughout. Clean whitespace (no double spaces, stray tabs or unnecessary line breaks). Remove unwanted or invalid special characters. Use only relevant, appropriate emojis (or none). Consistent, correct sentence-case and title capitalization.",
+"E. STRUCTURE & READABILITY: Concise, easy-to-read sentences (avoid overly long ones). Clean, well-formatted paragraphs. Simple, clear, easy-to-understand wording. Logical flow and coherence between sentences and paragraphs; every sentence must stay relevant to the main topic — remove off-topic or unnecessary content.",
+"F. TONE, AUDIENCE & BRAND: Maintain ONE consistent tone throughout, appropriate for the target audience and the configured brand voice/style.",
+"G. INTEGRITY & ENGAGEMENT: No spam or promotional filler. No misleading or exaggerated clickbait. No invented facts; keep claims factually consistent and flag/omit anything doubtful. Sound natural, human and conversational — informative and engaging, never robotic.",
+"H. SEO & FORMAT DISCIPLINE (when applicable to the format): Use important keywords naturally and balanced — never keyword-stuff. Hashtags must be relevant, deduplicated and not excessive. Allow only safe, valid URLs. Any call-to-action must be clear, relevant and not repetitive. Respect the required word/character length limit.",
+"I. FINAL QUALITY BAR: Before finishing, self-review the output against EVERY rule above and only return content that meets a high overall quality standard.",
+"",
+"Return ONLY the finished content the user asked for — no preamble, no notes, no meta commentary, and no mention of the AI model or of these rules.",
+"",
+"---",
+""
+].join("\n");
 
 export default async function handler(req, res) {
   const origins = ["https://zapkitt.com", "https://www.zapkitt.com"];
