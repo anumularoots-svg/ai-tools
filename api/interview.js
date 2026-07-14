@@ -1,4 +1,5 @@
 import { kvReady, kvGet, kvDel, kvSetEx, kvSAdd, kvSMembers, kvExpire, kvLPush, kvLTrim, kvLRange } from './_kv.js';
+import { slotType, totalQuestions, difficultyDecision, buildAnalyzerPrompt, buildPlannerPrompt, buildQuestionPrompt, buildAnswerEvalPrompt, buildReportPrompt, extractJSON } from './interview-engine.js';
 
 // Reliable feedback alert — Telegram (replaces the unreliable CallMeBot). Plain text = no escaping needed.
 async function sendTelegram(text){
@@ -168,7 +169,63 @@ export default async function handler(req,res){
     }
 
     var providers=getProviders();
-    if(!providers.length)return res.status(500).json({error:"No AI provider"});
+    if(!providers.length)return res.status(500).json({error:"No AI provider configured. Set GROQ_API_KEY (free at console.groq.com) or GEMINI_API_KEY in .env.local (and in Vercel for production), then restart the dev server."});
+
+    // ============================================================
+    // Interview Engine v2 — multi-prompt pipeline (additive; the old
+    // 'ask'/'evaluate' actions still work untouched). State is held by
+    // the client and sent each call, so this works with NO database.
+    // ============================================================
+    async function callAIJson(pr,maxTok){
+      var errs=[];
+      for(var i=0;i<providers.length;i++){
+        try{var raw=await callAI(providers[i],[{role:"system",content:pr.system},{role:"user",content:pr.user}],maxTok||1200);
+          return {data:extractJSON(raw),model:providers[i].name};}
+        catch(e){errs.push(providers[i].name+": "+e.message);}
+      }
+      throw new Error(errs.join(" | ")||"all providers failed");
+    }
+
+    // Step 1+2: Resume Analyzer -> Interview Planner (run once at interview start).
+    if(b.action==="v2_analyze"){
+      var aTier=b.tier==="r2"?"r2":(b.tier==="r3"?"r3":"free");
+      try{
+        var an=await callAIJson(buildAnalyzerPrompt(b.resume||"",b.role||"",b.experience||""),1500);
+        var pl=await callAIJson(buildPlannerPrompt(an.data,aTier,b.role||"",b.company||"",b.experience||""),1500);
+        return res.status(200).json({success:true,analysis:an.data,plan:pl.data,tier:aTier,total:totalQuestions(aTier),level:(an.data&&an.data.seniority)||"intermediate"});
+      }catch(e){return res.status(500).json({error:"Analyze failed: "+e.message});}
+    }
+
+    // Step 3/7: Question Generator (one question; no-repeat + adaptive difficulty).
+    if(b.action==="v2_question"){
+      var qTier=b.tier==="r2"?"r2":(b.tier==="r3"?"r3":"free");
+      var qn=parseInt(b.qn)||1;
+      var ctx={tier:qTier,qn:qn,type:b.followup?(b.type||slotType(qTier,qn)):slotType(qTier,qn),
+        level:b.level||"intermediate",role:b.role||"",company:b.company||"",resume:b.resume||"",
+        analysis:b.analysis||{},askedQuestions:Array.isArray(b.askedQuestions)?b.askedQuestions:[],
+        weak:Array.isArray(b.weak)?b.weak:[],pending:Array.isArray(b.pending)?b.pending:[],
+        followup:!!b.followup,lastAnswer:b.lastAnswer||""};
+      try{var q=await callAIJson(buildQuestionPrompt(ctx),1000);return res.status(200).json({success:true,data:q.data});}
+      catch(e){return res.status(500).json({error:"Question failed: "+e.message});}
+    }
+
+    // Step 5+6: Answer Evaluator (0-10) + DETERMINISTIC Difficulty Manager decision.
+    if(b.action==="v2_evaluate_answer"){
+      try{
+        var ev=await callAIJson(buildAnswerEvalPrompt(b.question||"",b.answer||"",b.role||""),1200);
+        var s10=(ev.data&&isFinite(Number(ev.data.score)))?Number(ev.data.score):0;
+        var next=difficultyDecision(b.level||"intermediate",s10*10); // eval score is 0-10 -> 0-100
+        return res.status(200).json({success:true,evaluation:ev.data,next:next});
+      }catch(e){return res.status(500).json({error:"Evaluate answer failed: "+e.message});}
+    }
+
+    // Step 8+9: Final Report (aggregate + 30-day learning plan).
+    if(b.action==="v2_report"){
+      var rqas=Array.isArray(b.qas)?b.qas.filter(function(x){return x&&x.q}):[];
+      try{var rep=await callAIJson(buildReportPrompt({role:b.role||"",company:b.company||""},rqas),6000);
+        return res.status(200).json({success:true,data:rep.data});}
+      catch(e){return res.status(500).json({error:"Report failed: "+e.message});}
+    }
 
     if(b.action==="evaluate"){
       // Prefer the structured Q&A pairs (exact question + exact answer) — no reconstruction, no missed questions.
@@ -190,6 +247,7 @@ export default async function handler(req,res){
       evalSys+="overall_score (0-100) is the WEIGHTED average of the categories using these exact weights: technical 35%, production_thinking 20%, problem_solving 15%, communication 10%, resume_knowledge 10%, confidence 10%.\n";
       evalSys+="IDEAL ANSWER RULES: For coding questions, ideal_answer MUST include complete working code. For technical/scenario questions, give the concrete correct answer with specific tools, commands, and architecture — like a real senior engineer. Keep each ideal_answer focused, not padded.";
       var evalMsgs=[{role:"system",content:evalSys},{role:"user",content:"Evaluate now. Output ONLY the JSON object, nothing else."}];
+      var evalErr="";
       for(var i=0;i<providers.length;i++){try{var t=await callAI(providers[i],evalMsgs,6000);t=t.replace(/```json/g,"").replace(/```/g,"").trim();var j1=t.indexOf("{"),j2=t.lastIndexOf("}");if(j1>=0&&j2>j1)t=t.substring(j1,j2+1);var parsed;try{parsed=JSON.parse(t)}catch(pe){
           // Try to fix common JSON issues (control chars, trailing commas)
           t=t.replace(/[\x00-\x1f]/g,' ').replace(/,\s*}/g,'}').replace(/,\s*]/g,']');
@@ -199,8 +257,8 @@ export default async function handler(req,res){
           for(var qk=0;qk<qas.length;qk++){if(!parsed.questions[qk])parsed.questions[qk]={q:qas[qk].q,answer:qas[qk].a||"[No answer given]",score:0,mistakes:"Not evaluated",ideal_answer:"",how_to_improve:""};
             else{if(!parsed.questions[qk].q)parsed.questions[qk].q=qas[qk].q;if(parsed.questions[qk].answer===undefined)parsed.questions[qk].answer=qas[qk].a||"";}}
           parsed.questions=parsed.questions.slice(0,qas.length);}
-        return res.status(200).json({success:true,data:parsed})}catch(e){continue}}
-      return res.status(500).json({error:"Evaluation failed. Please try again."});
+        return res.status(200).json({success:true,data:parsed})}catch(e){evalErr=e.message;continue}}
+      return res.status(500).json({error:"Evaluation failed"+(evalErr?": "+evalErr:". Please try again.")});
     }
 
     var resume=b.resume||"",role=b.role||"Software Engineer",company=b.company||"",difficulty=b.difficulty||"intermediate";
@@ -224,6 +282,10 @@ export default async function handler(req,res){
     var nextSlot=slotFor(tier,questionNum+1);
 
     sys+="ROUND: "+roundName+".\n\n";
+    // Adaptive difficulty (v2): the client raises/keeps this level from per-answer scores.
+    if(b.level)sys+="CURRENT DIFFICULTY LEVEL: "+b.level+" — calibrate this question's depth to that level (beginner = fundamentals, intermediate = applied, senior = trade-offs, architect = system design, expert = deep edge cases & production scale).\n";
+    if(Array.isArray(b.weakTopics)&&b.weakTopics.length)sys+="The candidate has been weaker on: "+b.weakTopics.slice(-6).join(", ")+" — you may probe one of these areas more deeply (without repeating an exact earlier question).\n";
+    sys+="\n";
     if(allowFollowup){
       sys+="YOU HAVE A CHOICE this turn. Read the candidate's last answer carefully like a real interviewer:\n";
       sys+='- If it was incomplete, vague, or they mentioned something specific worth digging into, ask ONE natural FOLLOW-UP on the SAME topic that references what they actually said. Set "followup":true and "type":"normal".\n';
@@ -267,7 +329,8 @@ export default async function handler(req,res){
       return res.end();
     }
 
-    for(var pi=0;pi<providers.length;pi++){try{var text=await callAI(providers[pi],msgs);await storeAsked(resumeHash,tier,text);text=text.replace(/```json/g,"").replace(/```/g,"").trim();var j1=text.indexOf("{"),j2=text.lastIndexOf("}");if(j1>=0&&j2>j1)text=text.substring(j1,j2+1);return res.status(200).json({success:true,data:JSON.parse(text)})}catch(e){continue}}
-    return res.status(500).json({error:"All providers failed"});
+    var askErr="";
+    for(var pi=0;pi<providers.length;pi++){try{var text=await callAI(providers[pi],msgs);await storeAsked(resumeHash,tier,text);text=text.replace(/```json/g,"").replace(/```/g,"").trim();var j1=text.indexOf("{"),j2=text.lastIndexOf("}");if(j1>=0&&j2>j1)text=text.substring(j1,j2+1);return res.status(200).json({success:true,data:JSON.parse(text)})}catch(e){askErr=e.message;continue}}
+    return res.status(500).json({error:"All providers failed"+(askErr?": "+askErr:"")});
   }catch(e){return res.status(500).json({error:e.message})}
 }
