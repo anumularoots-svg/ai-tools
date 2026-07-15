@@ -15,9 +15,11 @@ function genCode(n){var c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",s="";for(var i=0;i<
 // Admin auth — FAILS CLOSED. With no ADMIN_KEY configured nobody gets admin access
 // (no hardcoded fallback). Constant-time compare so the key can't be timing-probed.
 function adminOk(k){
-  var want=process.env.ADMIN_KEY||"";
+  // Trim both sides: env values often carry a trailing newline (e.g. when piped in
+  // via the CLI), which would silently fail the length check and lock out the admin.
+  var want=String(process.env.ADMIN_KEY||"").trim();
   if(!want||!k)return false;
-  var a=String(k),b=String(want);
+  var a=String(k).trim(),b=want;
   if(a.length!==b.length)return false;
   var diff=0;for(var i=0;i<a.length;i++)diff|=a.charCodeAt(i)^b.charCodeAt(i);
   return diff===0;
