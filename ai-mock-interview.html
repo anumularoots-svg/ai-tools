@@ -750,7 +750,37 @@ function setStatus(t){document.getElementById('voiceStatus').textContent=t}
 function enableInp(){document.getElementById('sbtn').disabled=false;document.getElementById('ainp').disabled=false;document.getElementById('ainp').focus()}
 function disableInp(){document.getElementById('sbtn').disabled=true;document.getElementById('ainp').disabled=true}
 
+// ── "Sorry, could you repeat that?" ────────────────────────────────────────
+// A real interviewer repeats the question instead of marking the request as an
+// answer. Fully client-side: nothing is recorded, no AI call, no question is
+// consumed — the same question is spoken again and the answer timer restarts.
+var REPEAT_RE=/(^|\s)(repeat|repeat it|repeat that|repeat the question|say that again|say it again|come again|pardon|pardon me|sorry what|what was that|what was the question|didn t catch|didn t get|didn t hear|didn t understand|did not catch|did not get|did not hear|did not understand|not clear|unable to get you|unable to hear|unable to understand|once more|again please|can you repeat|can you please repeat|could you repeat|could you please repeat|please repeat)(\s|$)/;
+function isRepeatRequest(t){
+  var s=String(t||'').trim().toLowerCase().replace(/[.?!,'’]/g,' ').replace(/\s+/g,' ').trim();
+  // Real answers are long. The length cap stops "I repeat the build step..." from triggering.
+  if(!s||s.length>70)return false;
+  return REPEAT_RE.test(' '+s+' ');
+}
+function repeatQuestion(said){
+  var q=S.qas.length?S.qas[S.qas.length-1].q:'';
+  if(!q)return false; // nothing asked yet — let it be handled as a normal answer
+  stopTimer();stopListening();
+  addM('u',said);
+  document.getElementById('ainp').value='';document.getElementById('capLive').textContent='';
+  disableInp();
+  addM('ai','<div class="sn">Interviewer</div><div style="font-size:12px;color:#6b7280;margin-bottom:6px">Of course — let me repeat that.</div><div style="font-size:14px;font-weight:500">'+q+'</div>');
+  setCaption(q);setPhase('speaking');
+  // Mirror finishAsk's post-speak handling so the input mode/timer are identical.
+  speak('Of course, let me repeat that. '+q,function(){
+    if(S.lastType==='coding'){setPhase('listening');document.getElementById('capLive').textContent='Write your code below (2 min)';showCodeEditor();startTimer(120)}
+    else if(typeMode){setPhase('idle');document.getElementById('ab').style.display='flex';enableInp();startTimer()}
+    else{startListening();startTimer()}
+  });
+  return true;
+}
+
 function submitAnswer(a){a=(a||'').trim();if(!a)return;
+  if(isRepeatRequest(a)&&repeatQuestion(a))return; // candidate asked to hear the question again
   stopTimer();stopListening();
   addM('u',a);if(S.qas.length)S.qas[S.qas.length-1].a=a;
   S.transcript+='Candidate A'+S.qNum+': '+a+'\n';
