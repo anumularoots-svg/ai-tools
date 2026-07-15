@@ -183,7 +183,10 @@ export default async function handler(req,res){
         try{
           var gk="unlock:"+vTier+":"+entered;
           var gv=await kvGet(gk);
-          if(gv){await kvDel(gk);return res.status(200).json({unlocked:true,tier:vTier,generated:true})}
+          // Tombstone instead of delete: keeps a record so a second attempt gets a
+          // clear "already used" instead of a confusing "code not recognised".
+          if(gv==="used")return res.status(200).json({unlocked:false,error:"This code has already been used — each code works only once. Message us on WhatsApp and we'll send you a new one."});
+          if(gv){await kvSetEx(gk,180*24*3600,"used");return res.status(200).json({unlocked:true,tier:vTier,generated:true})}
         }catch(kvErr){
           console.error("verifyUnlock KV error:",kvErr.message);
           return res.status(503).json({unlocked:false,error:"We couldn't verify your code right now (temporary issue on our side). Your payment is safe — please retry in a minute, or message us on WhatsApp and we'll unlock it manually."});
@@ -209,7 +212,10 @@ export default async function handler(req,res){
         }
       }
       // (3) Ko-fi auto path (optional — needs Upstash + KOFI_VERIFICATION_TOKEN).
-      if(!vEmail||vEmail.indexOf("@")<1)return res.status(400).json({unlocked:false,error:"Enter your unlock code (from WhatsApp) or the email you paid with on Ko-fi."});
+      // Nothing above matched. Distinguish "typed nothing" from "code we don't know",
+      // otherwise a paying user with a bad code is told to "enter your code" they just entered.
+      if(!entered)return res.status(400).json({unlocked:false,error:"Enter your unlock code (from WhatsApp) or the email you paid with on Ko-fi."});
+      if(vEmail.indexOf("@")<1)return res.status(200).json({unlocked:false,error:"That code wasn't recognised. Please double-check it, or message us on WhatsApp and we'll sort it out."});
       if(!kvReady())return res.status(200).json({unlocked:false,error:"That code wasn't recognised. Please enter the exact unlock code we sent you on WhatsApp."});
       try{
         var vKey="kofi:"+vEmail+":"+vTier;
