@@ -3,7 +3,7 @@
 
 /* Nav */
 .fp-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E5E7EB}
-.fp-nav-inner{max-width:1120px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.fp-nav-inner{max-width:100%;margin:0 auto;padding:0 44px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:32px}
 .fp-logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:20px;color:#111827;letter-spacing:-0.5px}
 .fp-logo svg{width:32px;height:32px}
 .fp-logo span{color:#D4920B}

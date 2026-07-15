@@ -91,7 +91,10 @@
 
   function build() {
     if (document.querySelector(".zkm2-trigger")) return;
-    var host = document.querySelector(".zk-nav-left") || document.querySelector(".zk-nav-links") || document.querySelector(".nl") || document.querySelector(".nav-links") || document.querySelector("nav .nav-in") || document.querySelector("nav");
+    // Order matters: match the page's real link container FIRST. Without
+    // .fp-nav-links here, every fp-nav page fell through to <nav> and the
+    // triggers were inserted before the logo, pushing the logo to the middle.
+    var host = document.querySelector(".zk-nav-left") || document.querySelector(".zk-nav-links") || document.querySelector(".fp-nav-links") || document.querySelector(".nl") || document.querySelector(".nav-links") || document.querySelector("nav .nav-in") || document.querySelector("nav");
     var navEl = document.querySelector(".zk-nav") || document.querySelector(".nav") || document.querySelector(".nav-wrap") || document.querySelector("nav");
     if (!host) return;
 
