@@ -7,21 +7,8 @@
 import { buildUserPrompt, getSystemPrompt } from "../prompts/prompt-engine.js";
 import { validateResume } from "../validator/resume-validator.js";
 
-// Rate limiter
-const rateMap = new Map();
-const RATE_LIMIT = 20;
-const RATE_WINDOW = 60000;
-
-function checkRate(ip) {
-  const now = Date.now();
-  const entry = rateMap.get(ip);
-  if (!entry || now - entry.start > RATE_WINDOW) {
-    rateMap.set(ip, { start: now, count: 1 });
-    return true;
-  }
-  entry.count++;
-  return entry.count <= RATE_LIMIT;
-}
+// Rate limiting is Upstash-backed (shared across instances, survives cold starts).
+import { rateLimit, clientIP } from "./_ratelimit.js";
 
 // Clean AI response — extract JSON from potential markdown/think blocks
 function extractJSON(text) {
@@ -49,8 +36,9 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
 
   // Rate limit
-  const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || "unknown";
-  if (!checkRate(ip)) return res.status(429).json({ error: "Too many requests. Please wait." });
+  const ip = clientIP(req);
+  const rl = await rateLimit("generate:" + ip, 20, 60);
+  if (!rl.ok) return res.status(429).json({ error: "Too many requests. Please wait." });
 
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) return res.status(500).json({ error: "API key not configured" });

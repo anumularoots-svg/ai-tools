@@ -21,6 +21,8 @@ async function cmd(args) {
 export function kvSetEx(key, seconds, val) { return cmd(['SET', key, val, 'EX', String(seconds)]); }
 export function kvGet(key) { return cmd(['GET', key]); }
 export function kvDel(key) { return cmd(['DEL', key]); }
+// Counter — used by the distributed rate limiter.
+export function kvIncr(key) { return cmd(['INCR', key]); }
 // Sets — used for cross-session question de-duplication per resume.
 export function kvSAdd(key, member) { return cmd(['SADD', key, member]); }
 export async function kvSMembers(key) { const r = await cmd(['SMEMBERS', key]); return Array.isArray(r) ? r : []; }
