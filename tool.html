@@ -268,7 +268,9 @@ function renderTool() {
     "applicationCategory": catMap[t.category] || "UtilitiesApplication",
     "operatingSystem": "Web",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
-    "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "120", "bestRating": "5", "worstRating": "1" },
+    // No aggregateRating: Google requires it to come from genuine reviews that are
+    // visible on the page. A hardcoded value is fabricated review data and risks a
+    // manual action. Re-add only when real ratings are aggregated and rendered here.
     "creator": { "@type": "Organization", "name": "ZapKitt", "url": "https://zapkitt.com" },
     "featureList": "Free, No signup required, AI-powered, No daily limits, No watermark",
     "screenshot": "https://zapkitt.com/og-image.png",

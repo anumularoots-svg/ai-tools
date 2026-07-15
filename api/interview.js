@@ -175,8 +175,17 @@ export default async function handler(req,res){
       // (1) Dev/test master key — unlocks any tier without paying. Remove env after testing.
       if(process.env.TEST_UNLOCK_KEY&&entered===process.env.TEST_UNLOCK_KEY)return res.status(200).json({unlocked:true,tier:vTier,test:true});
       // (1b) Admin-generated single-use code — valid in Upstash until redeemed, then deleted (consumed).
+      //      A KV OUTAGE must not look like a bad code: a paying user would be told their
+      //      code is wrong with no way forward. Surface it as an infrastructure error instead.
       if(entered&&kvReady()){
-        try{var gk="unlock:"+vTier+":"+entered;var gv=await kvGet(gk);if(gv){await kvDel(gk);return res.status(200).json({unlocked:true,tier:vTier,generated:true})}}catch(e){}
+        try{
+          var gk="unlock:"+vTier+":"+entered;
+          var gv=await kvGet(gk);
+          if(gv){await kvDel(gk);return res.status(200).json({unlocked:true,tier:vTier,generated:true})}
+        }catch(kvErr){
+          console.error("verifyUnlock KV error:",kvErr.message);
+          return res.status(503).json({unlocked:false,error:"We couldn't verify your code right now (temporary issue on our side). Your payment is safe — please retry in a minute, or message us on WhatsApp and we'll unlock it manually."});
+        }
       }
       // (2) Manual WhatsApp unlock codes. Env UNLOCK_CODES="r2:AB12CD,r3:EF34GH,r2:JK56LM".
       //     After a UPI payment you verify the screenshot on WhatsApp, then send the user one
