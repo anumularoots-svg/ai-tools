@@ -1,13 +1,7 @@
 // ZapKitt AI API v4 — Multi-Provider Auto-Failover
 // Groq → Google Gemini → OpenRouter → Cerebras
-const rateMap = new Map();
-function checkRate(ip) {
-  const now = Date.now();
-  const e = rateMap.get(ip);
-  if (!e || now - e.start > 60000) { rateMap.set(ip, { start: now, count: 1 }); return true; }
-  e.count++;
-  return e.count <= 20;
-}
+// Rate limiting is Upstash-backed (shared across instances, survives cold starts).
+import { rateLimit, clientIP } from './_ratelimit.js';
 function extractJSON(text) {
   let c = text.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
   c = c.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
@@ -134,8 +128,9 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
-  const ip = req.headers["x-forwarded-for"] ? req.headers["x-forwarded-for"].split(",")[0].trim() : "x";
-  if (!checkRate(ip)) return res.status(429).json({ error: "Rate limit — try again in 1 minute" });
+  const ip = clientIP(req);
+  const rl = await rateLimit("ai:" + ip, 20, 60);
+  if (!rl.ok) return res.status(429).json({ error: "Rate limit — try again in 1 minute" });
   const { prompt, system, max_tokens, mode, userData } = req.body;
   if (mode === "json" && userData) return jsonMode(res, userData);
   return legacyMode(res, prompt, system, max_tokens);

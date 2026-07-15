@@ -1,5 +1,6 @@
 // ZapKitt Shared Tool API — handles ALL config-driven AI tools
 // Single endpoint, different prompts per tool
+import { rateLimit, clientIP, sanitizeFields } from './_ratelimit.js';
 
 // Multi-key rotation: supports comma-separated keys per provider
 function pickKey(envValue) {
@@ -164,14 +165,25 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
 
+  // Rate limit BEFORE any AI call — generation is the expensive part. Upstash-backed
+  // so it survives cold starts and is shared across instances.
+  var ip = clientIP(req);
+  var rl = await rateLimit("tool:" + ip, 20, 60); // 20 generations / minute / IP
+  if (!rl.ok) return res.status(429).json({ error: "Too many requests. Please wait a minute and try again." });
+
   const { systemPrompt, userPrompt, fields, maxTokens, language } = req.body;
   if (!systemPrompt || !userPrompt) return res.status(400).json({ error: "systemPrompt and userPrompt required" });
+  // Cap prompt templates too — they arrive from the client, so bound the payload.
+  if (String(systemPrompt).length > 20000 || String(userPrompt).length > 20000)
+    return res.status(400).json({ error: "Prompt too large" });
 
   // Resolve requested language: explicit param, then a tool's own language field, else English.
   var lang = (language || (fields && fields.language) || "English").toString().trim() || "English";
+  lang = String(lang).slice(0, 40).replace(/[^A-Za-z ()À-ɏ]/g, ""); // language names only
   var langLock = buildLangLock(lang);
 
-  var prompt = buildPrompt(userPrompt, fields || {});
+  // Sanitise user-supplied field values before they are interpolated into the prompt.
+  var prompt = buildPrompt(userPrompt, sanitizeFields(fields, 6000));
   var mt = Math.min(parseInt(maxTokens) || 2000, 8000);
 
   var result = await callAI(langLock + QUALITY_GUARD + systemPrompt, prompt, mt, 0.5);

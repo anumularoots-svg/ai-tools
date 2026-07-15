@@ -1,5 +1,6 @@
 import { kvReady, kvGet, kvDel, kvSetEx, kvSAdd, kvSMembers, kvExpire, kvLPush, kvLTrim, kvLRange } from './_kv.js';
 import { slotType, totalQuestions, difficultyDecision, buildAnalyzerPrompt, buildPlannerPrompt, buildQuestionPrompt, buildAnswerEvalPrompt, buildReportPrompt, extractJSON } from './interview-engine.js';
+import { rateLimit, clientIP, sanitizeText } from './_ratelimit.js';
 
 // Reliable feedback alert — Telegram (replaces the unreliable CallMeBot). Plain text = no escaping needed.
 async function sendTelegram(text){
@@ -11,6 +12,16 @@ async function sendTelegram(text){
 function pickKey(env){if(!env)return null;var k=env.split(",").map(function(k){return k.trim()}).filter(Boolean);return k.length?k[Math.floor(Math.random()*k.length)]:null}
 // Random unlock code (no ambiguous chars: no O/0/I/1). e.g. genCode(6) -> "7K4M2P".
 function genCode(n){var c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",s="";for(var i=0;i<(n||6);i++)s+=c[Math.floor(Math.random()*c.length)];return s}
+// Admin auth — FAILS CLOSED. With no ADMIN_KEY configured nobody gets admin access
+// (no hardcoded fallback). Constant-time compare so the key can't be timing-probed.
+function adminOk(k){
+  var want=process.env.ADMIN_KEY||"";
+  if(!want||!k)return false;
+  var a=String(k),b=String(want);
+  if(a.length!==b.length)return false;
+  var diff=0;for(var i=0;i<a.length;i++)diff|=a.charCodeAt(i)^b.charCodeAt(i);
+  return diff===0;
+}
 
 // Exact question-slot plan per round (Phase 1 structured interview).
 function slotFor(tier,qn){
@@ -139,7 +150,8 @@ export default async function handler(req,res){
     }
     
     // Admin endpoint — prefer persistent Upstash list, fall back to in-memory.
-    if(b.action==='adminFeedback'&&b.key===(process.env.ADMIN_KEY||'zapkitt2026')){
+    // Admin auth: fail CLOSED — if ADMIN_KEY is not configured, no admin access at all.
+    if(b.action==='adminFeedback'&&adminOk(b.key)){
       if(kvReady()){try{var raw=await kvLRange('zk_feedback',0,499);var list=raw.map(function(x){try{return JSON.parse(x)}catch(e){return null}}).filter(Boolean);return res.status(200).json({feedback:list,count:list.length,store:'upstash'})}catch(e){}}
       return res.status(200).json({feedback:global._zkFeedback||[],count:(global._zkFeedback||[]).length,store:'memory'});
     }
@@ -148,7 +160,7 @@ export default async function handler(req,res){
     // Admin: generate a FRESH single-use unlock code (from the secret /admin page).
     // Stored in Upstash, consumed on redeem — no fixed pool to manage or run out.
     if(b.action==="adminGenCode"){
-      if(b.key!==(process.env.ADMIN_KEY||"zapkitt2026"))return res.status(403).json({error:"Invalid admin key"});
+      if(!adminOk(b.key))return res.status(403).json({error:"Invalid admin key"});
       if(!kvReady())return res.status(500).json({error:"Upstash not configured — set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN."});
       var gTier=b.tier==="r3"?"r3":"r2";
       var newCode=gTier.toUpperCase()+"-"+genCode(6);
@@ -196,6 +208,15 @@ export default async function handler(req,res){
         return res.status(200).json({unlocked:true,tier:vTier});
       }catch(ue){return res.status(200).json({unlocked:false,error:"Could not verify right now. Please retry."})}
     }
+
+    // Rate limit the AI-heavy paths. The cheap actions (checkLimit, feedback,
+    // verifyUnlock, adminGenCode) have already returned above.
+    var ivRl=await rateLimit("interview:"+userIP,30,60); // interviews are chatty: 30/min
+    if(!ivRl.ok)return res.status(429).json({error:"Too many requests. Please wait a moment and continue."});
+    // Sanitise the free-text the client sends into prompts (resume/JD/answers).
+    if(b.resume)b.resume=sanitizeText(b.resume,12000);
+    if(b.answer)b.answer=sanitizeText(b.answer,6000);
+    if(b.transcript)b.transcript=sanitizeText(b.transcript,20000);
 
     var providers=getProviders();
     if(!providers.length)return res.status(500).json({error:"No AI provider configured. Set GROQ_API_KEY (free at console.groq.com) or GEMINI_API_KEY in .env.local (and in Vercel for production), then restart the dev server."});
