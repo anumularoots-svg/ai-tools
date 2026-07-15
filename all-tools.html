@@ -211,7 +211,8 @@ async function loadTools() {
     tools.forEach(function(t){ count[t.category] = (count[t.category] || 0) + 1; });
 
     // Filters — only categories that actually have tools, in a fixed order
-    var fh = '<button class="fbtn on" data-cat="all" onclick="filterCat(\'all\',this)">All (' + tools.length + ')</button>';
+    // Show the same rounded total as the hero/homepage ("140+") so the count never looks mismatched.
+    var fh = '<button class="fbtn on" data-cat="all" onclick="filterCat(\'all\',this)">All (' + (Math.floor(tools.length / 10) * 10) + '+)</button>';
     CAT_ORDER.forEach(function(cat) {
       if (!count[cat]) return;
       fh += '<button class="fbtn" data-cat="' + cat + '" onclick="filterCat(\'' + cat + '\',this)">' + CAT_ICON[cat] + ' ' + CAT_NAME[cat] + ' (' + count[cat] + ')</button>';
