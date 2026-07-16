@@ -6,7 +6,7 @@
 .fp-nav-inner{max-width:100%;margin:0 auto;padding:0 44px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:32px}
 .fp-logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:20px;color:#111827;letter-spacing:-0.5px}
 .fp-logo svg{width:32px;height:32px}
-.fp-logo span{color:#D4920B}
+.fp-logo span{color:#6C3CE1}
 .fp-nav-links{display:flex;gap:28px}
 .fp-nav-links a{text-decoration:none;color:#6B7280;font-size:14px;font-weight:500;transition:color .15s}
 .fp-nav-links a:hover{color:#111827}
