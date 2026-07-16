@@ -2,7 +2,7 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#F6F8FC;--bg-2:#EEF2F8;--surface:#FFFFFF;--surface-alt:#F3F6FB;
-  --accent:#2F88FF;--accent-hover:#1E6FE6;--accent-light:#EAF3FF;--accent-dark:#1E6FE6;
+  --accent:#6C3CE1;--accent-hover:#5527CC;--accent-light:#F1ECFF;--accent-dark:#5527CC;
   --purple:#7C5CFC;--purple-bg:#F1ECFF;
   --success:#10B981;--success-bg:#E9FBF3;--danger:#E8215B;--danger-bg:#FDEAF0;
   --amber:#FF8A3D;--amber-bg:#FFF1E6;
@@ -80,7 +80,7 @@ a{text-decoration:none;color:inherit}
 .tw-shape.s2{top:14%;right:14%;width:26px;height:26px;background:#F368A0;border-radius:6px;transform:rotate(24deg);animation-delay:1.1s}
 .tw-shape.s3{top:56%;left:12%;width:9px;height:9px;border-radius:50%;background:#E8215B;animation-delay:.6s}
 .tw-shape.s4{top:72%;right:15%;width:9px;height:9px;border-radius:50%;background:#E8215B;animation-delay:1.6s}
-.tw-shape.s5{top:64%;left:22%;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:16px solid #2F88FF;transform:rotate(-20deg);animation-delay:2.1s}
+.tw-shape.s5{top:64%;left:22%;width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:16px solid #6C3CE1;transform:rotate(-20deg);animation-delay:2.1s}
 .tw-shape.s6{top:26%;right:20%;width:22px;height:22px;background:#7C5CFC;border-radius:5px;transform:rotate(-16deg);animation-delay:.3s}
 @keyframes twFloat{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-14px) rotate(var(--r,0deg))}}
 .tw-shape.s1{--r:18deg}.tw-shape.s2{--r:24deg}.tw-shape.s5{--r:-20deg}.tw-shape.s6{--r:-16deg}
@@ -266,7 +266,7 @@ a{text-decoration:none;color:inherit}
 
 /* ── FINAL CTA ── */
 .final-cta{max-width:1000px;margin:0 auto;padding:0 24px clamp(56px,8vw,88px)}
-.final-cta-card{background:linear-gradient(135deg,var(--accent) 0%,#5AA0FF 100%);border-radius:24px;padding:clamp(48px,7vw,72px) clamp(32px,5vw,48px);text-align:center;position:relative;overflow:hidden;box-shadow:0 24px 50px -18px rgba(47,136,255,.5)}
+.final-cta-card{background:linear-gradient(135deg,var(--accent) 0%,#8B5CF6 100%);border-radius:24px;padding:clamp(48px,7vw,72px) clamp(32px,5vw,48px);text-align:center;position:relative;overflow:hidden;box-shadow:0 24px 50px -18px rgba(47,136,255,.5)}
 .final-cta-card::before{content:'';position:absolute;top:-80px;right:-60px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.14);pointer-events:none}
 .final-cta-card h2{font-family:var(--sans);font-size:clamp(28px,4.4vw,44px);font-weight:800;letter-spacing:-.02em;color:#fff;margin-bottom:14px;position:relative;line-height:1.12}
 .final-cta-card p{font-size:17px;color:rgba(255,255,255,.9);margin-bottom:32px;position:relative}

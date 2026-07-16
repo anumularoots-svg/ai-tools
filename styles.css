@@ -48,7 +48,7 @@ body {
 }
 
 .highlight {
-  background: linear-gradient(120deg, #2F88FF 0%, #1E6FE6 100%);
+  background: linear-gradient(120deg, #6C3CE1 0%, #5527CC 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -84,7 +84,7 @@ body {
 }
 
 .tool-card:hover {
-  border-color: #2F88FF;
+  border-color: #6C3CE1;
   box-shadow: 0 2px 12px rgba(79,70,229,0.08);
 }
 
@@ -125,7 +125,7 @@ body {
   padding: 2px 8px;
   border-radius: 6px;
   background: #EEF2FF;
-  color: #2F88FF;
+  color: #6C3CE1;
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
@@ -158,7 +158,7 @@ body {
   display: block;
   font-size: 28px;
   font-weight: 700;
-  color: #2F88FF;
+  color: #6C3CE1;
 }
 
 .stat span {
@@ -246,7 +246,7 @@ body {
 }
 
 .drop-zone:hover, .drop-zone.drag-over {
-  border-color: #2F88FF;
+  border-color: #6C3CE1;
   background: #EEF2FF;
 }
 
@@ -307,7 +307,7 @@ body {
 }
 
 .btn-primary {
-  background: #2F88FF;
+  background: #6C3CE1;
   color: #fff;
 }
 
@@ -336,7 +336,7 @@ body {
 
 .progress-fill {
   height: 100%;
-  background: #2F88FF;
+  background: #6C3CE1;
   border-radius: 3px;
   transition: width 0.3s;
   width: 0%;

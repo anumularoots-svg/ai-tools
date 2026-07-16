@@ -2,7 +2,7 @@
 /* Linked AFTER each page's inline <style> so equal/!important rules win. */
 :root{
   --c-bg:#F6F8FC;--c-surface:#FFFFFF;--c-surface-hover:#FFFFFF;--c-alt:#F3F6FB;
-  --c-accent:#2F88FF;--c-accent-hover:#1E6FE6;--c-accent-light:#EAF3FF;--c-accent-dark:#1E6FE6;
+  --c-accent:#6C3CE1;--c-accent-hover:#5527CC;--c-accent-light:#F1ECFF;--c-accent-dark:#5527CC;
   --c-text:#141A2E;--c-text2:#5B6472;--c-text3:#8A93A3;--c-border:#E7ECF3;--c-border-strong:#D9E0EA;
   --c-sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;--c-ease:cubic-bezier(.16,1,.3,1);
   --c-shadow-soft:0 1px 3px rgba(20,26,46,.05),0 1px 2px rgba(20,26,46,.04);
@@ -61,7 +61,7 @@ h1,h2,h3,h4,.logo,.logo-text,.logo b,.hero h1,.wc h4,.card h3{font-family:var(--
 .card p{color:var(--c-text2)!important;font-size:12.5px!important}
 .card-tag{background:var(--c-accent-light)!important;color:var(--c-accent-dark)!important;border-radius:999px!important;padding:3px 11px!important;font-weight:700!important}
 /* cycling pastel icon tiles (TinyWow-style variety) */
-.grid .card:nth-child(6n+1) .card-icon{background:#EAF3FF!important}.grid .card:nth-child(6n+1) .card-icon svg{stroke:#2F88FF!important}
+.grid .card:nth-child(6n+1) .card-icon{background:#F1ECFF!important}.grid .card:nth-child(6n+1) .card-icon svg{stroke:#6C3CE1!important}
 .grid .card:nth-child(6n+2) .card-icon{background:#F1ECFF!important}.grid .card:nth-child(6n+2) .card-icon svg{stroke:#7C5CFC!important}
 .grid .card:nth-child(6n+3) .card-icon{background:#FFF1E6!important}.grid .card:nth-child(6n+3) .card-icon svg{stroke:#FF6B35!important}
 .grid .card:nth-child(6n+4) .card-icon{background:#E9FBF3!important}.grid .card:nth-child(6n+4) .card-icon svg{stroke:#10B981!important}
@@ -71,9 +71,9 @@ h1,h2,h3,h4,.logo,.logo-text,.logo b,.hero h1,.wc h4,.card h3{font-family:var(--
 .grid .card{position:relative;overflow:hidden}
 .grid .card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;opacity:0;transition:opacity .3s var(--c-ease);background:var(--tc,var(--c-accent))}
 .grid .card:hover::after{opacity:1}
-.grid .card:nth-child(6n+1){--tc:#2F88FF}.grid .card:nth-child(6n+2){--tc:#7C5CFC}.grid .card:nth-child(6n+3){--tc:#FF6B35}.grid .card:nth-child(6n+4){--tc:#10B981}.grid .card:nth-child(6n+5){--tc:#E8215B}.grid .card:nth-child(6n+6){--tc:#17A398}
+.grid .card:nth-child(6n+1){--tc:#6C3CE1}.grid .card:nth-child(6n+2){--tc:#7C5CFC}.grid .card:nth-child(6n+3){--tc:#FF6B35}.grid .card:nth-child(6n+4){--tc:#10B981}.grid .card:nth-child(6n+5){--tc:#E8215B}.grid .card:nth-child(6n+6){--tc:#17A398}
 .grid .card:hover{border-color:color-mix(in srgb,var(--tc) 45%,transparent)!important;box-shadow:0 20px 42px -16px color-mix(in srgb,var(--tc) 48%,rgba(20,26,46,.32))!important}
-.grid .card:nth-child(6n+1) .card-tag{background:#EAF3FF!important;color:#2F88FF!important}
+.grid .card:nth-child(6n+1) .card-tag{background:#F1ECFF!important;color:#6C3CE1!important}
 .grid .card:nth-child(6n+2) .card-tag{background:#F1ECFF!important;color:#7C5CFC!important}
 .grid .card:nth-child(6n+3) .card-tag{background:#FFF1E6!important;color:#FF6B35!important}
 .grid .card:nth-child(6n+4) .card-tag{background:#E9FBF3!important;color:#10B981!important}
@@ -95,7 +95,7 @@ h1,h2,h3,h4,.logo,.logo-text,.logo b,.hero h1,.wc h4,.card h3{font-family:var(--
 .wc p{color:var(--c-text2)!important;font-size:13.5px!important}
 
 /* CTA box */
-.cta-box{background:linear-gradient(135deg,var(--c-accent) 0%,#5AA0FF 100%)!important;border:none!important;border-radius:24px!important;padding:clamp(40px,6vw,64px)!important;box-shadow:0 24px 50px -18px rgba(47,136,255,.5)}
+.cta-box{background:linear-gradient(135deg,var(--c-accent) 0%,#8B5CF6 100%)!important;border:none!important;border-radius:24px!important;padding:clamp(40px,6vw,64px)!important;box-shadow:0 24px 50px -18px rgba(47,136,255,.5)}
 .cta-box h3{font-size:clamp(24px,3.4vw,36px)!important;font-weight:800!important;letter-spacing:-.02em;color:#fff!important}
 .cta-box p{color:rgba(255,255,255,.9)!important}
 .cta-btn{background:#fff!important;color:var(--c-accent)!important;border-radius:10px!important;font-weight:700!important;transition:transform .25s var(--c-ease),box-shadow .25s!important}
