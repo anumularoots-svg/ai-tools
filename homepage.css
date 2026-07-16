@@ -226,7 +226,7 @@ a{text-decoration:none;color:inherit}
 .btn-ghost:hover svg{transform:translateX(3px)}
 
 /* ── WHY GRID ── */
-.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px}
 .why-card{padding:30px;border-radius:var(--radius-xl);background:var(--surface);border:1px solid var(--border);transition:transform .3s var(--ease-out),box-shadow .3s,border-color .3s}
 .why-card:hover{border-color:var(--border-strong);box-shadow:var(--shadow-lg);transform:translateY(-6px)}
 .why-card-icon{width:46px;height:46px;border-radius:12px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;margin-bottom:18px;transition:transform .3s var(--ease-out)}
