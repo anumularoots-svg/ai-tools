@@ -1,0 +1,347 @@
+<!DOCTYPE html><html lang="en"><head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3VLGB81N09"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-3VLGB81N09");</script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="google-site-verification" content="2uRTT9HOTsR5dtlhUkW07-LsRBkcex-jc6B1fB6l7mg">
+<title>Free ATS Resume Checker — Match Your Resume to Any Job Description | ZapKitt</title>
+<meta name="description" content="Paste your resume and a job description. See exactly which keywords you are missing before you apply. Real keyword matching, no fake scores. Free, no signup.">
+<link rel="canonical" href="https://zapkitt.com/ats-checker">
+<meta property="og:type" content="website"><meta property="og:title" content="Free ATS Resume Checker — Match Your Resume to Any JD | ZapKitt"><meta property="og:description" content="See exactly which keywords you are missing before you apply. Real matching, no fake scores. Free, no signup."><meta property="og:url" content="https://zapkitt.com/ats-checker"><meta property="og:site_name" content="ZapKitt"><meta property="og:image" content="https://zapkitt.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Free ATS Resume Checker | ZapKitt"><meta name="twitter:description" content="See which keywords you are missing before you apply. Free, no signup."><meta name="twitter:image" content="https://zapkitt.com/og-image.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/zapkitt-global.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"ZapKitt ATS Resume Checker","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Match your resume against any job description and see which ATS keywords are missing."}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is the ATS checker free?","acceptedAnswer":{"@type":"Answer","text":"Yes. Unlimited checks, no signup, no card."}},{"@type":"Question","name":"How is the match score calculated?","acceptedAnswer":{"@type":"Answer","text":"Required keywords weigh 2x, preferred 1x. Score = matched weight divided by total weight. Matching is literal text plus known aliases, done in code — the AI never decides whether a keyword is in your resume."}},{"@type":"Question","name":"Is my resume stored?","acceptedAnswer":{"@type":"Answer","text":"No. Your text is sent for processing and discarded. Nothing is saved to a database."}},{"@type":"Question","name":"Does it work for non-tech roles?","acceptedAnswer":{"@type":"Answer","text":"Yes. Keywords are extracted from whatever job description you paste — finance, nursing, marketing, operations all work."}}]}</script>
+<style>
+.ats-wrap{max-width:860px;margin:0 auto;padding:0 20px 60px}
+.ats-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:720px){.ats-grid{grid-template-columns:1fr}}
+.ats-card{background:var(--zk-surface);border:1px solid var(--zk-border);border-radius:var(--zk-radius-xl);padding:26px;box-shadow:var(--zk-shadow-md)}
+.ats-card+.ats-card{margin-top:18px}
+.ats-field label{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-size:13px;font-weight:700;color:var(--zk-text);margin-bottom:7px}
+.ats-field label .cnt{font-size:11px;font-weight:600;color:var(--zk-text3);font-family:var(--zk-mono)}
+.ats-field textarea{width:100%;min-height:190px;padding:14px;border:1px solid var(--zk-border);border-radius:var(--zk-radius);font-size:14px;font-family:inherit;line-height:1.6;background:var(--zk-surface);color:var(--zk-text);outline:0;resize:vertical;transition:border-color .2s,box-shadow .2s;box-sizing:border-box}
+.ats-field textarea:focus{border-color:var(--zk-accent);box-shadow:0 0 0 3px rgba(108,60,225,.14)}
+.ats-err{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;border-radius:var(--zk-radius);padding:12px 14px;font-size:13.5px;font-weight:600;margin-bottom:16px}
+.ats-note{font-size:12.5px;color:var(--zk-text3);margin-top:14px;line-height:1.6;text-align:center}
+
+/* score header */
+.sc-head{display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+@media(max-width:560px){.sc-head{flex-direction:column;text-align:center;gap:16px}}
+.sc-ring{position:relative;width:132px;height:132px;flex:none}
+.sc-ring svg{transform:rotate(-90deg);width:132px;height:132px}
+.sc-ring .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.sc-ring .val b{font-family:var(--zk-mono);font-size:36px;font-weight:700;line-height:1;color:var(--zk-text)}
+.sc-ring .val span{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--zk-text3);margin-top:5px}
+.sc-meta{flex:1;min-width:220px}
+.sc-tag{display:inline-block;padding:5px 13px;border-radius:var(--zk-radius-full);font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px}
+.sc-tag.good{background:var(--zk-success-bg);color:#047857}
+.sc-tag.warn{background:#FFF7ED;color:#B45309}
+.sc-tag.bad{background:#FEF2F2;color:#B91C1C}
+.sc-meta h2{font-size:20px;font-weight:800;letter-spacing:-.02em;margin-bottom:7px;color:var(--zk-text);line-height:1.25}
+.sc-meta p{font-size:14px;color:var(--zk-text2);line-height:1.6}
+.sc-bar{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.sc-bar div{flex:1;min-width:104px;background:var(--zk-surface-alt);border:1px solid var(--zk-border);border-radius:10px;padding:10px 12px}
+.sc-bar b{display:block;font-family:var(--zk-mono);font-size:19px;font-weight:700;color:var(--zk-text);line-height:1.2}
+.sc-bar span{font-size:11px;color:var(--zk-text3);font-weight:600}
+
+/* keyword chips */
+.kw-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.kw-head h3{font-size:15px;font-weight:800;letter-spacing:-.01em}
+.kw-head .n{font-size:12px;color:var(--zk-text3);font-weight:600;font-family:var(--zk-mono)}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;font-size:13px;font-weight:600;line-height:1.3}
+.chip.ok{background:var(--zk-success-bg);color:#047857}
+.chip.no{background:#FEF2F2;color:#B91C1C}
+.chip .req{font-size:9.5px;font-weight:800;letter-spacing:.06em;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,.07);text-transform:uppercase}
+.chip.copyable{cursor:pointer;border:1px solid transparent;transition:border-color .15s}
+.chip.copyable:hover{border-color:currentColor}
+
+/* format checks */
+.fc{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-top:1px solid var(--zk-border);font-size:13.5px;line-height:1.55}
+.fc:first-of-type{border-top:0}
+.fc .ic{flex:none;width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;margin-top:1px}
+.fc.pass .ic{background:var(--zk-success)}
+.fc.fail .ic{background:#EF4444}
+.fc .tx b{display:block;font-weight:700;color:var(--zk-text);margin-bottom:2px}
+.fc .tx span{color:var(--zk-text2)}
+
+/* actions */
+.act{display:flex;gap:11px;padding:13px 0;border-top:1px solid var(--zk-border);font-size:13.5px;line-height:1.6;color:var(--zk-text2)}
+.act:first-of-type{border-top:0}
+.act .p{flex:none;font-size:9.5px;font-weight:800;letter-spacing:.06em;padding:3px 8px;border-radius:5px;text-transform:uppercase;height:fit-content;margin-top:2px}
+.act .p.high{background:#FEF2F2;color:#B91C1C}
+.act .p.medium{background:#FFF7ED;color:#B45309}
+
+.sec-t{font-size:15px;font-weight:800;letter-spacing:-.01em;margin-bottom:13px;color:var(--zk-text)}
+.how{background:var(--zk-surface-alt);border:1px solid var(--zk-border);border-radius:12px;padding:14px 16px;font-size:12.5px;color:var(--zk-text2);line-height:1.65;margin-top:18px}
+.how b{color:var(--zk-text)}
+.btn-row{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
+.btn-row .zk-btn{flex:1;min-width:190px;width:auto}
+.zk-btn-ghost{background:var(--zk-surface);color:var(--zk-text);border:1.5px solid var(--zk-border-strong)}
+.zk-btn-ghost:hover{border-color:var(--zk-accent);color:var(--zk-accent)}
+.spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.spin{animation-duration:2s}}
+</style>
+</head><body>
+<a href="#main" class="zk-skip">Skip to main content</a>
+
+<nav class="zk-nav"><div class="zk-nav-inner">
+<a href="/" class="zk-logo"><svg viewBox="0 0 32 32" fill="none" width="30" height="30"><rect width="32" height="32" rx="8" fill="#6C3CE1"></rect><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"></path></svg><div class="zk-logo-text">Zap<span>Kitt</span></div></a>
+<div class="zk-nav-links" id="zkNav">
+  <a href="/ats-checker">ATS checker</a><a href="/ai-resume-builder">Resume</a><a href="/ai-mock-interview">Interview</a><a href="/ai-cold-email">Referral email</a>
+  <a href="/ai-resume-builder" class="zk-nav-cta">Get started</a>
+</div>
+<button class="zk-ham" aria-label="Menu" onclick="document.getElementById('zkNav').classList.toggle('open')"><span></span><span></span><span></span></button>
+</div></nav>
+
+<main id="main">
+<div class="zk-tool-hero">
+  <span class="zk-tool-badge zk-tool-badge-green">Free · No signup · Unlimited</span>
+  <h1>ATS + JD matcher</h1>
+  <p>Paste your resume and the job description. See exactly which keywords you are missing — before you apply.</p>
+</div>
+
+<div class="ats-wrap">
+
+  <!-- STEP 1: INPUT -->
+  <section id="stepInput">
+    <div id="errBox" class="ats-err" style="display:none" role="alert"></div>
+    <div class="ats-card">
+      <div class="ats-grid">
+        <div class="ats-field">
+          <label for="resume">Your resume <span class="cnt" id="rc">0 chars</span></label>
+          <textarea id="resume" placeholder="Paste your full resume text here — name, contact, experience, education, skills.&#10;&#10;Tip: open your PDF, select all, copy, paste."></textarea>
+        </div>
+        <div class="ats-field">
+          <label for="jd">Job description <span class="cnt" id="jc">0 chars</span></label>
+          <textarea id="jd" placeholder="Paste the full job description from LinkedIn, Indeed, or the company careers page.&#10;&#10;Include the requirements and qualifications sections — that is where the keywords live."></textarea>
+        </div>
+      </div>
+      <button id="go" class="zk-btn zk-btn-primary" style="margin-top:6px">Analyse match</button>
+      <p class="ats-note">Nothing is stored. Your text is processed and discarded.</p>
+    </div>
+
+    <div class="how">
+      <b>How this is different:</b> most checkers ask an AI "is this keyword in the resume?" and the AI guesses — which is why their scores move every time you re-run them. Here the AI only reads the job description to list what it asks for. Whether each keyword is actually in your resume is decided by literal text matching in code, so the same resume and JD always give the same score, and every match is one you can point at.
+    </div>
+  </section>
+
+  <!-- STEP 2: RESULTS -->
+  <section id="stepResult" style="display:none">
+    <div class="ats-card">
+      <div class="sc-head">
+        <div class="sc-ring">
+          <svg viewBox="0 0 132 132" aria-hidden="true">
+            <circle cx="66" cy="66" r="57" fill="none" stroke="var(--zk-border)" stroke-width="12"></circle>
+            <circle id="ring" cx="66" cy="66" r="57" fill="none" stroke="var(--zk-accent)" stroke-width="12" stroke-linecap="round" stroke-dasharray="358" stroke-dashoffset="358" style="transition:stroke-dashoffset .9s cubic-bezier(.16,1,.3,1)"></circle>
+          </svg>
+          <div class="val"><b id="scoreNum">0</b><span>Match</span></div>
+        </div>
+        <div class="sc-meta">
+          <span class="sc-tag" id="verdictTag"></span>
+          <h2 id="verdictRole"></h2>
+          <p id="verdictLine"></p>
+          <div class="sc-bar">
+            <div><b id="cFound">0</b><span>Keywords found</span></div>
+            <div><b id="cMissing">0</b><span>Missing</span></div>
+            <div><b id="cReqMiss">0</b><span>Required missing</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ats-card">
+      <div class="kw-head"><h3 style="color:#047857">Found in your resume</h3><span class="n" id="foundN"></span></div>
+      <div class="chips" id="foundChips"></div>
+    </div>
+
+    <div class="ats-card">
+      <div class="kw-head"><h3 style="color:#B91C1C">Missing from your resume</h3><span class="n" id="missN"></span></div>
+      <div class="chips" id="missChips"></div>
+      <p style="font-size:12.5px;color:var(--zk-text3);margin-top:13px;line-height:1.6">Tap any keyword to copy it. Only add what you have genuinely done — coursework and personal projects count. Do not paste a keyword list at the bottom of your resume; ATS parsers and recruiters both discount it.</p>
+    </div>
+
+    <div class="ats-card">
+      <div class="sec-t">Do these next</div>
+      <div id="actions"></div>
+    </div>
+
+    <div class="ats-card">
+      <div class="sec-t">Resume format check</div>
+      <div id="formatChecks"></div>
+    </div>
+
+    <div class="ats-card">
+      <div class="sec-t">How your score was calculated</div>
+      <p style="font-size:13.5px;color:var(--zk-text2);line-height:1.7" id="scoringNote"></p>
+      <p style="font-size:12px;color:var(--zk-text3);margin-top:10px" id="modelNote"></p>
+    </div>
+
+    <div class="btn-row">
+      <button class="zk-btn zk-btn-ghost" id="again">Check another JD</button>
+      <a class="zk-btn zk-btn-primary" href="/ai-resume-builder" style="text-decoration:none">Fix my resume</a>
+    </div>
+    <div class="btn-row" style="margin-top:12px">
+      <a class="zk-btn zk-btn-ghost" href="/ai-mock-interview" style="text-decoration:none">Practice the interview</a>
+    </div>
+  </section>
+</div>
+
+<div class="zk-related">
+  <h3>Next steps</h3>
+  <a href="/ai-resume-builder">AI resume builder</a>
+  <a href="/ai-mock-interview">Real-time mock interview</a>
+  <a href="/ai-cold-email">Referral / cold email writer</a>
+  <a href="/ai-cover-letter">Cover letter generator</a>
+  <a href="/ai-resume-bullets">Resume bullet generator</a>
+</div>
+
+<div class="zk-seo">
+  <h2>Why your resume gets rejected before a human sees it</h2>
+  <p>Most mid-size and large employers run applications through an applicant tracking system. Recruiters filter that pile by searching for the skills in the job description. If your resume does not contain those terms in a form the parser recognises, you are filtered out before anyone reads a word you wrote.</p>
+  <p>The fix is not keyword stuffing. It is making sure the things you have genuinely done are described using the same words the job description uses — "GitHub Actions" instead of a vague "CI/CD", "Apache Airflow" instead of "scheduling tools". This tool shows you that gap for one specific job, because the gap is different for every job.</p>
+
+  <details><summary>Is it really free?</summary><p>Yes — unlimited checks, no signup, no card. There is a fair-use limit of 20 checks per 10 minutes per person to keep the service up.</p></details>
+  <details><summary>How is the match score calculated?</summary><p>Required keywords weigh 2x, preferred keywords 1x. Your score is matched weight divided by total available weight. Matching is literal text plus a curated alias list (AWS = Amazon Web Services, K8s = Kubernetes). The AI never decides whether something is in your resume, which is why the score does not drift between runs.</p></details>
+  <details><summary>Will my score match Jobscan or another checker?</summary><p>It should land in the same range, not on the same number — every tool weighs keywords slightly differently. What matters is the found and missing lists, which you can verify yourself against your resume. If we say a keyword is missing, search your resume for it: it will not be there.</p></details>
+  <details><summary>What happens to my resume?</summary><p>It is sent for processing and discarded. Nothing is written to a database, and no account exists to attach it to.</p></details>
+  <details><summary>Does this work for non-tech roles?</summary><p>Yes. Keywords come from whatever job description you paste, so nursing, finance, marketing, supply chain, and teaching roles all work the same way.</p></details>
+</div>
+</main>
+
+<footer class="zk-footer"><div class="zk-footer-inner">
+<div class="zk-footer-brand"><a href="/" class="zk-logo"><svg viewBox="0 0 32 32" fill="none" width="28" height="28"><rect width="32" height="32" rx="8" fill="#6C3CE1"></rect><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"></path></svg><div class="zk-logo-text">Zap<span>Kitt</span></div></a><p>AI career tools for resumes, interviews, and job preparation. Free to start.</p></div>
+<div class="zk-footer-col"><h4>Product</h4><a href="/ats-checker">ATS checker</a><a href="/ai-resume-builder">Resume builder</a><a href="/ai-mock-interview">Real-time interview</a><a href="/ai-cold-email">Referral email</a></div>
+<div class="zk-footer-col"><h4>Resources</h4><a href="/blog">Blog</a><a href="/all-tools">All tools</a></div>
+<div class="zk-footer-col"><h4>Company</h4><a href="/about">About</a><a href="/privacy">Privacy policy</a><a href="/terms">Terms</a><a href="mailto:hello@zapkitt.com">Contact</a></div>
+</div><div class="zk-footer-bottom">© 2026 ZapKitt · Free AI career tools. Made in India.</div></footer>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var resume = $('resume'), jd = $('jd'), go = $('go'), err = $('errBox');
+
+  function count(el, out){
+    var f = function(){ out.textContent = el.value.length.toLocaleString() + ' chars'; };
+    el.addEventListener('input', f); f();
+  }
+  count(resume, $('rc')); count(jd, $('jc'));
+
+  // Survive an accidental refresh — losing a pasted resume is the fastest way
+  // to lose the user entirely.
+  try {
+    resume.value = sessionStorage.getItem('zk_ats_resume') || '';
+    jd.value = sessionStorage.getItem('zk_ats_jd') || '';
+    $('rc').textContent = resume.value.length.toLocaleString() + ' chars';
+    $('jc').textContent = jd.value.length.toLocaleString() + ' chars';
+    resume.addEventListener('input', function(){ try{ sessionStorage.setItem('zk_ats_resume', resume.value); }catch(e){} });
+    jd.addEventListener('input', function(){ try{ sessionStorage.setItem('zk_ats_jd', jd.value); }catch(e){} });
+  } catch(e){}
+
+  function showErr(m){ err.textContent = m; err.style.display = 'block'; err.scrollIntoView({behavior:'smooth', block:'center'}); }
+  function hideErr(){ err.style.display = 'none'; }
+
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  }); }
+
+  function chip(k, ok){
+    var req = k.importance === 'required' ? '<span class="req">req</span>' : '';
+    var cls = 'chip ' + (ok ? 'ok' : 'no') + (ok ? '' : ' copyable');
+    var t = esc(k.term);
+    return '<span class="' + cls + '"' + (ok ? '' : ' data-copy="' + t + '" title="Tap to copy"') + '>' + t + req + '</span>';
+  }
+
+  function render(d){
+    // score ring: circumference for r=57 is ~358
+    $('scoreNum').textContent = d.score;
+    var ring = $('ring');
+    var colour = d.verdict.tone === 'good' ? '#10B981' : d.verdict.tone === 'warn' ? '#F59E0B' : '#EF4444';
+    ring.setAttribute('stroke', colour);
+    setTimeout(function(){ ring.style.strokeDashoffset = String(358 - (358 * d.score / 100)); }, 60);
+
+    var tag = $('verdictTag');
+    tag.textContent = d.verdict.label;
+    tag.className = 'sc-tag ' + d.verdict.tone;
+    $('verdictRole').textContent = d.role ? ('vs. ' + d.role) : 'Match against this job description';
+    $('verdictLine').textContent = d.verdict.line;
+
+    $('cFound').textContent = d.counts.found;
+    $('cMissing').textContent = d.counts.missing;
+    $('cReqMiss').textContent = d.counts.requiredMissing;
+
+    $('foundN').textContent = d.counts.found + ' of ' + d.counts.total;
+    $('missN').textContent = d.counts.missing + ' of ' + d.counts.total;
+    $('foundChips').innerHTML = d.found.length
+      ? d.found.map(function(k){ return chip(k, true); }).join('')
+      : '<span style="font-size:13.5px;color:var(--zk-text3)">None of the job description keywords appear in your resume. Check that you pasted the full resume text.</span>';
+    $('missChips').innerHTML = d.missing.length
+      ? d.missing.map(function(k){ return chip(k, false); }).join('')
+      : '<span style="font-size:13.5px;color:var(--zk-success);font-weight:600">Nothing missing — your resume covers every keyword in this job description.</span>';
+
+    $('actions').innerHTML = d.actions.length
+      ? d.actions.map(function(a){
+          return '<div class="act"><span class="p ' + esc(a.priority) + '">' + esc(a.priority) + '</span><span>' + esc(a.text) + '</span></div>';
+        }).join('')
+      : '<p style="font-size:13.5px;color:var(--zk-text2)">No blocking issues found. Apply.</p>';
+
+    $('formatChecks').innerHTML = d.formatChecks.map(function(c){
+      return '<div class="fc ' + (c.pass ? 'pass' : 'fail') + '"><span class="ic">' + (c.pass ? '✓' : '!') + '</span>' +
+             '<span class="tx"><b>' + esc(c.label) + '</b>' + (c.pass ? '' : '<span>' + esc(c.fix) + '</span>') + '</span></div>';
+    }).join('');
+
+    $('scoringNote').textContent = d.scoring;
+    $('modelNote').textContent = 'Keyword extraction: ' + (d.model || 'AI') + '. Matching and scoring: deterministic code, no AI.';
+
+    $('stepInput').style.display = 'none';
+    $('stepResult').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Copy a missing keyword on tap.
+  document.addEventListener('click', function(e){
+    var el = e.target.closest ? e.target.closest('[data-copy]') : null;
+    if (!el) return;
+    var v = el.getAttribute('data-copy');
+    if (navigator.clipboard) navigator.clipboard.writeText(v);
+    var old = el.style.opacity;
+    el.style.opacity = '.45';
+    setTimeout(function(){ el.style.opacity = old; }, 220);
+  });
+
+  go.addEventListener('click', async function(){
+    hideErr();
+    if (resume.value.trim().length < 100) return showErr('Paste your full resume text — at least 100 characters.');
+    if (jd.value.trim().length < 100) return showErr('Paste the full job description — at least 100 characters.');
+
+    go.disabled = true;
+    go.innerHTML = '<span class="spin"></span> Analysing…';
+    try {
+      var r = await fetch('/api/ats', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resume: resume.value, jd: jd.value })
+      });
+      var d = await r.json();
+      if (!r.ok || d.error) throw new Error(d.error || ('Request failed (' + r.status + ')'));
+      render(d);
+    } catch (e) {
+      showErr(e.message || 'Something went wrong. Try again in a moment.');
+    } finally {
+      go.disabled = false;
+      go.textContent = 'Analyse match';
+    }
+  });
+
+  $('again').addEventListener('click', function(){
+    $('stepResult').style.display = 'none';
+    $('stepInput').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    jd.focus();
+  });
+})();
+</script>
+</body></html>
