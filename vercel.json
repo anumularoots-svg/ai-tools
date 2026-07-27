@@ -66,6 +66,13 @@
       "maxDuration": 30
     }
   },
+  "redirects": [
+    {
+      "source": "/career",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/t/:slug",
