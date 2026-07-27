@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     }
 
     const totalYears = parseInt(userData.totalExp) || 0;
-    const systemPrompt = getSystemPrompt(totalYears);
+    const systemPrompt = getSystemPrompt(totalYears, userData.targetCountry);
     const userPrompt = buildUserPrompt(userData);
 
     // Try multiple models

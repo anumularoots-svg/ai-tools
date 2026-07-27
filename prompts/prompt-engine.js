@@ -20,6 +20,53 @@ The JSON must follow this exact structure:
 }`;
 
 // ============================================
+// THE METRIC RULE — the single most important rule in this file.
+//
+// An earlier version of this prompt told the model to "estimate realistic
+// metrics if none provided". That is instruction-to-fabricate: the candidate
+// then walks into an interview defending a 40% improvement they never made.
+// Numbers must come from the candidate, or be marked as missing.
+// ============================================
+const METRIC_RULE = `
+METRICS — ABSOLUTE RULE, NO EXCEPTIONS:
+- Every number in the resume (%, $, counts, team sizes, time saved, scale, users)
+  MUST come from what the candidate actually told you. Copy it, do not adjust it.
+- NEVER estimate, infer, approximate, or invent a number. Not even a "realistic"
+  or "conservative" one. A plausible invented number is still a lie the candidate
+  has to defend in an interview.
+- Where a number would strengthen a bullet but the candidate did not give one,
+  write the bullet WITHOUT a number and append this exact placeholder:
+    [ADD METRIC: <specific question>]
+  Examples:
+    "Automated the nightly reconciliation job [ADD METRIC: how many hours per week did this save?]"
+    "Migrated the reporting stack to Snowflake [ADD METRIC: how many tables or how much data?]"
+- Placeholders are the correct, expected output. A resume with six honest
+  placeholders is a better result than a resume with six invented numbers.
+- Do NOT put a placeholder in every bullet. Only where a number genuinely belongs.`;
+
+// ============================================
+// US RESUME CONVENTIONS — what US recruiters and ATS expect, and what will
+// get a resume discarded or expose the employer to discrimination claims.
+// ============================================
+const US_CONVENTIONS = `
+US RESUME CONVENTIONS (the candidate is applying in the United States):
+- NO photo, NO date of birth, NO age, NO gender, NO marital status, NO nationality,
+  NO religion. US employers must discard resumes containing these — including them
+  actively hurts the candidate.
+- Location: city and state only ("Dallas, TX"). Never a full street address.
+- No "References available upon request" — it wastes a line everyone ignores.
+- Dates as "Mon YYYY" ("Mar 2024 – Present"). Never DD/MM/YYYY.
+- Use US spelling (optimize, analyze, organization, program).
+- Do not mention expected salary, current CTC, or notice period. Those are Indian
+  and Gulf conventions; on a US resume they read as a category error.
+- Reverse-chronological order, most recent role first.
+- Freshers and candidates with under ~10 years: one page. Beyond that: two pages.
+- Never claim or imply work authorization the candidate did not state. If the
+  candidate provided a work-authorization status (F-1 OPT, STEM OPT, CPT, H-1B,
+  GC, citizen), place it as a single short line under the contact details.
+  If they did not provide one, omit the topic entirely — do not guess.`;
+
+// ============================================
 // BANNED WORDS — never appear in any resume
 // ============================================
 const BANNED_WORDS = [
@@ -92,13 +139,13 @@ STRICT RULES:
 2. NEVER fabricate companies, roles, dates, achievements, or metrics. Use ONLY provided data.
 3. Summary: 6-8 line executive summary including total experience, specialization, industry exposure, project count, key business achievement, and recruiter keywords. Must sound like written by a Fortune 500 recruiter.
 4. Every bullet MUST follow: Action Verb + Technology/Business Process + Business Impact + Measured Result. Use STAR framework.
-5. 80%+ bullets must include specific metrics (%, $, time, team size, scale, users). Estimate realistic metrics if none provided.
+5. Bullets carry metrics ONLY where the candidate supplied them. Where a number belongs but was not supplied, use the [ADD METRIC: ...] placeholder. Never estimate.
 6. Skills grouped into professional categories: Primary Technologies, Cloud Platforms, Programming Languages, Frameworks, Databases, DevOps, Monitoring, Methodologies. 3+ skills per category.
-7. Achievements section: Top 4-6 career wins with SPECIFIC numbers showing business value delivered.
+7. Achievements section: Top 4-6 career wins. Include numbers ONLY where the candidate gave them; otherwise state the win plainly and add an [ADD METRIC: ...] placeholder.
 8. NEVER use: Responsible for, Worked on, Involved in, Handled, Helped with, Duties included, Participated in.
 9. ONLY use power verbs: Architected, Spearheaded, Delivered, Reduced, Automated, Designed, Led, Implemented, Optimized, Orchestrated, Streamlined, Engineered, Accelerated, Pioneered, Deployed, Migrated, Transformed, Scaled.
-10. Include Professional Highlights: 6-8 concise metric cards (Total Experience, Enterprise Projects, Fortune 500 Clients, Business Impact).
-11. Resume must pass ATS parsing and be suitable for Naukri, LinkedIn, Indeed, and Fortune 500 recruiters.
+10. Professional Highlights: only cards you can fill from the candidate's own data (e.g. Total Experience). Omit any card you would have to guess at.
+11. Resume must pass ATS parsing (Workday, Greenhouse, Taleo, iCIMS) and read well to a US recruiter on LinkedIn or Indeed.
 12. No <think> blocks. No markdown. Pure JSON only.`,
 
   executive: `You are an Executive Resume Writer and Hiring Manager with 20+ years recruiting for Fortune 500 companies.
@@ -107,13 +154,13 @@ STRICT RULES:
 2. NEVER fabricate companies, roles, dates, or achievements. Use ONLY provided data.
 3. Summary: 6-8 line executive summary. Strategic leadership focus. Mention P&L ownership, team sizes, global scope, digital transformation, enterprise-scale impact. Must sound like written by a Fortune 500 executive recruiter.
 4. Professional Highlights: 6-8 premium executive highlight cards (Total Experience, Enterprise Projects, Fortune 500 Clients, End-to-End Implementations, Business Impact, Certifications, Leadership Experience).
-5. Achievements: Focus on organizational impact — revenue growth, cost reduction ($), team building (headcount), process transformation, SLA improvements.
+5. Achievements: Focus on organizational impact — revenue growth, cost reduction, team building, process transformation, SLA improvements. Use the candidate's own figures only; where none were given, use an [ADD METRIC: ...] placeholder.
 6. Every bullet: Action Verb + Technology/Strategy + Business Impact + Measured Result at SCALE. Example: "Spearheaded enterprise-wide cloud migration for 15 microservices, reducing infrastructure costs by $4,200/month and achieving 99.9% uptime SLA."
 7. Include: cross-functional leadership, stakeholder management, vendor management, strategic planning, P&L accountability.
 8. Recent roles: 8-10 detailed STAR bullets. Older roles: 3-4 bullets showing career progression.
 9. Skills emphasize: architecture decisions, platform strategy, compliance frameworks (HIPAA, SOC2, PCI), team leadership, FinOps.
 10. NEVER use: Responsible for, Worked on, Involved in, Handled. ONLY power verbs: Architected, Spearheaded, Orchestrated, Championed, Pioneered, Transformed.
-11. Must pass ATS and be suitable for Fortune 500 recruiters on Naukri, LinkedIn, Indeed.
+11. Must pass ATS parsing (Workday, Greenhouse, Taleo, iCIMS) and read well to US executive recruiters.
 12. No <think> blocks. No markdown. Pure JSON only.`
 };
 
@@ -220,7 +267,7 @@ OUTPUT RULES:
 2. personal.fullName MUST be "${fullName}" — never change it.
 3. Every company name and job title MUST match what I provided above.
 4. Every bullet MUST start with a different power verb.
-5. 70%+ of bullets must include a specific metric.
+5. Include a metric ONLY where the candidate supplied one. Never invent a number to hit a quota.
 6. Skills grouped into categories with 3+ skills each.
 7. education and certifications MUST use EXACT data I provided — NEVER invent.
 8. If I didn't provide certain data, use null or empty array — NEVER fabricate.
@@ -233,14 +280,33 @@ ${RESUME_SCHEMA_INSTRUCTION}`;
 // ============================================
 // GET SYSTEM PROMPT based on experience level
 // ============================================
-function getSystemPrompt(totalYears) {
-  if (totalYears <= 2) return SYSTEM_PROMPTS.fresher;
-  if (totalYears <= 12) return SYSTEM_PROMPTS.professional;
-  return SYSTEM_PROMPTS.executive;
+// The metric rule applies everywhere. The US conventions do not — telling a
+// candidate targeting Germany to drop their photo would be wrong, since a
+// Lebenslauf normally carries one. Default to US when no country is given,
+// because that is who this product is for.
+function isUSTarget(targetCountry) {
+  if (!targetCountry) return true;
+  const c = String(targetCountry).trim().toLowerCase();
+  return c === '' || c === 'global' || c === 'us' || c === 'usa' ||
+         c === 'united states' || c === 'united states of america' || c === 'america';
+}
+
+function getSystemPrompt(totalYears, targetCountry) {
+  let base;
+  if (totalYears <= 2) base = SYSTEM_PROMPTS.fresher;
+  else if (totalYears <= 12) base = SYSTEM_PROMPTS.professional;
+  else base = SYSTEM_PROMPTS.executive;
+
+  let out = base + "\n" + METRIC_RULE;
+  if (isUSTarget(targetCountry)) out += "\n" + US_CONVENTIONS;
+  return out;
 }
 
 export {
   buildUserPrompt,
+  METRIC_RULE,
+  US_CONVENTIONS,
+  isUSTarget,
   getSystemPrompt,
   getBulletCounts,
   POWER_VERBS,

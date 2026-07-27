@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Open-source AI Resume Builder — Production-grade, Groq-powered, Chrome-quality PDF",
   "scripts": {
-    "test": "node tests/ats.test.mjs"
+    "test": "node tests/ats.test.mjs && node tests/resume.test.mjs"
   },
   "dependencies": {
     "@sparticuz/chromium-min": "^133.0.0",
