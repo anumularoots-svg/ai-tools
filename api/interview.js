@@ -1,5 +1,5 @@
 import { kvReady, kvGet, kvDel, kvSetEx, kvSAdd, kvSMembers, kvExpire, kvLPush, kvLTrim, kvLRange } from './_kv.js';
-import { slotType, totalQuestions, difficultyDecision, buildAnalyzerPrompt, buildPlannerPrompt, buildQuestionPrompt, buildAnswerEvalPrompt, buildReportPrompt, extractJSON } from './interview-engine.js';
+import { slotType, totalQuestions, difficultyDecision, buildAnalyzerPrompt, buildPlannerPrompt, buildQuestionPrompt, buildAnswerEvalPrompt, buildReportPrompt, reconcileReport, extractJSON } from './interview-engine.js';
 import { rateLimit, clientIP, sanitizeText } from './_ratelimit.js';
 
 // Reliable feedback alert — Telegram (replaces the unreliable CallMeBot). Plain text = no escaping needed.
@@ -290,7 +290,8 @@ export default async function handler(req,res){
     if(b.action==="v2_report"){
       var rqas=Array.isArray(b.qas)?b.qas.filter(function(x){return x&&x.q}):[];
       try{var rep=await callAIJson(buildReportPrompt({role:b.role||"",company:b.company||""},rqas),6000);
-        return res.status(200).json({success:true,data:rep.data});}
+        // The model judges; the arithmetic is ours. See reconcileReport.
+        return res.status(200).json({success:true,data:reconcileReport(rep.data,rqas)});}
       catch(e){return res.status(500).json({error:"Report failed: "+e.message});}
     }
 
@@ -311,7 +312,7 @@ export default async function handler(req,res){
       evalSys+='Return ONLY valid JSON with the "questions" array containing EXACTLY '+(qas.length||5)+' objects, one per question above, in the same order:\n';
       evalSys+='{"overall_score":78,"overall_verdict":"Strong Hire/Hire/Lean Hire/No Hire","categories":{"technical":70,"production_thinking":68,"problem_solving":72,"communication":80,"resume_knowledge":65,"confidence":70},"questions":[{"q":"the exact question","answer":"the candidate\'s exact answer (verbatim, or [No answer given])","score":7,"mistakes":"specifically what was missing or wrong; if no answer, say so","ideal_answer":"the exact, correct answer a strong candidate would give","how_to_improve":"one concrete, actionable tip"}],"strong_areas":["..."],"weak_areas":["..."],"practice_topics":["..."],"hiring_readiness":"Ready/Needs Work/Not Ready"}\n';
       evalSys+="SCORING RULES: Score each answer 0-10 honestly against what the question actually asked. [No answer given] or empty/irrelevant answers MUST score 0-1. Vague answers 2-4. Solid answers 6-8. Excellent, specific, metric-backed answers 9-10. Never inflate.\n";
-      evalSys+="overall_score (0-100) is the WEIGHTED average of the categories using these exact weights: technical 35%, production_thinking 20%, problem_solving 15%, communication 10%, resume_knowledge 10%, confidence 10%.\n";
+      evalSys+="Judge each category (0-100) honestly and independently. Do NOT compute overall_score yourself — set it to 0. The server computes it from your category scores using fixed weights (technical 35%, production_thinking 20%, problem_solving 15%, communication 10%, resume_knowledge 10%, confidence 10%) and derives the verdict band from it.\n";
       evalSys+="IDEAL ANSWER RULES: For coding questions, ideal_answer MUST include complete working code. For technical/scenario questions, give the concrete correct answer with specific tools, commands, and architecture — like a real senior engineer. Keep each ideal_answer focused, not padded.";
       var evalMsgs=[{role:"system",content:evalSys},{role:"user",content:"Evaluate now. Output ONLY the JSON object, nothing else."}];
       var evalErr="";
@@ -324,7 +325,9 @@ export default async function handler(req,res){
           for(var qk=0;qk<qas.length;qk++){if(!parsed.questions[qk])parsed.questions[qk]={q:qas[qk].q,answer:qas[qk].a||"[No answer given]",score:0,mistakes:"Not evaluated",ideal_answer:"",how_to_improve:""};
             else{if(!parsed.questions[qk].q)parsed.questions[qk].q=qas[qk].q;if(parsed.questions[qk].answer===undefined)parsed.questions[qk].answer=qas[qk].a||"";}}
           parsed.questions=parsed.questions.slice(0,qas.length);}
-        return res.status(200).json({success:true,data:parsed})}catch(e){evalErr=e.message;continue}}
+        // Recompute the headline score from the categories rather than trusting
+        // the model's arithmetic, and derive the verdict band from it.
+        return res.status(200).json({success:true,data:reconcileReport(parsed,qas)})}catch(e){evalErr=e.message;continue}}
       return res.status(500).json({error:"Evaluation failed"+(evalErr?": "+evalErr:". Please try again.")});
     }
 

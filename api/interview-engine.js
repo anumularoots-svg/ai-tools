@@ -273,8 +273,117 @@ export function buildReportPrompt(session, qas) {
     '"questions":[{"q":"","answer":"","score":0,"mistakes":"","ideal_answer":"","how_to_improve":""}],' +
     '"strong_areas":["..."],"weak_areas":["..."],"top_skills":["..."],"topics_to_improve":["..."],' +
     '"hiring_recommendation":"one honest paragraph","learning_plan_30_days":["day-by-day or week-by-week actionable items"]}\n';
-  s += "overall_score (0-100) = weighted average: technical 35%, production_thinking 20%, problem_solving 15%, communication 10%, resume_knowledge 10%, confidence 10%. Category scores are 0-100. Per-question score is 0-10.";
+  s += "Category scores are 0-100. Per-question score is 0-10. Judge each category honestly and independently.\n";
+  s += "Do NOT try to compute overall_score yourself — set it to 0. The server computes it from your category scores using fixed weights (technical 35%, production_thinking 20%, problem_solving 15%, communication 10%, resume_knowledge 10%, confidence 10%) and derives the verdict from that. Your arithmetic is not used.";
   return { system: s, user: "Write the final report now. Output ONLY the JSON object." };
+}
+
+// ============================================================================
+// SCORE RECONCILIATION — the report's headline number is computed here, in
+// code, not by the model.
+//
+// The prompt tells the model the weights and asks it to produce the weighted
+// average. Language models are unreliable at arithmetic, so the score a
+// candidate saw could disagree with the categories printed right beside it,
+// and with the per-question scores they were shown live during the session.
+// A scoring product that contradicts itself is worse than no score.
+//
+// So: the model supplies judgement (category scores, per-answer scores,
+// written feedback). The arithmetic and the verdict band are ours.
+// ============================================================================
+export const CATEGORY_WEIGHTS = {
+  technical: 0.35,
+  production_thinking: 0.20,
+  problem_solving: 0.15,
+  communication: 0.10,
+  resume_knowledge: 0.10,
+  confidence: 0.10
+};
+
+function clamp(n, lo, hi) {
+  const v = Number(n);
+  if (!isFinite(v)) return null;
+  return Math.max(lo, Math.min(hi, v));
+}
+
+// Weighted average over whatever categories the model actually returned.
+// Missing categories are dropped and the weights renormalised, so an absent
+// field lowers nothing unfairly.
+export function computeOverallScore(categories) {
+  if (!categories || typeof categories !== "object") return null;
+  let sum = 0, weight = 0;
+  for (const key of Object.keys(CATEGORY_WEIGHTS)) {
+    const v = clamp(categories[key], 0, 100);
+    if (v === null) continue;
+    sum += v * CATEGORY_WEIGHTS[key];
+    weight += CATEGORY_WEIGHTS[key];
+  }
+  if (!weight) return null;
+  return Math.round(sum / weight);
+}
+
+// Published bands. Derived from the score so the verdict can never contradict
+// the number printed next to it.
+export function verdictFor(score) {
+  if (score >= 80) return "Strong Hire";
+  if (score >= 65) return "Hire";
+  if (score >= 50) return "Lean Hire";
+  return "No Hire";
+}
+
+export function readinessFor(score) {
+  if (score >= 75) return "Ready";
+  if (score >= 50) return "Needs Work";
+  return "Not Ready";
+}
+
+// Rewrites the model's report in place-ish (returns a new object) so that:
+//   - category scores are clamped to 0-100
+//   - overall_score is the real weighted average of those categories
+//   - verdict and readiness follow from that score
+//   - per-question scores match the ones shown live during the session,
+//     when the client supplied them
+// `qas` entries may carry a `score` recorded at answer time; that is the
+// authoritative one, because the candidate already saw it.
+export function reconcileReport(report, qas) {
+  const out = Object.assign({}, report || {});
+
+  if (out.categories && typeof out.categories === "object") {
+    const cats = {};
+    for (const key of Object.keys(CATEGORY_WEIGHTS)) {
+      const v = clamp(out.categories[key], 0, 100);
+      if (v !== null) cats[key] = Math.round(v);
+    }
+    out.categories = cats;
+  }
+
+  const computed = computeOverallScore(out.categories);
+  if (computed !== null) {
+    out.overall_score = computed;
+    out.overall_verdict = verdictFor(computed);
+    // Both spellings appear across the two report shapes in this codebase.
+    if ("interview_readiness" in out || !("hiring_readiness" in out)) out.interview_readiness = readinessFor(computed);
+    if ("hiring_readiness" in out) out.hiring_readiness = readinessFor(computed);
+  } else if (out.overall_score != null) {
+    out.overall_score = clamp(out.overall_score, 0, 100);
+  }
+
+  // Per-question scores: prefer what the candidate was shown at answer time.
+  if (Array.isArray(out.questions) && Array.isArray(qas)) {
+    out.questions = out.questions.map((q, i) => {
+      const src = qas[i];
+      const live = src && isFinite(Number(src.score)) ? clamp(src.score, 0, 10) : null;
+      const own = clamp(q && q.score, 0, 10);
+      return Object.assign({}, q, { score: live !== null ? Math.round(live) : (own === null ? 0 : Math.round(own)) });
+    });
+  } else if (Array.isArray(out.questions)) {
+    out.questions = out.questions.map(q => {
+      const own = clamp(q && q.score, 0, 10);
+      return Object.assign({}, q, { score: own === null ? 0 : Math.round(own) });
+    });
+  }
+
+  return out;
 }
 
 // ── Robust JSON extraction (shared by callers) ──────────────────────────────
