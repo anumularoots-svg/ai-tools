@@ -81,6 +81,28 @@
 .btn-row .zk-btn{flex:1;min-width:190px;width:auto}
 .zk-btn-ghost{background:var(--zk-surface);color:var(--zk-text);border:1.5px solid var(--zk-border-strong)}
 .zk-btn-ghost:hover{border-color:var(--zk-accent);color:var(--zk-accent)}
+/* rebuild step */
+.rb-delta{display:flex;align-items:center;gap:16px;flex:none}
+.rb-delta>div{text-align:center}
+.rb-delta span{display:block;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--zk-text3);margin-bottom:4px}
+.rb-delta b{font-family:var(--zk-mono);font-size:34px;font-weight:700;color:var(--zk-text2);line-height:1}
+.rb-delta b.up{color:var(--zk-success)}
+.rb-arrow{font-size:22px;color:var(--zk-text3);margin-top:14px}
+.rb-b{border-top:1px solid var(--zk-border);padding:14px 0}
+.rb-b:first-of-type{border-top:0}
+.rb-b .old{font-size:13px;color:var(--zk-text3);line-height:1.55;text-decoration:line-through;text-decoration-color:var(--zk-border-strong);margin-bottom:7px}
+.rb-b .new{font-size:14px;color:var(--zk-text);line-height:1.6;font-weight:500}
+.rb-b .why{font-size:12px;color:var(--zk-text3);margin-top:6px;line-height:1.5}
+.rb-b.reverted .new{color:var(--zk-text2)}
+.rb-b.reverted .why{color:#B45309}
+.rb-flag{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;background:#FFF7ED;color:#B45309;margin-bottom:6px}
+.rb-gap{border-top:1px solid var(--zk-border);padding:13px 0}
+.rb-gap:first-of-type{border-top:0}
+.rb-gap b{display:block;font-size:13.5px;font-weight:700;color:var(--zk-text);margin-bottom:4px}
+.rb-gap p{font-size:13px;color:var(--zk-text2);line-height:1.55}
+.rb-blocked{border-top:1px solid var(--zk-border);padding:11px 0;font-size:13px;line-height:1.55;color:var(--zk-text2)}
+.rb-blocked:first-of-type{border-top:0}
+.rb-blocked code{background:#FEF2F2;color:#B91C1C;padding:1px 6px;border-radius:4px;font-family:var(--zk-mono);font-size:12px;font-weight:700}
 .spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.spin{animation-duration:2s}}
@@ -180,12 +202,68 @@
       <p style="font-size:12px;color:var(--zk-text3);margin-top:10px" id="modelNote"></p>
     </div>
 
+    <div class="ats-card" style="border-color:var(--zk-accent)">
+      <div class="sec-t">Rebuild this resume for this job</div>
+      <p style="font-size:13.5px;color:var(--zk-text2);line-height:1.65;margin-bottom:6px">
+        We rewrite your bullets so the experience you already have is described in this job's own words,
+        then re-score with the same matcher so you can see exactly what moved.
+      </p>
+      <p style="font-size:12.5px;color:var(--zk-text3);line-height:1.6;margin-bottom:16px">
+        Nothing gets added to your resume. Skills the job wants that you haven't shown come back as
+        questions for you to answer — not as claims we make on your behalf.
+      </p>
+      <button id="rebuild" class="zk-btn zk-btn-primary">Rebuild for this job</button>
+    </div>
+
     <div class="btn-row">
       <button class="zk-btn zk-btn-ghost" id="again">Check another JD</button>
-      <a class="zk-btn zk-btn-primary" href="/ai-resume-builder" style="text-decoration:none">Fix my resume</a>
-    </div>
-    <div class="btn-row" style="margin-top:12px">
       <a class="zk-btn zk-btn-ghost" href="/ai-mock-interview" style="text-decoration:none">Practice the interview</a>
+    </div>
+  </section>
+
+  <!-- STEP 3: REBUILT RESUME -->
+  <section id="stepRebuild" style="display:none">
+    <div class="ats-card">
+      <div class="sc-head">
+        <div class="rb-delta">
+          <div><span>Before</span><b id="rbBefore">0</b></div>
+          <div class="rb-arrow">&rarr;</div>
+          <div><span>After</span><b id="rbAfter" class="up">0</b></div>
+        </div>
+        <div class="sc-meta">
+          <h2 id="rbHeadline">Rebuilt for this job</h2>
+          <p id="rbHonesty"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="ats-card" id="rbBlockedCard" style="display:none;border-color:#FECACA">
+      <div class="sec-t" style="color:#B91C1C">We blocked some suggestions</div>
+      <p style="font-size:13.5px;color:var(--zk-text2);line-height:1.65;margin-bottom:12px">
+        The rewrite tried to put skills on your resume that aren't in what you pasted. Those bullets were
+        reverted to your original wording. You're seeing this because you should know it happened.
+      </p>
+      <div id="rbBlocked"></div>
+    </div>
+
+    <div class="ats-card">
+      <div class="kw-head"><h3>Your rewritten bullets</h3><span class="n" id="rbCount"></span></div>
+      <div id="rbBullets"></div>
+      <button class="zk-btn zk-btn-ghost" id="rbCopy" style="margin-top:16px">Copy all rewritten bullets</button>
+    </div>
+
+    <div class="ats-card" id="rbGapCard" style="display:none">
+      <div class="sec-t">Answer these and your score goes higher</div>
+      <p style="font-size:13.5px;color:var(--zk-text2);line-height:1.65;margin-bottom:14px">
+        This job asks for these and your resume doesn't show them. Coursework and personal projects count.
+        If you've genuinely done it, write one line about it and add it yourself — then re-run the check.
+      </p>
+      <div id="rbGaps"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="zk-btn zk-btn-ghost" id="rbBack">Back to the match</button>
+      <a class="zk-btn zk-btn-primary" href="/ai-resume-builder" style="text-decoration:none">Build the full resume</a>
     </div>
   </section>
 </div>
@@ -296,7 +374,10 @@
     $('scoringNote').textContent = d.scoring;
     $('modelNote').textContent = 'Keyword extraction: ' + (d.model || 'AI') + '. Matching and scoring: deterministic code, no AI.';
 
+    window.__zkSetKeywords(d);
+
     $('stepInput').style.display = 'none';
+    $('stepRebuild').style.display = 'none';
     $('stepResult').style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -338,10 +419,104 @@
 
   $('again').addEventListener('click', function(){
     $('stepResult').style.display = 'none';
+    $('stepRebuild').style.display = 'none';
     $('stepInput').style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
     jd.focus();
   });
+
+  // ---- Step 3: rebuild for this job -------------------------------------
+  var lastKeywords = null;   // set from the match result so both runs score
+                             // against the identical keyword set
+
+  function renderRebuild(d){
+    $('rbBefore').textContent = d.score.before;
+    $('rbAfter').textContent = d.score.after;
+    $('rbAfter').className = d.score.delta > 0 ? 'up' : '';
+    $('rbHeadline').textContent = d.score.delta > 0
+      ? 'Match went up ' + d.score.delta + ' points'
+      : (d.score.delta === 0 ? 'Same score, clearer bullets' : 'Match moved down ' + Math.abs(d.score.delta) + ' points');
+    $('rbHonesty').textContent = d.honesty;
+
+    $('rbCount').textContent = d.bullets.length + ' bullet' + (d.bullets.length === 1 ? '' : 's');
+    $('rbBullets').innerHTML = d.bullets.map(function(b){
+      var changed = b.original && b.original !== b.rewritten;
+      return '<div class="rb-b' + (b.reverted ? ' reverted' : '') + '">' +
+        (b.reverted ? '<span class="rb-flag">reverted</span>' : '') +
+        (changed ? '<div class="old">' + esc(b.original) + '</div>' : '') +
+        '<div class="new">' + esc(b.rewritten) + '</div>' +
+        (b.why ? '<div class="why">' + esc(b.why) + '</div>' : '') +
+        '</div>';
+    }).join('');
+
+    if (d.blocked && d.blocked.length) {
+      $('rbBlockedCard').style.display = 'block';
+      $('rbBlocked').innerHTML = d.blocked.map(function(x){
+        return '<div class="rb-blocked">Tried to claim <code>' + esc(x.added.join(', ')) + '</code> &mdash; &ldquo;' + esc(x.text) + '&hellip;&rdquo;</div>';
+      }).join('');
+    } else {
+      $('rbBlockedCard').style.display = 'none';
+    }
+
+    if (d.gaps && d.gaps.length) {
+      $('rbGapCard').style.display = 'block';
+      $('rbGaps').innerHTML = d.gaps.map(function(g){
+        return '<div class="rb-gap"><b>' + esc(g.term) + '</b><p>' + esc(g.question) + '</p></div>';
+      }).join('');
+    } else {
+      $('rbGapCard').style.display = 'none';
+    }
+
+    $('stepResult').style.display = 'none';
+    $('stepRebuild').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  $('rebuild').addEventListener('click', async function(){
+    var btn = this;
+    if (!lastKeywords || !lastKeywords.length) return showErr('Run the match first.');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin"></span> Rebuilding…';
+    try {
+      var r = await fetch('/api/tailor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resume: resume.value, jd: jd.value, keywords: lastKeywords })
+      });
+      var d = await r.json();
+      if (!r.ok || d.error) throw new Error(d.error || ('Request failed (' + r.status + ')'));
+      renderRebuild(d);
+    } catch (e) {
+      showErr(e.message || 'Rebuild failed. Try again in a moment.');
+      $('stepResult').style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Rebuild for this job';
+    }
+  });
+
+  $('rbBack').addEventListener('click', function(){
+    $('stepRebuild').style.display = 'none';
+    $('stepResult').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  $('rbCopy').addEventListener('click', function(){
+    var text = Array.prototype.map.call(document.querySelectorAll('#rbBullets .new'), function(el){
+      return '- ' + el.textContent;
+    }).join('\n');
+    if (navigator.clipboard) navigator.clipboard.writeText(text);
+    var b = this; b.textContent = 'Copied';
+    setTimeout(function(){ b.textContent = 'Copy all rewritten bullets'; }, 1500);
+  });
+
+  // Expose the keyword set the match used, so the rebuild scores against the
+  // same list rather than re-extracting and producing a non-comparable number.
+  window.__zkSetKeywords = function(d){
+    lastKeywords = d.found.concat(d.missing).map(function(k){
+      return { term: k.term, importance: k.importance };
+    });
+  };
 })();
 </script>
 </body></html>

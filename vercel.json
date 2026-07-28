@@ -64,6 +64,9 @@
     },
     "api/ats.js": {
       "maxDuration": 30
+    },
+    "api/tailor.js": {
+      "maxDuration": 60
     }
   },
   "redirects": [
