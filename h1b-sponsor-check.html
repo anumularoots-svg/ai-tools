@@ -44,6 +44,13 @@
 .sp-banner.demo{background:#FFF7ED;border:1px solid #FED7AA;color:#B45309}
 .sp-banner.err{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C}
 
+/* Shown when the DOL dataset has not been loaded yet. Deliberately not styled
+   as an error: nothing has gone wrong for the visitor, the data simply is not
+   in place, and a red alert would read as a broken site. */
+.sp-pending{background:var(--zk-surface);border:1px solid var(--zk-border);border-radius:var(--zk-radius-xl);padding:30px;box-shadow:var(--zk-shadow-md);text-align:center}
+.sp-pending h3{font-size:20px;font-weight:800;letter-spacing:-.02em;color:var(--zk-text);margin-bottom:10px}
+.sp-pending p{font-size:14.5px;color:var(--zk-text2);line-height:1.7;max-width:520px;margin:0 auto}
+
 /* result */
 /* The nav is sticky at 70px. Without this, scrollIntoView parks the verdict
    pill underneath it and the single most important word on the page is hidden. */
@@ -432,6 +439,24 @@
     fetch(url)
       .then(function(res){ return res.json().then(function(d){ return { ok: res.ok, status: res.status, d: d }; }); })
       .then(function(res){
+        // 503 means the DOL dataset has not been ingested yet. That is a state
+        // of this deployment, not a mistake the visitor made, so it gets an
+        // explanation and somewhere useful to go — not a red alert.
+        if (res.status === 503) {
+          hideErr();
+          out.innerHTML =
+            '<div class="sp-pending"><h3>The sponsor database is still being loaded</h3>' +
+            '<p>We are processing the latest Department of Labor release. Searches will start returning ' +
+            'results here shortly &mdash; the notes below explain exactly what the data does and does not tell you. ' +
+            'In the meantime, the rest of the toolkit is fully working.</p>' +
+            '<div class="sp-next" style="max-width:520px;margin:22px auto 0">' +
+            '<a class="primary" href="/ats-checker">Match your resume to a job</a>' +
+            '<a class="ghost" href="/ai-mock-interview">Practise the sponsorship question</a>' +
+            '</div></div>';
+          out.style.display = 'block';
+          out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
         if (!res.ok) {
           out.style.display = 'none';
           showErr(res.d && res.d.error ? res.d.error : 'Lookup failed. Please try again.');
