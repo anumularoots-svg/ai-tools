@@ -9,3 +9,9 @@ dev-server.mjs
 
 .vercel
 .env*
+
+# H-1B ingest: DOL source files and the aggregated output are hundreds of MB.
+# They belong in Supabase, not in git. data/h1b-aliases.json IS tracked.
+lca-data/
+data/h1b-employers.ndjson
+data/h1b-meta.json
