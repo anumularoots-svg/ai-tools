@@ -65,7 +65,36 @@ async function callAIStream(prov,msgs,onChunk){
       try{var j=JSON.parse(pl);var dc=j.choices&&j.choices[0]&&j.choices[0].delta&&j.choices[0].delta.content;if(dc){got=true;onChunk(dc)}}catch(e){}}}
   if(!got)throw new Error(prov.name+" empty stream");
   return true}
-async function callAI(prov,msgs,maxTok){maxTok=maxTok||1500;if(prov.format==="gemini"){var gm=msgs.filter(function(m){return m.role!=="system"}).map(function(m){return{role:m.role==="assistant"?"model":"user",parts:[{text:m.content}]}});var sys=msgs.find(function(m){return m.role==="system"});var body={contents:gm,generationConfig:{maxOutputTokens:maxTok,temperature:0.7}};if(sys)body.systemInstruction={parts:[{text:sys.content}]};var r=await fetch(prov.url+"/models/"+prov.model+":generateContent?key="+prov.key,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});if(!r.ok)throw new Error("Gemini "+r.status);var d=await r.json();return d.candidates[0].content.parts[0].text}else{var h={"Content-Type":"application/json","Authorization":"Bearer "+prov.key};if(prov.name==="openrouter"){h["HTTP-Referer"]="https://zapkitt.com";h["X-Title"]="ZapKitt"}var r2=await fetch(prov.url,{method:"POST",headers:h,body:JSON.stringify({model:prov.model,messages:msgs,max_tokens:maxTok,temperature:0.7})});if(!r2.ok)throw new Error(prov.name+" "+r2.status);var d2=await r2.json();return d2.choices[0].message.content}}
+// Every provider call is bounded. Without this, one slow provider consumes the
+// whole 60s function budget, Vercel kills the request mid-flight, and the
+// fallback providers below never get tried -- which is what produced the
+// "Evaluation Error / 0%" report a candidate would read as their own score.
+async function callAI(prov,msgs,maxTok,timeoutMs){
+  maxTok=maxTok||1500;
+  var ac=new AbortController();
+  var timer=setTimeout(function(){ac.abort()},timeoutMs||25000);
+  try{
+    if(prov.format==="gemini"){
+      var gm=msgs.filter(function(m){return m.role!=="system"}).map(function(m){return{role:m.role==="assistant"?"model":"user",parts:[{text:m.content}]}});
+      var sys=msgs.find(function(m){return m.role==="system"});
+      var body={contents:gm,generationConfig:{maxOutputTokens:maxTok,temperature:0.7}};
+      if(sys)body.systemInstruction={parts:[{text:sys.content}]};
+      var r=await fetch(prov.url+"/models/"+prov.model+":generateContent?key="+prov.key,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),signal:ac.signal});
+      if(!r.ok)throw new Error("Gemini "+r.status);
+      var d=await r.json();
+      return d.candidates[0].content.parts[0].text;
+    }
+    var h={"Content-Type":"application/json","Authorization":"Bearer "+prov.key};
+    if(prov.name==="openrouter"){h["HTTP-Referer"]="https://zapkitt.com";h["X-Title"]="ZapKitt"}
+    var r2=await fetch(prov.url,{method:"POST",headers:h,body:JSON.stringify({model:prov.model,messages:msgs,max_tokens:maxTok,temperature:0.7}),signal:ac.signal});
+    if(!r2.ok)throw new Error(prov.name+" "+r2.status);
+    var d2=await r2.json();
+    return d2.choices[0].message.content;
+  }catch(e){
+    if(e.name==="AbortError")throw new Error(prov.name+" timed out after "+Math.round((timeoutMs||25000)/1000)+"s");
+    throw e;
+  }finally{ clearTimeout(timer); }
+}
 
 export default async function handler(req,res){
   const origins=["https://zapkitt.com","https://www.zapkitt.com"];const o=req.headers.origin||"";
@@ -316,7 +345,16 @@ export default async function handler(req,res){
       evalSys+="IDEAL ANSWER RULES: For coding questions, ideal_answer MUST include complete working code. For technical/scenario questions, give the concrete correct answer with specific tools, commands, and architecture — like a real senior engineer. Keep each ideal_answer focused, not padded.";
       var evalMsgs=[{role:"system",content:evalSys},{role:"user",content:"Evaluate now. Output ONLY the JSON object, nothing else."}];
       var evalErr="";
-      for(var i=0;i<providers.length;i++){try{var t=await callAI(providers[i],evalMsgs,6000);t=t.replace(/```json/g,"").replace(/```/g,"").trim();var j1=t.indexOf("{"),j2=t.lastIndexOf("}");if(j1>=0&&j2>j1)t=t.substring(j1,j2+1);var parsed;try{parsed=JSON.parse(t)}catch(pe){
+      // Budget the fan-out. Vercel kills this function at 60s; spending all of
+      // it on one slow provider is what produced the "Evaluation Error / 0%"
+      // report -- which a candidate reads as their own score, not our outage.
+      // 45s of wall clock, at most 20s per provider, so a stalled first choice
+      // still leaves room for the fallbacks.
+      var evalDeadline=Date.now()+45000;
+      for(var i=0;i<providers.length;i++){
+        var evalLeft=evalDeadline-Date.now();
+        if(evalLeft<6000){evalErr=evalErr||"ran out of time before a provider answered";break}
+        try{var t=await callAI(providers[i],evalMsgs,6000,Math.min(20000,evalLeft));t=t.replace(/```json/g,"").replace(/```/g,"").trim();var j1=t.indexOf("{"),j2=t.lastIndexOf("}");if(j1>=0&&j2>j1)t=t.substring(j1,j2+1);var parsed;try{parsed=JSON.parse(t)}catch(pe){
           // Try to fix common JSON issues (control chars, trailing commas)
           t=t.replace(/[\x00-\x1f]/g,' ').replace(/,\s*}/g,'}').replace(/,\s*]/g,']');
           try{parsed=JSON.parse(t)}catch(pe2){continue}}

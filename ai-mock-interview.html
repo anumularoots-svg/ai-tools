@@ -282,7 +282,6 @@ body{font-family:Inter,system-ui,sans-serif;background:#FFFFFF;color:#111827;-we
 <h1>Practice the interview you're <em>actually about to walk into</em></h1>
 <p class="sub">Upload your resume, pick the company, get a 20-minute mock that mirrors their real process — with a written debrief that tells you exactly where you'd fail and how to fix it.</p>
 <a href="#setupForm" class="hero-cta" onclick="document.getElementById('setupForm').scrollIntoView({behavior:'smooth'});return false">Start Free Practice <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
-<div class="live-count"><strong id="liveCount">2,847</strong> interviews completed this week</div>
 </section>
 
 <!-- HOW IT WORKS -->
@@ -339,7 +338,7 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 
 <div class="card"><h3>Company</h3>
 <div class="chips"><button class="ch on" onclick="pickCo(this,'')">Any</button><button class="ch" onclick="pickCo(this,'Google')">Google</button><button class="ch" onclick="pickCo(this,'Amazon')">Amazon</button><button class="ch" onclick="pickCo(this,'Microsoft')">Microsoft</button><button class="ch" onclick="pickCo(this,'TCS')">TCS</button><button class="ch" onclick="pickCo(this,'Infosys')">Infosys</button><button class="ch" onclick="pickCo(this,'Accenture')">Accenture</button><button class="ch" onclick="pickCo(this,'Deloitte')">Deloitte</button><button class="ch" onclick="pickCo(this,'Wipro')">Wipro</button></div>
-<div class="f"><label>Or type company name</label><input id="inp_co" placeholder="e.g. Razorpay, Flipkart"></div></div>
+<div class="f"><label>Or type company name</label><input id="inp_co" placeholder="e.g. JPMorgan Chase, Salesforce"></div></div>
 
 <div class="card"><h3>Experience Level</h3>
 <div class="diff">
@@ -417,7 +416,7 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 <div class="upgrade-grid">
 <div class="upgrade-card">
 <div class="rname">Round 2 — Technical + Scenario</div>
-<div class="price">&#8377;9 <small>/ $2</small></div>
+<div class="price">$2 <small>one-time</small></div>
 <div class="feats">
 <span>&#10003; 25 unique questions</span>
 <span>&#10003; Deep-dive on your resume's tech stack</span>
@@ -435,7 +434,7 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 <div class="upgrade-card best">
 <div class="best-badge">RECOMMENDED</div>
 <div class="rname">Round 3 — Coding + Cross-Scenario + HR</div>
-<div class="price">&#8377;29 <small>/ $5</small></div>
+<div class="price">$5 <small>one-time</small></div>
 <div class="feats">
 <span>&#10003; 25 coding + cross-scenario questions</span>
 <span>&#10003; Live code editor (2 min each)</span>
@@ -451,9 +450,7 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 </div>
 </div>
 </div>
-<div class="pay-opts">
-<a href="https://ko-fi.com/zapkitt" target="_blank" style="background:#111827;color:#fff">Pay via Ko-fi ($)</a>
-</div>
+
 </div>
 
 <!-- FEEDBACK -->
@@ -471,8 +468,8 @@ Answer lacked specific metrics. "Improved performance" should be "reduced latenc
 <input type="text" id="fbName" placeholder="Your Name *" style="padding:10px;border:1.5px solid #E7ECF3;border-radius:8px;font-family:inherit;font-size:12px;outline:0">
 <div style="display:flex;gap:4px">
 <select id="fbCountry" title="Country code" style="flex:0 0 auto;max-width:120px;padding:10px 4px;border:1.5px solid #E7ECF3;border-radius:8px;font-family:inherit;font-size:12px;outline:0;background:#FFFFFF;cursor:pointer">
-<option value="+91">🇮🇳 +91</option>
 <option value="+1">🇺🇸 +1</option>
+<option value="+91">🇮🇳 +91</option>
 <option value="+44">🇬🇧 +44</option>
 <option value="+971">🇦🇪 +971</option>
 <option value="+966">🇸🇦 +966</option>
@@ -561,9 +558,11 @@ var _thinkT=null;
 function startThinking(){var i=0;setCaption(THINK_MSGS[0]);if(_thinkT)clearInterval(_thinkT);_thinkT=setInterval(function(){i=(i+1)%THINK_MSGS.length;setCaption(THINK_MSGS[i])},1500)}
 function stopThinking(){if(_thinkT){clearInterval(_thinkT);_thinkT=null}}
 
-// Randomize live count
-var base=2400+Math.floor(Math.random()*800);
-document.getElementById('liveCount').textContent=base.toLocaleString();
+// The "N interviews completed this week" counter used to be
+// 2400+Math.random()*800 -- a different invented number on every page load.
+// Refreshing twice exposed it, and a fake usage stat costs more trust than the
+// stat was ever worth. The element is gone; put a real figure here only when it
+// comes from analytics.
 
 async function checkIPLimit(){
   try{
@@ -793,25 +792,75 @@ async function evaluate(){clearInterval(S.timer);stopTimer();stopListening();sto
   document.getElementById('evalBox').classList.add('show');setStatus('');
   setCaption('Thank you for completing the interview. Preparing your evaluation report…');
   speak('Thank you for completing the interview. Please wait while I prepare your evaluation report.');
+  var ok=await evaluateAnswers();
+  if(!ok)showLocalResults();}
+
+// Scoring only. Split out of evaluate() so the retry button can re-run it
+// without making the candidate sit through the interview a second time --
+// their answers are already in S.qas. Resolves true when a report rendered.
+async function evaluateAnswers(){
   var evalBody=JSON.stringify({action:'evaluate',qas:S.qas,transcript:S.transcript,role:S.role,company:S.co});
   async function tryEval(){var r=await fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:evalBody});return r.json()}
   try{
     var data=await tryEval();
-    if(!data.success){ // one retry — evaluation accuracy matters
+    if(!data||!data.success){ // one retry — evaluation accuracy matters
       setCaption('Finalizing your detailed evaluation…');
       try{data=await tryEval()}catch(e2){}
     }
-    if(!data||!data.success){showLocalResults();return}
-    showResults(data.data);
-  }catch(e){try{var d2=await tryEval();if(d2&&d2.success){showResults(d2.data);return}}catch(e3){}showLocalResults()}}
+    if(!data||!data.success)return false;
+    showResults(data.data);return true;
+  }catch(e){
+    try{var d2=await tryEval();if(d2&&d2.success){showResults(d2.data);return true}}catch(e3){}
+    return false;
+  }}
 
+// When evaluation fails we must NOT render a scorecard. The previous version
+// built a report of 0% across every category with "0/10" on each question,
+// which reads as "you scored zero on your interview" -- the single most
+// discouraging thing this product could tell someone, for an outage that is
+// entirely our fault. Show the failure as a failure, keep their answers, and
+// let them re-run the evaluation without redoing the interview.
 function showLocalResults(){
-  var d={overall_score:0,overall_verdict:"Evaluation Error - Manual Review Needed",
-    categories:{technical:0,communication:0,confidence:0,star_format:0,problem_solving:0},
-    questions:S.qas.map(function(qa,i){return{q:qa.q,answer:qa.a,score:0,mistakes:"Could not evaluate - API timeout",ideal_answer:"Please retry the interview for AI evaluation",how_to_improve:"Practice answering clearly and specifically"}}),
-    strong_areas:[],weak_areas:["Evaluation could not complete"],practice_topics:["Retry interview"]};
-  showResults(d)
+  document.getElementById('iv').classList.remove('show');
+  // Render into a SEPARATE container. Overwriting #rs would destroy the
+  // scorecard markup that showResults() needs if the retry below succeeds.
+  var rs=document.getElementById('rs');
+  var box=document.getElementById('rsErr');
+  if(!box){box=document.createElement('div');box.id='rsErr';box.className=rs.className;rs.parentNode.insertBefore(box,rs);}
+  box.classList.add('show');
+  box.innerHTML=
+    '<div style="max-width:620px;margin:0 auto;padding:48px 24px;text-align:center">'+
+      '<div style="width:56px;height:56px;border-radius:50%;background:#FFF7ED;display:flex;align-items:center;justify-content:center;margin:0 auto 20px">'+
+        '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round"><path d="M12 8v5"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>'+
+      '</div>'+
+      '<h2 style="font-size:23px;font-weight:800;letter-spacing:-.02em;color:#141A2E;margin-bottom:10px">We could not score this interview</h2>'+
+      '<p style="font-size:15px;color:#5B6472;line-height:1.7;margin-bottom:6px">Our evaluation service did not respond in time. <b>This is a problem on our side, not a reflection of how you answered.</b></p>'+
+      '<p style="font-size:15px;color:#5B6472;line-height:1.7;margin-bottom:26px">Your '+S.qas.length+' answer'+(S.qas.length===1?'':'s')+' '+(S.qas.length===1?'is':'are')+' still here. Scoring again takes about 30 seconds and does not repeat the interview.</p>'+
+      '<button id="reEval" style="background:#6C3CE1;color:#fff;border:0;border-radius:10px;padding:14px 30px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer">Score my answers again</button>'+
+      '<div id="reEvalMsg" style="font-size:13px;color:#8A93A3;margin-top:14px;min-height:18px"></div>'+
+      '<details style="margin-top:30px;text-align:left;background:#F3F6FB;border-radius:12px;padding:16px 18px">'+
+        '<summary style="font-weight:700;font-size:14px;color:#141A2E;cursor:pointer">Your answers</summary>'+
+        S.qas.map(function(qa,i){
+          return '<div style="margin-top:14px;padding-top:14px;border-top:1px solid #E7ECF3">'+
+            '<div style="font-size:13px;font-weight:700;color:#141A2E;margin-bottom:5px">Q'+(i+1)+'. '+esc(qa.q)+'</div>'+
+            '<div style="font-size:13px;color:#5B6472;line-height:1.6">'+(esc(qa.a)||'<i>No answer recorded</i>')+'</div></div>';
+        }).join('')+
+      '</details>'+
+    '</div>';
+  document.getElementById('reEval').addEventListener('click',function(){
+    var b=this,msg=document.getElementById('reEvalMsg');
+    b.disabled=true;b.style.opacity='.6';b.textContent='Scoring…';
+    msg.textContent='This can take up to 30 seconds.';
+    evaluateAnswers().then(function(ok){
+      if(ok){box.classList.remove('show');box.innerHTML='';return}
+      b.disabled=false;b.style.opacity='1';b.textContent='Score my answers again';
+      msg.textContent='Still not responding. Please try once more in a minute.';
+    });
+  });
 }
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 function showResults(d){document.getElementById('iv').classList.remove('show');document.getElementById('rs').classList.add('show');
   document.getElementById('rsub').textContent=S.role+(S.co?' at '+S.co:'')+' | '+Math.floor(S.secs/60)+'m '+(S.secs%60)+'s';
