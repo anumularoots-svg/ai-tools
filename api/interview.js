@@ -1,5 +1,5 @@
 import { kvReady, kvGet, kvDel, kvSetEx, kvSAdd, kvSMembers, kvExpire, kvLPush, kvLTrim, kvLRange } from './_kv.js';
-import { slotType, totalQuestions, difficultyDecision, buildAnalyzerPrompt, buildPlannerPrompt, buildQuestionPrompt, buildAnswerEvalPrompt, buildReportPrompt, reconcileReport, extractJSON } from './interview-engine.js';
+import { slotType, totalQuestions, difficultyDecision, buildAnalyzerPrompt, buildPlannerPrompt, buildQuestionPrompt, buildAnswerEvalPrompt, buildReportPrompt, reconcileReport, extractJSON } from './_interview-engine.js';
 import { rateLimit, clientIP, sanitizeText } from './_ratelimit.js';
 
 // Reliable feedback alert — Telegram (replaces the unreliable CallMeBot). Plain text = no escaping needed.

@@ -1,0 +1,488 @@
+<!DOCTYPE html><html lang="en"><head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3VLGB81N09"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-3VLGB81N09");</script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Does This Company Sponsor H-1B? — Free Sponsor Checker | ZapKitt</title>
+<meta name="description" content="Search any US employer and see how many H-1B visa filings it actually made, for which roles, at what salary. Built from public Department of Labor data. Free, no signup.">
+<link rel="canonical" href="https://zapkitt.com/h1b-sponsor-check">
+<meta property="og:type" content="website"><meta property="og:title" content="Does This Company Sponsor H-1B? — Free Checker | ZapKitt"><meta property="og:description" content="Search any US employer and see its real H-1B filing history, roles and salaries. Public DOL data. Free, no signup."><meta property="og:url" content="https://zapkitt.com/h1b-sponsor-check"><meta property="og:site_name" content="ZapKitt"><meta property="og:image" content="https://zapkitt.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Does This Company Sponsor H-1B? | ZapKitt"><meta name="twitter:description" content="Real filing history for any US employer, from public DOL data. Free, no signup."><meta name="twitter:image" content="https://zapkitt.com/og-image.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/zapkitt-global.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"ZapKitt H-1B Sponsor Checker","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Search any US employer for its H-1B LCA filing history, sponsored roles and salary ranges, from public Department of Labor disclosure data."}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Where does this data come from?","acceptedAnswer":{"@type":"Answer","text":"The US Department of Labor publishes every Labor Condition Application (Form ETA-9035) an employer files. It is public record, released quarterly. We aggregate the most recent three fiscal years per employer."}},{"@type":"Question","name":"Is an LCA the same as an H-1B petition?","acceptedAnswer":{"@type":"Answer","text":"No. An LCA is the wage filing an employer makes with the Department of Labor before sending an H-1B petition to USCIS. One LCA can cover more than one position, and a certified LCA does not mean a visa was approved. It is the best public signal of sponsorship intent, which is why we use it, but we label it as filings and never as petitions or approvals."}},{"@type":"Question","name":"Does a company with no filings definitely not sponsor?","acceptedAnswer":{"@type":"Answer","text":"Not always. Large employers often file under a subsidiary such as a Services or Technologies entity, and staffing firms file on behalf of their clients. If you get no result, search the parent company name before ruling the employer out."}},{"@type":"Question","name":"Is the checker free?","acceptedAnswer":{"@type":"Answer","text":"Yes. Unlimited searches, no signup, no card."}}]}</script>
+<style>
+.sp-wrap{max-width:900px;margin:0 auto;padding:0 20px 60px}
+
+/* search */
+.sp-search{position:relative;max-width:660px;margin:0 auto 10px}
+.sp-searchbar{display:flex;align-items:center;gap:10px;background:var(--zk-surface);border:1px solid var(--zk-border-strong);border-radius:var(--zk-radius-full);padding:8px 8px 8px 20px;box-shadow:var(--zk-shadow-md);transition:border-color .2s,box-shadow .2s}
+.sp-searchbar:focus-within{border-color:var(--zk-accent);box-shadow:0 0 0 4px rgba(108,60,225,.12),var(--zk-shadow-md)}
+.sp-searchbar input{flex:1;border:0;outline:0;background:none;font-size:16px;font-family:inherit;color:var(--zk-text);padding:10px 0;min-width:0}
+.sp-searchbar button{flex:none;background:var(--zk-accent);color:#fff;border:0;border-radius:var(--zk-radius-full);padding:12px 26px;font-size:14.5px;font-weight:700;font-family:inherit;cursor:pointer;transition:background .2s}
+.sp-searchbar button:hover{background:var(--zk-accent-hover)}
+.sp-searchbar button:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:520px){.sp-searchbar{padding-left:16px}.sp-searchbar button{padding:12px 18px}}
+
+/* autocomplete */
+.sp-ac{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--zk-surface);border:1px solid var(--zk-border);border-radius:var(--zk-radius-lg);box-shadow:var(--zk-shadow-lg);overflow:hidden;z-index:40;display:none}
+.sp-ac.open{display:block}
+.sp-ac button{display:flex;align-items:baseline;justify-content:space-between;gap:12px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--zk-border);padding:12px 18px;font-family:inherit;font-size:14.5px;color:var(--zk-text);cursor:pointer}
+.sp-ac button:last-child{border-bottom:0}
+.sp-ac button:hover,.sp-ac button.on{background:var(--zk-accent-light)}
+.sp-ac .n{font-weight:600}
+.sp-ac .c{flex:none;font-family:var(--zk-mono);font-size:11.5px;color:var(--zk-text3);font-weight:600}
+
+.sp-role{max-width:660px;margin:0 auto;text-align:center}
+.sp-role input{width:100%;max-width:340px;padding:10px 16px;border:1px solid var(--zk-border);border-radius:var(--zk-radius-full);font-size:13.5px;font-family:inherit;background:var(--zk-surface);color:var(--zk-text);outline:0;text-align:center;transition:border-color .2s}
+.sp-role input:focus{border-color:var(--zk-accent)}
+.sp-hint{font-size:12.5px;color:var(--zk-text3);margin-top:12px;text-align:center;line-height:1.6}
+
+/* banners */
+.sp-banner{border-radius:var(--zk-radius-lg);padding:13px 16px;font-size:13.5px;font-weight:600;line-height:1.6;margin:0 auto 20px;max-width:660px}
+.sp-banner.demo{background:#FFF7ED;border:1px solid #FED7AA;color:#B45309}
+.sp-banner.err{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C}
+
+/* Shown when the DOL dataset has not been loaded yet. Deliberately not styled
+   as an error: nothing has gone wrong for the visitor, the data simply is not
+   in place, and a red alert would read as a broken site. */
+.sp-pending{background:var(--zk-surface);border:1px solid var(--zk-border);border-radius:var(--zk-radius-xl);padding:30px;box-shadow:var(--zk-shadow-md);text-align:center}
+.sp-pending h3{font-size:20px;font-weight:800;letter-spacing:-.02em;color:var(--zk-text);margin-bottom:10px}
+.sp-pending p{font-size:14.5px;color:var(--zk-text2);line-height:1.7;max-width:520px;margin:0 auto}
+
+/* result */
+/* The nav is sticky at 70px. Without this, scrollIntoView parks the verdict
+   pill underneath it and the single most important word on the page is hidden. */
+#result{scroll-margin-top:86px}
+.sp-card{background:var(--zk-surface);border:1px solid var(--zk-border);border-radius:var(--zk-radius-xl);padding:28px;box-shadow:var(--zk-shadow-md)}
+.sp-card+.sp-card{margin-top:18px}
+.sp-head{display:flex;align-items:flex-start;gap:22px;flex-wrap:wrap}
+.sp-head .who{flex:1;min-width:240px}
+.sp-tag{display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:var(--zk-radius-full);font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-bottom:12px}
+.sp-tag .dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.sp-tag.t-strong,.sp-tag.t-active{background:var(--zk-success-bg);color:#047857}
+.sp-tag.t-occasional{background:#FFF7ED;color:#B45309}
+.sp-tag.t-dormant,.sp-tag.t-none,.sp-tag.t-unknown{background:#FEF2F2;color:#B91C1C}
+.sp-head h2{font-size:26px;font-weight:800;letter-spacing:-.025em;line-height:1.2;color:var(--zk-text);margin-bottom:6px}
+.sp-head .sub{font-size:15px;color:var(--zk-text2);font-weight:600}
+.sp-detail{font-size:14px;color:var(--zk-text2);line-height:1.65;margin-top:14px;padding-top:14px;border-top:1px solid var(--zk-border)}
+
+.sp-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(146px,1fr));gap:10px;margin-top:20px}
+.sp-stat{background:var(--zk-surface-alt);border:1px solid var(--zk-border);border-radius:12px;padding:13px 15px}
+.sp-stat b{display:block;font-family:var(--zk-mono);font-size:22px;font-weight:700;color:var(--zk-text);line-height:1.15}
+.sp-stat span{display:block;font-size:11.5px;color:var(--zk-text3);font-weight:600;margin-top:3px;line-height:1.4}
+
+/* fiscal-year bars */
+.sp-sec-t{font-size:15px;font-weight:800;letter-spacing:-.01em;color:var(--zk-text);margin-bottom:16px}
+.sp-fy{display:flex;align-items:flex-end;gap:14px;height:132px;padding-bottom:2px}
+.sp-fy .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px;height:100%}
+.sp-fy .bar{width:100%;max-width:76px;background:var(--zk-accent);border-radius:8px 8px 4px 4px;min-height:4px;transition:height .6s var(--zk-ease)}
+.sp-fy .col.dim .bar{background:var(--zk-border-strong)}
+.sp-fy .v{font-family:var(--zk-mono);font-size:13px;font-weight:700;color:var(--zk-text)}
+.sp-fy .y{font-size:11.5px;font-weight:600;color:var(--zk-text3)}
+
+/* roles */
+.sp-role-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--zk-border)}
+.sp-role-row:first-of-type{border-top:0}
+.sp-role-row .t{flex:1;min-width:0;font-size:14px;font-weight:600;color:var(--zk-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sp-role-row .c{flex:none;font-family:var(--zk-mono);font-size:13px;font-weight:700;color:var(--zk-text2)}
+.sp-role-row .w{flex:none;font-family:var(--zk-mono);font-size:12.5px;color:var(--zk-text3);width:88px;text-align:right}
+@media(max-width:560px){.sp-role-row .w{display:none}}
+.sp-role-row.hit{background:var(--zk-accent-light);margin:0 -14px;padding:12px 14px;border-radius:8px;border-top-color:transparent}
+
+.sp-rolehit{background:var(--zk-accent-light);border:1px solid var(--zk-border);border-radius:var(--zk-radius-lg);padding:15px 17px;font-size:13.5px;line-height:1.65;color:var(--zk-text2);margin-bottom:18px}
+.sp-rolehit b{color:var(--zk-text)}
+
+.sp-alts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.sp-alts button{background:var(--zk-surface);border:1px solid var(--zk-border);border-radius:var(--zk-radius-full);padding:8px 15px;font-size:13px;font-weight:600;font-family:inherit;color:var(--zk-accent);cursor:pointer;transition:all .18s}
+.sp-alts button:hover{border-color:var(--zk-accent);background:var(--zk-accent-light)}
+
+.sp-states{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+.sp-states span{background:var(--zk-surface-alt);border:1px solid var(--zk-border);border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--zk-text2)}
+.sp-states span b{font-family:var(--zk-mono);color:var(--zk-text);margin-left:5px}
+
+.sp-source{font-size:12px;color:var(--zk-text3);line-height:1.65;margin-top:18px;text-align:center}
+.sp-source a{color:var(--zk-text2);text-decoration:underline}
+
+.sp-next{display:flex;gap:11px;flex-wrap:wrap;margin-top:20px}
+.sp-next a{flex:1;min-width:200px;display:block;text-align:center;padding:13px 18px;border-radius:var(--zk-radius);font-size:14px;font-weight:700;text-decoration:none;transition:all .2s}
+.sp-next a.primary{background:var(--zk-accent);color:#fff}
+.sp-next a.primary:hover{background:var(--zk-accent-hover)}
+.sp-next a.ghost{background:var(--zk-surface);color:var(--zk-text);border:1.5px solid var(--zk-border-strong)}
+.sp-next a.ghost:hover{border-color:var(--zk-accent);color:var(--zk-accent)}
+
+.sp-pop{max-width:660px;margin:26px auto 0;text-align:center}
+.sp-pop h3{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--zk-text3);margin-bottom:12px}
+.sp-pop button{background:var(--zk-surface);border:1px solid var(--zk-border);border-radius:var(--zk-radius-full);padding:8px 16px;font-size:13px;font-weight:600;font-family:inherit;color:var(--zk-text2);cursor:pointer;margin:0 6px 8px 0;transition:all .18s}
+.sp-pop button:hover{border-color:var(--zk-accent);color:var(--zk-accent);background:var(--zk-accent-light)}
+
+.spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.spin{animation-duration:2s}.sp-fy .bar{transition:none}}
+</style>
+</head><body>
+<a href="#main" class="zk-skip">Skip to main content</a>
+
+<nav class="zk-nav"><div class="zk-nav-inner">
+<a href="/" class="zk-logo"><svg viewBox="0 0 32 32" fill="none" width="30" height="30"><rect width="32" height="32" rx="8" fill="#6C3CE1"></rect><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"></path></svg><div class="zk-logo-text">Zap<span>Kitt</span></div></a>
+<div class="zk-nav-links" id="zkNav">
+  <a href="/h1b-sponsor-check">H-1B sponsors</a><a href="/ats-checker">ATS checker</a><a href="/ai-resume-builder">Resume</a><a href="/ai-mock-interview">Interview</a><a href="/ai-cold-email">Referral email</a>
+  <a href="/ai-resume-builder" class="zk-nav-cta">Get started</a>
+</div>
+<button class="zk-ham" aria-label="Menu" onclick="document.getElementById('zkNav').classList.toggle('open')"><span></span><span></span><span></span></button>
+</div></nav>
+
+<main id="main">
+<div class="zk-tool-hero">
+  <span class="zk-tool-badge zk-tool-badge-green">Free · No signup · Public DOL data</span>
+  <h1>Does this company sponsor H-1B?</h1>
+  <p>Search any US employer and see what it actually filed — how many visa applications, for which roles, at what salary. Before you spend an application on it.</p>
+</div>
+
+<div class="sp-wrap">
+
+  <div id="demoBanner" class="sp-banner demo" style="display:none">
+    <strong>Demo data.</strong> The real Department of Labor dataset is not loaded on this deployment, so these numbers are placeholders for testing. Do not rely on them.
+  </div>
+  <div id="errBox" class="sp-banner err" style="display:none" role="alert"></div>
+
+  <form class="sp-search" id="form" autocomplete="off">
+    <div class="sp-searchbar">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#8A93A3" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+      <input id="company" type="text" placeholder="Company name — try Deloitte, Amazon, Infosys" aria-label="Company name" spellcheck="false">
+      <button type="submit" id="go">Check</button>
+    </div>
+    <div class="sp-ac" id="ac" role="listbox"></div>
+  </form>
+
+  <div class="sp-role">
+    <input id="role" type="text" placeholder="Optional: your target role, e.g. Data Analyst" aria-label="Target role" spellcheck="false">
+    <p class="sp-hint">Nothing is stored. This is public record data — no account, no card, no limit.</p>
+  </div>
+
+  <div class="sp-pop" id="popular">
+    <h3>Popular searches</h3>
+    <div id="popBtns"></div>
+  </div>
+
+  <section id="result" style="display:none;margin-top:32px"></section>
+
+</div>
+
+<div class="zk-seo">
+  <h2>Why this matters more than any other filter</h2>
+  <p>International students routinely send most of their applications to companies that were never going to sponsor. Every one of those is a week you do not get back — and on OPT, with a 90-day unemployment limit, weeks are the whole budget.</p>
+  <p>The US Department of Labor publishes every Labor Condition Application an employer files. That record is the closest thing to a public answer to "will this company sponsor me". This tool aggregates the most recent three fiscal years so you can check before you apply, not after the recruiter tells you.</p>
+
+  <h2 style="margin-top:34px">Common questions</h2>
+  <details><summary>Where does this data come from?</summary><p>The US Department of Labor's LCA (Form ETA-9035) disclosure files, released quarterly at <a href="https://www.dol.gov/agencies/eta/foreign-labor/performance" rel="nofollow noopener" target="_blank">dol.gov</a>. It is public record. We aggregate the most recent three fiscal years per employer and show certified filings only.</p></details>
+  <details><summary>Is an LCA the same as an H-1B petition?</summary><p>No, and any tool that tells you it is has misread the data. An LCA is the wage filing an employer submits to the Department of Labor <em>before</em> a petition goes to USCIS. One LCA can cover several positions, and a certified LCA does not mean a visa was approved. It is still the best public signal of sponsorship intent, which is why it is used here — but it is labelled as filings, never as petitions or approvals.</p></details>
+  <details><summary>Why do you not show an approval rate?</summary><p>Because the number everyone quotes is the Department of Labor's certification rate, and DOL certifies roughly 98% of everything it receives. A "94% approval rate" sounds meaningful and tells you nothing about your chances. Filing volume and recency actually differentiate employers, so that is what is shown.</p></details>
+  <details><summary>The company I searched shows nothing. Does it definitely not sponsor?</summary><p>Not necessarily. Large employers often file under a subsidiary — a "Services", "Technologies" or "USA" entity — and staffing firms file on behalf of their clients. Search the parent company before ruling an employer out. A genuine zero across three years is a strong signal, but check the spelling first.</p></details>
+  <details><summary>Is it free?</summary><p>Yes. Unlimited searches, no signup, no card.</p></details>
+</div>
+
+<div class="zk-related">
+  <h3>Next steps</h3>
+  <a href="/ats-checker">Match your resume to the job</a>
+  <a href="/ai-resume-builder">Build an ATS-ready resume</a>
+  <a href="/ai-mock-interview">Practise the sponsorship question</a>
+  <a href="/ai-cold-email">Write a referral email</a>
+</div>
+</main>
+
+<footer class="zk-footer"><div class="zk-footer-inner">
+<div class="zk-footer-brand"><a href="/" class="zk-logo"><svg viewBox="0 0 32 32" fill="none" width="28" height="28"><rect width="32" height="32" rx="8" fill="#6C3CE1"></rect><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"></path></svg><div class="zk-logo-text">Zap<span>Kitt</span></div></a><p>AI career tools for resumes, interviews, and job preparation. Free to start.</p></div>
+<div class="zk-footer-col"><h4>Product</h4><a href="/h1b-sponsor-check">H-1B sponsor check</a><a href="/ats-checker">ATS checker</a><a href="/ai-resume-builder">Resume builder</a><a href="/ai-mock-interview">Real-time interview</a><a href="/ai-cold-email">Referral email</a></div>
+<div class="zk-footer-col"><h4>Resources</h4><a href="/blog">Blog</a></div>
+<div class="zk-footer-col"><h4>Company</h4><a href="/about">About</a><a href="/privacy">Privacy policy</a><a href="/terms">Terms</a><a href="mailto:hello@zapkitt.com">Contact</a></div>
+</div><div class="zk-footer-bottom">© 2026 ZapKitt · Free AI career tools. Made in India.<br><span style="display:inline-block;margin-top:8px;max-width:640px;color:var(--zk-text3)">ZapKitt provides career and job-search support only. It is not legal or immigration advice. For questions about your visa status, consult a licensed immigration attorney.</span></div></footer>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var company = $('company'), role = $('role'), form = $('form'), go = $('go');
+  var ac = $('ac'), out = $('result'), err = $('errBox'), demo = $('demoBanner');
+
+  var POPULAR = ['Deloitte','Amazon','Google','Infosys','JPMorgan Chase','Microsoft','Cognizant','Capgemini'];
+
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  }); }
+  function num(n){ return (Number(n) || 0).toLocaleString(); }
+  function money(n){ return n ? '$' + Math.round(n/1000) + 'k' : '--'; }
+
+  function showErr(m){ err.textContent = m; err.style.display = 'block'; }
+  function hideErr(){ err.style.display = 'none'; }
+
+  // ── popular chips ─────────────────────────────────────────────────────────
+  $('popBtns').innerHTML = POPULAR.map(function(n){
+    return '<button type="button" data-q="' + esc(n) + '">' + esc(n) + '</button>';
+  }).join('');
+  $('popBtns').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    company.value = b.getAttribute('data-q');
+    check();
+  });
+
+  // ── autocomplete ──────────────────────────────────────────────────────────
+  var acItems = [], acIndex = -1, acTimer = null, acSeq = 0;
+
+  function closeAc(){ ac.classList.remove('open'); ac.innerHTML = ''; acItems = []; acIndex = -1; }
+
+  function renderAc(items){
+    acItems = items; acIndex = -1;
+    if (!items.length) { closeAc(); return; }
+    ac.innerHTML = items.map(function(s, i){
+      var vol = s.latestFyCertified > 0
+        ? num(s.latestFyCertified) + ' in FY' + s.latestFy
+        : 'none in FY' + s.latestFy;
+      return '<button type="button" role="option" data-i="' + i + '">' +
+             '<span class="n">' + esc(s.name) + '</span><span class="c">' + esc(vol) + '</span></button>';
+    }).join('');
+    ac.classList.add('open');
+  }
+
+  function highlight(){
+    var btns = ac.querySelectorAll('button');
+    for (var i = 0; i < btns.length; i++) btns[i].classList.toggle('on', i === acIndex);
+  }
+
+  ac.addEventListener('mousedown', function(e){
+    // mousedown, not click: blur would close the panel before click lands.
+    var b = e.target.closest('button'); if (!b) return;
+    e.preventDefault();
+    var s = acItems[Number(b.getAttribute('data-i'))];
+    if (!s) return;
+    company.value = s.name; closeAc(); check();
+  });
+
+  company.addEventListener('input', function(){
+    var q = company.value.trim();
+    clearTimeout(acTimer);
+    if (q.length < 2) { closeAc(); return; }
+    acTimer = setTimeout(function(){
+      var seq = ++acSeq;
+      fetch('/api/sponsor?mode=suggest&q=' + encodeURIComponent(q))
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(d){
+          if (seq !== acSeq) return;           // a newer keystroke already won
+          if (d && d.source === 'sample') demo.style.display = 'block';
+          renderAc((d && d.suggestions) || []);
+        })
+        .catch(function(){ /* autocomplete is optional — stay silent */ });
+    }, 180);
+  });
+
+  company.addEventListener('keydown', function(e){
+    if (!ac.classList.contains('open')) return;
+    if (e.key === 'ArrowDown'){ e.preventDefault(); acIndex = Math.min(acIndex + 1, acItems.length - 1); highlight(); }
+    else if (e.key === 'ArrowUp'){ e.preventDefault(); acIndex = Math.max(acIndex - 1, -1); highlight(); }
+    else if (e.key === 'Enter' && acIndex >= 0){ e.preventDefault(); company.value = acItems[acIndex].name; closeAc(); check(); }
+    else if (e.key === 'Escape'){ closeAc(); }
+  });
+
+  document.addEventListener('click', function(e){ if (!form.contains(e.target)) closeAc(); });
+
+  // ── render ────────────────────────────────────────────────────────────────
+  function fyChart(fyCounts){
+    if (!fyCounts || !fyCounts.length) return '';
+    var max = fyCounts.reduce(function(m, f){ return Math.max(m, f.certified); }, 0) || 1;
+    var cols = fyCounts.map(function(f){
+      var h = Math.max(4, Math.round((f.certified / max) * 96));
+      return '<div class="col' + (f.certified === 0 ? ' dim' : '') + '">' +
+             '<span class="v">' + num(f.certified) + '</span>' +
+             '<div class="bar" style="height:' + h + 'px"></div>' +
+             '<span class="y">FY' + f.fy + '</span></div>';
+    }).join('');
+    return '<div class="sp-card"><div class="sp-sec-t">Certified filings by fiscal year</div>' +
+           '<div class="sp-fy">' + cols + '</div></div>';
+  }
+
+  function rolesCard(roles, roleMatch){
+    if (!roles || !roles.length) return '';
+    var hitKeys = {};
+    if (roleMatch && roleMatch.matches) roleMatch.matches.forEach(function(m){ hitKeys[m.key] = 1; });
+
+    var note = '';
+    if (roleMatch) {
+      note = roleMatch.matches.length
+        ? '<div class="sp-rolehit">Filings matching <b>' + esc(roleMatch.query) + '</b>: <b>' +
+          num(roleMatch.certified) + '</b> over the period shown. Your role is one they sponsor for.</div>'
+        : '<div class="sp-rolehit">No filings matching <b>' + esc(roleMatch.query) + '</b>. This employer sponsors, but not visibly for your role — sponsorship here may be concentrated in other teams.</div>';
+    }
+
+    var rows = roles.slice(0, 12).map(function(r){
+      return '<div class="sp-role-row' + (hitKeys[r.key] ? ' hit' : '') + '">' +
+             '<span class="t">' + esc(r.title) + '</span>' +
+             '<span class="c">' + num(r.certified) + '</span>' +
+             '<span class="w">' + esc(money(r.wageMedian)) + '</span></div>';
+    }).join('');
+
+    return '<div class="sp-card">' + note +
+           '<div class="sp-sec-t">Most sponsored roles <span style="font-weight:600;color:var(--zk-text3);font-size:12.5px">— filings &middot; median salary</span></div>' +
+           rows + '</div>';
+  }
+
+  // "Certified, last 1 years" is the kind of detail that makes a data tool look
+  // careless, so the range is spelled out instead of counted.
+  function coveredLabel(s){
+    var y = s.yearsCovered || [];
+    if (y.length > 1) return 'Certified, FY' + y[0] + '–FY' + y[y.length - 1];
+    if (y.length === 1) return 'Certified in FY' + y[0];
+    return 'Certified filings';
+  }
+
+  function altsHtml(alts){
+    if (!alts || !alts.length) return '';
+    return '<div class="sp-alts">' + alts.slice(0, 5).map(function(a){
+      return '<button type="button" data-alt="' + esc(a.name) + '">' + esc(a.name) + '</button>';
+    }).join('') + '</div>';
+  }
+
+  function render(d){
+    hideErr();
+    demo.style.display = d.source === 'sample' ? 'block' : 'none';
+
+    var v = d.verdict;
+
+    if (!d.found) {
+      out.innerHTML =
+        '<div class="sp-card"><div class="sp-head"><div class="who">' +
+        '<span class="sp-tag t-unknown"><span class="dot"></span>' + esc(v.label) + '</span>' +
+        '<h2>' + esc(d.query) + '</h2>' +
+        '<div class="sub">' + esc(v.headline) + '</div></div></div>' +
+        '<div class="sp-detail">' + esc(v.detail) + '</div>' +
+        altsHtml(d.alternatives) +
+        '<div class="sp-next"><a class="ghost" href="#" data-retry="1">Search a different name</a>' +
+        '<a class="primary" href="/ai-resume-builder">Build a resume that gets past ATS</a></div></div>';
+      out.style.display = 'block';
+      out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+
+    var s = d.stats;
+    // Only worth saying when we can actually offer somewhere else to go.
+    // "Try one of these:" above an empty list reads as a broken page, and
+    // searching "Deloitte" and landing on "Deloitte Consulting LLP" does not
+    // need an apology.
+    var didYouMean = (d.matchedExactly || !d.alternatives || !d.alternatives.length) ? '' :
+      '<div class="sp-detail" style="border-top:0;padding-top:0;margin-top:10px;font-size:13px;color:var(--zk-text3)">' +
+      'Closest match to &ldquo;' + esc(d.query) + '&rdquo;. Not the company you meant?</div>' + altsHtml(d.alternatives);
+
+    var denial = s.denialFlag
+      ? '<div class="sp-detail" style="color:#B45309">Note: ' + s.denialFlag + '% of this employer’s filings in the period were denied or withdrawn, which is higher than usual. Worth asking about before you count on an offer here.</div>'
+      : '';
+
+    out.innerHTML =
+      '<div class="sp-card">' +
+        '<div class="sp-head"><div class="who">' +
+          '<span class="sp-tag t-' + esc(v.tier) + '"><span class="dot"></span>' + esc(v.label) + '</span>' +
+          '<h2>' + esc(d.employer.name) + '</h2>' +
+          '<div class="sub">' + esc(v.headline) + '</div>' +
+        '</div></div>' +
+        didYouMean +
+        '<div class="sp-detail">' + esc(v.detail) + '</div>' + denial +
+        '<div class="sp-stats">' +
+          '<div class="sp-stat"><b>' + num(s.latestFyCertified) + '</b><span>Certified filings, FY' + s.latestFy + '</span></div>' +
+          '<div class="sp-stat"><b>' + num(s.totalCertified) + '</b><span>' + esc(coveredLabel(s)) + '</span></div>' +
+          '<div class="sp-stat"><b>' + money(s.wage.median) + '</b><span>Median sponsored salary</span></div>' +
+          '<div class="sp-stat"><b>' + money(s.wage.p25) + '&ndash;' + money(s.wage.p75) + '</b><span>Typical salary range</span></div>' +
+        '</div>' +
+        (s.topStates.length
+          ? '<div style="margin-top:18px"><div class="sp-sec-t" style="margin-bottom:8px">Where they file</div><div class="sp-states">' +
+            s.topStates.map(function(t){ return '<span>' + esc(t.state) + '<b>' + num(t.certified) + '</b></span>'; }).join('') +
+            '</div></div>'
+          : '') +
+      '</div>' +
+      fyChart(s.fyCounts) +
+      rolesCard(d.roles, d.roleMatch) +
+      '<div class="sp-next">' +
+        '<a class="primary" href="/ats-checker">Match your resume to a job here</a>' +
+        '<a class="ghost" href="/ai-mock-interview">Practise the sponsorship question</a>' +
+      '</div>' +
+      '<p class="sp-source">Source: US Department of Labor LCA (Form ETA-9035) disclosure data, through FY' + s.latestFy +
+        '. Certified filings only. An LCA is a wage filing made before an H-1B petition, not a petition or an approval &mdash; ' +
+        '<a href="#main">see the notes below</a>.</p>';
+
+    out.style.display = 'block';
+    out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  out.addEventListener('click', function(e){
+    var retry = e.target.closest('a[data-retry]');
+    if (retry) {
+      e.preventDefault();
+      company.select(); company.focus();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    var b = e.target.closest('button[data-alt]'); if (!b) return;
+    company.value = b.getAttribute('data-alt');
+    check();
+  });
+
+  // ── check ─────────────────────────────────────────────────────────────────
+  var busy = false;
+  function check(){
+    var q = company.value.trim();
+    if (!q) { showErr('Enter a company name.'); company.focus(); return; }
+    if (busy) return;
+    busy = true; closeAc(); hideErr();
+    go.innerHTML = '<span class="spin"></span>'; go.disabled = true;
+
+    var url = '/api/sponsor?company=' + encodeURIComponent(q);
+    var r = role.value.trim();
+    if (r) url += '&role=' + encodeURIComponent(r);
+
+    fetch(url)
+      .then(function(res){ return res.json().then(function(d){ return { ok: res.ok, status: res.status, d: d }; }); })
+      .then(function(res){
+        // 503 means the DOL dataset has not been ingested yet. That is a state
+        // of this deployment, not a mistake the visitor made, so it gets an
+        // explanation and somewhere useful to go — not a red alert.
+        if (res.status === 503) {
+          hideErr();
+          out.innerHTML =
+            '<div class="sp-pending"><h3>The sponsor database is still being loaded</h3>' +
+            '<p>We are processing the latest Department of Labor release. Searches will start returning ' +
+            'results here shortly &mdash; the notes below explain exactly what the data does and does not tell you. ' +
+            'In the meantime, the rest of the toolkit is fully working.</p>' +
+            '<div class="sp-next" style="max-width:520px;margin:22px auto 0">' +
+            '<a class="primary" href="/ats-checker">Match your resume to a job</a>' +
+            '<a class="ghost" href="/ai-mock-interview">Practise the sponsorship question</a>' +
+            '</div></div>';
+          out.style.display = 'block';
+          out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+        if (!res.ok) {
+          out.style.display = 'none';
+          showErr(res.d && res.d.error ? res.d.error : 'Lookup failed. Please try again.');
+          return;
+        }
+        render(res.d);
+        try { gtag('event', 'h1b_check', { company: q, tier: res.d.verdict && res.d.verdict.tier }); } catch(e){}
+      })
+      .catch(function(){
+        out.style.display = 'none';
+        showErr('Could not reach the sponsor database. Check your connection and try again.');
+      })
+      .finally(function(){ busy = false; go.textContent = 'Check'; go.disabled = false; });
+  }
+
+  form.addEventListener('submit', function(e){ e.preventDefault(); check(); });
+  role.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); check(); } });
+
+  // Deep link: /h1b-sponsor-check?company=Deloitte — this is what the blog
+  // posts and Reddit links will point at, so it must work on first paint.
+  (function(){
+    var p = new URLSearchParams(location.search);
+    var c = p.get('company'), rr = p.get('role');
+    if (rr) role.value = rr;
+    if (c) { company.value = c; check(); }
+  })();
+})();
+</script>
+</body></html>

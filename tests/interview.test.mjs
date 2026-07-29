@@ -6,7 +6,7 @@
 // printed beside it and with the per-question scores the candidate was shown
 // live during the session. A scoring product that contradicts itself is worse
 // than no score at all.
-import { computeOverallScore, verdictFor, readinessFor, reconcileReport, CATEGORY_WEIGHTS } from '../api/interview-engine.js';
+import { computeOverallScore, verdictFor, readinessFor, reconcileReport, CATEGORY_WEIGHTS } from '../api/_interview-engine.js';
 
 let pass = 0, fail = 0;
 function check(name, actual, expected) {

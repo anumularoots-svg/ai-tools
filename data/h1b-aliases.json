@@ -1,0 +1,23 @@
+{
+  "_comment": [
+    "Employer key aliases for scripts/ingest-lca.mjs. Maps a normalised key to",
+    "the key it should be merged into, so filings made under subsidiaries land",
+    "on the entity a user actually searches for.",
+    "",
+    "Keys on BOTH sides must already be normalised the way normalizeEmployer()",
+    "in api/_h1b.js normalises: uppercase, punctuation to spaces, legal suffixes",
+    "(INC / LLC / CORP / USA ...) stripped. Run this to check a key:",
+    "  node -e \"import('./api/_h1b.js').then(m=>console.log(m.normalizeEmployer('Amazon.com Services LLC')))\"",
+    "",
+    "Only alias entities that are genuinely the same employer to a job seeker.",
+    "Merging a staffing vendor into its client would overstate the client's",
+    "sponsorship and is exactly the kind of error this tool exists to avoid.",
+    "",
+    "Start empty and add entries as you find split employers in the output:",
+    "  head -50 data/h1b-employers.ndjson | node -e \"...\" | sort",
+    "",
+    "Example (uncomment and verify against your own ingest before trusting):",
+    "  \"AMAZON COM SERVICES\": \"AMAZON\",",
+    "  \"AMAZON WEB SERVICES\": \"AMAZON\","
+  ]
+}
