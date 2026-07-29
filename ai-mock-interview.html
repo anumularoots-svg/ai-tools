@@ -611,23 +611,9 @@ async function unlockTier(tier){
 
 // UPI unlock — user pays via UPI, sends screenshot on WhatsApp, receives a code
 // from UNLOCK_CODES, enters it here. Same verifyUnlock backend, tier-enforced.
-var upiTier='r2';
-function upiSetTier(t){upiTier=(t==='r3')?'r3':'r2';
-  var a=document.getElementById('upiTb_r2'),b=document.getElementById('upiTb_r3');
-  if(a){a.style.borderColor=upiTier==='r2'?'#6C3CE1':'#E7ECF3';a.style.background=upiTier==='r2'?'#F1ECFF':'#fff';a.style.color=upiTier==='r2'?'#6C3CE1':'#6b7280';}
-  if(b){b.style.borderColor=upiTier==='r3'?'#6C3CE1':'#E7ECF3';b.style.background=upiTier==='r3'?'#F1ECFF':'#fff';b.style.color=upiTier==='r3'?'#6C3CE1':'#6b7280';}}
-async function upiUnlock(){
-  var code=(document.getElementById('upiCode').value||'').trim();
-  var msg=document.getElementById('upiMsg');
-  if(!code||code.length<4){msg.style.color='#dc2626';msg.textContent='Enter the unlock code we sent you on WhatsApp.';return}
-  msg.style.color='#6b7280';msg.textContent='Verifying your code…';
-  try{
-    var r=await fetch('/api/interview',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'verifyUnlock',tier:upiTier,email:code})});
-    var d=await r.json();
-    if(d.unlocked){msg.style.color='#16a34a';msg.textContent='Unlocked! Starting your round…';setTimeout(function(){document.getElementById('upiM').style.display='none';startPaidRound(upiTier)},600)}
-    else{msg.style.color='#dc2626';msg.textContent=d.error||'That code was not recognised. Please check it and retry.'}
-  }catch(e){msg.style.color='#dc2626';msg.textContent='Could not verify right now. Please retry.'}
-}
+// The UPI unlock path was removed along with the UPI payment option;
+// Ko-fi is the only route now. See git history if it is ever needed back.
+
 
 // Step 3: reset into a fresh paid interview session.
 function startPaidRound(tier){
