@@ -138,10 +138,11 @@ export default async function handler(req, res) {
 
   const usingDb = dbReady();
   if (!usingDb && !SAMPLE_MODE) {
-    return res.status(503).json({
-      error: 'Sponsor data is not loaded yet.',
-      detail: 'Run db/h1b-schema.sql on the Supabase project and load it with scripts/ingest-lca.mjs, then set SUPABASE_URL and SUPABASE_ANON_KEY.'
-    });
+    // The operator instructions go to the logs, not the response body. This is
+    // a public endpoint; there is no reason to tell the internet our file
+    // layout and environment variable names.
+    console.error('sponsor: no database configured. Run db/h1b-schema.sql, load it with scripts/ingest-lca.mjs, then set SUPABASE_URL and SUPABASE_ANON_KEY.');
+    return res.status(503).json({ error: 'Sponsor data is not loaded yet.' });
   }
   const source = usingDb ? 'db' : 'sample';
 
