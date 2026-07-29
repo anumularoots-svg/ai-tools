@@ -1,5 +1,6 @@
 /* ZapKitt — Shared styles for all pages */
-/* Updated to match new blue (#D4920B) design system */
+/* Brand accent: violet #6C3CE1 (see the design brief). Amber #D4920B and blue
+   #2F88FF are earlier identities -- do not reintroduce them. */
 
 /* Nav */
 .fp-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #E5E7EB}
@@ -13,7 +14,7 @@
 
 /* Footer */
 .fp-footer{text-align:center;padding:40px 24px;border-top:1px solid #E5E7EB;color:#6B7280;font-size:13px;margin-top:40px}
-.fp-footer a{color:#D4920B;text-decoration:none;font-weight:500}
+.fp-footer a{color:#6C3CE1;text-decoration:none;font-weight:500}
 .fp-footer a:hover{text-decoration:underline}
 
 /* Mobile */
