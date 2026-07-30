@@ -155,15 +155,30 @@ const CHECKS = [
     return { ok, detail: 'page prices $' + prices.join(' / $') + ' vs thresholds $5 / $9' };
   }],
 
-  ['paid unlocks can actually be paid for', async () => {
-    const r = await fetch(BASE + '/api/kofi', {
+  ['payment webhook is configured and enforcing', async () => {
+    // A deliberately wrong signature. Configured and correct => 401.
+    const r = await fetch(BASE + '/api/dodo', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'data=' + encodeURIComponent(JSON.stringify({ email: 'status-check@example.com', amount: '9', verification_token: 'deliberately-wrong' }))
+      headers: {
+        'Content-Type': 'application/json',
+        'webhook-id': 'status_check',
+        'webhook-timestamp': String(Math.floor(Date.now() / 1000)),
+        'webhook-signature': 'v1,ZGVsaWJlcmF0ZWx5LXdyb25n'
+      },
+      body: JSON.stringify({ type: 'payment.succeeded', data: { total_amount: 900, customer: { email: 'status-check@example.com' } } })
     });
-    if (r.status === 503) return { ok: false, detail: 'KOFI_VERIFICATION_TOKEN not set — nothing can be paid for' };
-    if (r.status === 401) return { ok: true, detail: 'token configured and enforced (bad token rejected)' };
-    return { ok: false, detail: 'HTTP ' + r.status + ' — expected 401 for a bad token' };
+    if (r.status === 503) return { ok: false, detail: 'DODO_WEBHOOK_SECRET not set — nothing can be paid for' };
+    if (r.status === 401) return { ok: true, detail: 'secret set, bad signature rejected' };
+    if (r.status === 200) return { ok: false, detail: 'ACCEPTED A FORGED SIGNATURE — anyone can grant themselves paid rounds' };
+    return { ok: false, detail: 'HTTP ' + r.status + ' — expected 401 for a bad signature' };
+  }],
+
+  ['checkout links are configured', async () => {
+    const h = await page('/ai-mock-interview');
+    const m = h.match(/var PAY_LINKS=\{r2:'([^']*)',r3:'([^']*)'\}/);
+    if (!m) return { ok: false, detail: 'PAY_LINKS block not found' };
+    const missing = [!m[1] && 'r2', !m[2] && 'r3'].filter(Boolean);
+    return { ok: missing.length === 0, detail: missing.length ? 'no checkout URL for ' + missing.join(' and ') : 'both set' };
   }],
 
   ['all four tools respond', async () => {
@@ -178,7 +193,8 @@ const CHECKS = [
 
 const PENDING = [
   ['H-1B: load the DOL dataset', 'db/README.md steps 2-4. Pipeline is built and tested.'],
-  ['Ko-fi: set KOFI_VERIFICATION_TOKEN', 'Ko-fi > Settings > Webhooks/API. Restores $5/$9 payments.'],
+  ['Dodo: set DODO_WEBHOOK_SECRET', 'Dodo dashboard > Developer > Webhooks. Until then no payment unlocks anything.'],
+  ['Dodo: paste the two checkout URLs', 'Into PAY_LINKS in ai-mock-interview.html. Round 2 $5, Round 3 $9.'],
   ['Blog: 10 generic AI-tool listicles', 'Unlink rather than delete — they carry search traffic.'],
   ['Interview testimonials', 'Confirm Rahul M. / Sneha K. / Aditya P. are real, or remove.'],
   ['User accounts', 'Not built. Blocks the webhook handler and the $49/mo plan.'],
