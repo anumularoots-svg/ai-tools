@@ -36,8 +36,17 @@ const SKIP = new Set(['admin.html', 'admin-feedback.html']);
 // came here about a visa. Those pages keep this same nav, so anyone who does
 // arrive is funnelled into the career tools rather than deeper into the
 // directory.
+// H-1B sponsors is HIDDEN, not deleted. The page and the API are finished, but
+// the DOL dataset is not loaded, so a visitor who clicks it gets "the sponsor
+// database is still being loaded" instead of an answer. Advertising a tool that
+// cannot answer costs more trust than the traffic is worth -- particularly on a
+// site that is about to start charging.
+//
+// TO RE-LAUNCH once the data is in: uncomment the line below, re-run this
+// script, and restore the sitemap entry (see sitemap.xml) plus the homepage
+// card in index.html. Nothing else was removed.
 const LINKS = [
-  ['/h1b-sponsor-check', 'H-1B sponsors'],
+  // ['/h1b-sponsor-check', 'H-1B sponsors'],
   ['/ats-checker', 'ATS checker'],
   ['/ai-resume-builder', 'Resume'],
   ['/ai-mock-interview', 'Interview'],
@@ -87,7 +96,7 @@ const RULES = [
     // destination, and it advertised the tool directory from 36 pages.
     label: 'footer link row',
     re: /<p style="margin-top:8px">\s*<a href="\/">All Tools<\/a>[\s\S]{0,220}?<\/p>/g,
-    fn: () => '<p style="margin-top:8px"><a href="/h1b-sponsor-check">H-1B sponsors</a> &middot; <a href="/ats-checker">ATS checker</a> &middot; <a href="/about">About</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>'
+    fn: () => '<p style="margin-top:8px"><a href="/ats-checker">ATS checker</a> &middot; <a href="/ai-resume-builder">Resume builder</a> &middot; <a href="/about">About</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>'
   },
   {
     label: 'footer copyright (generic)',
