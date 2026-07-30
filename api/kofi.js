@@ -20,8 +20,18 @@ export default async function handler(req, res) {
 
     const d = JSON.parse(dataStr);
 
+    // FAIL CLOSED. This used to be `if (expected && ...)`, so with
+    // KOFI_VERIFICATION_TOKEN unset the check was skipped and this endpoint
+    // granted paid unlocks to anyone who could POST to it: any email, any
+    // amount, no payment. It was unset in production. An unauthenticated
+    // endpoint that hands out paid features must refuse to run before it
+    // trusts an unverified body.
     const expected = process.env.KOFI_VERIFICATION_TOKEN || '';
-    if (expected && d.verification_token !== expected) return res.status(401).json({ error: 'bad token' });
+    if (!expected) {
+      console.error('kofi: KOFI_VERIFICATION_TOKEN is not set — refusing to grant unlocks. Set it from Ko-fi > Settings > Webhooks/API.');
+      return res.status(503).json({ error: 'webhook not configured' });
+    }
+    if (d.verification_token !== expected) return res.status(401).json({ error: 'bad token' });
 
     const email = String(d.email || '').trim().toLowerCase();
     const amount = parseFloat(d.amount || '0') || 0;

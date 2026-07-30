@@ -26,16 +26,22 @@ const APPLY = !process.argv.includes('--check');
 const SKIP = new Set(['admin.html', 'admin-feedback.html']);
 
 // ── The canonical nav ───────────────────────────────────────────────────────
-// Career tools first, in funnel order. "All tools" stays last and
-// de-emphasised: ~100 utility pages are real SEO surface and dropping the link
-// entirely would orphan every one of them from site navigation.
+// Career tools only, in funnel order.
+//
+// "All tools" was here and is deliberately gone. It was the last link in the
+// career nav pointing at a directory of 140+ PDF/image/marketing tools, which
+// is the competing identity this whole sweep exists to remove. /all-tools and
+// the category pages stay live and stay in sitemap.xml, so existing search
+// traffic still lands; they are simply no longer advertised to a student who
+// came here about a visa. Those pages keep this same nav, so anyone who does
+// arrive is funnelled into the career tools rather than deeper into the
+// directory.
 const LINKS = [
   ['/h1b-sponsor-check', 'H-1B sponsors'],
   ['/ats-checker', 'ATS checker'],
   ['/ai-resume-builder', 'Resume'],
   ['/ai-mock-interview', 'Interview'],
-  ['/ai-cold-email', 'Referral email'],
-  ['/all-tools', 'All tools']
+  ['/ai-cold-email', 'Referral email']
 ];
 
 const navHtml = () => LINKS.map(([h, t]) => `<a href="${h}">${t}</a>`).join('');
@@ -74,6 +80,14 @@ const RULES = [
     label: 'footer .fp-footer line',
     re: /<p>©\s*20\d\d ZapKitt[^<]*<\/p>/,
     fn: () => `<p>${COPYRIGHT}</p>`
+  },
+  {
+    // The fp-footer link row read "All Tools · About · Privacy" -- and "All
+    // Tools" pointed at "/", the career homepage. Wrong label, wrong
+    // destination, and it advertised the tool directory from 36 pages.
+    label: 'footer link row',
+    re: /<p style="margin-top:8px">\s*<a href="\/">All Tools<\/a>[\s\S]{0,220}?<\/p>/g,
+    fn: () => '<p style="margin-top:8px"><a href="/h1b-sponsor-check">H-1B sponsors</a> &middot; <a href="/ats-checker">ATS checker</a> &middot; <a href="/about">About</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>'
   },
   {
     label: 'footer copyright (generic)',
