@@ -107,13 +107,14 @@
 @keyframes sp{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.spin{animation-duration:2s}}
 </style>
+<script src="/zapkitt-auth.js"></script>
 </head><body>
 <a href="#main" class="zk-skip">Skip to main content</a>
 
 <nav class="zk-nav"><div class="zk-nav-inner">
 <a href="/" class="zk-logo"><svg viewBox="0 0 32 32" fill="none" width="30" height="30"><rect width="32" height="32" rx="8" fill="#6C3CE1"></rect><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"></path></svg><div class="zk-logo-text">Zap<span>Kitt</span></div></a>
 <div class="zk-nav-links" id="zkNav">
-  <a href="/ats-checker">ATS checker</a><a href="/ai-resume-builder">Resume</a><a href="/ai-mock-interview">Interview</a><a href="/ai-cold-email">Referral email</a>
+  <a href="/ats-checker">ATS checker</a><a href="/ai-resume-builder">Resume</a><a href="/ai-mock-interview">Interview</a><a href="/ai-cold-email">Referral email</a><a href="/account">Account</a>
   <a href="/ai-resume-builder" class="zk-nav-cta">Get started</a>
 </div>
 <button class="zk-ham" aria-label="Menu" onclick="document.getElementById('zkNav').classList.toggle('open')"><span></span><span></span><span></span></button>
@@ -334,6 +335,8 @@
   }
 
   function render(d){
+    try{ if(window.ZK&&ZK.auth&&ZK.auth.signedIn()) ZK.auth.record("ats"); }catch(e){}
+
     // score ring: circumference for r=57 is ~358
     $('scoreNum').textContent = d.score;
     var ring = $('ring');

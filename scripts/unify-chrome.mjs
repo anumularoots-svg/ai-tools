@@ -50,7 +50,10 @@ const LINKS = [
   ['/ats-checker', 'ATS checker'],
   ['/ai-resume-builder', 'Resume'],
   ['/ai-mock-interview', 'Interview'],
-  ['/ai-cold-email', 'Referral email']
+  ['/ai-cold-email', 'Referral email'],
+  // Accounts are optional -- every tool works signed out. This link is last
+  // and unemphasised for that reason; it is not a gate.
+  ['/account', 'Account']
 ];
 
 const navHtml = () => LINKS.map(([h, t]) => `<a href="${h}">${t}</a>`).join('');

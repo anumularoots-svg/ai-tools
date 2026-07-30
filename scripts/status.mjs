@@ -15,7 +15,11 @@
 
 const BASE = process.argv.includes('--local') ? 'http://localhost:4599' : 'https://zapkitt.com';
 
+// The four tools, in funnel order. /account is nav furniture rather than a
+// tool -- it is allowed in the nav but is not something that has to "work"
+// in the sense the tool checks below mean.
 const CAREER_NAV = ['/ats-checker', '/ai-resume-builder', '/ai-mock-interview', '/ai-cold-email'];
+const NAV_EXTRAS = ['/account'];
 const NAV_CONTAINER = /class="(?:zk-nav-links|nl|fp-nav-links|nav-links)"[^>]*>([\s\S]{0,600}?)<\/div>/;
 
 const pages = {};
@@ -59,7 +63,7 @@ const CHECKS = [
   ['nav shows only working tools', async () => {
     const links = navLinks(await page('/')) || [];
     const tools = links.filter(l => l !== '/');
-    const bad = tools.filter(l => !CAREER_NAV.includes(l));
+    const bad = tools.filter(l => !CAREER_NAV.includes(l) && !NAV_EXTRAS.includes(l));
     return { ok: bad.length === 0, detail: bad.length ? 'unexpected: ' + bad.join(' ') : tools.join(' ') };
   }],
 
@@ -197,6 +201,18 @@ const CHECKS = [
     if (!m) return { ok: false, detail: 'PAY_LINKS block not found' };
     const missing = [!m[1] && 'r2', !m[2] && 'r3'].filter(Boolean);
     return { ok: missing.length === 0, detail: missing.length ? 'no checkout URL for ' + missing.join(' and ') : 'both set' };
+  }],
+
+  ['accounts degrade safely when unconfigured', async () => {
+    const h = await page('/account');
+    if (!h) return { ok: false, detail: '/account did not respond' };
+    // The service_role key bypasses RLS. It must never reach the browser.
+    if (/service_role|"role"\s*:\s*"service_role"/.test(h)) {
+      return { ok: false, detail: 'SERVICE ROLE KEY IN CLIENT CODE — rotate it now' };
+    }
+    const js = await page('/zapkitt-auth.js');
+    const configured = /var SUPABASE_URL = '(?!')\S/.test(js);
+    return { ok: true, detail: configured ? 'configured — sign-in live' : 'not configured, page shows the setup notice' };
   }],
 
   ['all four tools respond', async () => {

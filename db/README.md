@@ -107,3 +107,72 @@ change.
   `verdict()` in `api/_h1b.js`.
 
 `node tests/sponsor.test.mjs` covers all of the above.
+
+---
+
+# Accounts (auth, profile, usage, saved resumes)
+
+Accounts are **optional**. Every tool works signed out; an account adds saved
+resumes, the OPT countdown, and usage history.
+
+## Why there is no API route for this
+
+The browser talks to Supabase directly using the signed-in user's JWT. Row
+Level Security in [`accounts-schema.sql`](accounts-schema.sql) is the access
+control — every policy is `auth.uid() = user_id`, enforced by Postgres.
+
+Two reasons this matters:
+
+1. **Vercel Hobby caps this project at 12 serverless functions and it is at
+   11.** Proxying profile reads through our own API would have spent the last
+   slot on something Postgres already does.
+2. Access control lives in one place. A new endpoint cannot forget to check
+   ownership, because there are no endpoints.
+
+The **anon key ships in client JavaScript**. That is what it is for — it grants
+nothing on its own, since every table denies by default. **Never** put the
+`service_role` key in client code; it bypasses RLS entirely.
+
+## Setup
+
+1. Create a Supabase project (the free tier is enough).
+2. **Authentication → Providers**: enable **Email** (magic link — no passwords
+   to store or leak) and **Google**.
+3. **Authentication → URL Configuration**: set the site URL to
+   `https://zapkitt.com` and add `https://zapkitt.com/account` as a redirect
+   URL. Add `http://localhost:4599/account` too if you develop locally.
+4. Run [`accounts-schema.sql`](accounts-schema.sql) in the SQL editor.
+5. Paste the project URL and **anon** key into the top of
+   [`../zapkitt-auth.js`](../zapkitt-auth.js):
+
+   ```js
+   var SUPABASE_URL = 'https://xxxx.supabase.co';
+   var SUPABASE_ANON_KEY = 'eyJ...';
+   ```
+
+Until those are filled in, `ZK.auth.ready()` is false and `/account` shows
+"Accounts are not switched on yet" rather than erroring. No other page changes.
+
+## Recording usage
+
+One line at the point a tool actually succeeds:
+
+```js
+try{ if(window.ZK&&ZK.auth&&ZK.auth.signedIn()) ZK.auth.record('ats'); }catch(e){}
+```
+
+Fire-and-forget on purpose: a tool must never fail because logging failed, and
+signed-out users are skipped. Currently wired on the ATS checker. Tool keys:
+`ats`, `resume`, `interview`, `referral`.
+
+`ZK.auth.usageToday()` returns `{ats: 3, resume: 1}` for the free daily limit
+when you add one. Counting is server-side via the `usage_today()` function, and
+there is deliberately no update or delete policy on `usage_events` — a usage
+record must not be editable by the person it limits.
+
+## The OPT clock
+
+`ZK.auth.optClock(profile)` returns `{used, left, started}` counting from
+`opt_start_date` while `employed` is false. It is a planning aid, not a legal
+record — USCIS counts cumulative unemployed days across the whole OPT period,
+and the dashboard says so under the number. Do not present it as authoritative.

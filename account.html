@@ -1,0 +1,308 @@
+<!DOCTYPE html><html lang="en"><head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3VLGB81N09"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-3VLGB81N09");</script>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your account | ZapKitt</title>
+<meta name="description" content="Your ZapKitt dashboard — OPT countdown, saved resumes, and your tool history.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://zapkitt.com/account">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/zapkitt-global.css">
+<style>
+.ac-wrap{max-width:880px;margin:0 auto;padding:0 20px 72px}
+.ac-card{background:var(--zk-surface);border:1px solid var(--zk-border);border-radius:var(--zk-radius-xl);padding:26px;box-shadow:var(--zk-shadow-md)}
+.ac-card+.ac-card{margin-top:18px}
+.ac-h{font-size:15px;font-weight:800;letter-spacing:-.01em;color:var(--zk-text);margin-bottom:14px}
+.ac-sub{font-size:13.5px;color:var(--zk-text2);line-height:1.65;margin-bottom:16px}
+
+/* sign-in */
+.ac-signin{max-width:420px;margin:0 auto;text-align:center}
+.ac-signin h1{font-size:clamp(26px,4vw,36px);font-weight:800;letter-spacing:-.03em;margin-bottom:10px;color:var(--zk-text)}
+.ac-signin p{font-size:15px;color:var(--zk-text2);line-height:1.65;margin-bottom:24px}
+.ac-in{width:100%;padding:13px 15px;border:1px solid var(--zk-border);border-radius:var(--zk-radius);font-size:15px;font-family:inherit;background:var(--zk-surface);color:var(--zk-text);outline:0;transition:border-color .2s,box-shadow .2s}
+.ac-in:focus{border-color:var(--zk-accent);box-shadow:0 0 0 3px rgba(108,60,225,.14)}
+.ac-btn{width:100%;padding:13px 20px;border:0;border-radius:var(--zk-radius);font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;background:var(--zk-accent);color:#fff;transition:background .2s;margin-top:10px}
+.ac-btn:hover{background:var(--zk-accent-hover)}
+.ac-btn:disabled{opacity:.55;cursor:not-allowed}
+.ac-btn-g{background:var(--zk-surface);color:var(--zk-text);border:1.5px solid var(--zk-border-strong);display:flex;align-items:center;justify-content:center;gap:9px}
+.ac-btn-g:hover{background:var(--zk-surface-alt);border-color:var(--zk-border-strong)}
+.ac-or{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--zk-text3);font-size:12.5px;font-weight:600}
+.ac-or::before,.ac-or::after{content:"";flex:1;height:1px;background:var(--zk-border)}
+.ac-msg{font-size:13.5px;line-height:1.6;margin-top:14px;padding:11px 14px;border-radius:var(--zk-radius);display:none}
+.ac-msg.on{display:block}
+.ac-msg.ok{background:var(--zk-success-bg);color:#047857}
+.ac-msg.err{background:#FEF2F2;color:#B91C1C}
+
+/* header */
+.ac-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:22px}
+.ac-top h1{font-size:clamp(24px,3.4vw,32px);font-weight:800;letter-spacing:-.03em;color:var(--zk-text);line-height:1.15}
+.ac-top .em{font-size:13.5px;color:var(--zk-text2);margin-top:4px;font-family:var(--zk-mono)}
+.ac-out{background:none;border:1px solid var(--zk-border-strong);border-radius:var(--zk-radius);padding:9px 16px;font-size:13px;font-weight:600;font-family:inherit;color:var(--zk-text2);cursor:pointer;flex:none}
+.ac-out:hover{border-color:var(--zk-accent);color:var(--zk-accent)}
+
+/* OPT clock */
+.opt{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.opt-num{font-family:var(--zk-mono);font-size:52px;font-weight:700;line-height:1;letter-spacing:-.03em}
+.opt-num.safe{color:var(--zk-success)} .opt-num.warn{color:#B45309} .opt-num.crit{color:#B91C1C}
+.opt-l{font-size:13px;color:var(--zk-text2);line-height:1.6}
+.opt-bar{width:100%;height:8px;background:var(--zk-surface-alt);border-radius:99px;overflow:hidden;margin-top:14px}
+.opt-fill{height:100%;border-radius:99px;transition:width .6s var(--zk-ease)}
+.opt-note{font-size:12px;color:var(--zk-text3);margin-top:10px;line-height:1.6}
+
+/* usage */
+.use{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px}
+.use div{background:var(--zk-surface-alt);border:1px solid var(--zk-border);border-radius:12px;padding:13px 15px}
+.use b{display:block;font-family:var(--zk-mono);font-size:22px;font-weight:700;color:var(--zk-text);line-height:1.15}
+.use span{display:block;font-size:11.5px;color:var(--zk-text3);font-weight:600;margin-top:3px}
+
+/* rows */
+.row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 0;border-top:1px solid var(--zk-border);font-size:14px}
+.row:first-of-type{border-top:0}
+.row .t{color:var(--zk-text);font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .d{font-family:var(--zk-mono);font-size:12px;color:var(--zk-text3);flex:none}
+.row .x{background:none;border:0;color:var(--zk-text3);cursor:pointer;font-size:13px;font-family:inherit;padding:4px 8px;border-radius:6px}
+.row .x:hover{color:#B91C1C;background:#FEF2F2}
+.empty{font-size:13.5px;color:var(--zk-text3);line-height:1.65;padding:6px 0}
+
+/* profile form */
+.pf{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.pf{grid-template-columns:1fr}}
+.pf label{display:block;font-size:12.5px;font-weight:600;color:var(--zk-text2);margin-bottom:5px}
+.pf input,.pf select{width:100%;padding:10px 12px;border:1px solid var(--zk-border);border-radius:var(--zk-radius);font-size:14px;font-family:inherit;background:var(--zk-surface);color:var(--zk-text);outline:0}
+.pf input:focus,.pf select:focus{border-color:var(--zk-accent)}
+.pf .full{grid-column:1/-1}
+.ac-save{margin-top:16px;padding:11px 24px;border:0;border-radius:var(--zk-radius);background:var(--zk-accent);color:#fff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer}
+.ac-save:hover{background:var(--zk-accent-hover)}
+
+.ac-setup{max-width:560px;margin:0 auto;text-align:center;background:var(--zk-surface);border:1px solid var(--zk-border);border-radius:var(--zk-radius-xl);padding:36px 30px;box-shadow:var(--zk-shadow-md)}
+.ac-setup h1{font-size:22px;font-weight:800;letter-spacing:-.02em;margin-bottom:10px}
+.ac-setup p{font-size:14.5px;color:var(--zk-text2);line-height:1.7}
+.ac-setup code{font-family:var(--zk-mono);font-size:12.5px;background:var(--zk-surface-alt);padding:2px 6px;border-radius:4px}
+</style>
+</head><body>
+<a href="#main" class="zk-skip">Skip to main content</a>
+
+<nav class="zk-nav"><div class="zk-nav-inner">
+<a href="/" class="zk-logo"><svg viewBox="0 0 32 32" fill="none" width="30" height="30"><rect width="32" height="32" rx="8" fill="#6C3CE1"></rect><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"></path></svg><div class="zk-logo-text">Zap<span>Kitt</span></div></a>
+<div class="zk-nav-links" id="zkNav">
+  <a href="/ats-checker">ATS checker</a><a href="/ai-resume-builder">Resume</a><a href="/ai-mock-interview">Interview</a><a href="/ai-cold-email">Referral email</a><a href="/account">Account</a>
+  
+</div>
+<button class="zk-ham" aria-label="Menu" onclick="document.getElementById('zkNav').classList.toggle('open')"><span></span><span></span><span></span></button>
+</div></nav>
+
+<main id="main">
+<div class="ac-wrap" style="padding-top:48px">
+
+  <!-- Accounts not configured on this deployment -->
+  <div id="setup" class="ac-setup" style="display:none">
+    <h1>Accounts are not switched on yet</h1>
+    <p>Every tool on ZapKitt works right now without one — an account only adds saved resumes, your OPT countdown, and your history.</p>
+    <p style="margin-top:14px"><a href="/ats-checker">Use the ATS checker →</a></p>
+  </div>
+
+  <!-- Signed out -->
+  <section id="signin" class="ac-signin" style="display:none">
+    <h1>Sign in to ZapKitt</h1>
+    <p>Save your resumes, track your OPT clock, and pick up where you left off. The tools stay free either way.</p>
+    <button class="ac-btn ac-btn-g" id="google" type="button">
+      <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.6 12.2c0-.7-.1-1.4-.2-2H12v3.9h6c-.3 1.4-1.1 2.6-2.3 3.4v2.8h3.7c2.2-2 3.4-5 3.4-8.1z"/><path fill="#34A853" d="M12 23c3.1 0 5.7-1 7.6-2.8l-3.7-2.8c-1 .7-2.3 1.1-3.9 1.1-3 0-5.5-2-6.4-4.7H1.8v2.9C3.7 20.5 7.6 23 12 23z"/><path fill="#FBBC05" d="M5.6 13.8c-.2-.7-.4-1.4-.4-2.1s.1-1.5.4-2.1V6.7H1.8C1 8.3.6 10.1.6 11.7s.4 3.4 1.2 5l3.8-2.9z"/><path fill="#EA4335" d="M12 4.9c1.7 0 3.2.6 4.4 1.7l3.3-3.3C17.7 1.4 15.1.4 12 .4 7.6.4 3.7 2.9 1.8 6.7l3.8 2.9C6.5 6.9 9 4.9 12 4.9z"/></svg>
+      Continue with Google
+    </button>
+    <div class="ac-or">or</div>
+    <form id="emailForm">
+      <input class="ac-in" id="email" type="email" placeholder="you@university.edu" required autocomplete="email">
+      <button class="ac-btn" id="emailBtn" type="submit">Email me a sign-in link</button>
+    </form>
+    <div class="ac-msg" id="msg" role="status"></div>
+    <p style="font-size:12.5px;color:var(--zk-text3);margin-top:22px;line-height:1.6">No password to remember. We store what you enter here and nothing else — the tools still do not keep your resume text.</p>
+  </section>
+
+  <!-- Signed in -->
+  <section id="dash" style="display:none">
+    <div class="ac-top">
+      <div><h1 id="hello">Your dashboard</h1><div class="em" id="whoami"></div></div>
+      <button class="ac-out" id="signout" type="button">Sign out</button>
+    </div>
+
+    <div class="ac-card" id="optCard" style="display:none">
+      <div class="ac-h">OPT unemployment clock</div>
+      <div class="opt">
+        <div class="opt-num" id="optNum">--</div>
+        <div class="opt-l" id="optLabel"></div>
+      </div>
+      <div class="opt-bar"><div class="opt-fill" id="optFill" style="width:0"></div></div>
+      <p class="opt-note">Counted from the OPT start date you entered, assuming you have not been employed since. This is a planning aid, not a legal record — USCIS counts cumulative unemployed days, and only your DSO and an immigration attorney can confirm your actual position.</p>
+    </div>
+
+    <div class="ac-card">
+      <div class="ac-h">Today</div>
+      <div class="use" id="usage"><div><b>--</b><span>loading</span></div></div>
+    </div>
+
+    <div class="ac-card">
+      <div class="ac-h">Saved resumes</div>
+      <div id="resumes"><p class="empty">Loading…</p></div>
+    </div>
+
+    <div class="ac-card">
+      <div class="ac-h">Your profile</div>
+      <p class="ac-sub">Graduation date and OPT start drive the countdown above. Everything is optional.</p>
+      <form id="profileForm">
+        <div class="pf">
+          <div class="full"><label for="p_name">Full name</label><input id="p_name" type="text" autocomplete="name"></div>
+          <div><label for="p_uni">University</label><input id="p_uni" type="text"></div>
+          <div><label for="p_major">Major</label><input id="p_major" type="text"></div>
+          <div><label for="p_grad">Graduation date</label><input id="p_grad" type="date"></div>
+          <div><label for="p_visa">Visa status</label><select id="p_visa">
+            <option value="">Prefer not to say</option>
+            <option value="F1">F-1</option><option value="OPT">OPT</option>
+            <option value="STEM-OPT">STEM OPT</option><option value="H1B">H-1B</option>
+            <option value="CPT">CPT</option><option value="other">Other</option>
+          </select></div>
+          <div><label for="p_opt">OPT start date</label><input id="p_opt" type="date"></div>
+          <div><label for="p_emp">Currently employed?</label><select id="p_emp"><option value="false">No, still searching</option><option value="true">Yes</option></select></div>
+          <div><label for="p_role">Target role</label><input id="p_role" type="text" placeholder="e.g. Data Analyst"></div>
+          <div><label for="p_loc">Target location</label><input id="p_loc" type="text" placeholder="e.g. Austin, TX"></div>
+        </div>
+        <button class="ac-save" type="submit">Save profile</button>
+        <div class="ac-msg" id="pmsg" role="status"></div>
+      </form>
+    </div>
+
+    <div class="ac-card">
+      <div class="ac-h">Recent activity</div>
+      <div id="history"><p class="empty">Loading…</p></div>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<footer class="zk-footer"><div class="zk-footer-inner">
+<div class="zk-footer-brand"><a href="/" class="zk-logo"><svg viewBox="0 0 32 32" fill="none" width="28" height="28"><rect width="32" height="32" rx="8" fill="#6C3CE1"></rect><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"></path></svg><div class="zk-logo-text">Zap<span>Kitt</span></div></a><p>AI career tools for international students job hunting in the US. Free to start.</p></div>
+<div class="zk-footer-col"><h4>Product</h4><a href="/ats-checker">ATS checker</a><a href="/ai-resume-builder">Resume builder</a><a href="/ai-mock-interview">Real-time interview</a><a href="/ai-cold-email">Referral email</a></div>
+<div class="zk-footer-col"><h4>Resources</h4><a href="/blog">Blog</a></div>
+<div class="zk-footer-col"><h4>Company</h4><a href="/about">About</a><a href="/privacy">Privacy policy</a><a href="/terms">Terms</a><a href="mailto:hello@zapkitt.com">Contact</a></div>
+</div><div class="zk-footer-bottom">© 2026 ZapKitt · Free AI career tools for international students.<br><span style="display:inline-block;margin-top:8px;max-width:640px;color:var(--zk-text3)">ZapKitt provides career and job-search support only. It is not legal or immigration advice. For questions about your visa status, consult a licensed immigration attorney.</span></div></footer>
+
+<script src="/zapkitt-auth.js"></script>
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var A = window.ZK.auth;
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function show(el,on){ el.style.display = on ? 'block' : 'none'; }
+  function say(el,text,ok){ el.textContent=text; el.className='ac-msg on '+(ok?'ok':'err'); }
+
+  var TOOLS = {ats:'ATS checks', resume:'Resumes built', interview:'Interviews', referral:'Referral emails'};
+
+  if (!A.ready()) { show($('setup'), true); return; }
+  if (!A.signedIn()) { show($('signin'), true); wireSignIn(); return; }
+  show($('dash'), true);
+  wireDash();
+
+  function wireSignIn(){
+    $('google').addEventListener('click', function(){ A.signInWithGoogle(location.origin + '/account'); });
+    $('emailForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      var b = $('emailBtn'), em = $('email').value.trim();
+      b.disabled = true; b.textContent = 'Sending…';
+      A.signInWithEmail(em, location.origin + '/account')
+        .then(function(){ say($('msg'), 'Check ' + em + ' for your sign-in link. It expires in an hour.', true); })
+        .catch(function(err){ say($('msg'), err.message || 'Could not send the link. Please try again.', false); })
+        .finally(function(){ b.disabled = false; b.textContent = 'Email me a sign-in link'; });
+    });
+  }
+
+  function wireDash(){
+    var u = A.user();
+    $('whoami').textContent = u.email || '';
+    if (u.name) $('hello').textContent = 'Welcome back, ' + u.name.split(' ')[0];
+    $('signout').addEventListener('click', function(){ A.signOut().then(function(){ location.reload(); }); });
+
+    A.getProfile().then(function(p){ fillProfile(p); drawOpt(p); }).catch(function(){});
+    A.usageToday().then(drawUsage).catch(function(){ drawUsage({}); });
+    A.listResumes().then(drawResumes).catch(function(){ drawResumes([]); });
+    A.usageHistory(20).then(drawHistory).catch(function(){ drawHistory([]); });
+
+    $('profileForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      var fields = {
+        full_name: $('p_name').value.trim() || null,
+        university: $('p_uni').value.trim() || null,
+        major: $('p_major').value.trim() || null,
+        graduation_date: $('p_grad').value || null,
+        visa_status: $('p_visa').value || null,
+        opt_start_date: $('p_opt').value || null,
+        employed: $('p_emp').value === 'true',
+        target_role: $('p_role').value.trim() || null,
+        target_location: $('p_loc').value.trim() || null
+      };
+      A.saveProfile(fields)
+        .then(function(p){ say($('pmsg'), 'Saved.', true); drawOpt(p); })
+        .catch(function(err){ say($('pmsg'), err.message || 'Could not save.', false); });
+    });
+  }
+
+  function fillProfile(p){
+    if (!p) return;
+    $('p_name').value = p.full_name || ''; $('p_uni').value = p.university || '';
+    $('p_major').value = p.major || ''; $('p_grad').value = p.graduation_date || '';
+    $('p_visa').value = p.visa_status || ''; $('p_opt').value = p.opt_start_date || '';
+    $('p_emp').value = p.employed ? 'true' : 'false';
+    $('p_role').value = p.target_role || ''; $('p_loc').value = p.target_location || '';
+  }
+
+  function drawOpt(p){
+    var c = A.optClock(p);
+    if (!c) { show($('optCard'), false); return; }
+    show($('optCard'), true);
+    var cls = c.left > 45 ? 'safe' : c.left > 15 ? 'warn' : 'crit';
+    var colour = c.left > 45 ? 'var(--zk-success)' : c.left > 15 ? '#B45309' : '#B91C1C';
+    $('optNum').textContent = c.left;
+    $('optNum').className = 'opt-num ' + cls;
+    $('optLabel').innerHTML = '<strong>days left</strong> of the 90-day unemployment allowance.<br>' +
+      esc(String(c.used)) + ' used so far.';
+    $('optFill').style.width = Math.round((c.used / 90) * 100) + '%';
+    $('optFill').style.background = colour;
+  }
+
+  function drawUsage(counts){
+    $('usage').innerHTML = Object.keys(TOOLS).map(function(k){
+      return '<div><b>' + (counts[k] || 0) + '</b><span>' + TOOLS[k] + '</span></div>';
+    }).join('');
+  }
+
+  function drawResumes(rows){
+    if (!rows || !rows.length) {
+      $('resumes').innerHTML = '<p class="empty">Nothing saved yet. Build a resume and it will appear here.</p>';
+      return;
+    }
+    $('resumes').innerHTML = rows.map(function(r){
+      return '<div class="row"><span class="t">' + esc(r.title) + '</span>' +
+        '<span class="d">' + new Date(r.updated_at).toLocaleDateString() + '</span>' +
+        '<button class="x" data-del="' + esc(r.id) + '" type="button">Delete</button></div>';
+    }).join('');
+    $('resumes').addEventListener('click', function(e){
+      var b = e.target.closest('button[data-del]'); if (!b) return;
+      b.disabled = true;
+      A.deleteResume(b.getAttribute('data-del'))
+        .then(function(){ A.listResumes().then(drawResumes); })
+        .catch(function(){ b.disabled = false; });
+    }, { once: true });
+  }
+
+  function drawHistory(rows){
+    if (!rows || !rows.length) { $('history').innerHTML = '<p class="empty">No activity yet.</p>'; return; }
+    $('history').innerHTML = rows.map(function(r){
+      return '<div class="row"><span class="t">' + esc(TOOLS[r.tool] || r.tool) + '</span>' +
+        '<span class="d">' + new Date(r.created_at).toLocaleString() + '</span></div>';
+    }).join('');
+  }
+})();
+</script>
+</body></html>
