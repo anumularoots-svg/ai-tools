@@ -247,8 +247,11 @@ export default async function handler(req,res){
       if(vEmail.indexOf("@")<1)return res.status(200).json({unlocked:false,error:"That code wasn't recognised. Please double-check it, or message us on WhatsApp and we'll sort it out."});
       if(!kvReady())return res.status(200).json({unlocked:false,error:"That code wasn't recognised. Please enter the exact unlock code we sent you on WhatsApp."});
       try{
-        var vKey="kofi:"+vEmail+":"+vTier;
+        // "pay:" is written by api/dodo.js. "kofi:" is the old prefix, checked
+        // second so any payment made before the switch can still be redeemed.
+        var vKey="pay:"+vEmail+":"+vTier;
         var vVal=await kvGet(vKey);
+        if(!vVal){ vKey="kofi:"+vEmail+":"+vTier; vVal=await kvGet(vKey); }
         if(!vVal)return res.status(200).json({unlocked:false,error:"No matching payment found yet. It can take up to a minute after paying — please wait and retry."});
         await kvDel(vKey); // consume: one payment = one round
         return res.status(200).json({unlocked:true,tier:vTier});

@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Open-source AI Resume Builder — Production-grade, Groq-powered, Chrome-quality PDF",
   "scripts": {
-    "test": "node tests/ats.test.mjs && node tests/resume.test.mjs && node tests/interview.test.mjs && node tests/tailor.test.mjs && node tests/sponsor.test.mjs",
+    "test": "node tests/ats.test.mjs && node tests/resume.test.mjs && node tests/interview.test.mjs && node tests/tailor.test.mjs && node tests/sponsor.test.mjs && node tests/dodo.test.mjs",
     "ingest:h1b": "node scripts/ingest-lca.mjs --in ./lca-data --out ./data"
   },
   "dependencies": {
