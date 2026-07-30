@@ -37,10 +37,15 @@ export default async function handler(req, res) {
     const amount = parseFloat(d.amount || '0') || 0;
     if (!email) return res.status(200).json({ ok: true, note: 'no email on payment' });
 
-    // Map amount → tier ($5+ = Round 3, $2+ = Round 2).
+    // Map amount → tier. Round 2 is $5, Round 3 is $9.
+    //
+    // These thresholds MUST track the prices on ai-mock-interview.html. They
+    // were $2/$5, and when the prices moved to $5/$9 the old `amount >= 5`
+    // rule would have handed Round 3 to everyone who paid $5 for Round 2.
+    // If you change a price, change the matching threshold in the same commit.
     let tier = '';
-    if (amount >= 5) tier = 'r3';
-    else if (amount >= 2) tier = 'r2';
+    if (amount >= 9) tier = 'r3';
+    else if (amount >= 5) tier = 'r2';
     if (!tier) return res.status(200).json({ ok: true, note: 'amount below any tier' });
 
     // Record the unlock, valid 7 days, one-time use (consumed on verifyUnlock).
