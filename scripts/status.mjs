@@ -155,6 +155,24 @@ const CHECKS = [
     return { ok, detail: 'page prices $' + prices.join(' / $') + ' vs thresholds $5 / $9' };
   }],
 
+  ['no price before the value is proven', async () => {
+    // Free experience first, price only after Round 1 produces a report. The
+    // pricing markup lives inside #rs, which is display:none until showResults
+    // runs, so this checks that nothing has moved it outside that container.
+    const bad = [];
+    const home = await page('/');
+    if (/Unlock Round|>\$\d+\s*<\/div>/.test(home)) bad.push('homepage shows a price');
+
+    const iv = await page('/ai-mock-interview');
+    const rsAt = iv.indexOf('<div class="rs" id="rs">');
+    if (rsAt < 0) return { ok: false, detail: 'results container #rs not found' };
+    for (const m of iv.matchAll(/<div class="price">/g)) {
+      if (m.index < rsAt) bad.push('a price sits outside the results screen');
+    }
+    if (!/\.rs\{[^}]*display:none/.test(iv)) bad.push('#rs is no longer hidden by default');
+    return { ok: bad.length === 0, detail: bad.length ? bad.join('; ') : 'free first, price only after the report' };
+  }],
+
   ['payment webhook is configured and enforcing', async () => {
     // A deliberately wrong signature. Configured and correct => 401.
     const r = await fetch(BASE + '/api/dodo', {
