@@ -163,3 +163,70 @@ as $$
 $$;
 
 grant execute on function usage_today() to authenticated;
+
+-- ============================================================================
+-- Plan (added with ZapKitt Pro)
+-- ============================================================================
+
+alter table profiles add column if not exists plan text not null default 'free'
+  check (plan in ('free', 'pro'));
+
+-- Someone can pay before they have an account -- Dodo only knows their email.
+-- The webhook parks the plan here and the signup trigger below claims it, so
+-- paying first and signing up second still gets Pro.
+create table if not exists pending_plans (
+  email       text primary key,
+  plan        text not null default 'pro' check (plan in ('free','pro')),
+  created_at  timestamptz not null default now()
+);
+
+-- No policies at all: only the service key (the Dodo webhook) touches this.
+-- RLS on with zero policies means every anonymous request is denied.
+alter table pending_plans enable row level security;
+
+-- IMPORTANT: profiles has a read policy and an update policy scoped to
+-- auth.uid(), which means a signed-in user could otherwise PATCH their own
+-- plan to 'pro'. Lock the column so only the service key can change it.
+create or replace function guard_plan_column()
+returns trigger language plpgsql as $$
+begin
+  if new.plan is distinct from old.plan then
+    raise exception 'plan is set by the payment webhook, not by the client';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists profiles_guard_plan on profiles;
+create trigger profiles_guard_plan
+  before update on profiles
+  for each row
+  when (current_setting('request.jwt.claim.role', true) is distinct from 'service_role')
+  execute function guard_plan_column();
+
+-- Extend the signup trigger so a pre-paid plan is applied on account creation.
+create or replace function handle_new_user()
+returns trigger
+language plpgsql
+security definer set search_path = public
+as $$
+declare
+  parked text;
+begin
+  select p.plan into parked from public.pending_plans p where p.email = new.email;
+
+  insert into public.profiles (id, email, full_name, plan)
+  values (
+    new.id,
+    new.email,
+    coalesce(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name'),
+    coalesce(parked, 'free')
+  )
+  on conflict (id) do nothing;
+
+  if parked is not null then
+    delete from public.pending_plans where email = new.email;
+  end if;
+  return new;
+end;
+$$;

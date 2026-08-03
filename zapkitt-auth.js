@@ -242,7 +242,7 @@
   // link: create the subscription product in Dodo, generate a payment link,
   // and paste it here. While it is empty the upgrade buttons say so instead
   // of opening a dead page.
-  var PLAN = { name: 'ZapKitt Pro', price: 29, period: 'month', link: '' };
+  var PLAN = { name: 'ZapKitt Pro', price: 29, period: 'month', link: 'https://checkout.dodopayments.com/buy/pdt_0NkZTJsPMFrNhGWiIaELu?quantity=1' };
 
   // ── Free daily limits ─────────────────────────────────────────────────────
   // One place for the numbers. Change them here, nowhere else.
