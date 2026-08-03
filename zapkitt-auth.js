@@ -20,10 +20,12 @@
   if (window.ZK && window.ZK.auth) return;
 
   var SUPABASE_URL = 'https://awesmczmsaxabeeamtkw.supabase.co';
-  // Paste the publishable / anon key here. Supabase > Project Settings > API.
-  // It is safe in client code -- see the note above. The service_role key is
-  // NOT: it bypasses every RLS policy and must never leave the server.
-  var SUPABASE_ANON_KEY = '';
+  // Publishable key. Safe in client code -- see the note above. Supabase's
+  // newer format (sb_publishable_...) rather than the legacy eyJ... JWT; both
+  // go in the same apikey header. The SECRET key (sb_secret_...) is the
+  // service_role equivalent: it bypasses every RLS policy and must never
+  // leave the server.
+  var SUPABASE_ANON_KEY = 'sb_publishable_CdYXvthyzlfDdVgRrcxsDw_NaCiGLUn';
 
   var STORE = 'zk_session';
   var session = null;
@@ -93,9 +95,37 @@
       });
   }
 
+  // ── Capability probe ──────────────────────────────────────────────────────
+  // Ask the project what is actually switched on instead of assuming. A
+  // provider button that 404s, or a dashboard that renders empty because the
+  // tables were never created, is worse than not offering the feature.
+  var caps = null;
+  function capabilities() {
+    if (caps) return Promise.resolve(caps);
+    if (!ready()) return Promise.resolve({ google: false, schema: false });
+    return Promise.all([
+      fetch(SUPABASE_URL + '/auth/v1/settings', { headers: { apikey: SUPABASE_ANON_KEY } })
+        .then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+      fetch(SUPABASE_URL + '/rest/v1/profiles?select=id&limit=1', { headers: { apikey: SUPABASE_ANON_KEY } })
+        .then(function (r) { return r.status; }).catch(function () { return 0; })
+    ]).then(function (out) {
+      var settings = out[0], profilesStatus = out[1];
+      caps = {
+        google: !!(settings && settings.external && settings.external.google),
+        email: !!(settings && settings.external && settings.external.email),
+        // PGRST205 (404) means the table is not in the schema cache -- i.e.
+        // db/accounts-schema.sql has not been run. 401 is fine: the table
+        // exists and RLS is correctly refusing an anonymous read.
+        schema: profilesStatus !== 404 && profilesStatus !== 0
+      };
+      return caps;
+    });
+  }
+
   // ── Public API ────────────────────────────────────────────────────────────
   var auth = {
     ready: ready,
+    capabilities: capabilities,
     user: function () { return user(); },
     signedIn: function () { return !!user(); },
 
@@ -200,6 +230,20 @@
     return { used: Math.min(days, 90), left: Math.max(0, 90 - days), started: true };
   };
 
+  // ── Plan ──────────────────────────────────────────────────────────────────
+  // The single source of truth for the price. pricing.html and every upgrade
+  // prompt read it from here, so there is one number to change.
+  //
+  // $29/month, chosen over $9 and $49: at $9 the Dodo fee (4% + $0.40 + 0.5%)
+  // is ~9% of the transaction, which is too much of a small price to give
+  // away. At $29 it is ~5.5%, and it undercuts Jobscan ($49.95) and Huntr
+  // ($40) while leaving margin.
+  //
+  // link: create the subscription product in Dodo, generate a payment link,
+  // and paste it here. While it is empty the upgrade buttons say so instead
+  // of opening a dead page.
+  var PLAN = { name: 'ZapKitt Pro', price: 29, period: 'month', link: '' };
+
   // ── Free daily limits ─────────────────────────────────────────────────────
   // One place for the numbers. Change them here, nowhere else.
   var FREE_LIMITS = { ats: 3, resume: 1, referral: 5 };
@@ -265,5 +309,6 @@
   window.ZK = window.ZK || {};
   window.ZK.auth = auth;
   window.ZK.limits = limits;
+  window.ZK.plan = PLAN;
   window.dispatchEvent(new Event('zk-auth-ready'));
 })();

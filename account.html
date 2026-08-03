@@ -182,7 +182,7 @@
 
 <footer class="zk-footer"><div class="zk-footer-inner">
 <div class="zk-footer-brand"><a href="/" class="zk-logo"><svg viewBox="0 0 32 32" fill="none" width="28" height="28"><rect width="32" height="32" rx="8" fill="#6C3CE1"></rect><path d="M19 5l-7 11h6l-1 12 8-14h-6.5z" fill="#fff"></path></svg><div class="zk-logo-text">Zap<span>Kitt</span></div></a><p>AI career tools for international students job hunting in the US. Free to start.</p></div>
-<div class="zk-footer-col"><h4>Product</h4><a href="/ats-checker">ATS checker</a><a href="/ai-resume-builder">Resume builder</a><a href="/ai-mock-interview">Real-time interview</a><a href="/ai-cold-email">Referral email</a></div>
+<div class="zk-footer-col"><h4>Product</h4><a href="/ats-checker">ATS checker</a><a href="/ai-resume-builder">Resume builder</a><a href="/ai-mock-interview">Real-time interview</a><a href="/ai-cold-email">Referral email</a><a href="/pricing">Pricing</a></div>
 <div class="zk-footer-col"><h4>Resources</h4><a href="/blog">Blog</a></div>
 <div class="zk-footer-col"><h4>Company</h4><a href="/about">About</a><a href="/privacy">Privacy policy</a><a href="/terms">Terms</a><a href="mailto:hello@zapkitt.com">Contact</a></div>
 </div><div class="zk-footer-bottom">© 2026 ZapKitt · Free AI career tools for international students.<br><span style="display:inline-block;margin-top:8px;max-width:640px;color:var(--zk-text3)">ZapKitt provides career and job-search support only. It is not legal or immigration advice. For questions about your visa status, consult a licensed immigration attorney.</span></div></footer>
@@ -201,11 +201,35 @@
   var TOOLS = {ats:'ATS checks', resume:'Resumes built', interview:'Interviews', referral:'Referral emails'};
 
   if (!A.ready()) { show($('setup'), true); return; }
-  if (!A.signedIn()) { show($('signin'), true); wireSignIn(); return; }
-  show($('dash'), true);
-  wireDash();
 
-  function wireSignIn(){
+  // Ask the project what is switched on before offering it. Hiding the Google
+  // button beats showing one that 404s, and a dashboard whose tables do not
+  // exist should say so rather than render four empty cards.
+  A.capabilities().then(function (caps) {
+    if (!caps.schema) {
+      $('setup').querySelector('h1').textContent = 'Accounts are almost ready';
+      $('setup').querySelector('p').innerHTML =
+        'The database tables have not been created yet, so signing in would not have anywhere to save anything. ' +
+        'Run <code>db/accounts-schema.sql</code> in the Supabase SQL editor and reload this page.';
+      show($('setup'), true);
+      return;
+    }
+    if (!A.signedIn()) {
+      show($('signin'), true);
+      wireSignIn(caps);
+      return;
+    }
+    show($('dash'), true);
+    wireDash();
+  }).catch(function () { show($('setup'), true); });
+
+  function wireSignIn(caps){
+    // Google is not enabled on the project yet. Offering the button anyway
+    // would send someone to a provider error page mid-signup.
+    if (!caps || !caps.google) {
+      show($('google'), false);
+      var or = document.querySelector('.ac-or'); if (or) or.style.display = 'none';
+    }
     $('google').addEventListener('click', function(){ A.signInWithGoogle(location.origin + '/account'); });
     $('emailForm').addEventListener('submit', function(e){
       e.preventDefault();

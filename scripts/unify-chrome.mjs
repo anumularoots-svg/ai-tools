@@ -99,7 +99,7 @@ const RULES = [
     // destination, and it advertised the tool directory from 36 pages.
     label: 'footer link row',
     re: /<p style="margin-top:8px">\s*<a href="\/">All Tools<\/a>[\s\S]{0,220}?<\/p>/g,
-    fn: () => '<p style="margin-top:8px"><a href="/ats-checker">ATS checker</a> &middot; <a href="/ai-resume-builder">Resume builder</a> &middot; <a href="/about">About</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>'
+    fn: () => '<p style="margin-top:8px"><a href="/ats-checker">ATS checker</a> &middot; <a href="/ai-resume-builder">Resume builder</a> &middot; <a href="/pricing">Pricing</a> &middot; <a href="/about">About</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>'
   },
   {
     label: 'footer copyright (generic)',
