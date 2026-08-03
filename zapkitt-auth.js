@@ -19,7 +19,10 @@
   "use strict";
   if (window.ZK && window.ZK.auth) return;
 
-  var SUPABASE_URL = '';
+  var SUPABASE_URL = 'https://awesmczmsaxabeeamtkw.supabase.co';
+  // Paste the publishable / anon key here. Supabase > Project Settings > API.
+  // It is safe in client code -- see the note above. The service_role key is
+  // NOT: it bypasses every RLS policy and must never leave the server.
   var SUPABASE_ANON_KEY = '';
 
   var STORE = 'zk_session';
@@ -197,10 +200,70 @@
     return { used: Math.min(days, 90), left: Math.max(0, 90 - days), started: true };
   };
 
+  // ── Free daily limits ─────────────────────────────────────────────────────
+  // One place for the numbers. Change them here, nowhere else.
+  var FREE_LIMITS = { ats: 3, resume: 1, referral: 5 };
+  // interview is deliberately absent: Round 1 is free and unlimited, and the
+  // paid rounds are already gated by payment.
+
+  var ANON_KEY = 'zk_anon_usage';
+
+  function todayStamp() { return new Date().toISOString().slice(0, 10); }
+
+  // Signed-out counting is localStorage, which the user can clear. That is
+  // accepted: it is a nudge toward signing in, not a security boundary. The
+  // real limit applies once there is an account, where the count comes from
+  // usage_events and the table has no update or delete policy.
+  function anonCounts() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(ANON_KEY) || '{}');
+      if (raw.day !== todayStamp()) return { day: todayStamp(), counts: {} };
+      return { day: raw.day, counts: raw.counts || {} };
+    } catch (e) { return { day: todayStamp(), counts: {} }; }
+  }
+  function bumpAnon(tool) {
+    var s = anonCounts();
+    s.counts[tool] = (s.counts[tool] || 0) + 1;
+    try { localStorage.setItem(ANON_KEY, JSON.stringify(s)); } catch (e) {}
+    return s.counts[tool];
+  }
+
+  var limits = {
+    of: function (tool) { return FREE_LIMITS[tool] || 0; },
+
+    // Resolves { allowed, used, limit, signedIn }. NEVER rejects: if the count
+    // cannot be fetched we allow the run. A tool breaking because the counter
+    // broke would be a worse failure than one extra free use.
+    check: function (tool) {
+      var limit = FREE_LIMITS[tool] || 0;
+      if (!limit) return Promise.resolve({ allowed: true, used: 0, limit: 0, signedIn: auth.signedIn() });
+
+      if (!auth.signedIn() || !ready()) {
+        var used = anonCounts().counts[tool] || 0;
+        return Promise.resolve({ allowed: used < limit, used: used, limit: limit, signedIn: false });
+      }
+      return auth.usageToday().then(function (counts) {
+        var u = counts[tool] || 0;
+        return { allowed: u < limit, used: u, limit: limit, signedIn: true };
+      }).catch(function () {
+        return { allowed: true, used: 0, limit: limit, signedIn: true };
+      });
+    },
+
+    // Call after a tool run actually succeeds. Records against the account when
+    // there is one, and always bumps the local counter so the signed-out nudge
+    // still works.
+    consume: function (tool) {
+      bumpAnon(tool);
+      return auth.record(tool);
+    }
+  };
+
   load();
   captureFromHash();
 
   window.ZK = window.ZK || {};
   window.ZK.auth = auth;
+  window.ZK.limits = limits;
   window.dispatchEvent(new Event('zk-auth-ready'));
 })();
