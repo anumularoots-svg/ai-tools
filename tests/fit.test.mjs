@@ -6,7 +6,9 @@
 // fit, and reporting a fit that is actually one line over.
 import {
   MM_TO_PX, MIN_ZOOM, MAX_ZOOM, printableBox, pagesFor,
-  zoomToFit, targetPagesFor, overflowAdvice
+  zoomToFit, targetPagesFor, overflowAdvice,
+  fillFor, nextScales, fitScore,
+  MIN_FONT_SCALE, MAX_FONT_SCALE, MIN_LEAD_SCALE, MAX_LEAD_SCALE, MIN_LAST_PAGE
 } from '../renderer/fit.js';
 
 let pass = 0, fail = 0;
@@ -66,14 +68,17 @@ const tooLong = H * 3.5;
 const zFloor = zoomToFit(tooLong, H, 2);
 check('a 3.5-page resume cannot be forced into 2', pagesFor(tooLong * zFloor, H) > 2, true);
 
-console.log('\ntarget pages by seniority (Golden ATS rule)');
+console.log('\ntarget pages by seniority (US convention: 1 page under 10 years)');
 check('a fresher gets one page', targetPagesFor(0), 1);
 check('2 years gets one page', targetPagesFor(2), 1);
-check('3 years gets two pages', targetPagesFor(3), 2);
-check('12 years still gets two pages, never three', targetPagesFor(12), 2);
-check('30 years still gets two pages', targetPagesFor(30), 2);
-check('unknown experience defaults to two', targetPagesFor(undefined), 2);
-check('nonsense experience defaults to two', targetPagesFor('lots'), 2);
+// The rule that changed: four years is a ONE-page resume in the US market.
+check('3 years gets one page', targetPagesFor(3), 1);
+check('4 years gets one page', targetPagesFor(4), 1);
+check('9 years still gets one page', targetPagesFor(9), 1);
+check('10 years gets two pages', targetPagesFor(10), 2);
+check('30 years still gets two pages, never three', targetPagesFor(30), 2);
+check('unknown experience defaults to one', targetPagesFor(undefined), 1);
+check('nonsense experience defaults to one', targetPagesFor('lots'), 1);
 
 console.log('\noverflow advice');
 const ok2 = overflowAdvice(2, 2);
@@ -83,6 +88,62 @@ const over = overflowAdvice(3, 2);
 check('an overflow reports not fitted', over.fitted, false);
 check('the advice names what to cut', /oldest role/.test(over.message), true);
 check('the advice states both numbers', /3 pages/.test(over.message) && /is 2/.test(over.message), true);
+
+console.log('\ncontinuous fill (what an integer page count cannot express)');
+near('one full page is 1.0', fillFor(H, H), 1, 0.001);
+near('a page and a fifth is 1.2', fillFor(H * 1.2, H), 1.2, 0.001);
+// The distinction the old integer-only code could not make.
+check('2.05 and 2.9 pages are different numbers',
+  fillFor(H * 2.05, H) !== fillFor(H * 2.9, H), true);
+check('no content is no fill', fillFor(0, H), 0);
+
+console.log('\ntwo-knob scaling');
+// Over-long: leading is spent before type is touched.
+const long1 = nextScales({ fill: 2.4, pages: 3, target: 2, font: 1, lead: 1 });
+check('an over-long resume tightens the leading', long1.lead < 1, true);
+check('and does not enlarge the type', long1.font <= 1, true);
+check('leading never passes its floor', long1.lead >= MIN_LEAD_SCALE, true);
+check('type never passes its floor', long1.font >= MIN_FONT_SCALE, true);
+
+// Under-full: air, not bigger letters.
+const short1 = nextScales({ fill: 1.2, pages: 2, target: 2, font: 1, lead: 1 });
+check('an under-full resume opens the leading', short1.lead > 1, true);
+check('leading never passes its ceiling', short1.lead <= MAX_LEAD_SCALE, true);
+check('type never passes its ceiling', short1.font <= MAX_FONT_SCALE, true);
+check('leading moves further than type when filling',
+  (short1.lead - 1) > (short1.font - 1), true);
+
+// A resume already sitting well is left alone.
+const fine = nextScales({ fill: 1.9, pages: 2, target: 2, font: 1, lead: 1 });
+check('a good fit is reported done', fine.done, true);
+check('a good fit is not rescaled', fine.font === 1 && fine.lead === 1, true);
+
+// A page that is technically within budget but nearly empty is NOT done --
+// this is the branch the old code lacked entirely.
+const empty2nd = nextScales({ fill: 1.1, pages: 2, target: 2, font: 1, lead: 1 });
+check('a nearly empty last page is not accepted', empty2nd.done, false);
+check('and it is treated as too short, not too long', empty2nd.tooShort, true);
+
+// Passes must compound: feeding a scaled layout back in keeps moving.
+const step1 = nextScales({ fill: 2.4, pages: 3, target: 2, font: 1, lead: 1 });
+const step2 = nextScales({ fill: 2.1, pages: 3, target: 2, font: step1.font, lead: step1.lead });
+check('a second pass tightens further, it does not reset',
+  step2.lead <= step1.lead, true);
+
+check('nonsense fill is refused', nextScales({ fill: 0, pages: 1, target: 2 }).done, true);
+
+console.log('\nranking imperfect fits');
+check('spilling a page loses to an under-filled one',
+  fitScore({ pages: 3, target: 2, lastPage: 0.9 }) < fitScore({ pages: 2, target: 2, lastPage: 0.3 }), true);
+check('the fuller of two clean fits wins',
+  fitScore({ pages: 2, target: 2, lastPage: 0.95 }) > fitScore({ pages: 2, target: 2, lastPage: 0.4 }), true);
+check('spilling two pages loses to spilling one',
+  fitScore({ pages: 4, target: 2, lastPage: 0.9 }) < fitScore({ pages: 3, target: 2, lastPage: 0.1 }), true);
+
+console.log('\nthe last-page threshold is a real constraint');
+check('a 72%-full last page is acceptable', MIN_LAST_PAGE <= 0.72, true);
+check('a 20%-full second page is rejected',
+  nextScales({ fill: 1.2, pages: 2, target: 2 }).done, false);
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed\n');
 process.exit(fail ? 1 : 0);
