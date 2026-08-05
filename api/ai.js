@@ -4,7 +4,7 @@
 import { rateLimit, clientIP } from './_ratelimit.js';
 import { METRIC_RULE, US_CONVENTIONS, isUSTarget } from '../prompts/prompt-engine.js';
 import { validateResume } from '../validator/resume-validator.js';
-import { sanitizeResumeJSON, sanitizeResumeText, normalizeResumeShape } from '../validator/us-resume-rules.js';
+import { sanitizeResumeJSON, sanitizeResumeText, normalizeResumeShape, salvageResumeJSON } from '../validator/us-resume-rules.js';
 function extractJSON(text) {
   let c = text.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
   c = c.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
@@ -272,26 +272,68 @@ async function jsonMode(res, u) {
     "9. The whole document MUST fit " + pageTarget + " page(s). If it will not, cut the weakest bullets " +
        "and drop Certifications entirely. Do NOT pad to fill space.\n" +
     "10. No bracketed placeholders anywhere in the output. Not one.\n\n" +
-    "JSON VALIDITY (CRITICAL): Output EXACTLY ONE valid JSON object using ONLY the keys shown above. " +
-    "EVERY value must belong to a key — never emit a loose/standalone string. 'summary' is ONE string. " +
-    "No duplicate keys, no trailing commas, no text or code fences outside the JSON. " +
+    "JSON VALIDITY (CRITICAL): Output EXACTLY ONE valid JSON object using ONLY the keys shown above.\n" +
+    "- EVERY key MUST have a value. Never write \"skills\": followed by a comma or a brace with nothing " +
+      "in between. If a section is empty, write an empty array: \"skills\":[]. A key with no value is the " +
+      "single most common way this output is rejected.\n" +
+    "- Every value must belong to a key — never emit a loose/standalone string.\n" +
+    "- 'summary' is ONE string. No duplicate keys, no trailing commas, no code fences, no text outside " +
+      "the JSON.\n" +
+    "- Close every brace and bracket you open.\n" +
     "The output MUST pass JSON.parse without errors." + langInstr;
 
-  const result = await callAI(sys, p, 8000, 0.3);
+  // ── STEP 1: get parseable JSON out of the model, retrying once. ───────
+  //
+  // Observed failure, verbatim: ..."skills":,"experience":,"achievements":}
+  // Every one of those keys was emitted with NO VALUE. That is unparseable,
+  // and the old code responded by handing result.text to the client as resume
+  // prose -- so the user got a screen of raw JSON.
+  //
+  // Three layers now: parse, salvage what the model DID get right, and if the
+  // salvage is missing the sections that make a resume a resume, ask again
+  // with a blunter instruction. One retry only; latency matters more than
+  // chasing a third attempt.
+  const CORE = ["experience", "skills", "education", "projects"];
+  let resume = null, salvageNote = null, attempts = 0;
+  let result = await callAI(sys, p, 8000, 0.3);
   if (result.error) return res.status(500).json({ error: "AI failed: " + result.error });
 
-  // ── STEP 1: parse. This try covers PARSING ONLY. ──────────────────────
-  // It used to wrap the parse AND every post-processing step, so a TypeError
-  // in a `.filter()` was indistinguishable from "the model did not return
-  // JSON" -- and the fallback handed `result.text` to the client as resume
-  // prose. When result.text IS the JSON, the user saw a screen of
-  // {"personal":{"fullName":... where their resume should be.
-  let resume = null;
-  try {
-    resume = JSON.parse(extractJSON(result.text).replace(/,\s*([}\]])/g, "$1"));
-  } catch (parseErr) {
+  for (attempts = 1; attempts <= 2; attempts++) {
+    const got = salvageResumeJSON(result.text);
+    const haveCore = got && CORE.some(function(k) {
+      var v = got.resume[k];
+      return Array.isArray(v) ? v.length > 0 : !!v;
+    });
+
+    if (got && haveCore) {
+      resume = got.resume;
+      if (got.salvaged) salvageNote = "recovered from malformed JSON; keys the model left empty: " +
+        (got.missingKeys.join(", ") || "none");
+      break;
+    }
+
+    if (attempts === 2) {
+      // Second attempt also unusable. Keep whatever was salvaged rather than
+      // showing the user nothing -- a resume with a name and summary beats a
+      // wall of JSON, and the missing-section notice will tell them what to add.
+      if (got) {
+        resume = got.resume;
+        salvageNote = "the model returned an incomplete resume twice; missing: " +
+          (got.missingKeys.join(", ") || CORE.join(", "));
+      }
+      break;
+    }
+
+    const retryNote = "\n\nYOUR PREVIOUS RESPONSE WAS REJECTED: it contained keys with no value " +
+      "(for example \"skills\": followed immediately by a comma). Every key must have a value. " +
+      "Use [] for an empty list. Return the COMPLETE resume JSON again, valid this time.";
+    result = await callAI(sys, p + retryNote, 8000, 0.2);
+    if (result.error) break;
+  }
+
+  if (!resume) {
     return res.status(200).json({
-      result: sanitizeResumeText(result.text), model: result.model,
+      result: sanitizeResumeText(result.text || ""), model: result.model,
       targetPages: pageTarget, jsonError: true
     });
   }
@@ -344,7 +386,9 @@ async function jsonMode(res, u) {
     resume: resume, model: result.model, validation: validation,
     targetPages: pageTarget,
     rulesApplied: ruleReport,
-    postError: postError
+    postError: postError,
+    salvageNote: salvageNote,
+    attempts: attempts
   });
 }
 

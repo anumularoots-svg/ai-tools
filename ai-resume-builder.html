@@ -515,21 +515,79 @@ function zkMarkPlaceholders() {
 // object, parse it rather than printing it. A user must never see
 // {"personal":{"fullName":"..." where their resume belongs.
 function _recoverResumeJSON(text) {
-  var t = String(text || "").trim();
-  if (t.charAt(0) !== "{") {
-    var i = t.indexOf('{"personal"');
-    if (i < 0) i = t.indexOf("{");
-    if (i < 0) return null;
-    t = t.slice(i);
-  }
-  var last = t.lastIndexOf("}");
-  if (last < 0) return null;
-  t = t.slice(0, last + 1).replace(/,\s*([}\]])/g, "$1");
+  var t = String(text || "").replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
+  var start = t.indexOf("{");
+  if (start < 0) return null;
+  t = t.slice(start);
+
+  // Happy path.
   try {
-    var o = JSON.parse(t);
-    // Only treat it as a resume if it actually looks like one.
+    var o = JSON.parse(t.replace(/,\s*([}\]])/g, "$1"));
     if (o && typeof o === "object" && (o.personal || o.summary || o.experience || o.skills)) return o;
-  } catch (e) { /* genuinely prose — fall through */ }
+  } catch (e) { /* fall through to the salvage walk */ }
+
+  // Salvage walk — mirrors salvageResumeJSON() in validator/us-resume-rules.js.
+  // Real observed breakage: "skills":,"experience":,"achievements":}
+  // Keys with no value. Read each top-level key's value with a balanced scan
+  // and keep whatever parses, rather than discarding a response whose personal
+  // block and summary were perfectly good.
+  var readVal = function(s, i) {
+    while (i < s.length && /\s/.test(s.charAt(i))) i++;
+    var c = s.charAt(i);
+    if (!c || c === "," || c === "}" || c === "]") return null;
+    if (c === '"') {
+      var j = i + 1;
+      while (j < s.length) { if (s.charAt(j) === "\\") { j += 2; continue; } if (s.charAt(j) === '"') break; j++; }
+      if (j >= s.length) return null;
+      try { return { value: JSON.parse(s.slice(i, j + 1)), end: j + 1 }; } catch (e) { return null; }
+    }
+    if (c === "{" || c === "[") {
+      var close = c === "{" ? "}" : "]", depth = 0, k = i, inS = false;
+      for (; k < s.length; k++) {
+        var ch = s.charAt(k);
+        if (inS) { if (ch === "\\") { k++; continue; } if (ch === '"') inS = false; continue; }
+        if (ch === '"') { inS = true; continue; }
+        if (ch === c) depth++;
+        else if (ch === close) { depth--; if (depth === 0) { k++; break; } }
+      }
+      if (depth !== 0) return null;
+      var raw = s.slice(i, k);
+      try { return { value: JSON.parse(raw), end: k }; }
+      catch (e) { try { return { value: JSON.parse(raw.replace(/,\s*([}\]])/g, "$1")), end: k }; } catch (e2) { return null; } }
+    }
+    var m = /^(true|false|null|-?\d+(?:\.\d+)?)/.exec(s.slice(i));
+    if (m) { try { return { value: JSON.parse(m[1]), end: i + m[1].length }; } catch (e) { return null; } }
+    return null;
+  };
+
+  var out = {}, depth = 0, inStr = false, i = 0;
+  while (i < t.length) {
+    var ch2 = t.charAt(i);
+    if (inStr) { if (ch2 === "\\") { i += 2; continue; } if (ch2 === '"') inStr = false; i++; continue; }
+    if (ch2 === '"') {
+      if (depth === 1) {
+        var j2 = i + 1;
+        while (j2 < t.length) { if (t.charAt(j2) === "\\") { j2 += 2; continue; } if (t.charAt(j2) === '"') break; j2++; }
+        var k2 = j2 + 1;
+        while (k2 < t.length && /\s/.test(t.charAt(k2))) k2++;
+        if (t.charAt(k2) === ":") {
+          var key = null;
+          try { key = JSON.parse(t.slice(i, j2 + 1)); } catch (e) { key = null; }
+          if (key != null) {
+            var got = readVal(t, k2 + 1);
+            if (got) { out[key] = got.value; i = got.end; continue; }
+            i = k2 + 1; continue;
+          }
+        }
+        i = j2 + 1; continue;
+      }
+      inStr = true; i++; continue;
+    }
+    if (ch2 === "{" || ch2 === "[") depth++;
+    else if (ch2 === "}" || ch2 === "]") depth--;
+    i++;
+  }
+  if (out.personal || out.summary || out.experience || out.skills) return out;
   return null;
 }
 

@@ -7,7 +7,7 @@
 // Project Portfolio / Additional Information sections.
 import {
   sanitizeResumeJSON, sanitizeResumeText, tidyText, trimSummary,
-  isUsableBullet, isWorthKeepingCert, isNonUSPhone, looksLikeSchoolEntry, normalizeResumeShape
+  isUsableBullet, isWorthKeepingCert, isNonUSPhone, looksLikeSchoolEntry, normalizeResumeShape, salvageResumeJSON
 } from '../validator/us-resume-rules.js';
 import { targetPagesFor } from '../renderer/fit.js';
 
@@ -345,6 +345,48 @@ const strBullets = normalizeResumeShape({ experience: [{ title: 'Dev', bullets: 
 check('string bullets become {text}', strBullets.experience[0].bullets[0].text, 'Shipped a thing');
 check('a summary array is joined', normalizeResumeShape({ summary: ['One.', 'Two.'] }).summary, 'One. Two.');
 check('a missing personal block is created', typeof normalizeResumeShape({}).personal, 'object');
+
+// ===========================================================================
+// Salvaging malformed model JSON — the raw-JSON-on-screen bug, real cause.
+//
+// Observed in production, verbatim. Every one of these keys was emitted with
+// NO VALUE, which JSON.parse cannot read and a trailing-comma repair cannot
+// fix. The old code responded by printing the raw JSON at the user.
+// ===========================================================================
+console.log('\nsalvaging malformed model JSON');
+const BROKEN = '{"personal":{"fullName":"MANJUSHA KATRAGADDA","title":"","headline":"B.Tech Graduate | Python, SQL, Data Analysis | 0 Years","email":"Manjushak9988@gmail.com","phone":"+91 - 7330989188","location":"Vijayawada, Andhra Pradesh","linkedin":"","github":""},"summary":"Enthusiastic and detail-oriented B.Tech graduate in Electronics and Communication Engineering with a strong foundation in Python, SQL, and data analysis. Skilled in developing database-driven solutions, performing data preprocessing, and applying analytical techniques to solve real-world problems. Seeking an entry-level Software Engineer, Python Developer, Backend Developer, or Data Analyst role.","skills":,"experience":,"achievements":},"education":,"certifications":}';
+
+check('the real payload is genuinely unparseable',
+  (() => { try { JSON.parse(BROKEN); return false; } catch (e) { return true; } })(), true);
+const sal = salvageResumeJSON(BROKEN);
+check('salvage returns something', !!sal, true);
+check('it reports itself as salvaged', sal.salvaged, true);
+check('the name is recovered', sal.resume.personal.fullName, 'MANJUSHA KATRAGADDA');
+check('the email is recovered', sal.resume.personal.email, 'Manjushak9988@gmail.com');
+check('the headline is recovered', sal.resume.personal.headline, 'B.Tech Graduate | Python, SQL, Data Analysis | 0 Years');
+check('the summary is recovered whole', /Seeking an entry-level Software Engineer/.test(sal.resume.summary), true);
+check('the value-less keys are named, not silently lost',
+  sal.missingKeys.includes('skills') && sal.missingKeys.includes('experience'), true);
+check('a salvaged resume still sanitises without throwing',
+  (() => { try { sanitizeResumeJSON(sal.resume, { targetPages: 1, years: 0 }); return true; } catch (e) { return false; } })(), true);
+
+console.log('\nother malformations a model produces');
+const M2 = salvageResumeJSON('{"personal":{"fullName":"A"},"summary":"S.","skills":[{"category":"P","items":["Python"]}]');
+check('an unterminated object still yields its keys', M2 && M2.resume.personal.fullName, 'A');
+check('and keeps the array that did close', M2 && M2.resume.skills.length, 1);
+const M3 = salvageResumeJSON('```json\n{"personal":{"fullName":"B"},"summary":"S."}\n```');
+check('code fences are stripped', M3 && M3.resume.personal.fullName, 'B');
+check('clean JSON is not marked salvaged', M3.salvaged, false);
+const M4 = salvageResumeJSON('Here is your resume:\n{"personal":{"fullName":"C"},"summary":"S."}');
+check('a chatty preamble is skipped', M4 && M4.resume.personal.fullName, 'C');
+const M5 = salvageResumeJSON('{"personal":{"fullName":"D"},"skills":[{"category":"P","items":["Py"],}],"summary":"S."}');
+check('a trailing comma inside an array is repaired', M5 && M5.resume.skills.length, 1);
+check('prose with no JSON returns null', salvageResumeJSON('Sorry, I cannot help with that.'), null);
+check('empty input returns null', salvageResumeJSON(''), null);
+// A brace inside a string value must not be mistaken for structure.
+const M6 = salvageResumeJSON('{"personal":{"fullName":"E"},"summary":"Used {braces} and \\"quotes\\" here."}');
+check('braces inside a string do not confuse the scanner', M6 && M6.resume.summary,
+  'Used {braces} and "quotes" here.');
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed\n');
 process.exit(fail ? 1 : 0);
