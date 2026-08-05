@@ -7,7 +7,7 @@
 // Project Portfolio / Additional Information sections.
 import {
   sanitizeResumeJSON, sanitizeResumeText, tidyText, trimSummary,
-  isUsableBullet, isWorthKeepingCert
+  isUsableBullet, isWorthKeepingCert, isNonUSPhone, looksLikeSchoolEntry
 } from '../validator/us-resume-rules.js';
 import { targetPagesFor } from '../renderer/fit.js';
 
@@ -160,10 +160,18 @@ const SENIOR = {
   personal: { fullName: 'Ravi K' },
   summary: 'Senior Data Engineer with 8 years of experience in distributed data platforms. Skilled in Python, AWS, Spark and Kafka. Delivered a pipeline processing 4TB daily.',
   skills: [{ category: 'Data', items: ['Python', 'AWS', 'Spark', 'Kafka'] }],
-  experience: [0, 1, 2].map(i => ({
-    title: 'Data Engineer ' + i, company: 'Company ' + i,
-    bullets: Array.from({ length: 8 }, (_, k) => ({ text: 'Engineered a Spark job number ' + k + ' processing terabytes of event data daily' })),
-  })),
+  // Each role gets DISTINCT bullets. An earlier version of this fixture reused
+  // the same sentence in all three roles, and the global de-duplicator quite
+  // correctly emptied roles two and three — which is the real-world defect
+  // being fixed, not something to work around in the fixture.
+  experience: [
+    { title: 'Senior Data Engineer', company: 'Nordstrom',
+      bullets: Array.from({ length: 8 }, (_, k) => ({ text: 'Engineered a Spark streaming job number ' + k + ' processing four terabytes of clickstream events daily' })) },
+    { title: 'Data Engineer', company: 'Expedia',
+      bullets: Array.from({ length: 7 }, (_, k) => ({ text: 'Built an Airflow pipeline number ' + k + ' orchestrating nightly warehouse loads across source systems' })) },
+    { title: 'Data Analyst', company: 'Infosys',
+      bullets: Array.from({ length: 6 }, (_, k) => ({ text: 'Automated a reporting workflow number ' + k + ' replacing manual spreadsheet consolidation each week' })) },
+  ],
   additionalInfo: { currentLocation: 'Pune, India' },
   education: [{ degree: 'M.S. Data Science', institution: 'BITS', year: '2016' }],
 };
@@ -200,6 +208,97 @@ check('placeholders gone from text mode', /\[[^\]]*\]/.test(txt), false);
 check('the duplicate heading is gone', /QUANTIFIED ACHIEVEMENTS/.test(txt), false);
 check('the real content survives', /Reduced regression time by 60%/.test(txt), true);
 check('education survives the heading surgery', /EDUCATION/.test(txt), true);
+
+// ===========================================================================
+// The Manjusha case — one assertion per row of the side-by-side table.
+// ===========================================================================
+console.log('\nManjusha (fresher, US-targeting) — every row of the comparison table');
+const REPEATED = 'Performed data analysis using Tableau and Excel to derive business insights from manufacturing datasets';
+const MANJUSHA = {
+  personal: {
+    fullName: 'Manjusha Katragadda', title: 'Entry-Level Data Analyst / Python Developer',
+    email: 'manjushak9988@gmail.com', phone: '+91 98765 43210',
+    location: 'Vijayawada, Andhra Pradesh', linkedin: 'linkedin.com/in/manjusha-k',
+  },
+  summary: 'B.Tech graduate in Electronics and Communication Engineering pursuing a Master of Science in Data Science. Skilled in Python, SQL, PostgreSQL, and data visualization with Tableau and Excel. Completed data analytics and cybersecurity certifications with hands-on project experience. She is a quick learner. She works well in teams. She is passionate about data. She seeks a challenging role. She is available immediately.',
+  skills: [
+    { category: 'Programming', items: ['Python'] },
+    { category: 'Databases', items: ['SQL', 'PostgreSQL'] },
+    { category: 'Analytics', items: ['Tableau', 'Microsoft Excel', 'Data Cleaning'] },
+  ],
+  experience: [
+    { title: 'Student', company: 'NRI Institute of Technology', startDate: '2021', endDate: '2025',
+      bullets: [{ text: 'Studied Electronics and Communication Engineering coursework' }] },
+    { title: 'Data Analytics Virtual Experience', company: 'Daikibo (Forage)',
+      startDate: 'Jun 2024', endDate: 'Aug 2024', bullets: [
+      { text: REPEATED },
+      { text: 'Created calculated fields, dashboards, and logical classifications to identify production trends' },
+      { text: REPEATED },
+      { text: 'Delivered visual reports enabling stakeholders to compare performance across manufacturing plants' },
+    ] },
+    { title: 'Cybersecurity Virtual Internship', company: 'Forage',
+      startDate: 'Sep 2024', endDate: 'Nov 2024', bullets: [
+      { text: 'Analyzed web server logs to detect suspicious activity across login sessions' },
+      { text: REPEATED },
+      { text: 'Investigated API request patterns and applied threat detection techniques to flag incidents' },
+    ] },
+  ],
+  projects: [{ name: 'MIMO Antenna Design — Academic Project', technologies: ['HFSS'], bullets: [
+    { text: 'Designed a compact planar four-element MIMO antenna supporting LTE and 5G frequency bands' },
+    { text: 'Simulated antenna performance parameters and validated design against industry specifications' },
+  ] }],
+  quantifiedAchievements: ['Analyzed web server logs to detect suspicious activity across login sessions'],
+  projectPortfolio: [{ client: 'Daikibo', project: 'Analytics' }],
+  additionalInfo: { currentLocation: 'Vijayawada, Andhra Pradesh' },
+  coreCompetencies: ['Data Analysis', 'Problem Solving'],
+  certifications: [
+    { name: 'HackerRank SQL (Basic)' }, { name: 'The Complete SQL Bootcamp' },
+    { name: 'Microsoft Excel Training' },
+  ],
+  education: [
+    { degree: 'Master of Business Administration — Data Science', institution: 'KL University', year: 'Pursuing' },
+    { degree: 'B.Tech — Electronics and Communication', institution: 'NRI Institute of Technology', year: '2021-2025' },
+  ],
+};
+const M = sanitizeResumeJSON(MANJUSHA, {
+  targetPages: 1, maxBulletsPerRole: 5, maxSummarySentences: 3, years: 0, dropNonUSLocation: true,
+}).resume;
+
+check('summary is 3 sentences, not 8', M.summary.split(/[.!?]+\s/).filter(Boolean).length <= 3, true);
+check('"STUDENT" is no longer listed as a job', M.experience.some(e => /student/i.test(e.title)), false);
+check('the two real internships survive', M.experience.length, 2);
+check('section is titled "Projects & Internships"', M.experienceHeading, 'Projects & Internships');
+check('the bullet repeated 3 times now appears once',
+  JSON.stringify(M).split(REPEATED).length - 1, 1);
+check('Project Portfolio removed', M.projectPortfolio, undefined);
+check('Additional Information removed', M.additionalInfo, undefined);
+check('Core Competencies removed', M.coreCompetencies, undefined);
+check('India location removed from header', M.personal.location, '');
+check('+91 phone removed from header', M.personal.phone, '');
+check('email kept', M.personal.email, 'manjushak9988@gmail.com');
+check('LinkedIn kept', M.personal.linkedin, 'linkedin.com/in/manjusha-k');
+check('all 3 certifications kept (none employer-internal)', M.certifications.length, 3);
+check('the academic project survives', M.projects.length, 1);
+check('both degrees survive', M.education.length, 2);
+check('no placeholders', anyPlaceholder(M), false);
+
+console.log('\ncollege-as-employment detection');
+check('"Student" at a college is not a job', looksLikeSchoolEntry({ title: 'Student', company: 'NRI Institute of Technology' }), true);
+check('"B.Tech" as a title is not a job', looksLikeSchoolEntry({ title: 'B.Tech Electronics' }), true);
+check('a Teaching Assistant at a university IS a job',
+  looksLikeSchoolEntry({ title: 'Teaching Assistant', company: 'KL University' }), false);
+check('a Research Intern at a university IS a job',
+  looksLikeSchoolEntry({ title: 'Research Intern', company: 'Stanford University' }), false);
+check('a normal role is untouched',
+  looksLikeSchoolEntry({ title: 'Data Engineer', company: 'Nordstrom' }), false);
+
+console.log('\nRULE 8 — phone in the header');
+check('+91 is non-US', isNonUSPhone('+91 9515358589'), true);
+check('+44 is non-US', isNonUSPhone('+44 20 7946 0958'), true);
+check('+1 is US', isNonUSPhone('+1 512 555 0100'), false);
+check('(512) 555-0100 is US', isNonUSPhone('(512) 555-0100'), false);
+check('a bare 10-digit number is treated as domestic', isNonUSPhone('5125550100'), false);
+check('empty is not flagged', isNonUSPhone(''), false);
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed\n');
 process.exit(fail ? 1 : 0);

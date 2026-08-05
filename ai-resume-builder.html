@@ -198,13 +198,16 @@ function renderJSONResume(rj) {
     });
   }
 
-  // Experience
+  var H2 = 'color:#141A2E;border-bottom-color:#141A2E;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #141A2E;margin-bottom:4px';
+
+  // Experience \u2014 heading chosen by the sanitiser, so a fresher's internships
+  // are not presented as "Professional Experience".
   if (rj.experience && rj.experience.length > 0) {
-    h += '<h2 style="color:#141A2E;border-bottom-color:#141A2E;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #141A2E;margin-bottom:4px">PROFESSIONAL EXPERIENCE</h2>';
+    h += '<h2 style="' + H2 + '">' + (rj.experienceHeading || "Professional Experience").toUpperCase() + '</h2>';
     rj.experience.forEach(function(exp) {
-      h += '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;margin-bottom:1px">';
+      h += '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:6px;margin-bottom:1px">';
       h += '<span style="font-size:10.5px;font-weight:bold">' + (exp.title || "").toUpperCase() + '</span>';
-      h += '<span style="font-size:9px;color:#555;font-style:italic">' + (exp.startDate || "") + ' \u2014 ' + (exp.endDate || "") + '</span>';
+      h += '<span style="font-size:9px;color:#555;font-style:italic;white-space:nowrap">' + (exp.startDate || "") + ' \u2014 ' + (exp.endDate || "") + '</span>';
       h += '</div>';
       h += '<div style="font-size:9px;color:#555;font-style:italic;margin-bottom:3px">' + (exp.company || "") + (exp.location ? ", " + exp.location : "") + '</div>';
       if (exp.bullets) {
@@ -216,9 +219,30 @@ function renderJSONResume(rj) {
     });
   }
 
+  // Projects \u2014 the preview never rendered these either, so a fresher saw an
+  // empty-looking resume and had no idea their coursework had been dropped.
+  if (rj.projects && rj.projects.length > 0) {
+    var showProjHeading = !(rj.experienceHeading === "Projects & Internships" && rj.experience && rj.experience.length);
+    if (showProjHeading) h += '<h2 style="' + H2 + '">PROJECTS</h2>';
+    rj.projects.forEach(function(proj) {
+      h += '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:6px;margin-bottom:1px">';
+      h += '<span style="font-size:10.5px;font-weight:bold">' + (proj.name || proj.title || "") + '</span>';
+      if (proj.duration || proj.year) h += '<span style="font-size:9px;color:#555;font-style:italic;white-space:nowrap">' + (proj.duration || proj.year) + '</span>';
+      h += '</div>';
+      if (proj.technologies && proj.technologies.length) {
+        h += '<div style="font-size:9px;color:#555;font-style:italic;margin-bottom:2px">Technologies: ' + (Array.isArray(proj.technologies) ? proj.technologies.join(", ") : proj.technologies) + '</div>';
+      }
+      if (proj.description) h += '<div style="font-size:10px;margin-bottom:2px">' + proj.description + '</div>';
+      (proj.bullets || []).forEach(function(b) {
+        var txt = typeof b === "string" ? b : (b.text || "");
+        if (txt) h += '<div style="font-size:10px;margin-left:4px;margin-bottom:2px;text-indent:-10px;padding-left:14px">\u2022 ' + txt + '</div>';
+      });
+    });
+  }
+
   // Education
   if (rj.education && rj.education.length > 0) {
-    h += '<h2 style="color:#141A2E;border-bottom-color:#141A2E;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #141A2E;margin-bottom:4px">EDUCATION</h2>';
+    h += '<h2 style="' + H2 + '">EDUCATION</h2>';
     rj.education.forEach(function(edu) {
       h += '<div style="font-size:10px;margin-bottom:2px"><strong>' + (edu.degree || "") + '</strong>';
       if (edu.institution) h += ' \u2014 ' + edu.institution;
@@ -227,16 +251,15 @@ function renderJSONResume(rj) {
     });
   }
 
-  // Certifications
+  // Certifications \u2014 ONE compact line, not one line each.
   if (rj.certifications && rj.certifications.length > 0) {
-    h += '<h2 style="color:#141A2E;border-bottom-color:#141A2E;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #141A2E;margin-bottom:4px">CERTIFICATIONS</h2>';
-    rj.certifications.forEach(function(c) {
-      var line = c.name || "";
-      if (c.issuer) line += " \u2014 " + c.issuer;
-      if (c.year) line += " (" + c.year + ")";
-      if (c.status === "target") line += " [Target]";
-      h += '<div style="font-size:10px;margin-bottom:2px">' + line + '</div>';
-    });
+    h += '<h2 style="' + H2 + '">CERTIFICATIONS</h2>';
+    h += '<div style="font-size:10px">' + rj.certifications.map(function(c) {
+      var line = (typeof c === "string" ? c : (c.name || "")) || "";
+      if (c && c.issuer && line.indexOf(c.issuer) === -1) line += " \u2014 " + c.issuer;
+      if (c && c.year) line += " (" + c.year + ")";
+      return line.trim();
+    }).filter(Boolean).join("  |  ") + '</div>';
   }
 
   // CORE COMPETENCIES / QUANTIFIED ACHIEVEMENTS / PROJECT PORTFOLIO /
@@ -526,6 +549,57 @@ function _enforceUSResumeRules(rj) {
   });
   rj.achievements = out;
 
+  // College is not a job. "STUDENT — NRI Institute of Technology" under
+  // PROFESSIONAL EXPERIENCE tells a recruiter the candidate counts being
+  // enrolled as employment.
+  if (rj.experience) {
+    rj.experience = rj.experience.filter(function(e) {
+      if (!e) return false;
+      var ti = String(e.title || ""), co = String(e.company || "");
+      if (/^\s*(student|undergraduate|graduate|scholar|fresher|pursuing|b\.?tech|b\.?e\.?|m\.?tech|mba|bachelor|master)\b/i.test(ti)) return false;
+      if (/\b(university|college|institute of technology|polytechnic|school)\b/i.test(co) &&
+          !/\b(assistant|associate|engineer|developer|analyst|intern|researcher|fellow|tutor)\b/i.test(ti)) return false;
+      return true;
+    });
+  }
+
+  // Repeated bullets, globally. The model reuses a strong sentence under each
+  // client, so one bullet appeared four times on a single resume.
+  var bSeen = {};
+  var dedupe = function(list) {
+    return (list || []).filter(function(b) {
+      var k = norm(textOf(b));
+      if (!k || bSeen[k]) return false;
+      bSeen[k] = true;
+      return true;
+    });
+  };
+  (rj.experience || []).forEach(function(e) { if (e) e.bullets = dedupe(e.bullets); });
+  (rj.projects || []).forEach(function(pr) { if (pr) pr.bullets = dedupe(pr.bullets); });
+
+  // Internships and coursework are not "Professional Experience".
+  var roles = (rj.experience || []).filter(function(e) { return e && (e.title || e.company); });
+  var allInterny = roles.length > 0 && roles.every(function(e) {
+    return /\b(intern|internship|trainee|virtual experience|apprentice|co-?op|academic project|capstone)\b/i.test(String(e.title || "") + " " + String(e.company || ""));
+  });
+  var yrsField = parseFloat((document.getElementById("totalExp") || {}).value);
+  var entry = !roles.length || allInterny || (isFinite(yrsField) && yrsField < 1);
+  rj.experienceHeading = (entry && (roles.length || (rj.projects || []).length))
+    ? "Projects & Internships" : "Professional Experience";
+
+  // RULE 8 — a +91 number in the header of a US application is a screen-out.
+  if (rj.personal) {
+    var ph = String(rj.personal.phone || "").trim();
+    if (ph && !/^\+?1[\s\-.(]/.test(ph) && !/^\(\d{3}\)/.test(ph) &&
+        (/^\+/.test(ph) || ph.replace(/\D/g, "").length !== 10)) {
+      rj.personal.phone = "";
+    }
+    var loc = String(rj.personal.location || "").trim();
+    if (loc && !/\b(usa|u\.s\.a|united states|us|remote)\b/i.test(loc) && !/,\s*[A-Z]{2}$/.test(loc)) {
+      rj.personal.location = "";
+    }
+  }
+
   // RULE 10 — sections that do not belong on a US resume.
   delete rj.quantifiedAchievements;
   delete rj.projectPortfolio;
@@ -548,10 +622,21 @@ function jsonToPlainText(rj) {
   // reviewed.
   if (rj.summary) t += "PROFESSIONAL SUMMARY\n" + rj.summary + "\n\n";
   if (rj.skills && rj.skills.length) { t += "TECHNICAL SKILLS\n"; rj.skills.forEach(function(s) { t += s.category + ": " + (s.items||[]).join(", ") + "\n"; }); t += "\n"; }
-  if (rj.experience && rj.experience.length) { t += "PROFESSIONAL EXPERIENCE\n"; rj.experience.forEach(function(e) { t += e.title + " | " + e.company + " | " + e.startDate + " \u2014 " + e.endDate + "\n"; (e.bullets||[]).forEach(function(b) { t += "\u2022 " + (b.text || b) + "\n"; }); t += "\n"; }); }
+  if (rj.experience && rj.experience.length) { t += (rj.experienceHeading || "Professional Experience").toUpperCase() + "\n"; rj.experience.forEach(function(e) { t += e.title + " | " + e.company + " | " + e.startDate + " \u2014 " + e.endDate + "\n"; (e.bullets||[]).forEach(function(b) { t += "\u2022 " + (b.text || b) + "\n"; }); t += "\n"; }); }
+  if (rj.projects && rj.projects.length) {
+    if (!(rj.experienceHeading === "Projects & Internships" && rj.experience && rj.experience.length)) t += "PROJECTS\n";
+    rj.projects.forEach(function(pr) {
+      t += (pr.name || pr.title || "") + (pr.duration || pr.year ? " | " + (pr.duration || pr.year) : "") + "\n";
+      if (pr.technologies && pr.technologies.length) t += "Technologies: " + (Array.isArray(pr.technologies) ? pr.technologies.join(", ") : pr.technologies) + "\n";
+      if (pr.description) t += pr.description + "\n";
+      (pr.bullets||[]).forEach(function(b) { t += "\u2022 " + (b.text || b) + "\n"; });
+      t += "\n";
+    });
+  }
   if (rj.achievements && rj.achievements.length) { t += "KEY ACHIEVEMENTS\n"; rj.achievements.forEach(function(a) { t += "\u2022 " + (a.text || a) + "\n"; }); t += "\n"; }
   if (rj.education && rj.education.length) { t += "EDUCATION\n"; rj.education.forEach(function(e) { t += (e.degree||"") + " \u2014 " + (e.institution||"") + " (" + (e.year||"") + ")\n"; }); t += "\n"; }
-  if (rj.certifications && rj.certifications.length) { t += "CERTIFICATIONS\n"; rj.certifications.forEach(function(c) { t += (c.name || c) + "\n"; }); t += "\n"; }
+  // ONE line, matching the PDF.
+  if (rj.certifications && rj.certifications.length) { t += "CERTIFICATIONS\n" + rj.certifications.map(function(c) { return (typeof c === "string" ? c : (c.name || "")); }).filter(Boolean).join(" | ") + "\n\n"; }
   return t;
 }
 
@@ -1213,9 +1298,12 @@ var doc = new J.jsPDF({ unit: "mm", format: "a4" });
     y += 1 * L;
   }
 
-  // ── EXPERIENCE ──
+  // ── EXPERIENCE / PROJECTS & INTERNSHIPS ──
+  // A fresher's internships and coursework are not "Professional Experience".
+  // The sanitiser decides which heading is honest and puts it on the object;
+  // this renders whatever it decided.
   if (rj.experience && rj.experience.length > 0) {
-    secH("Professional Experience");
+    secH(rj.experienceHeading || "Professional Experience");
     rj.experience.forEach(function(exp, ei) {
       chk(12 * L);
       // Title + dates on same line
@@ -1278,6 +1366,57 @@ var doc = new J.jsPDF({ unit: "mm", format: "a4" });
     });
   }
 
+  // ── PROJECTS ──
+  // This section did not exist. `rj.projects` was populated for every fresher
+  // and rendered NOWHERE in the PDF, so a graduate whose entire case rests on
+  // coursework and personal builds got a resume with the substance missing.
+  // When the experience block is already headed "Projects & Internships" these
+  // fold in underneath it rather than opening a second, near-identical heading.
+  if (rj.projects && rj.projects.length > 0) {
+    var projHeading = (rj.experienceHeading === "Projects & Internships" &&
+                       rj.experience && rj.experience.length) ? null : "Projects";
+    if (projHeading) secH(projHeading);
+    rj.projects.forEach(function(proj) {
+      chk(10 * L);
+      doc.setFont(FONT, "bold");
+      doc.setFontSize(9 * S);
+      setC(T.body);
+      var pName = proj.name || proj.title || "";
+      var pWhen = proj.duration || proj.year || "";
+      if (pWhen) {
+        doc.setFont(FONT, "italic");
+        doc.setFontSize(8 * S);
+        var pdW = doc.getTextWidth(pWhen);
+        doc.setFont(FONT, "bold");
+        doc.setFontSize(9 * S);
+        var proom = CW - pdW - 4;
+        if (doc.getTextWidth(pName) > proom) {
+          while (pName.length > 1 && doc.getTextWidth(pName + "…") > proom) pName = pName.slice(0, -1);
+          pName += "…";
+        }
+      }
+      doc.text(pName, ML, y);
+      if (pWhen) {
+        doc.setFont(FONT, "italic");
+        doc.setFontSize(8 * S);
+        setC(T.muted);
+        doc.text(pWhen, W - MR, y, { align: "right" });
+      }
+      y += 3.8 * L;
+
+      if (proj.technologies && proj.technologies.length) {
+        drawText("Technologies: " + (Array.isArray(proj.technologies) ? proj.technologies.join(", ") : proj.technologies),
+          7.8, "italic", 0, 3.2);
+      }
+      if (proj.description) drawText(proj.description, 8.2, "normal", 0, 3.3);
+      (proj.bullets || []).forEach(function(b) {
+        var t = typeof b === "string" ? b : (b.text || "");
+        if (t) drawBullet(String(t).replace(/[^\x20-\x7E%$+.,;:()\/\-'\"!@#&*=~]/g, ""));
+      });
+      y += 1.5 * L;
+    });
+  }
+
   // ── QUANTIFIED ACHIEVEMENTS / PROJECT PORTFOLIO — REMOVED ──
   //
   // RULE 3 and RULE 10. Quantified Achievements restated Key Achievements from
@@ -1329,9 +1468,16 @@ var doc = new J.jsPDF({ unit: "mm", format: "a4" });
     });
     if (certs.length) {
       secH("Certifications");
-      certs.forEach(function(c) {
-        drawBullet(typeof c === "string" ? c : (c.name || c.title || ""));
-      });
+      // ONE compact line, pipe-separated — not a bulleted list. Three
+      // certifications as three bullets cost four lines of a one-page budget
+      // and gave them the visual weight of an employment history.
+      var certLine = certs.map(function(c) {
+        var n = typeof c === "string" ? c : (c.name || c.title || "");
+        if (c && c.issuer && String(n).indexOf(c.issuer) === -1) n += " — " + c.issuer;
+        if (c && c.year) n += " (" + c.year + ")";
+        return String(n).trim();
+      }).filter(Boolean).join("  |  ");
+      drawText(certLine, 8.2, "normal", 0, 3.4);
       y += 1 * L;
     }
   }

@@ -297,6 +297,7 @@ async function jsonMode(res, u) {
         targetPages: pageTarget,
         maxBulletsPerRole: bc[0] || 5,
         maxSummarySentences: 3,
+        years: yrs,
         dropNonUSLocation: isUSTarget(u.targetCountry)
       });
       resume = cleaned.resume;
