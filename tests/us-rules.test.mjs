@@ -7,7 +7,7 @@
 // Project Portfolio / Additional Information sections.
 import {
   sanitizeResumeJSON, sanitizeResumeText, tidyText, trimSummary,
-  isUsableBullet, isWorthKeepingCert, isNonUSPhone, looksLikeSchoolEntry
+  isUsableBullet, isWorthKeepingCert, isNonUSPhone, looksLikeSchoolEntry, normalizeResumeShape
 } from '../validator/us-resume-rules.js';
 import { targetPagesFor } from '../renderer/fit.js';
 
@@ -299,6 +299,52 @@ check('+1 is US', isNonUSPhone('+1 512 555 0100'), false);
 check('(512) 555-0100 is US', isNonUSPhone('(512) 555-0100'), false);
 check('a bare 10-digit number is treated as domestic', isNonUSPhone('5125550100'), false);
 check('empty is not flagged', isNonUSPhone(''), false);
+
+// ===========================================================================
+// Shape robustness — the raw-JSON-on-screen bug.
+//
+// A model returns whatever shape it likes. Every one of these used to throw a
+// TypeError inside the endpoint's single try/catch, which was indistinguishable
+// from "the model did not return JSON" — so the fallback rendered the raw JSON
+// string as if it were resume prose. The user saw
+// {"personal":{"fullName":"MANJUSHA KATRAGADDA"... where their resume belonged.
+// ===========================================================================
+console.log('\nshape robustness — no model output may crash post-processing');
+const SHAPES = {
+  'certifications as bare strings': { personal: { fullName: 'M' }, certifications: ['HackerRank SQL (Basic)', 'Excel Training'] },
+  'a null inside an array':         { personal: { fullName: 'M' }, certifications: [null, { name: 'AWS Certified Developer' }] },
+  'skills as an object':            { personal: { fullName: 'M' }, skills: { Languages: ['Python', 'SQL'] } },
+  'education as an object':         { personal: { fullName: 'M' }, education: { degree: 'B.Tech' } },
+  'experience as an object':        { personal: { fullName: 'M' }, experience: { title: 'Intern', bullets: ['Built a dashboard used by twelve people'] } },
+  'bullets as bare strings':        { personal: { fullName: 'M' }, experience: [{ title: 'Intern', bullets: ['Did something genuinely useful here'] }] },
+  'skill items as one string':      { personal: { fullName: 'M' }, skills: [{ category: 'P', items: 'Python, SQL' }] },
+  'summary as an array of lines':   { personal: { fullName: 'M' }, summary: ['Line one here.', 'Line two here.'] },
+  'personal missing entirely':      { summary: 'A summary here.' },
+  'achievements as bare strings':   { personal: { fullName: 'M' }, achievements: ['Reduced regression time by 60% overall'] },
+  'nulls scattered everywhere':     { personal: { fullName: 'M' }, experience: [null, { title: 'Dev', bullets: [null, 'Shipped a feature used by many customers'] }], education: [null] },
+  'an empty object':                {},
+};
+for (const [name, shape] of Object.entries(SHAPES)) {
+  let threw = null;
+  try { sanitizeResumeJSON(shape, { targetPages: 1, maxBulletsPerRole: 5, years: 0, dropNonUSLocation: true }); }
+  catch (e) { threw = e.message; }
+  check(name + ' does not throw', threw, null);
+}
+
+// Coercion must PRESERVE the data, not just avoid the crash. String
+// certifications previously survived the crash check and were then silently
+// deleted by a `c.name && ...` filter.
+console.log('\nshape coercion preserves the content');
+const strCerts = normalizeResumeShape({ certifications: ['HackerRank SQL (Basic)', 'Excel Training'] });
+check('string certifications become {name}', strCerts.certifications.map(c => c.name),
+  ['HackerRank SQL (Basic)', 'Excel Training']);
+const objSkills = normalizeResumeShape({ skills: { Languages: ['Python', 'SQL'], Tools: 'Git, Docker' } });
+check('an object of skills becomes categories', objSkills.skills.map(s => s.category), ['Languages', 'Tools']);
+check('a comma string of items becomes a list', objSkills.skills[1].items, ['Git', 'Docker']);
+const strBullets = normalizeResumeShape({ experience: [{ title: 'Dev', bullets: ['Shipped a thing'] }] });
+check('string bullets become {text}', strBullets.experience[0].bullets[0].text, 'Shipped a thing');
+check('a summary array is joined', normalizeResumeShape({ summary: ['One.', 'Two.'] }).summary, 'One. Two.');
+check('a missing personal block is created', typeof normalizeResumeShape({}).personal, 'object');
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed\n');
 process.exit(fail ? 1 : 0);

@@ -389,11 +389,24 @@ function generateResume() {
       // what an ATS parser would see anyway.
       _scoreResumeATS(resumeText, userData.jobDescription, userData.techSkills);
     } else if (data.result) {
-      // Legacy text mode fallback
-      resumeText = data.result;
-      window.resumeJSON = null;
-      var fd = _getFormData();
-      renderResume(data.result, userData.jobDescription, userData.techSkills);
+      // Legacy text mode fallback.
+      //
+      // Last line of defence: if the "text" is actually JSON, rendering it as
+      // prose puts {"personal":{"fullName":"..." on screen where the resume
+      // should be. Recover it here rather than showing the user a wall of
+      // machine data.
+      var recovered = _recoverResumeJSON(data.result);
+      if (recovered) {
+        window.resumeJSON = _enforceUSResumeRules(recovered);
+        document.getElementById("resumeContent").innerHTML = renderJSONResume(window.resumeJSON);
+        resumeText = jsonToPlainText(window.resumeJSON);
+        _scoreResumeATS(resumeText, userData.jobDescription, userData.techSkills);
+      } else {
+        resumeText = data.result;
+        window.resumeJSON = null;
+        var fd = _getFormData();
+        renderResume(data.result, userData.jobDescription, userData.techSkills);
+      }
     } else {
       throw new Error(data.error || "No result from AI");
     }
@@ -498,6 +511,28 @@ function zkMarkPlaceholders() {
 // It is duplicated rather than imported because this page is a classic script,
 // not a module. If you change a rule here, change it there too.
 // ---------------------------------------------------------------------------
+// If the server fell back to "text mode" but the text is really a resume JSON
+// object, parse it rather than printing it. A user must never see
+// {"personal":{"fullName":"..." where their resume belongs.
+function _recoverResumeJSON(text) {
+  var t = String(text || "").trim();
+  if (t.charAt(0) !== "{") {
+    var i = t.indexOf('{"personal"');
+    if (i < 0) i = t.indexOf("{");
+    if (i < 0) return null;
+    t = t.slice(i);
+  }
+  var last = t.lastIndexOf("}");
+  if (last < 0) return null;
+  t = t.slice(0, last + 1).replace(/,\s*([}\]])/g, "$1");
+  try {
+    var o = JSON.parse(t);
+    // Only treat it as a resume if it actually looks like one.
+    if (o && typeof o === "object" && (o.personal || o.summary || o.experience || o.skills)) return o;
+  } catch (e) { /* genuinely prose — fall through */ }
+  return null;
+}
+
 var ZK_PLACEHOLDER = /\[[^\]]*\]/g;
 var ZK_DANGLING = /[\s,;:]*\b(?:by|to|from|of|with|for|across|over|reaching|achieving|resulting in|leading to|including|up to)\s*[.,;:]*\s*$/i;
 

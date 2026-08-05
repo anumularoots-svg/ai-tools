@@ -4,7 +4,7 @@
 import { rateLimit, clientIP } from './_ratelimit.js';
 import { METRIC_RULE, US_CONVENTIONS, isUSTarget } from '../prompts/prompt-engine.js';
 import { validateResume } from '../validator/resume-validator.js';
-import { sanitizeResumeJSON, sanitizeResumeText } from '../validator/us-resume-rules.js';
+import { sanitizeResumeJSON, sanitizeResumeText, normalizeResumeShape } from '../validator/us-resume-rules.js';
 function extractJSON(text) {
   let c = text.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
   c = c.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
@@ -279,58 +279,73 @@ async function jsonMode(res, u) {
 
   const result = await callAI(sys, p, 8000, 0.3);
   if (result.error) return res.status(500).json({ error: "AI failed: " + result.error });
+
+  // ── STEP 1: parse. This try covers PARSING ONLY. ──────────────────────
+  // It used to wrap the parse AND every post-processing step, so a TypeError
+  // in a `.filter()` was indistinguishable from "the model did not return
+  // JSON" -- and the fallback handed `result.text` to the client as resume
+  // prose. When result.text IS the JSON, the user saw a screen of
+  // {"personal":{"fullName":... where their resume should be.
+  let resume = null;
   try {
-    let resume = JSON.parse(extractJSON(result.text).replace(/,\s*([}\]])/g, "$1"));
-    // Post-process: clean empty data
-    if (resume.skills) resume.skills = resume.skills.filter(function(s) { return s.category && s.items && s.items.length > 0; });
-    if (resume.education) resume.education = resume.education.filter(function(e) { return e.degree && e.degree !== "Not Applicable" && e.degree !== "N/A" && e.degree !== "Not specified"; });
-    if (resume.certifications) resume.certifications = resume.certifications.filter(function(c) { return c.name && c.name.trim() && c.name !== "None" && c.name !== "N/A"; });
-
-    // ── Enforce the 12 rules, deterministically ─────────────────────────
-    // The prompt asks; this guarantees. A model told "never emit a
-    // placeholder" still does it occasionally, and one "[ADD METRIC: what
-    // percentage?]" reaching a recruiter costs more than every other defect
-    // on the page combined.
-    var ruleReport = [];
-    try {
-      var cleaned = sanitizeResumeJSON(resume, {
-        targetPages: pageTarget,
-        maxBulletsPerRole: bc[0] || 5,
-        maxSummarySentences: 3,
-        years: yrs,
-        dropNonUSLocation: isUSTarget(u.targetCountry)
-      });
-      resume = cleaned.resume;
-      ruleReport = cleaned.removed;
-    } catch (se) { /* sanitising must never break generation */ }
-    // Check every number the model wrote against what the candidate supplied.
-    // This path had no validation at all, which is how invented metrics reached
-    // real resumes. Never blocks the response — the user still gets their
-    // resume, with the unverifiable figures called out so they can fix them.
-    var validation = null;
-    try {
-      var v = validateResume(resume, u);
-      validation = {
-        score: v.score,
-        passed: v.passed,
-        fabricatedMetrics: v.fabricatedMetrics,
-        placeholderCount: v.placeholderCount,
-        issues: v.issues.filter(function(i) { return i.severity === "critical" || i.severity === "major"; }).slice(0, 12)
-      };
-    } catch (ve) { /* validation must never break generation */ }
-
-    return res.status(200).json({
-      resume: resume, model: result.model, validation: validation,
-      targetPages: pageTarget,
-      rulesApplied: ruleReport
-    });
-  } catch (e) {
-    // Legacy text path: the same rules still apply, just against prose.
+    resume = JSON.parse(extractJSON(result.text).replace(/,\s*([}\]])/g, "$1"));
+  } catch (parseErr) {
     return res.status(200).json({
       result: sanitizeResumeText(result.text), model: result.model,
       targetPages: pageTarget, jsonError: true
     });
   }
+
+  // ── STEP 2: post-process. Nothing here may cost the user their resume. ──
+  // Normalising first means the filters below cannot throw on a shape the
+  // model improvised: certifications as bare strings, skills as an object
+  // keyed by category, a null in an array.
+  var ruleReport = [];
+  var postError = null;
+  try {
+    resume = normalizeResumeShape(resume);
+
+    if (Array.isArray(resume.skills)) resume.skills = resume.skills.filter(function(s) { return s && s.category && s.items && s.items.length > 0; });
+    if (Array.isArray(resume.education)) resume.education = resume.education.filter(function(e) { return e && e.degree && e.degree !== "Not Applicable" && e.degree !== "N/A" && e.degree !== "Not specified"; });
+    if (Array.isArray(resume.certifications)) resume.certifications = resume.certifications.filter(function(c) { return c && c.name && String(c.name).trim() && c.name !== "None" && c.name !== "N/A"; });
+
+    // Enforce the 12 rules deterministically. The prompt asks; this guarantees.
+    var cleaned = sanitizeResumeJSON(resume, {
+      targetPages: pageTarget,
+      maxBulletsPerRole: bc[0] || 5,
+      maxSummarySentences: 3,
+      years: yrs,
+      dropNonUSLocation: isUSTarget(u.targetCountry)
+    });
+    resume = cleaned.resume;
+    ruleReport = cleaned.removed;
+  } catch (se) {
+    // Surfaced rather than swallowed: silently skipping the rules used to mean
+    // a resume shipped with placeholders and duplicate sections intact, and
+    // nobody knew. The user still gets their resume.
+    postError = String(se && se.message || se);
+    console.error("resume post-processing failed:", se);
+  }
+
+  // Check every number the model wrote against what the candidate supplied.
+  var validation = null;
+  try {
+    var v = validateResume(resume, u);
+    validation = {
+      score: v.score,
+      passed: v.passed,
+      fabricatedMetrics: v.fabricatedMetrics,
+      placeholderCount: v.placeholderCount,
+      issues: v.issues.filter(function(i) { return i.severity === "critical" || i.severity === "major"; }).slice(0, 12)
+    };
+  } catch (ve) { /* validation must never block the response */ }
+
+  return res.status(200).json({
+    resume: resume, model: result.model, validation: validation,
+    targetPages: pageTarget,
+    rulesApplied: ruleReport,
+    postError: postError
+  });
 }
 
 
