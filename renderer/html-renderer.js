@@ -5,12 +5,38 @@ const COLOR_THEMES = {
   green:  { primary: "#15803D", accent: "#166534", line: "#15803D", light: "#F0FDF4" },
   purple: { primary: "#7C3AED", accent: "#6D28D9", line: "#7C3AED", light: "#F5F3FF" },
   red:    { primary: "#DC2626", accent: "#B91C1C", line: "#DC2626", light: "#FEF2F2" },
-  teal:   { primary: "#0D9488", accent: "#0F766E", line: "#0D9488", light: "#F0FDFA" }
+  teal:   { primary: "#0D9488", accent: "#0F766E", line: "#0D9488", light: "#F0FDFA" },
+  navy:   { primary: "#1A237E", accent: "#283593", line: "#1A237E", light: "#E8EAF6" },
+  slate:  { primary: "#28303C", accent: "#3F4756", line: "#28303C", light: "#F1F5F9" },
+  violet: { primary: "#6C3CE1", accent: "#5B32C0", line: "#6C3CE1", light: "#F3EEFF" }
+};
+
+// The `template` option used to be accepted and then dropped on the floor --
+// renderResumeHTML only ever read options.color and options.align, so
+// api/pdf.js passed a template id that changed nothing. These map the same ten
+// ids the browser builder uses onto the knobs this renderer does have.
+//
+// This is a colour/alignment mapping, NOT the full ten-template treatment the
+// client-side jsPDF layout applies (fonts, chip style, table on/off, density).
+// It exists so the parameter is honest rather than silently inert.
+const TEMPLATE_STYLES = {
+  Harvard_Classic:    { color: "black",  align: "center" },
+  Stanford_Clean:     { color: "slate",  align: "left"   },
+  Google_XYZ:         { color: "blue",   align: "left"   },
+  ATS_Ultra_Safe:     { color: "black",  align: "left"   },
+  Executive_Standard: { color: "navy",   align: "center" },
+  Modern_Minimal:     { color: "slate",  align: "left"   },
+  Corporate_Formal:   { color: "navy",   align: "center" },
+  MIT_Technical:      { color: "teal",   align: "left"   },
+  McKinsey_Compact:   { color: "black",  align: "left"   },
+  FAANG_Standard:     { color: "violet", align: "left"   }
 };
 
 function renderResumeHTML(resumeJSON, options = {}) {
-  const theme = COLOR_THEMES[options.color] || COLOR_THEMES.black;
-  const align = options.align || "center";
+  // An explicit color/align always wins; the template supplies the default.
+  const tpl = TEMPLATE_STYLES[options.template] || {};
+  const theme = COLOR_THEMES[options.color || tpl.color] || COLOR_THEMES.black;
+  const align = options.align || tpl.align || "center";
   const p = resumeJSON.personal || {};
   const name = (p.fullName || "").toUpperCase();
   const title = p.title || "";
@@ -166,32 +192,43 @@ function renderResumeHTML(resumeJSON, options = {}) {
   return html;
 }
 
+// Every size is derived from two custom properties so the fitter can rescale
+// the document without CSS `zoom`.
+//
+//   --fs  font scale   -- multiplies type only
+//   --ls  leading scale -- multiplies line-height and every vertical gap
+//
+// zoom was the old mechanism and it was wrong twice over: it scaled the box as
+// well as the type, so shrinking to win a page also narrowed the content and
+// left a dead gutter on the right, and reading scrollHeight back off a zoomed
+// element double-counts the scale so the fitter could not see its own effect.
 const RESUME_CSS = `
 @page { size: A4; margin: 12mm 14mm 10mm 14mm; }
+:root { --fs: 1; --ls: 1; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #000; font-size: 8.5pt; line-height: 1.35; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #000; font-size: calc(8.5pt * var(--fs)); line-height: calc(1.35 * var(--ls)); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .resume-container { width: 100%; }
-.header { margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1.5px solid #000; }
-.name { font-size: 17pt; font-weight: 900; letter-spacing: 1.5px; margin-bottom: 2px; }
-.title { font-size: 9pt; margin-bottom: 2px; }
-.contact { font-size: 8pt; color: #555; }
-.section { margin-bottom: 2px; }
-.section-header { font-size: 9pt; font-weight: bold; text-transform: uppercase; margin-top: 4px; padding-bottom: 1px; border-bottom: 1px solid #000; margin-bottom: 3px; break-after: avoid; page-break-after: avoid; }
-.highlights-row { display: flex; flex-wrap: wrap; gap: 2px 14px; }
-.hl-item { font-size: 8.5pt; white-space: nowrap; }
-.job { margin-bottom: 3px; }
-.job-header { display: flex; justify-content: space-between; align-items: baseline; margin-top: 3px; margin-bottom: 0; break-after: avoid; page-break-after: avoid; }
-.job-title { font-size: 9pt; font-weight: bold; }
-.job-date { font-size: 8pt; color: #555; font-style: italic; }
-.company { font-size: 8pt; color: #555; font-style: italic; margin-bottom: 1px; }
-.bullet { font-size: 8.5pt; margin-left: 4px; margin-bottom: 1px; text-indent: -10px; padding-left: 14px; line-height: 1.32; page-break-inside: avoid; -webkit-column-break-inside: avoid; display: table; width: 100%; }
-.text { font-size: 8.5pt; margin-bottom: 1px; line-height: 1.35; }
-.skills-line { font-size: 8.5pt; margin-bottom: 1px; line-height: 1.3; }
+.header { margin-bottom: calc(5px * var(--ls)); padding-bottom: calc(5px * var(--ls)); border-bottom: 1.5px solid #000; }
+.name { font-size: calc(17pt * var(--fs)); font-weight: 900; letter-spacing: 1.5px; margin-bottom: calc(2px * var(--ls)); }
+.title { font-size: calc(9pt * var(--fs)); margin-bottom: calc(2px * var(--ls)); }
+.contact { font-size: calc(8pt * var(--fs)); color: #555; }
+.section { margin-bottom: calc(2px * var(--ls)); }
+.section-header { font-size: calc(9pt * var(--fs)); font-weight: bold; text-transform: uppercase; margin-top: calc(4px * var(--ls)); padding-bottom: 1px; border-bottom: 1px solid #000; margin-bottom: calc(3px * var(--ls)); break-after: avoid; page-break-after: avoid; }
+.highlights-row { display: flex; flex-wrap: wrap; gap: calc(2px * var(--ls)) 14px; }
+.hl-item { font-size: calc(8.5pt * var(--fs)); white-space: nowrap; }
+.job { margin-bottom: calc(3px * var(--ls)); }
+.job-header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-top: calc(3px * var(--ls)); margin-bottom: 0; break-after: avoid; page-break-after: avoid; }
+.job-title { font-size: calc(9pt * var(--fs)); font-weight: bold; }
+.job-date { font-size: calc(8pt * var(--fs)); color: #555; font-style: italic; white-space: nowrap; flex: none; }
+.company { font-size: calc(8pt * var(--fs)); color: #555; font-style: italic; margin-bottom: calc(1px * var(--ls)); }
+.bullet { font-size: calc(8.5pt * var(--fs)); margin-left: 4px; margin-bottom: calc(1px * var(--ls)); text-indent: -10px; padding-left: 14px; line-height: calc(1.32 * var(--ls)); page-break-inside: avoid; -webkit-column-break-inside: avoid; display: table; width: 100%; }
+.text { font-size: calc(8.5pt * var(--fs)); margin-bottom: calc(1px * var(--ls)); line-height: calc(1.35 * var(--ls)); }
+.skills-line { font-size: calc(8.5pt * var(--fs)); margin-bottom: calc(1px * var(--ls)); line-height: calc(1.3 * var(--ls)); }
 .skills-cat { font-weight: bold; }
-.edu-line { font-size: 8.5pt; margin-bottom: 2px; }
-.portfolio-table { width: 100%; border-collapse: collapse; font-size: 8pt; margin-top: 2px; }
-.portfolio-table th { background: #f5f5f5; font-weight: bold; text-align: left; padding: 2px 4px; border: 0.5px solid #ccc; font-size: 7.5pt; }
-.portfolio-table td { padding: 2px 4px; border: 0.5px solid #ddd; font-size: 7.5pt; line-height: 1.3; }
+.edu-line { font-size: calc(8.5pt * var(--fs)); margin-bottom: calc(2px * var(--ls)); }
+.portfolio-table { width: 100%; border-collapse: collapse; font-size: calc(8pt * var(--fs)); margin-top: calc(2px * var(--ls)); }
+.portfolio-table th { background: #f5f5f5; font-weight: bold; text-align: left; padding: 2px 4px; border: 0.5px solid #ccc; font-size: calc(7.5pt * var(--fs)); }
+.portfolio-table td { padding: 2px 4px; border: 0.5px solid #ddd; font-size: calc(7.5pt * var(--fs)); line-height: calc(1.3 * var(--ls)); }
 `;
 
 export { renderResumeHTML, RESUME_CSS };
