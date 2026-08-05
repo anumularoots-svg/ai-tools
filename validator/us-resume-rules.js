@@ -316,6 +316,36 @@ export function normalizeResumeShape(input) {
     rj[f] = [v];   // a bare string where a list was expected
   });
 
+  // Skill items as a comma string -> a list.
+  //
+  // The model returns {"category":"Programming","items":"Python, SQL"} roughly
+  // as often as it returns a real array. renderJSONResume() then called
+  // .join() on a string, threw, and aborted the ENTIRE render — leaving the
+  // resume box empty with only an alert to show for it. The PDF path survived
+  // because it happened to test Array.isArray first, which is exactly why the
+  // download worked while the screen did not.
+  if (Array.isArray(rj.skills)) {
+    rj.skills.forEach(function (s) {
+      if (!s || typeof s !== "object") return;
+      if (s.items == null && s.skills != null) s.items = s.skills;
+      if (typeof s.items === "string") s.items = s.items.split(/\s*[,;|]\s*/).filter(Boolean);
+      else if (!Array.isArray(s.items)) s.items = s.items == null ? [] : [String(s.items)];
+      s.items = s.items.map(function (x) { return String(x).trim(); }).filter(Boolean);
+    });
+  }
+
+  // Same coercion for every other list-of-strings the renderers .join().
+  ["coreCompetencies", "strengths", "highlights"].forEach(function (f) {
+    if (typeof rj[f] === "string") rj[f] = rj[f].split(/\s*[,;|]\s*/).filter(Boolean);
+  });
+  if (Array.isArray(rj.projects)) {
+    rj.projects.forEach(function (p) {
+      if (p && typeof p.technologies === "string") {
+        p.technologies = p.technologies.split(/\s*[,;|]\s*/).filter(Boolean);
+      }
+    });
+  }
+
   // Certifications as bare strings -> {name}. Without this they survived the
   // crash check but were silently deleted by the `c.name && ...` filter.
   if (Array.isArray(rj.certifications)) {

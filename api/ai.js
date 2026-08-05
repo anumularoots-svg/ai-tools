@@ -255,8 +255,9 @@ async function jsonMode(res, u) {
     "\"skills\":[{\"category\":\"\",\"items\":[]}]," +
     "\"experience\":[{\"title\":\"\",\"company\":\"\",\"location\":\"\",\"startDate\":\"Mon YYYY\",\"endDate\":\"Present\",\"client\":\"\",\"bullets\":[{\"text\":\"\"}]}]," +
     "\"achievements\":[{\"text\":\"A result the candidate actually stated. Include their own figure where they gave one. If they gave no number, state the result plainly WITHOUT any bracketed placeholder.\",\"metric\":\"only if the candidate supplied it, else empty string\"}]," +
+    "\"projects\":[{\"name\":\"\",\"technologies\":[],\"bullets\":[{\"text\":\"\"}]}]," +
     "\"education\":[{\"degree\":\"\",\"institution\":\"\",\"year\":\"\"}]," +
-    "\"certifications\":[{\"name\":\"industry-recognized only — omit employer-internal certifications entirely\"}]}";
+    "\"certifications\":[{\"name\":\"\"}]}";
   p += "\n\nFINAL RULES:\n" +
     "1. headline = 'Title | Key Tech | Years'. Example: 'QA Automation Engineer | Selenium, Java, TestNG, CI/CD | 4+ Years'\n" +
     "2. summary = AT MOST 3 sentences. Not 6, not 8. Three.\n" +
@@ -265,13 +266,19 @@ async function jsonMode(res, u) {
     "4. experience bullets = " + (bc[0] || 5) + " on the most recent role, 3-4 on each older role. " +
        "Each 1-2 lines. Start with a power verb.\n" +
     "5. education = ALL degrees with university and year. Extract from the source resume.\n" +
-    "6. skills = only categories WITH items, at most 5 categories.\n" +
-    "7. certifications = industry-recognized only (AWS, Azure, GCP, PMP, CISSP, ISTQB, CompTIA, Scrum). " +
-       "Return an empty array rather than listing employer-internal training certificates.\n" +
-    "8. " + (u.fullName ? "fullName = \"" + u.fullName + "\"" : "fullName = the REAL candidate name from the source resume (top of page); NEVER blank or generic") + "\n" +
-    "9. The whole document MUST fit " + pageTarget + " page(s). If it will not, cut the weakest bullets " +
+    "6. skills = only categories WITH items, at most 5 categories. " +
+       "\"items\" MUST be a JSON ARRAY of strings, e.g. [\"Python\",\"SQL\"] — never one comma-separated string.\n" +
+    "7. projects = academic, capstone and personal projects the candidate described, with 1-2 bullets each. " +
+       "For a candidate with little or no paid experience this is the most important section on the page — " +
+       "NEVER drop a project they told you about. Return [] only if they described none.\n" +
+    "8. certifications = every real certification the candidate listed, including course and platform " +
+       "credentials (HackerRank, Coursera, Udemy, NPTEL) — for an entry-level candidate these carry weight. " +
+       "EXCLUDE only employer-internal training certificates such as 'Infosys Certified ...' or " +
+       "'TCS Certified ...'. Do NOT return an empty array when the candidate gave you certifications.\n" +
+    "9. " + (u.fullName ? "fullName = \"" + u.fullName + "\"" : "fullName = the REAL candidate name from the source resume (top of page); NEVER blank or generic") + "\n" +
+    "10. The whole document MUST fit " + pageTarget + " page(s). If it will not, cut the weakest bullets " +
        "and drop Certifications entirely. Do NOT pad to fill space.\n" +
-    "10. No bracketed placeholders anywhere in the output. Not one.\n\n" +
+    "11. No bracketed placeholders anywhere in the output. Not one.\n\n" +
     "JSON VALIDITY (CRITICAL): Output EXACTLY ONE valid JSON object using ONLY the keys shown above.\n" +
     "- EVERY key MUST have a value. Never write \"skills\": followed by a comma or a brace with nothing " +
       "in between. If a section is empty, write an empty array: \"skills\":[]. A key with no value is the " +

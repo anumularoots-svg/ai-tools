@@ -152,6 +152,28 @@ var resumeJSON = null;  // Structured resume data
 // ============================================
 // JSON RESUME RENDERER — renders structured HTML from JSON
 // ============================================
+// If the rich preview throws, show the resume anyway from the plain-text
+// projection. The content is the point; the styling is not worth losing it for.
+function _renderResumeFallback(rj, err) {
+  var body = "";
+  try { body = jsonToPlainText(rj); } catch (e) { body = ""; }
+  if (!body.trim()) {
+    return '<div style="padding:18px;line-height:1.7"><strong>Could not display this resume.</strong><br>' +
+      'Click <strong>Regenerate</strong> to try again.</div>';
+  }
+  return '<div style="white-space:pre-wrap;font-size:11.5px;line-height:1.6">' +
+    zkEsc(body) + '</div>';
+}
+
+// Join a list that might not be a list. Every renderer goes through this now:
+// one .join() on a string threw and took the whole resume down with it.
+function _zkList(v, sep) {
+  sep = sep || ", ";
+  if (Array.isArray(v)) return v.filter(Boolean).join(sep);
+  if (v == null) return "";
+  return String(v);
+}
+
 function renderJSONResume(rj) {
   var p = rj.personal || {};
   var name = (p.fullName || "").toUpperCase();
@@ -194,7 +216,9 @@ function renderJSONResume(rj) {
   if (rj.skills && rj.skills.length > 0) {
     h += '<h2 style="color:#141A2E;border-bottom-color:#141A2E;font-size:11px;margin-top:8px;padding-bottom:2px;border-bottom:1px solid #141A2E;margin-bottom:4px">TECHNICAL SKILLS</h2>';
     rj.skills.forEach(function(cat) {
-      h += '<div style="font-size:10px;margin-bottom:2px"><strong>' + cat.category + ':</strong> ' + (cat.items || []).join(", ") + '</div>';
+      // _zkList, never .join() — a string here threw and aborted the entire
+      // render, leaving the resume box blank with only an alert.
+      h += '<div style="font-size:10px;margin-bottom:2px"><strong>' + cat.category + ':</strong> ' + _zkList(cat.items) + '</div>';
     });
   }
 
@@ -373,7 +397,18 @@ function generateResume() {
       resumeJSON = _enforceUSResumeRules(resumeJSON);
       window.resumeJSON = resumeJSON;
 
-      var htmlContent = renderJSONResume(resumeJSON);
+      // A render fault must never cost the user the whole resume. This threw
+      // once already — .join() on a skills string — and the exception escaped
+      // to the promise catch, so the box was left EMPTY and all the user got
+      // was an alert. The PDF path was unaffected, which is why downloads
+      // worked while the screen showed nothing.
+      var htmlContent;
+      try {
+        htmlContent = renderJSONResume(resumeJSON);
+      } catch (renderErr) {
+        try { console.error("ZapKitt: preview render failed", renderErr); } catch (e2) {}
+        htmlContent = _renderResumeFallback(resumeJSON, renderErr);
+      }
       document.getElementById("resumeContent").innerHTML = htmlContent;
 
       // Surface unverifiable numbers and unfilled metric placeholders.
@@ -646,6 +681,28 @@ function _enforceUSResumeRules(rj) {
   var norm = function(t) { return _zkTidy(t).toLowerCase().replace(/[^a-z0-9%]/g, ""); };
   var textOf = function(x) { return typeof x === "string" ? x : (x && (x.text || x.metric)) || ""; };
 
+  // Skill items arrive as "Python, SQL" about as often as ["Python","SQL"].
+  // renderJSONResume() called .join() on the string, threw, and aborted the
+  // whole render — the resume box came out EMPTY with just an alert. The PDF
+  // survived because it tested Array.isArray first, which is why downloads
+  // worked while the screen showed nothing.
+  var toList = function(v) {
+    if (Array.isArray(v)) return v.map(function(x) { return String(x).trim(); }).filter(Boolean);
+    if (typeof v === "string") return v.split(/\s*[,;|]\s*/).filter(Boolean);
+    return v == null ? [] : [String(v)];
+  };
+  if (Array.isArray(rj.skills)) {
+    rj.skills.forEach(function(s) {
+      if (!s || typeof s !== "object") return;
+      if (s.items == null && s.skills != null) s.items = s.skills;
+      s.items = toList(s.items);
+    });
+  }
+  ["coreCompetencies", "strengths", "highlights"].forEach(function(f) {
+    if (rj[f] != null) rj[f] = toList(rj[f]);
+  });
+  (rj.projects || []).forEach(function(p) { if (p && p.technologies != null) p.technologies = toList(p.technologies); });
+
   // RULE 4 — three sentences. Periods that do NOT end a sentence must be
   // masked first: "B.Tech graduate." was being split at "B." and, because the
   // fragment failed the sentence pattern, the "B." was dropped entirely — the
@@ -760,7 +817,7 @@ function jsonToPlainText(rj) {
   // pasting into a Workday form gets different content from the one they
   // reviewed.
   if (rj.summary) t += "PROFESSIONAL SUMMARY\n" + rj.summary + "\n\n";
-  if (rj.skills && rj.skills.length) { t += "TECHNICAL SKILLS\n"; rj.skills.forEach(function(s) { t += s.category + ": " + (s.items||[]).join(", ") + "\n"; }); t += "\n"; }
+  if (rj.skills && rj.skills.length) { t += "TECHNICAL SKILLS\n"; rj.skills.forEach(function(s) { t += s.category + ": " + _zkList(s.items) + "\n"; }); t += "\n"; }
   if (rj.experience && rj.experience.length) { t += (rj.experienceHeading || "Professional Experience").toUpperCase() + "\n"; rj.experience.forEach(function(e) { t += e.title + " | " + e.company + " | " + e.startDate + " \u2014 " + e.endDate + "\n"; (e.bullets||[]).forEach(function(b) { t += "\u2022 " + (b.text || b) + "\n"; }); t += "\n"; }); }
   if (rj.projects && rj.projects.length) {
     if (!(rj.experienceHeading === "Projects & Internships" && rj.experience && rj.experience.length)) t += "PROJECTS\n";
