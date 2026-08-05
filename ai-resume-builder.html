@@ -410,6 +410,13 @@ function generateResume() {
     } else {
       throw new Error(data.error || "No result from AI");
     }
+    // ── FINAL GUARD ────────────────────────────────────────────────────
+    // Whatever happened above, machine data must not be what the user reads.
+    // This has now been reached by two different routes (a post-processing
+    // TypeError, and a text sanitiser that ate JSON arrays), so it is checked
+    // at the last possible moment rather than trusted.
+    _assertNotRawJSON(data);
+
     document.getElementById("output").classList.add("show");
     document.getElementById("interviewSection").style.display = "block";
 
@@ -514,6 +521,35 @@ function zkMarkPlaceholders() {
 // If the server fell back to "text mode" but the text is really a resume JSON
 // object, parse it rather than printing it. A user must never see
 // {"personal":{"fullName":"..." where their resume belongs.
+// Last line of defence. If the resume box somehow ended up holding JSON, one
+// more salvage attempt is made; failing that the user gets a plain explanation
+// and a Regenerate prompt instead of a wall of machine data.
+function _assertNotRawJSON(data) {
+  var box = document.getElementById("resumeContent");
+  if (!box) return;
+  var txt = (box.textContent || "").trim();
+  var looksJSON = txt.indexOf('{"') === 0 || /"fullName"\s*:/.test(txt) ||
+                  /^\s*\{\s*"personal"/.test(txt);
+  if (!looksJSON) return;
+
+  var salvaged = _recoverResumeJSON(txt);
+  if (salvaged) {
+    window.resumeJSON = _enforceUSResumeRules(salvaged);
+    box.innerHTML = renderJSONResume(window.resumeJSON);
+    resumeText = jsonToPlainText(window.resumeJSON);
+    return;
+  }
+  box.innerHTML = '<div style="padding:18px;line-height:1.7">' +
+    '<strong>The AI returned data we could not turn into a resume.</strong><br>' +
+    'Nothing has been lost — click <strong>Regenerate</strong> and it will try again. ' +
+    'If it happens twice, shorten the pasted resume in Step 1 and retry.</div>';
+  window.resumeJSON = null;
+  resumeText = "";
+  try { console.error("ZapKitt: unrenderable AI response", {
+    jsonError: data && data.jsonError, postError: data && data.postError,
+    salvageNote: data && data.salvageNote, attempts: data && data.attempts }); } catch (e) {}
+}
+
 function _recoverResumeJSON(text) {
   var t = String(text || "").replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
   var start = t.indexOf("{");
@@ -610,9 +646,19 @@ function _enforceUSResumeRules(rj) {
   var norm = function(t) { return _zkTidy(t).toLowerCase().replace(/[^a-z0-9%]/g, ""); };
   var textOf = function(x) { return typeof x === "string" ? x : (x && (x.text || x.metric)) || ""; };
 
+  // RULE 4 — three sentences. Periods that do NOT end a sentence must be
+  // masked first: "B.Tech graduate." was being split at "B." and, because the
+  // fragment failed the sentence pattern, the "B." was dropped entirely — the
+  // summary rendered as "Tech graduate...". Same for 1.5 years and 99.9%.
   if (rj.summary) {
-    var sents = _zkTidy(rj.summary).match(/[^.!?]+[.!?]+(\s|$)|[^.!?]+$/g) || [];
-    rj.summary = sents.slice(0, 3).join(" ").replace(/\s{2,}/g, " ").trim();
+    var GUARD = String.fromCharCode(1);   // non-printing sentinel, kept out of the file as a literal
+    var guarded = _zkTidy(rj.summary)
+      .replace(/(\d)\.(\d)/g, "$1" + GUARD + "$2")
+      .replace(/\b([A-Z])\./g, "$1" + GUARD)
+      .replace(/\b(Inc|Ltd|Co|Corp|Sr|Jr|Dr|Mr|Ms|Mrs|St|vs|etc|approx|Ph|No)\./gi,
+        function(m) { return m.slice(0, -1) + GUARD; });
+    var sents = guarded.match(/[^.!?]+[.!?]+|\S[^.!?]*$/g) || [guarded];
+    rj.summary = sents.slice(0, 3).join(" ").split(GUARD).join(".").replace(/\s{2,}/g, " ").trim();
   }
   if (rj.headline) rj.headline = _zkTidy(rj.headline);
 

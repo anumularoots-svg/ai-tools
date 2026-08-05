@@ -388,5 +388,40 @@ const M6 = salvageResumeJSON('{"personal":{"fullName":"E"},"summary":"Used {brac
 check('braces inside a string do not confuse the scanner', M6 && M6.resume.summary,
   'Used {braces} and "quotes" here.');
 
+// ===========================================================================
+// The text sanitiser must never be let near JSON.
+//
+// Its placeholder regex is /\[[^\]]*\]/g, which eats JSON arrays. Applied to a
+// perfectly valid model response it produced EXACTLY the corruption a user
+// reported seeing on screen:
+//   model sent : "skills":[],"experience":[],"achievements":[]}
+//   user saw   : "skills":,"experience":,"achievements":}
+// The model's JSON was fine. This function destroyed it.
+// ===========================================================================
+console.log('\nthe text sanitiser must not corrupt JSON');
+const VALID_JSON = '{"personal":{"fullName":"MANJUSHA"},"skills":[],"experience":[],' +
+  '"achievements":[],"summary":"A summary.","education":[{"degree":"B.Tech"}]}';
+const afterText = sanitizeResumeText(VALID_JSON);
+check('valid JSON survives the text sanitiser byte for byte', afterText, VALID_JSON);
+check('and is still parseable',
+  (() => { try { JSON.parse(afterText); return true; } catch (e) { return false; } })(), true);
+check('empty arrays are not eaten', /"skills":\[\]/.test(afterText), true);
+check('fenced JSON is also left alone',
+  sanitizeResumeText('```json\n' + VALID_JSON + '\n```').includes('"skills":[]'), true);
+
+// ...but it must still do its job on genuine prose.
+const prose = 'PROFESSIONAL SUMMARY\nA summary.\n\nKEY ACHIEVEMENTS\n' +
+  '• Reduced regression time by 60%\n• Improved coverage by [ADD METRIC: what %?]\n';
+const afterProse = sanitizeResumeText(prose);
+check('prose placeholders are still stripped', /\[ADD METRIC/.test(afterProse), false);
+check('prose content is still kept', /Reduced regression time by 60%/.test(afterProse), true);
+
+// End to end: the exact corruption path, now closed.
+const roundTrip = salvageResumeJSON(sanitizeResumeText(VALID_JSON));
+check('a valid response survives sanitise -> salvage intact',
+  roundTrip && roundTrip.resume.personal.fullName, 'MANJUSHA');
+check('and is not flagged as salvaged, because nothing broke it',
+  roundTrip && roundTrip.salvaged, false);
+
 console.log('\n' + pass + ' passed, ' + fail + ' failed\n');
 process.exit(fail ? 1 : 0);
