@@ -4,6 +4,7 @@
 import { rateLimit, clientIP } from './_ratelimit.js';
 import { METRIC_RULE, US_CONVENTIONS, isUSTarget } from '../prompts/prompt-engine.js';
 import { validateResume } from '../validator/resume-validator.js';
+import { sanitizeResumeJSON, sanitizeResumeText } from '../validator/us-resume-rules.js';
 function extractJSON(text) {
   let c = text.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
   c = c.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
@@ -142,20 +143,81 @@ async function jsonMode(res, u) {
   const yrs = parseInt(u.totalExp) || 0;
   const hasExp = u.experience && u.experience.length > 0 && u.experience[0].title;
   const hasSource = !!(u.existingResume || u.backgroundDesc);
-  const pageTarget = yrs <= 2 ? 1 : 2;
+  // RULE 1 — one page under ten years. The old threshold was two years, which
+  // sent a four-year candidate to two pages; in the US that reads as padding
+  // and is a screen-out, not a bonus.
+  const pageTarget = yrs < 10 ? 1 : 2;
 
+  // RULE 6 — four to five bullets on the most recent role, three to four on
+  // older ones. The old ladder asked for eight to ten, which is what made the
+  // resume overflow before anything had been measured.
   const bc = (u.experience || []).map(function(_, i) {
-    if (yrs <= 2) return i === 0 ? 5 : 4;
-    if (yrs <= 6) return [8, 6, 5][i] || 4;
-    if (yrs <= 12) return [10, 7, 6, 5][i] || 4;
-    return [10, 8, 6, 5, 4][i] || 3;
+    if (i === 0) return yrs < 2 ? 4 : 5;
+    return i === 1 ? 4 : 3;
   });
 
   var lang = ((u.language || "English") + "").trim();
   var isEn = !lang || lang.toLowerCase() === "english";
   var langInstr = isEn ? "" : "\n\n⚠️ MANDATORY OUTPUT LANGUAGE = " + lang + ". Write EVERY human-readable text value in the returned JSON — summary, headline, ALL experience bullets, achievements, skill category names, strengths, coreCompetencies, quantifiedAchievements, highlights, additionalInfo — entirely and natively in " + lang + ". Do NOT write any of this content in English. Keep ONLY proper nouns unchanged (person name, company names, technology/tool/framework names, certification names, URLs, email, phone). Keep numbers, dates and metrics as digits. This language requirement overrides any English examples shown below.";
 
-  const sys = "You are an Executive Resume Writer and ATS Expert with 20+ years Fortune 500 recruiting experience. Return ONLY valid JSON. No markdown, no code fences, no explanation.\n\nPAGE TARGET: " + pageTarget + " page(s). Generate ENOUGH content to fill " + pageTarget + " full pages.\n\nRULES:\n1. NEVER fabricate companies, titles, dates, education. Use ONLY provided data.\n2. If EXISTING RESUME is pasted, EXTRACT ALL data from it: every role, education, certifications, skills.\n3. Every bullet: Action Verb + Technology + Business Impact + Result. Include a number ONLY when the candidate supplied one.\n4. NEVER use: Responsible for, Worked on, Involved in, Handled.\n5. Power verbs ONLY: Architected, Spearheaded, Delivered, Reduced, Automated, Designed, Led, Implemented, Optimized.\n6. Skills grouped into categories. Do NOT include empty categories with no items.\n7. Summary: 6-8 lines, executive-level.\n8. highlights: 6-8 SHORT strings (2-5 words each), built from facts the candidate gave. NOT long sentences.\n9. achievements: 6-8 real results. Carry over the candidate's own figure where they gave one; where they did not, state the achievement plainly and append an [ADD METRIC: ...] placeholder. Never invent a figure to fill the slot.\n10. strengths: 6-9 SHORT professional keywords (2-3 words each). NOT sentences.\n11. Education: MUST extract from source resume if user didn't fill Step 4. NEVER return 'Not Applicable' or 'Not specified'.\n12. If source has multiple projects under one company, create SEPARATE experience entries.\n" + (yrs <= 2 ? "\nFRESHER: 1 page. Projects, internships, academics." : yrs <= 12 ? "\nPROFESSIONAL: 2 pages. Achievement-driven. 8-10 bullets for recent role." : "\nEXECUTIVE: 2-3 pages. Strategic leadership. 10 bullets for recent role.") + "\n" + METRIC_RULE + (isUSTarget(u.targetCountry) ? "\n" + US_CONVENTIONS : "") + langInstr;
+  // ==========================================================================
+  // SYSTEM PROMPT — the 12 ABSOLUTE RULES.
+  //
+  // Every rule here is also enforced deterministically by
+  // validator/us-resume-rules.js after the model answers. The prompt gets it
+  // right most of the time; the sanitiser guarantees it. Rule 2 in particular
+  // reversed a previous instruction that asked the model to WRITE
+  // "[ADD METRIC: ...]" wherever a number was missing -- an honest anti-
+  // fabrication measure whose side effect was shipping visibly unfinished
+  // resumes to recruiters.
+  // ==========================================================================
+  const sys =
+    "You are a US career expert resume writer. You produce ATS-optimized, " +
+    (pageTarget === 1 ? "single-page" : "two-page") + " resumes for candidates targeting US jobs. " +
+    "Follow every rule below with zero exceptions.\n\n" +
+    "Return ONLY valid JSON. No markdown, no code fences, no explanation.\n\n" +
+    "ABSOLUTE RULES:\n" +
+    "RULE 1 - " + (pageTarget === 1 ? "ONE PAGE ONLY" : "TWO PAGES MAXIMUM") + ". This candidate has " + (u.totalExp || "0") +
+      " years of experience, so the resume MUST fit on exactly " + pageTarget + " page(s). No exceptions. " +
+      "Cut content to fit. Priority order for cutting: remove Certifications, remove Project Portfolio, " +
+      "shorten Professional Summary, combine similar bullets.\n" +
+    "RULE 2 - NEVER output placeholder text. Never write [ADD METRIC: ...], [INSERT NUMBER], [X%], or ANY " +
+      "bracketed placeholder. If you do not have a specific number, write the bullet without it. " +
+      "WRONG: 'Improved test coverage by [ADD METRIC: what percentage?]'. " +
+      "CORRECT: 'Improved test coverage across the full regression suite' - or omit the bullet.\n" +
+    "RULE 3 - NO DUPLICATE SECTIONS. Achievements appear ONCE, either as a Key Achievements section OR " +
+      "inside experience bullets. Never both. Never create separate 'Key Achievements' and " +
+      "'Quantified Achievements' sections.\n" +
+    "RULE 4 - PROFESSIONAL SUMMARY: maximum 3 sentences, no more. Pattern: [Title] with [X] years of " +
+      "experience in [domain]. Skilled in [top 3-4 technologies]. Delivered [top 1-2 quantified results].\n" +
+    "RULE 5 - EVERY BULLET starts with a strong action verb and carries a quantified result WHERE THE " +
+      "CANDIDATE PROVIDED ONE. If they gave no number, do not invent one and do not insert a placeholder - " +
+      "state the accomplishment without a figure.\n" +
+    "RULE 6 - EXPERIENCE BULLETS: maximum 5 on the most recent role, 3-4 on older roles. Each bullet is " +
+      "1-2 lines and never exceeds 2 lines. Cut the weakest bullets to stay within " + pageTarget + " page(s).\n" +
+    "RULE 7 - SECTIONS, in this order only: Contact Info, Professional Summary, Technical Skills, " +
+      "Professional Experience, Education. Certifications ONLY if space allows AND only industry-recognized " +
+      "ones (AWS, Azure, PMP, CISSP, ISTQB). NEVER employer-internal certifications such as " +
+      "'Infosys Certified ...' or 'TCS Certified ...'.\n" +
+    "RULE 8 - CONTACT INFO: name, email, phone, LinkedIn only. " +
+      (isUSTarget(u.targetCountry)
+        ? "Target is the US: do NOT put city/country in the header unless the candidate is already in the US. "
+        : "") +
+      "Never include photo, date of birth, marital status, or visa status.\n" +
+    "RULE 9 - SKILLS: one compact block grouped by category (Languages, Frameworks, Tools, Testing), " +
+      "comma-separated, maximum 4 categories worth of content. No bullet points.\n" +
+    "RULE 10 - DO NOT include: Project Portfolio tables, Additional Information sections, Core Competencies " +
+      "when a Skills section exists, hobbies, references, or 'Location: City, Country' as its own section.\n" +
+    "RULE 11 - ATS: standard headings only (Professional Summary, Technical Skills, Professional " +
+      "Experience, Education). No creative headings, no tables, no columns, no graphics.\n" +
+    "RULE 12 - If a metric appears more than once in the input (e.g. '60% faster regression'), use it ONCE, " +
+      "in the single most impactful bullet. Never repeat the same figure across sections.\n\n" +
+    "TRUTH: never fabricate companies, titles, dates, education, or metrics. Use ONLY the supplied data. " +
+    "If an EXISTING RESUME is pasted, extract every role, education entry and skill from it.\n" +
+    "NEVER use the phrases: Responsible for, Worked on, Involved in, Handled.\n" +
+    "Power verbs: Architected, Spearheaded, Delivered, Reduced, Automated, Designed, Led, Implemented, " +
+    "Optimized, Engineered, Accelerated, Migrated, Integrated.\n" +
+    METRIC_RULE + (isUSTarget(u.targetCountry) ? "\n" + US_CONVENTIONS : "") + langInstr;
 
   var eduStr = "";
   if (u.degree) { eduStr = u.degree; if (u.university) eduStr += " — " + u.university; if (u.gradYear) eduStr += " (" + u.gradYear + ")"; }
@@ -183,17 +245,63 @@ async function jsonMode(res, u) {
   if (u.backgroundDesc) p += "\n\nBACKGROUND:\n\"\"\"\n" + u.backgroundDesc.substring(0, 3000) + "\n\"\"\"";
   if (u.jobDescription) p += "\n\nJOB DESCRIPTION (weave keywords):\n\"\"\"\n" + u.jobDescription.substring(0, 3000) + "\n\"\"\"";
 
-  p += "\n\nReturn ONLY this JSON:\n{\"personal\":{\"fullName\":\"" + u.fullName + "\",\"title\":\"\",\"headline\":\"\",\"email\":\"\",\"phone\":\"\",\"location\":\"\",\"linkedin\":\"\",\"github\":\"\"},\"highlights\":[\"SHORT metrics only\"],\"summary\":\"ONE single JSON string of 6-8 sentences separated by spaces — NEVER split into multiple values\",\"achievements\":[{\"text\":\"Use the candidate’s own figure if given, e.g. Reduced regression time by 60%; otherwise state the result and append [ADD METRIC: ...]\",\"metric\":\"only if the candidate supplied it, else empty string\"}],\"skills\":[{\"category\":\"\",\"items\":[]}],\"certifications\":[{\"name\":\"\"}],\"experience\":[{\"title\":\"\",\"company\":\"\",\"location\":\"\",\"startDate\":\"Mon YYYY\",\"endDate\":\"Present\",\"client\":\"\",\"domain\":\"\",\"teamSize\":\"\",\"bullets\":[{\"text\":\"\"}]}],\"quantifiedAchievements\":[\"Only results the candidate actually quantified; omit this array entirely if they quantified none\"],\"projectPortfolio\":[{\"client\":\"\",\"project\":\"\",\"type\":\"\",\"role\":\"\",\"duration\":\"\",\"teamSize\":\"\"}],\"education\":[{\"degree\":\"\",\"institution\":\"\",\"year\":\"\"}],\"coreCompetencies\":[\"short keywords\"],\"additionalInfo\":{\"currentLocation\":\"\",\"preferredLocation\":\"\",\"languages\":\"\"},\"strengths\":[\"SHORT keywords\"]}";
-  p += "\n\nFINAL RULES:\n1. headline = 'Title | Specialization | Key Tech | Years'. Example: 'QA Automation Engineer | SDET  •  Selenium · Java · TestNG · REST Assured · CI/CD  •  4+ Years'\n2. highlights = SHORT strings max 5 words, each built from a fact the candidate gave. Example: '4+ Yrs QA'. Never invent a number to fill one.\n3. achievements = 6-8 items. Include a figure only where the candidate gave one; otherwise append [ADD METRIC: ...].\n4. quantifiedAchievements = ONLY results the candidate actually quantified. If they quantified none, return an empty array. Never invent entries to reach a count.\n5. projectPortfolio = table data for EACH project/client the candidate worked on. MUST match experience entries. If 2 experience entries exist, generate 2+ portfolio rows.\n6. coreCompetencies = 6-9 SHORT professional keywords.\n7. additionalInfo = location, preferred location, languages from source resume.\n8. education = ALL degrees with university and year. Extract from source.\n9. skills = Only categories WITH items.\n10. experience: For EACH project, create SEPARATE entry with client, domain, teamSize. Generate " + (yrs <= 6 ? "8-10" : "10") + " STAR bullets for recent role, 5-7 for older roles.\n11. strengths = SHORT keywords max 3 words each.\n12. " + (u.fullName ? "fullName = \"" + u.fullName + "\"" : "fullName = the REAL candidate name extracted from the source resume (top of page); NEVER blank or generic") + "\n13. Fill " + pageTarget + " full pages completely.\n\nJSON VALIDITY (CRITICAL): Output EXACTLY ONE valid JSON object using ONLY the keys shown above. EVERY value must belong to a key — never emit a loose/standalone string. 'summary' is ONE string. No duplicate keys, no trailing commas, no text or code fences outside the JSON. The output MUST pass JSON.parse without errors." + langInstr;
+  // The requested shape no longer contains projectPortfolio, coreCompetencies,
+  // additionalInfo, quantifiedAchievements or strengths. Asking for a key is
+  // the surest way to be given it, and RULE 10 says none of them belong on a
+  // US resume -- the previous schema demanded all five and then the layout
+  // dutifully printed them.
+  p += "\n\nReturn ONLY this JSON:\n{\"personal\":{\"fullName\":\"" + u.fullName + "\",\"title\":\"\",\"headline\":\"\",\"email\":\"\",\"phone\":\"\",\"location\":\"\",\"linkedin\":\"\",\"github\":\"\"}," +
+    "\"summary\":\"ONE single JSON string of AT MOST 3 sentences — never split into multiple values\"," +
+    "\"skills\":[{\"category\":\"\",\"items\":[]}]," +
+    "\"experience\":[{\"title\":\"\",\"company\":\"\",\"location\":\"\",\"startDate\":\"Mon YYYY\",\"endDate\":\"Present\",\"client\":\"\",\"bullets\":[{\"text\":\"\"}]}]," +
+    "\"achievements\":[{\"text\":\"A result the candidate actually stated. Include their own figure where they gave one. If they gave no number, state the result plainly WITHOUT any bracketed placeholder.\",\"metric\":\"only if the candidate supplied it, else empty string\"}]," +
+    "\"education\":[{\"degree\":\"\",\"institution\":\"\",\"year\":\"\"}]," +
+    "\"certifications\":[{\"name\":\"industry-recognized only — omit employer-internal certifications entirely\"}]}";
+  p += "\n\nFINAL RULES:\n" +
+    "1. headline = 'Title | Key Tech | Years'. Example: 'QA Automation Engineer | Selenium, Java, TestNG, CI/CD | 4+ Years'\n" +
+    "2. summary = AT MOST 3 sentences. Not 6, not 8. Three.\n" +
+    "3. achievements = at most 4 items, and ONLY results not already stated in an experience bullet. " +
+       "If every result is already in the bullets, return an empty array. NEVER use a bracketed placeholder.\n" +
+    "4. experience bullets = " + (bc[0] || 5) + " on the most recent role, 3-4 on each older role. " +
+       "Each 1-2 lines. Start with a power verb.\n" +
+    "5. education = ALL degrees with university and year. Extract from the source resume.\n" +
+    "6. skills = only categories WITH items, at most 5 categories.\n" +
+    "7. certifications = industry-recognized only (AWS, Azure, GCP, PMP, CISSP, ISTQB, CompTIA, Scrum). " +
+       "Return an empty array rather than listing employer-internal training certificates.\n" +
+    "8. " + (u.fullName ? "fullName = \"" + u.fullName + "\"" : "fullName = the REAL candidate name from the source resume (top of page); NEVER blank or generic") + "\n" +
+    "9. The whole document MUST fit " + pageTarget + " page(s). If it will not, cut the weakest bullets " +
+       "and drop Certifications entirely. Do NOT pad to fill space.\n" +
+    "10. No bracketed placeholders anywhere in the output. Not one.\n\n" +
+    "JSON VALIDITY (CRITICAL): Output EXACTLY ONE valid JSON object using ONLY the keys shown above. " +
+    "EVERY value must belong to a key — never emit a loose/standalone string. 'summary' is ONE string. " +
+    "No duplicate keys, no trailing commas, no text or code fences outside the JSON. " +
+    "The output MUST pass JSON.parse without errors." + langInstr;
 
   const result = await callAI(sys, p, 8000, 0.3);
   if (result.error) return res.status(500).json({ error: "AI failed: " + result.error });
   try {
-    const resume = JSON.parse(extractJSON(result.text).replace(/,\s*([}\]])/g, "$1"));
+    let resume = JSON.parse(extractJSON(result.text).replace(/,\s*([}\]])/g, "$1"));
     // Post-process: clean empty data
     if (resume.skills) resume.skills = resume.skills.filter(function(s) { return s.category && s.items && s.items.length > 0; });
     if (resume.education) resume.education = resume.education.filter(function(e) { return e.degree && e.degree !== "Not Applicable" && e.degree !== "N/A" && e.degree !== "Not specified"; });
     if (resume.certifications) resume.certifications = resume.certifications.filter(function(c) { return c.name && c.name.trim() && c.name !== "None" && c.name !== "N/A"; });
+
+    // ── Enforce the 12 rules, deterministically ─────────────────────────
+    // The prompt asks; this guarantees. A model told "never emit a
+    // placeholder" still does it occasionally, and one "[ADD METRIC: what
+    // percentage?]" reaching a recruiter costs more than every other defect
+    // on the page combined.
+    var ruleReport = [];
+    try {
+      var cleaned = sanitizeResumeJSON(resume, {
+        targetPages: pageTarget,
+        maxBulletsPerRole: bc[0] || 5,
+        maxSummarySentences: 3,
+        dropNonUSLocation: isUSTarget(u.targetCountry)
+      });
+      resume = cleaned.resume;
+      ruleReport = cleaned.removed;
+    } catch (se) { /* sanitising must never break generation */ }
     // Check every number the model wrote against what the candidate supplied.
     // This path had no validation at all, which is how invented metrics reached
     // real resumes. Never blocks the response — the user still gets their
@@ -210,8 +318,18 @@ async function jsonMode(res, u) {
       };
     } catch (ve) { /* validation must never break generation */ }
 
-    return res.status(200).json({ resume: resume, model: result.model, validation: validation });
-  } catch (e) { return res.status(200).json({ result: result.text, model: result.model, jsonError: true }); }
+    return res.status(200).json({
+      resume: resume, model: result.model, validation: validation,
+      targetPages: pageTarget,
+      rulesApplied: ruleReport
+    });
+  } catch (e) {
+    // Legacy text path: the same rules still apply, just against prose.
+    return res.status(200).json({
+      result: sanitizeResumeText(result.text), model: result.model,
+      targetPages: pageTarget, jsonError: true
+    });
+  }
 }
 
 

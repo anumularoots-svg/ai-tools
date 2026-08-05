@@ -68,14 +68,17 @@ const tooLong = H * 3.5;
 const zFloor = zoomToFit(tooLong, H, 2);
 check('a 3.5-page resume cannot be forced into 2', pagesFor(tooLong * zFloor, H) > 2, true);
 
-console.log('\ntarget pages by seniority (Golden ATS rule)');
+console.log('\ntarget pages by seniority (US convention: 1 page under 10 years)');
 check('a fresher gets one page', targetPagesFor(0), 1);
 check('2 years gets one page', targetPagesFor(2), 1);
-check('3 years gets two pages', targetPagesFor(3), 2);
-check('12 years still gets two pages, never three', targetPagesFor(12), 2);
-check('30 years still gets two pages', targetPagesFor(30), 2);
-check('unknown experience defaults to two', targetPagesFor(undefined), 2);
-check('nonsense experience defaults to two', targetPagesFor('lots'), 2);
+// The rule that changed: four years is a ONE-page resume in the US market.
+check('3 years gets one page', targetPagesFor(3), 1);
+check('4 years gets one page', targetPagesFor(4), 1);
+check('9 years still gets one page', targetPagesFor(9), 1);
+check('10 years gets two pages', targetPagesFor(10), 2);
+check('30 years still gets two pages, never three', targetPagesFor(30), 2);
+check('unknown experience defaults to one', targetPagesFor(undefined), 1);
+check('nonsense experience defaults to one', targetPagesFor('lots'), 1);
 
 console.log('\noverflow advice');
 const ok2 = overflowAdvice(2, 2);

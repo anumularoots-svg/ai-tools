@@ -65,13 +65,16 @@ export function zoomToFit(contentHeightPx, pageHeightPx, targetPages, currentZoo
   return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Number(ideal.toFixed(4))));
 }
 
-// How many pages a resume of this seniority should be. Mirrors the Golden ATS
-// rule, and caps at 2 -- three-page resumes are an executive-only exception
-// this product does not serve.
+// How many pages a resume of this seniority should be.
+//
+// US convention, which is stricter than the generic rule this used to follow:
+// ONE page under ten years, two only beyond that, never three. The old
+// threshold was three years, which sent a four-year candidate to two pages --
+// in the US market that reads as padding and is a screen-out, not a bonus.
 export function targetPagesFor(yearsExperience) {
   const y = Number(yearsExperience);
-  if (!isFinite(y) || y < 0) return 2;
-  return y < 3 ? 1 : 2;
+  if (!isFinite(y) || y < 0) return 1;
+  return y < 10 ? 1 : 2;
 }
 
 // ============================================================================
