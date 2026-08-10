@@ -1,5 +1,5 @@
 // ============================================================================
-// ZapKitt Jobs V0.5 — Single API endpoint (counts as 1 serverless function)
+// ZapKitt Jobs V1 — Single API endpoint (counts as 1 serverless function)
 //
 // Routes via query param `action`:
 //   GET  /api/jobs                    → list jobs
@@ -10,6 +10,8 @@
 // ============================================================================
 import { rateLimit, clientIP } from './_ratelimit.js';
 import { fetchUSAJobs } from './_jobs-source.js';
+import { fetchGreenhouseJobs } from './_jobs-greenhouse.js';
+import { fetchLeverJobs } from './_jobs-lever.js';
 import { classifyJob } from './_jobs-rules.js';
 import { classifyWithAI } from './_jobs-ai.js';
 import { upsertJob, existsByHash, queryJobs, getJobById, getStats, cleanupOldJobs, logCronRun, getLastCronRun, dbReady } from './_jobs-db.js';
@@ -148,10 +150,27 @@ async function handleCron(req, res) {
   const errors = [];
 
   try {
-    // 1. Fetch jobs from USAJOBS
-    log('INFO', 'Starting USAJOBS fetch');
-    const rawJobs = await fetchUSAJobs(log);
+    // 1. Fetch jobs from ALL sources
+    log('INFO', 'Starting job fetch from all sources');
+
+    const [usaJobs, ghJobs, lvJobs] = await Promise.allSettled([
+      fetchUSAJobs(log),
+      fetchGreenhouseJobs(log),
+      fetchLeverJobs(log)
+    ]);
+
+    const rawJobs = [
+      ...(usaJobs.status === 'fulfilled' ? usaJobs.value : []),
+      ...(ghJobs.status === 'fulfilled' ? ghJobs.value : []),
+      ...(lvJobs.status === 'fulfilled' ? lvJobs.value : [])
+    ];
+
+    if (usaJobs.status === 'rejected') log('ERROR', 'USAJOBS source failed: ' + usaJobs.reason?.message);
+    if (ghJobs.status === 'rejected') log('ERROR', 'Greenhouse source failed: ' + ghJobs.reason?.message);
+    if (lvJobs.status === 'rejected') log('ERROR', 'Lever source failed: ' + lvJobs.reason?.message);
+
     fetched = rawJobs.length;
+    log('INFO', `Total from all sources: ${fetched} jobs`);
 
     // 2. Process each job
     for (const job of rawJobs) {
