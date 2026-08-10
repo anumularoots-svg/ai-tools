@@ -67,8 +67,17 @@
     },
     "api/tailor.js": {
       "maxDuration": 60
+    },
+    "api/jobs.js": {
+      "maxDuration": 60
     }
   },
+  "crons": [
+    {
+      "path": "/api/jobs?action=cron",
+      "schedule": "0 6 * * *"
+    }
+  ],
   "redirects": [
     {
       "source": "/career",

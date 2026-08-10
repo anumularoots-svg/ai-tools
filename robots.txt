@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
+Disallow: /jobs
 Sitemap: https://zapkitt.com/sitemap.xml
