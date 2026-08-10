@@ -195,13 +195,10 @@ async function handleCron(req, res) {
         }
 
         // For ambiguous jobs: skip AI to stay within timeout, use partial rules
-        // AI can be run separately later if needed
         const fullJob = { ...job, ...classification, classification_method: 'RULE_PARTIAL' };
         delete fullJob.needs_ai;
         await upsertJob(fullJob);
         inserted++;
-          log('WARN', `AI failed for "${job.title}": ${aiResult.error}`);
-        }
       } catch (e) {
         errors.push(`${job.title}: ${e.message}`);
         log('ERROR', `Processing failed: ${e.message}`);
