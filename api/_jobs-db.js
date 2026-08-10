@@ -12,16 +12,16 @@ function dbReady() { return !!NEON_URL; }
 // ── Lightweight SQL executor (no ORM, minimal) ─────────────────────────────
 // Neon's serverless driver uses HTTP, so no persistent connection pool needed.
 
-async function query(sql, params) {
+async function query(sqlText, params) {
   if (!dbReady()) throw new Error('NEON_DATABASE_URL not configured');
 
   // Dynamic import to avoid breaking existing deploys that don't have the package
   const { neon } = await import('@neondatabase/serverless');
   const sql_fn = neon(NEON_URL);
 
-  // neon() returns a tagged template function. For parameterised queries we
-  // call it as a regular function with the SQL string and params array.
-  const rows = await sql_fn(sql, params);
+  // neon() returns a tagged template function. For conventional parameterised
+  // queries ($1, $2, etc.) use the .query() method instead.
+  const rows = await sql_fn.query(sqlText, params);
   return rows;
 }
 
