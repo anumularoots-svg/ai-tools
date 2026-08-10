@@ -133,11 +133,17 @@ export async function fetchGreenhouseJobs(log) {
       }
 
       // Respectful delay between companies
-      await new Promise(r => setTimeout(r, 300));
+      await new Promise(r => setTimeout(r, 100));
 
     } catch (e) {
       log('WARN', `Greenhouse ${company.name} failed: ${e.message}`);
       companiesErrored++;
+    }
+
+    // Stop after 20 companies per run to stay within serverless timeout
+    if (companiesFetched + companiesErrored >= 20) {
+      log('INFO', 'Greenhouse batch limit reached (20 companies)');
+      break;
     }
   }
 

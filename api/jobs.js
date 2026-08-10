@@ -194,20 +194,12 @@ async function handleCron(req, res) {
           continue;
         }
 
-        // AI fallback for ambiguous jobs
-        aiProcessed++;
-        const aiResult = await classifyWithAI(job.title, job.description);
-        if (aiResult.success) {
-          const fullJob = { ...job, ...aiResult.classification };
-          await upsertJob(fullJob);
-          inserted++;
-        } else {
-          aiFailures++;
-          // Still insert with rule-based partial classification
-          const fullJob = { ...job, ...classification, classification_method: 'RULE_PARTIAL' };
-          delete fullJob.needs_ai;
-          await upsertJob(fullJob);
-          inserted++;
+        // For ambiguous jobs: skip AI to stay within timeout, use partial rules
+        // AI can be run separately later if needed
+        const fullJob = { ...job, ...classification, classification_method: 'RULE_PARTIAL' };
+        delete fullJob.needs_ai;
+        await upsertJob(fullJob);
+        inserted++;
           log('WARN', `AI failed for "${job.title}": ${aiResult.error}`);
         }
       } catch (e) {

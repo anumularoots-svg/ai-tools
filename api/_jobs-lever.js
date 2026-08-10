@@ -149,11 +149,17 @@ export async function fetchLeverJobs(log) {
       }
 
       // Respectful delay
-      await new Promise(r => setTimeout(r, 300));
+      await new Promise(r => setTimeout(r, 100));
 
     } catch (e) {
       log('WARN', `Lever ${company.name} failed: ${e.message}`);
       companiesErrored++;
+    }
+
+    // Stop after 10 companies per run to stay within serverless timeout
+    if (companiesFetched + companiesErrored >= 10) {
+      log('INFO', 'Lever batch limit reached (10 companies)');
+      break;
     }
   }
 
