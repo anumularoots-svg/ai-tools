@@ -12,13 +12,10 @@ import { rateLimit, clientIP } from './_ratelimit.js';
 import { fetchUSAJobs } from './_jobs-source.js';
 import { fetchGreenhouseJobs } from './_jobs-greenhouse.js';
 import { fetchLeverJobs } from './_jobs-lever.js';
-import { fetchIndiaGreenhouseJobs } from './_jobs-india.js';
-import { fetchIndeedIndiaJobs } from './_jobs-indeed-india.js';
-import { fetchAdzunaIndiaJobs } from './_jobs-adzuna-india.js';
 import { classifyJob } from './_jobs-rules.js';
 import { classifyWithAI } from './_jobs-ai.js';
 import { enrichJobsWithLCA } from './_jobs-lca.js';
-import { upsertJob, existsByHash, queryJobs, getJobById, getStats, getIndiaStats, cleanupOldJobs, logCronRun, getLastCronRun, dbReady } from './_jobs-db.js';
+import { upsertJob, existsByHash, queryJobs, getJobById, getStats, cleanupOldJobs, logCronRun, getLastCronRun, dbReady } from './_jobs-db.js';
 import { RETENTION_DAYS } from './_jobs-config.js';
 
 // ── Owner check ─────────────────────────────────────────────────────────────
@@ -59,11 +56,9 @@ export default async function handler(req, res) {
   try {
     switch (action) {
       case 'cron':        return await handleCron(req, res);
-      case 'india-cron':  return await handleIndiaCron(req, res);
       case 'debug':       return await handleDebug(req, res);
       case 'detail':      return await handleDetail(req, res);
       case 'stats':       return await handleStats(req, res);
-      case 'india-stats': return await handleIndiaStats(req, res);
       default:            return await handleList(req, res);
     }
   } catch (e) {
@@ -258,87 +253,6 @@ async function handleCron(req, res) {
       duration_ms: duration
     }).catch(() => {});
 
-    return res.status(500).json({ error: e.message, logs });
-  }
-}
-
-// ── INDIA STATS ──────────────────────────────────────────────────────────────
-async function handleIndiaStats(req, res) {
-  if (!isOwner(req)) return res.status(403).json({ error: 'Access denied' });
-  const stats = await getIndiaStats();
-  return res.status(200).json(stats);
-}
-
-// ── INDIA CRON ───────────────────────────────────────────────────────────────
-async function handleIndiaCron(req, res) {
-  const cronSecret = process.env.CRON_SECRET;
-  const authHeader = req.headers['authorization'];
-  if (cronSecret && authHeader === 'Bearer ' + cronSecret) { /* ok */ }
-  else if (isOwner(req)) { /* ok */ }
-  else { return res.status(403).json({ error: 'Unauthorized' }); }
-
-  const startTime = Date.now();
-  const logs = [];
-  const log = (level, msg) => {
-    logs.push({ time: new Date().toISOString(), level, msg });
-    console.log(`[india-cron] ${level}: ${msg}`);
-  };
-
-  let fetched = 0, inserted = 0, duplicates = 0, errors = [];
-
-  try {
-    log('INFO', 'Starting India jobs fetch from all sources');
-
-    // Fetch from all sources in parallel
-    const [ghResult, indeedResult, adzunaResult] = await Promise.allSettled([
-      fetchIndiaGreenhouseJobs(log),
-      fetchIndeedIndiaJobs(log),
-      fetchAdzunaIndiaJobs(log)
-    ]);
-
-    const rawJobs = [
-      ...(ghResult.status === 'fulfilled' ? ghResult.value : []),
-      ...(indeedResult.status === 'fulfilled' ? indeedResult.value : []),
-      ...(adzunaResult.status === 'fulfilled' ? adzunaResult.value : [])
-    ];
-
-    if (ghResult.status === 'rejected') log('ERROR', 'India GH failed: ' + ghResult.reason?.message);
-    if (indeedResult.status === 'rejected') log('ERROR', 'Indeed failed: ' + indeedResult.reason?.message);
-    if (adzunaResult.status === 'rejected') log('ERROR', 'Adzuna failed: ' + adzunaResult.reason?.message);
-
-    fetched = rawJobs.length;
-    log('INFO', `Total India jobs: ${fetched}`);
-
-    for (const job of rawJobs) {
-      try {
-        const exists = await existsByHash(job.job_hash);
-        if (exists) { duplicates++; continue; }
-
-        const classification = classifyJob(job);
-        const fullJob = { ...job, ...classification };
-        delete fullJob.needs_ai;
-        delete fullJob.is_fresher;
-        await upsertJob(fullJob);
-        inserted++;
-      } catch (e) {
-        errors.push(`${job.title}: ${e.message}`);
-        log('ERROR', `Processing failed: ${e.message}`);
-      }
-    }
-
-    const cleaned = await cleanupOldJobs(RETENTION_DAYS, 'IN');
-    if (cleaned > 0) log('INFO', `Cleaned up ${cleaned} old India jobs`);
-
-    const duration = Date.now() - startTime;
-    log('INFO', `India done in ${duration}ms: ${fetched} fetched, ${inserted} inserted, ${duplicates} duplicates`);
-
-    return res.status(200).json({
-      success: true, fetched, inserted, duplicates,
-      errors_count: errors.length, duration_ms: duration, logs
-    });
-
-  } catch (e) {
-    log('ERROR', `India cron failed: ${e.message}`);
     return res.status(500).json({ error: e.message, logs });
   }
 }

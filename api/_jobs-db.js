@@ -162,12 +162,6 @@ export async function queryJobs(filters) {
     conditions.push('is_it_job = true');
   }
 
-  if (filters.country) {
-    conditions.push(`country = $${pi}`);
-    params.push(filters.country);
-    pi++;
-  }
-
   // Posted filter
   if (filters.posted) {
     let hours = 24;
@@ -256,33 +250,10 @@ export async function getStats() {
 
 // ── Cleanup ─────────────────────────────────────────────────────────────────
 
-export async function cleanupOldJobs(days, country) {
-  let sql = `DELETE FROM jobs WHERE posted_at < NOW() - INTERVAL '${days || 7} days'`;
-  if (country) sql += ` AND country = '${country}'`;
-  sql += ' RETURNING id';
+export async function cleanupOldJobs(days) {
+  const sql = `DELETE FROM jobs WHERE posted_at < NOW() - INTERVAL '${days || 7} days' RETURNING id`;
   const rows = await query(sql, []);
   return rows.length;
-}
-
-export async function getIndiaStats() {
-  const sql = `
-    SELECT
-      COUNT(*)::int as total,
-      COUNT(*) FILTER (WHERE is_it_job = true OR is_it_job IS NULL)::int as it_jobs,
-      COUNT(*) FILTER (WHERE remote_type IN ('REMOTE_US','REMOTE_GLOBAL') OR location_raw ILIKE '%remote%')::int as remote,
-      COUNT(*) FILTER (WHERE city ILIKE '%Hyderabad%')::int as hyderabad,
-      COUNT(*) FILTER (WHERE city ILIKE '%Bangalore%' OR city ILIKE '%Bengaluru%')::int as bangalore,
-      COUNT(*) FILTER (WHERE city ILIKE '%Chennai%')::int as chennai,
-      COUNT(*) FILTER (WHERE city ILIKE '%Pune%')::int as pune,
-      COUNT(*) FILTER (WHERE posted_at >= NOW() - INTERVAL '24 hours')::int as last_24h,
-      COUNT(*) FILTER (WHERE posted_at >= NOW() - INTERVAL '3 days')::int as last_3d,
-      COUNT(*) FILTER (WHERE source = 'indeed_india')::int as from_indeed,
-      COUNT(*) FILTER (WHERE source = 'greenhouse_india')::int as from_greenhouse,
-      MAX(posted_at) as newest
-    FROM jobs WHERE status = 'active' AND country = 'IN'
-  `;
-  const rows = await query(sql, []);
-  return rows[0] || {};
 }
 
 // ── Log cron run ────────────────────────────────────────────────────────────
