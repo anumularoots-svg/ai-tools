@@ -40,6 +40,7 @@ export async function upsertJob(job) {
       is_it_job, it_category, classification_method, classification_confidence,
       h1b_status, h1b_confidence, h1b_evidence,
       sponsorship_status, sponsorship_confidence, sponsorship_evidence,
+      h1b_lca_status, h1b_lca_filings, h1b_lca_latest, h1b_lca_wage_median, h1b_lca_evidence,
       posted_at, first_seen_at, last_seen_at,
       job_hash, status
     ) VALUES (
@@ -53,8 +54,9 @@ export async function upsertJob(job) {
       $21, $22, $23, $24,
       $25, $26, $27,
       $28, $29, $30,
-      $31, NOW(), NOW(),
-      $32, 'active'
+      $31, $32, $33, $34, $35,
+      $36, NOW(), NOW(),
+      $37, 'active'
     )
     ON CONFLICT (source, external_id) DO UPDATE SET
       last_seen_at = NOW(),
@@ -68,6 +70,11 @@ export async function upsertJob(job) {
       sponsorship_status = COALESCE(EXCLUDED.sponsorship_status, jobs.sponsorship_status),
       sponsorship_confidence = GREATEST(EXCLUDED.sponsorship_confidence, jobs.sponsorship_confidence),
       sponsorship_evidence = COALESCE(NULLIF(EXCLUDED.sponsorship_evidence, ''), jobs.sponsorship_evidence),
+      h1b_lca_status = COALESCE(EXCLUDED.h1b_lca_status, jobs.h1b_lca_status),
+      h1b_lca_filings = COALESCE(EXCLUDED.h1b_lca_filings, jobs.h1b_lca_filings),
+      h1b_lca_latest = COALESCE(EXCLUDED.h1b_lca_latest, jobs.h1b_lca_latest),
+      h1b_lca_wage_median = COALESCE(EXCLUDED.h1b_lca_wage_median, jobs.h1b_lca_wage_median),
+      h1b_lca_evidence = COALESCE(NULLIF(EXCLUDED.h1b_lca_evidence, ''), jobs.h1b_lca_evidence),
       remote_type = COALESCE(EXCLUDED.remote_type, jobs.remote_type),
       skills = COALESCE(EXCLUDED.skills, jobs.skills),
       updated_at = NOW()
@@ -85,6 +92,8 @@ export async function upsertJob(job) {
     job.is_it_job, job.it_category, job.classification_method, job.classification_confidence,
     job.h1b_status, job.h1b_confidence, job.h1b_evidence,
     job.sponsorship_status, job.sponsorship_confidence, job.sponsorship_evidence,
+    job.h1b_lca_status || null, job.h1b_lca_filings || null, job.h1b_lca_latest || null,
+    job.h1b_lca_wage_median || null, job.h1b_lca_evidence || null,
     job.posted_at,
     job.job_hash
   ];

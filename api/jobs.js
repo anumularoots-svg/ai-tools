@@ -17,6 +17,7 @@ import { fetchIndeedIndiaJobs } from './_jobs-indeed-india.js';
 import { fetchAdzunaIndiaJobs } from './_jobs-adzuna-india.js';
 import { classifyJob } from './_jobs-rules.js';
 import { classifyWithAI } from './_jobs-ai.js';
+import { enrichJobsWithLCA } from './_jobs-lca.js';
 import { upsertJob, existsByHash, queryJobs, getJobById, getStats, getIndiaStats, cleanupOldJobs, logCronRun, getLastCronRun, dbReady } from './_jobs-db.js';
 import { RETENTION_DAYS } from './_jobs-config.js';
 
@@ -180,8 +181,12 @@ async function handleCron(req, res) {
     fetched = rawJobs.length;
     log('INFO', `Total from all sources: ${fetched} jobs`);
 
-    // 2. Process each job
-    for (const job of rawJobs) {
+    // 2. Enrich with LCA H1B data from DOL database
+    log('INFO', 'Enriching with LCA H1B signals from DOL database');
+    const enrichedJobs = await enrichJobsWithLCA(rawJobs, log);
+
+    // 3. Process each job
+    for (const job of enrichedJobs) {
       try {
         // Check duplicate by hash
         const exists = await existsByHash(job.job_hash);

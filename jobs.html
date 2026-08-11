@@ -60,6 +60,15 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
 .badge.hybrid{background:#E0E7FF;color:#3730A3}
 .badge.onsite{background:#F3F4F6;color:#4B5563}
 .badge.category{background:#EDE9FE;color:#6C3CE1}
+.badge.lca-strong{background:#064E3B;color:#fff}
+.badge.lca-active{background:#065F46;color:#fff}
+.badge.lca-occasional{background:#D1FAE5;color:#065F46}
+.badge.lca-stopped{background:#FEE2E2;color:#991B1B}
+.lca-box{background:#F0FDF4;border:1px solid #6EE7B7;border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.lca-box h4{font-size:11px;font-weight:700;color:#065F46;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.lca-stat{display:inline-block;margin-right:20px;margin-bottom:4px}
+.lca-stat b{display:block;font-size:18px;font-weight:800;color:#059669}
+.lca-stat small{font-size:11px;color:#6B7280}
 .job-skills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
 .skill-tag{padding:2px 8px;border-radius:6px;font-size:11px;background:#F3F4F6;color:#374151;font-weight:500}
 .job-actions{display:flex;gap:8px}
@@ -333,6 +342,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
         '<div class="job-badges">' +
           (j.it_category?'<span class="badge category">'+esc(j.it_category)+'</span>':'')+
           h1bBadge(j.h1b_status)+sponsorBadge(j.sponsorship_status)+remoteBadge(j.remote_type)+
+          lcaBadge(j.h1b_lca_status, j.h1b_lca_filings)+
         '</div>' +
         (skills?'<div class="job-skills">'+skills+'</div>':'')+
         '<div class="job-actions">' +
@@ -381,6 +391,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
           '</div>' +
           (j.h1b_evidence?'<div class="evidence-box">✅ H1B evidence: "'+esc(j.h1b_evidence)+'"</div>':'')+
           (j.sponsorship_evidence?'<div class="evidence-box">✅ Sponsorship: "'+esc(j.sponsorship_evidence)+'"</div>':'')+
+          (j.h1b_lca_status ? lcaDetailBox(j) : '') +
           (skills?'<div class="job-skills" style="margin-bottom:16px">'+skills+'</div>':'')+
         '</div>' +
         '<div class="detail-desc">'+desc+'</div>' +
@@ -430,6 +441,35 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
     if (s==='EXPLICIT') return '<span class="badge h1b-explicit">H1B ✓</span>';
     if (s==='NOT_SUPPORTED') return '<span class="badge h1b-not">No H1B</span>';
     return '<span class="badge h1b-unknown">H1B ?</span>';
+  }
+  function lcaBadge(s, filings){
+    if (!s) return '';
+    if (s==='STRONG_SPONSOR') return '<span class="badge lca-strong">🏆 '+filings+'+ LCA Filed</span>';
+    if (s==='ACTIVE_SPONSOR') return '<span class="badge lca-active">✅ LCA Verified</span>';
+    if (s==='OCCASIONAL_SPONSOR') return '<span class="badge lca-occasional">📋 LCA On Record</span>';
+    if (s==='STOPPED') return '<span class="badge lca-stopped">⚠️ No Recent LCA</span>';
+    return '';
+  }
+
+  function lcaDetailBox(j) {
+    if (!j.h1b_lca_status) return '';
+    var label = {
+      'STRONG_SPONSOR': '🏆 Strong H1B Sponsor — DOL Verified',
+      'ACTIVE_SPONSOR': '✅ Active H1B Sponsor — DOL Verified',
+      'OCCASIONAL_SPONSOR': '📋 Occasional H1B Sponsor — DOL Record',
+      'STOPPED': '⚠️ No Recent H1B Filings'
+    }[j.h1b_lca_status] || '';
+    return '<div class="lca-box">' +
+      '<h4>DOL LCA Database — H1B History</h4>' +
+      '<p style="font-weight:600;margin-bottom:8px">'+esc(label)+'</p>' +
+      '<div>' +
+        (j.h1b_lca_filings ? '<span class="lca-stat"><b>'+j.h1b_lca_filings.toLocaleString()+'</b><small>Total LCA Filed</small></span>' : '') +
+        (j.h1b_lca_latest ? '<span class="lca-stat"><b>'+j.h1b_lca_latest.toLocaleString()+'</b><small>Last Year</small></span>' : '') +
+        (j.h1b_lca_wage_median ? '<span class="lca-stat"><b>$'+Math.round(j.h1b_lca_wage_median/1000)+'k</b><small>Median H1B Wage</small></span>' : '') +
+      '</div>' +
+      (j.h1b_lca_evidence ? '<p style="font-size:12px;color:#065F46;margin-top:6px">'+esc(j.h1b_lca_evidence)+'</p>' : '') +
+      '<p style="font-size:11px;color:#9CA3AF;margin-top:6px">Source: US Department of Labor LCA Disclosure Data</p>' +
+    '</div>';
   }
   function sponsorBadge(s){
     if (s==='EXPLICIT') return '<span class="badge sponsor-explicit">Sponsor ✓</span>';

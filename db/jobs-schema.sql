@@ -53,6 +53,13 @@ CREATE TABLE IF NOT EXISTS jobs (
   first_seen_at             TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   last_seen_at              TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
+  -- LCA / DOL enrichment fields
+  h1b_lca_status            TEXT,        -- STRONG_SPONSOR | ACTIVE_SPONSOR | OCCASIONAL_SPONSOR | STOPPED
+  h1b_lca_filings           INT,         -- total certified LCA filings
+  h1b_lca_latest            INT,         -- latest FY certified filings
+  h1b_lca_wage_median       INT,         -- median wage from LCA data
+  h1b_lca_evidence          TEXT,        -- human-readable evidence string
+
   job_hash                  TEXT NOT NULL,
 
   status                    TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active','expired','removed')),
