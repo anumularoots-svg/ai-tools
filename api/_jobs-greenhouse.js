@@ -4,6 +4,9 @@
 // Greenhouse exposes public job boards at:
 //   https://boards-api.greenhouse.io/v1/boards/{board_id}/jobs
 // No authentication required. This is their official public API.
+//
+// Daily rotation ensures ALL companies are covered over time, not just
+// the first 20 alphabetically.
 // ============================================================================
 import { GREENHOUSE_COMPANIES, IT_DEPARTMENT_KEYWORDS } from './_jobs-companies.js';
 import { jobHash } from './_jobs-source.js';
@@ -82,7 +85,17 @@ export async function fetchGreenhouseJobs(log) {
   let companiesFetched = 0;
   let companiesErrored = 0;
 
-  for (const company of GREENHOUSE_COMPANIES) {
+  // Daily rotation — ensures ALL companies covered over time, not just first 20
+  const dayOfYear = Math.floor(Date.now() / 86400000);
+  const batchSize = 20;
+  const startIdx = (dayOfYear * batchSize) % GREENHOUSE_COMPANIES.length;
+  const rotated = [
+    ...GREENHOUSE_COMPANIES.slice(startIdx),
+    ...GREENHOUSE_COMPANIES.slice(0, startIdx)
+  ];
+  log('INFO', `Greenhouse rotation: batch starting at company ${startIdx + 1}/${GREENHOUSE_COMPANIES.length}`);
+
+  for (const company of rotated) {
     try {
       const url = `https://boards-api.greenhouse.io/v1/boards/${company.board_id}/jobs?content=true`;
       const resp = await fetch(url, {
