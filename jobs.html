@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>ZapKitt Jobs — US IT Jobs Dashboard</title>
+<title>ZapKitt Jobs — US IT Jobs</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,36 +11,33 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-webkit-font-smoothing:antialiased}
 
-/* Auth gate */
 #auth-gate{display:flex;align-items:center;justify-content:center;min-height:80vh;text-align:center}
 #auth-gate h2{font-size:20px;color:#6B7280}
 .hidden{display:none!important}
 
-/* Header */
+/* FIX 1: Header — clean title, no "us US" duplication */
 .jobs-header{max-width:1100px;margin:0 auto;padding:32px 20px 0;text-align:center}
 .jobs-header h1{font-size:clamp(26px,4vw,36px);font-weight:800;letter-spacing:-0.03em;color:#111827}
 .jobs-header h1 span{color:#6C3CE1}
 .jobs-header p{color:#6B7280;margin-top:6px;font-size:14px}
 
-/* Stats bar */
+/* Stats */
 .stats-bar{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:20px auto;max-width:800px;padding:0 20px}
 .stat{background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:10px 16px;text-align:center;min-width:80px}
 .stat b{display:block;font-size:22px;font-weight:800;color:#6C3CE1}
 .stat small{font-size:11px;color:#6B7280;font-weight:500}
 
-/* Search + filters */
+/* Controls */
 .controls{max-width:1100px;margin:20px auto;padding:0 20px}
 .search-row{display:flex;gap:10px;margin-bottom:14px}
 .search-row input{flex:1;padding:10px 14px;border:1px solid #D1D5DB;border-radius:8px;font-size:14px;outline:none;transition:border .15s}
 .search-row input:focus{border-color:#6C3CE1}
 .search-row button{padding:10px 20px;background:#6C3CE1;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px}
 .search-row button:hover{background:#5B32C7}
-
 .filter-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .ftab{padding:6px 14px;border-radius:20px;border:1px solid #E5E7EB;background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:#6B7280;transition:all .15s}
 .ftab:hover{border-color:#C4B5FD;color:#6C3CE1}
 .ftab.active{background:#6C3CE1;color:#fff;border-color:#6C3CE1}
-
 .filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .filter-row select{padding:7px 10px;border:1px solid #D1D5DB;border-radius:8px;font-size:13px;background:#fff;cursor:pointer}
 
@@ -72,39 +69,45 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
 .btn-apply{background:#6C3CE1;color:#fff}
 .btn-apply:hover{background:#5B32C7}
 
-/* Detail view */
-.job-detail{max-width:900px;margin:0 auto;padding:20px;display:none}
-.job-detail.visible{display:block}
-.back-btn{display:inline-flex;align-items:center;gap:6px;color:#6C3CE1;font-weight:600;font-size:14px;cursor:pointer;margin-bottom:16px;text-decoration:none}
-.detail-header h2{font-size:24px;font-weight:800;margin-bottom:6px}
+/* FIX 2: Detail view — proper back button, stays on page */
+#detail-section{display:none;max-width:900px;margin:0 auto;padding:20px 20px 40px}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:#6C3CE1;font-weight:600;font-size:14px;cursor:pointer;margin-bottom:20px;padding:8px 16px;background:#EDE9FE;border-radius:8px;border:none;transition:background .15s}
+.back-btn:hover{background:#DDD6FE}
+.detail-card{background:#fff;border:1px solid #E5E7EB;border-radius:16px;padding:28px;margin-bottom:16px}
+.detail-card h2{font-size:22px;font-weight:800;color:#111827;margin-bottom:8px;line-height:1.3}
 .detail-meta{color:#6B7280;font-size:14px;margin-bottom:14px}
 .detail-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.detail-desc{background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:20px;line-height:1.7;font-size:14px;color:#374151;white-space:pre-wrap;word-break:break-word;margin-bottom:16px;max-height:600px;overflow-y:auto}
-.detail-source{font-size:12px;color:#9CA3AF;margin-bottom:16px}
-.detail-source b{color:#6B7280}
+.evidence-box{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:10px 14px;font-size:12px;color:#166534;margin-bottom:10px}
+
+/* FIX 3: Job description — render HTML properly */
+.detail-desc{border:1px solid #E5E7EB;border-radius:12px;padding:20px;line-height:1.8;font-size:14px;color:#374151;margin-bottom:16px;max-height:600px;overflow-y:auto;background:#FAFAFA}
+.detail-desc p{margin-bottom:10px}
+.detail-desc ul,.detail-desc ol{padding-left:20px;margin-bottom:10px}
+.detail-desc li{margin-bottom:4px}
+.detail-desc strong,.detail-desc b{font-weight:600;color:#111827}
+.detail-desc h1,.detail-desc h2,.detail-desc h3{font-weight:700;color:#111827;margin:14px 0 6px}
+.detail-desc a{color:#6C3CE1;text-decoration:none}
+
+.detail-source{font-size:12px;color:#9CA3AF;margin-bottom:20px}
+.apply-btn-big{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:#6C3CE1;color:#fff;border-radius:10px;font-weight:700;font-size:15px;text-decoration:none;transition:background .15s}
+.apply-btn-big:hover{background:#5B32C7}
 
 /* Pagination */
 .pagination{display:flex;gap:6px;justify-content:center;padding:20px 0}
 .pagination button{padding:6px 14px;border:1px solid #D1D5DB;border-radius:8px;background:#fff;cursor:pointer;font-size:13px}
 .pagination button.active{background:#6C3CE1;color:#fff;border-color:#6C3CE1}
 .pagination button:disabled{opacity:.4;cursor:default}
-
-/* Loading */
 .loading{text-align:center;padding:40px;color:#9CA3AF;font-size:14px}
 
-/* Mobile */
 @media(max-width:600px){
-  .stats-bar{gap:8px}
-  .stat{min-width:70px;padding:8px 10px}
-  .search-row{flex-direction:column}
-  .job-card{padding:14px}
-  .filter-row{flex-direction:column}
+  .stats-bar{gap:8px}.stat{min-width:70px;padding:8px 10px}
+  .search-row{flex-direction:column}.job-card{padding:14px}
+  .filter-row{flex-direction:column}.detail-card{padding:16px}
 }
 </style>
 </head>
 <body>
 
-<!-- Nav (matches existing ZapKitt) -->
 <nav class="fp-nav"><div class="fp-nav-inner">
   <a href="/" class="fp-logo"><svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="8" fill="#6C3CE1"/><path d="M8 22L14 10l4 7 2-3 4 8" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Zap<span>Kitt</span></a>
   <div class="fp-nav-links">
@@ -124,81 +127,82 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
       <input type="password" id="key-input" placeholder="Owner key" style="padding:10px 14px;border:1px solid #D1D5DB;border-radius:8px;font-size:14px;width:220px">
       <button onclick="tryAccess()" style="padding:10px 20px;background:#6C3CE1;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer">Enter</button>
     </div>
+    <p id="auth-error" style="color:#DC2626;font-size:13px;margin-top:10px;display:none">Invalid key. Try again.</p>
   </div>
 </div>
 
-<!-- Main dashboard (hidden until authenticated) -->
+<!-- Dashboard -->
 <div id="dashboard" class="hidden">
 
+  <!-- FIX 1: Clean header — "US IT Jobs" only, no emoji flag causing "us US" -->
   <div class="jobs-header">
-    <h1>🇺🇸 US IT <span>Jobs</span></h1>
-    <p>Fresh IT positions from top tech companies • Updated daily • H1B & Sponsorship signals</p>
+    <h1>US IT <span>Jobs</span></h1>
+    <p>Fresh IT positions from top tech companies · Updated daily · H1B &amp; Sponsorship signals</p>
   </div>
 
   <div class="stats-bar" id="stats-bar"></div>
 
-  <div class="controls">
-    <div class="search-row">
-      <input type="text" id="search-input" placeholder="Search jobs: Java, Python, DevOps, AWS...">
-      <button onclick="searchJobs()">Search</button>
+  <!-- Job list section -->
+  <div id="list-section">
+    <div class="controls">
+      <div class="search-row">
+        <input type="text" id="search-input" placeholder="Search: Java, Python, DevOps, AWS, Stripe...">
+        <button onclick="searchJobs()">Search</button>
+      </div>
+      <div class="filter-tabs">
+        <span class="ftab active" data-filter="all" onclick="setFilter('all')">All</span>
+        <span class="ftab" data-filter="h1b" onclick="setFilter('h1b')">H1B Sponsor</span>
+        <span class="ftab" data-filter="sponsorship" onclick="setFilter('sponsorship')">Visa Sponsor</span>
+        <span class="ftab" data-filter="remote" onclick="setFilter('remote')">Remote</span>
+      </div>
+      <div class="filter-row">
+        <select id="f-posted" onchange="searchJobs()">
+          <option value="">All time</option>
+          <option value="24h" selected>Last 24 hours</option>
+          <option value="3d">Last 3 days</option>
+          <option value="7d">Last 7 days</option>
+        </select>
+        <select id="f-category" onchange="searchJobs()">
+          <option value="">Category: All</option>
+          <option>Software Engineering</option><option>Java</option><option>.NET</option>
+          <option>Python</option><option>Frontend</option><option>Backend</option>
+          <option>Full Stack</option><option>DevOps</option><option>Cloud</option>
+          <option>Data Engineering</option><option>Data Science</option><option>AI/ML</option>
+          <option>Cybersecurity</option><option>QA/Testing</option><option>SAP</option>
+          <option>Database</option><option>Networking</option><option>IT Support</option>
+          <option>System Administration</option><option>Business Analyst</option>
+        </select>
+        <select id="f-remote" onchange="searchJobs()">
+          <option value="">Remote: Any</option>
+          <option value="REMOTE_US">Remote US</option>
+          <option value="REMOTE_GLOBAL">Remote Global</option>
+          <option value="HYBRID">Hybrid</option>
+          <option value="ONSITE">Onsite</option>
+        </select>
+      </div>
     </div>
 
-    <div class="filter-tabs" id="filter-tabs">
-      <span class="ftab active" data-filter="all" onclick="setFilter('all')">All</span>
-      <span class="ftab" data-filter="h1b" onclick="setFilter('h1b')">H1B Sponsor</span>
-      <span class="ftab" data-filter="sponsorship" onclick="setFilter('sponsorship')">Visa Sponsor</span>
-      <span class="ftab" data-filter="remote" onclick="setFilter('remote')">Remote</span>
+    <div class="job-list" id="job-list">
+      <div class="loading">Loading jobs...</div>
     </div>
-
-    <div class="filter-row">
-      <select id="f-posted" onchange="searchJobs()">
-        <option value="">Posted: Any</option>
-        <option value="24h" selected>Last 24 hours</option>
-        <option value="3d">Last 3 days</option>
-        <option value="7d">Last 7 days</option>
-      </select>
-      <select id="f-category" onchange="searchJobs()">
-        <option value="">Category: All</option>
-        <option>Software Engineering</option><option>Java</option><option>.NET</option>
-        <option>Python</option><option>Frontend</option><option>Backend</option>
-        <option>Full Stack</option><option>DevOps</option><option>Cloud</option>
-        <option>Data Engineering</option><option>Data Science</option><option>AI/ML</option>
-        <option>Cybersecurity</option><option>QA/Testing</option><option>SAP</option>
-        <option>Database</option><option>Networking</option><option>IT Support</option>
-        <option>System Administration</option><option>Business Analyst</option>
-      </select>
-      <select id="f-remote" onchange="searchJobs()">
-        <option value="">Remote: Any</option>
-        <option value="REMOTE_US">Remote US</option>
-        <option value="HYBRID">Hybrid</option>
-        <option value="ONSITE">Onsite</option>
-      </select>
-    </div>
+    <div class="pagination" id="pagination"></div>
   </div>
 
-  <!-- Job list -->
-  <div class="job-list" id="job-list">
-    <div class="loading">Loading jobs...</div>
-  </div>
-
-  <div class="pagination" id="pagination"></div>
-
-  <!-- Job detail (toggle visibility) -->
-  <div class="job-detail" id="job-detail">
-    <a class="back-btn" onclick="hideDetail()">← Back to jobs</a>
+  <!-- FIX 2: Detail section — proper back button, stays on page -->
+  <div id="detail-section">
+    <button class="back-btn" onclick="hideDetail()">← Back to Jobs</button>
     <div id="detail-content"></div>
   </div>
 
 </div>
 
 <footer class="fp-footer">
-  <p>ZapKitt Jobs — Private tool • Data from <a href="https://usajobs.gov" target="_blank">USAJOBS</a>, Greenhouse & Lever public boards • Not affiliated with any listed company</p>
+  <p>ZapKitt Jobs · Private tool · Data from <a href="https://usajobs.gov" target="_blank">USAJOBS</a>, Greenhouse &amp; Lever public boards · Not affiliated with listed companies</p>
 </footer>
 
 <script>
 (function(){
   'use strict';
-
   var OWNER_KEY = '';
   var currentPage = 1;
   var currentFilter = 'all';
@@ -207,8 +211,17 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
   window.tryAccess = function() {
     OWNER_KEY = document.getElementById('key-input').value.trim();
     if (!OWNER_KEY) return;
-    try { localStorage.setItem('zk_owner_key', OWNER_KEY); } catch(e) {}
-    initDashboard();
+    // Test the key with a real API call
+    fetch('/api/jobs?action=stats&owner_key=' + encodeURIComponent(OWNER_KEY))
+      .then(function(r) {
+        if (r.status === 403) {
+          document.getElementById('auth-error').style.display = 'block';
+          OWNER_KEY = '';
+          return;
+        }
+        try { localStorage.setItem('zk_owner_key', OWNER_KEY); } catch(e) {}
+        initDashboard();
+      }).catch(function() { initDashboard(); });
   };
 
   function checkAccess() {
@@ -223,48 +236,32 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
     searchJobs();
   }
 
-  // ── API helper ────────────────────────────────────────────────────────────
+  // ── API ────────────────────────────────────────────────────────────────────
   function api(params) {
     var qs = new URLSearchParams(params);
     qs.set('owner_key', OWNER_KEY);
-    return fetch('/api/jobs?' + qs.toString())
-      .then(function(r) {
-        if (r.status === 403) {
-          localStorage.removeItem('zk_owner_key');
-          location.reload();
-          throw new Error('Access denied');
-        }
-        return r.json();
-      });
+    return fetch('/api/jobs?' + qs.toString()).then(function(r) {
+      if (r.status === 403) { localStorage.removeItem('zk_owner_key'); location.reload(); throw new Error('Access denied'); }
+      return r.json();
+    });
   }
 
-  // ── Stats ─────────────────────────────────────────────────────────────────
+  // ── Stats ──────────────────────────────────────────────────────────────────
   function loadStats() {
     api({ action: 'stats' }).then(function(s) {
-      var bar = document.getElementById('stats-bar');
-      bar.innerHTML =
-        stat(s.total || 0, 'Total') +
-        stat(s.it_jobs || 0, 'IT Jobs') +
-        stat(s.h1b_explicit || 0, 'H1B') +
-        stat(s.sponsorship_explicit || 0, 'Sponsor') +
-        stat(s.remote_us || 0, 'Remote') +
-        stat(s.last_24h || 0, 'Today');
-    }).catch(function() {});
+      document.getElementById('stats-bar').innerHTML =
+        stat(s.total||0,'Total') + stat(s.it_jobs||0,'IT Jobs') +
+        stat(s.h1b_explicit||0,'H1B') + stat(s.sponsorship_explicit||0,'Sponsor') +
+        stat(s.remote_us||0,'Remote') + stat(s.last_24h||0,'Today');
+    }).catch(function(){});
   }
+  function stat(n,l){ return '<div class="stat"><b>'+n+'</b><small>'+l+'</small></div>'; }
 
-  function stat(n, label) {
-    return '<div class="stat"><b>' + n + '</b><small>' + label + '</small></div>';
-  }
-
-  // ── Search / Filter ───────────────────────────────────────────────────────
-  window.searchJobs = function() {
-    currentPage = 1;
-    loadJobs();
-  };
-
+  // ── Search / Filter ────────────────────────────────────────────────────────
+  window.searchJobs = function() { currentPage = 1; loadJobs(); };
   window.setFilter = function(f) {
     currentFilter = f;
-    document.querySelectorAll('.ftab').forEach(function(el) {
+    document.querySelectorAll('.ftab').forEach(function(el){
       el.classList.toggle('active', el.dataset.filter === f);
     });
     searchJobs();
@@ -272,179 +269,161 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
 
   function loadJobs() {
     var params = { page: String(currentPage) };
-    var search = document.getElementById('search-input').value.trim();
-    if (search) params.search = search;
-
+    var s = document.getElementById('search-input').value.trim();
+    if (s) params.search = s;
     var posted = document.getElementById('f-posted').value;
     if (posted) params.posted = posted;
-
-    var category = document.getElementById('f-category').value;
-    if (category) params.category = category;
-
-    var remote = document.getElementById('f-remote').value;
-    if (remote) params.remote = remote;
-
+    var cat = document.getElementById('f-category').value;
+    if (cat) params.category = cat;
+    var rem = document.getElementById('f-remote').value;
+    if (rem) params.remote = rem;
     if (currentFilter === 'h1b') params.h1b = 'EXPLICIT';
     if (currentFilter === 'sponsorship') params.sponsorship = 'EXPLICIT';
     if (currentFilter === 'remote') params.remote = params.remote || 'REMOTE_US';
-
     params.is_it = 'true';
 
     document.getElementById('job-list').innerHTML = '<div class="loading">Loading...</div>';
-    document.getElementById('job-detail').classList.remove('visible');
-    document.getElementById('job-detail').style.display = 'none';
 
-    api(params).then(function(data) {
-      renderJobs(data.jobs || [], data.total || 0, data.pages || 1);
-    }).catch(function(e) {
-      document.getElementById('job-list').innerHTML = '<div class="loading">Failed to load jobs</div>';
-    });
+    api(params).then(function(data){ renderJobs(data.jobs||[], data.total||0, data.pages||1); })
+      .catch(function(){ document.getElementById('job-list').innerHTML = '<div class="loading">Failed to load. Refresh and try again.</div>'; });
   }
 
-  // ── Render jobs ───────────────────────────────────────────────────────────
+  // ── Render jobs ────────────────────────────────────────────────────────────
   function renderJobs(jobs, total, pages) {
     var list = document.getElementById('job-list');
     if (!jobs.length) {
-      list.innerHTML = '<div class="loading">No jobs found. Try different filters.</div>';
+      list.innerHTML = '<div class="loading">No jobs found. Try different filters or click "All time".</div>';
       document.getElementById('pagination').innerHTML = '';
       return;
     }
-
-    list.innerHTML = jobs.map(function(j) {
-      var skills = (j.skills || []).slice(0, 6).map(function(s) {
-        return '<span class="skill-tag">' + esc(s) + '</span>';
-      }).join('');
-
-      return '<div class="job-card" onclick="showDetail(' + j.id + ')">' +
-        '<h3>' + esc(j.title) + '</h3>' +
+    list.innerHTML = jobs.map(function(j){
+      var skills = (j.skills||[]).slice(0,6).map(function(s){ return '<span class="skill-tag">'+esc(s)+'</span>'; }).join('');
+      return '<div class="job-card" onclick="showDetail('+j.id+')">' +
+        '<h3>'+esc(j.title)+'</h3>' +
         '<div class="job-meta">' +
-          '<span>🏢 ' + esc(j.company_name || 'Unknown') + '</span>' +
-          '<span>📍 ' + esc(j.location_raw || j.state || 'US') + '</span>' +
-          '<span>🕐 ' + timeAgo(j.posted_at) + '</span>' +
-          (j.salary_min ? '<span>💰 $' + fmt(j.salary_min) + (j.salary_max ? '–$' + fmt(j.salary_max) : '') + '</span>' : '') +
+          '<span>🏢 '+esc(j.company_name||'Unknown')+'</span>' +
+          '<span>📍 '+esc(j.location_raw||j.state||'US')+'</span>' +
+          '<span>🕐 '+timeAgo(j.posted_at)+'</span>' +
+          (j.salary_min ? '<span>💰 $'+fmt(j.salary_min)+(j.salary_max?'–$'+fmt(j.salary_max):'')+'</span>' : '') +
         '</div>' +
         '<div class="job-badges">' +
-          (j.it_category ? '<span class="badge category">' + esc(j.it_category) + '</span>' : '') +
-          h1bBadge(j.h1b_status) +
-          sponsorBadge(j.sponsorship_status) +
-          remoteBadge(j.remote_type) +
+          (j.it_category?'<span class="badge category">'+esc(j.it_category)+'</span>':'')+
+          h1bBadge(j.h1b_status)+sponsorBadge(j.sponsorship_status)+remoteBadge(j.remote_type)+
         '</div>' +
-        (skills ? '<div class="job-skills">' + skills + '</div>' : '') +
+        (skills?'<div class="job-skills">'+skills+'</div>':'')+
         '<div class="job-actions">' +
-          '<button class="btn-view" onclick="event.stopPropagation();showDetail(' + j.id + ')">Details</button>' +
-          (j.apply_url ? '<a class="btn-apply" href="' + esc(j.apply_url) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Apply ↗</a>' : '') +
-        '</div>' +
-      '</div>';
+          '<button class="btn-view" onclick="event.stopPropagation();showDetail('+j.id+')">Details</button>' +
+          (j.apply_url?'<a class="btn-apply" href="'+esc(j.apply_url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">Apply ↗</a>':'')+
+        '</div></div>';
     }).join('');
 
-    // Pagination
     var pag = document.getElementById('pagination');
     if (pages <= 1) { pag.innerHTML = ''; return; }
-    var html = '';
-    html += '<button ' + (currentPage <= 1 ? 'disabled' : 'onclick="goPage(' + (currentPage-1) + ')"') + '>← Prev</button>';
-    for (var i = 1; i <= Math.min(pages, 10); i++) {
-      html += '<button class="' + (i === currentPage ? 'active' : '') + '" onclick="goPage(' + i + ')">' + i + '</button>';
+    var html = '<button '+(currentPage<=1?'disabled':'onclick="goPage('+(currentPage-1)+')"')+'>← Prev</button>';
+    for (var i=1; i<=Math.min(pages,10); i++){
+      html += '<button class="'+(i===currentPage?'active':'')+'" onclick="goPage('+i+')">'+i+'</button>';
     }
-    html += '<button ' + (currentPage >= pages ? 'disabled' : 'onclick="goPage(' + (currentPage+1) + ')"') + '>Next →</button>';
+    html += '<button '+(currentPage>=pages?'disabled':'onclick="goPage('+(currentPage+1)+')"')+'>Next →</button>';
     pag.innerHTML = html;
   }
 
-  window.goPage = function(p) { currentPage = p; loadJobs(); window.scrollTo(0, 0); };
+  window.goPage = function(p){ currentPage=p; loadJobs(); window.scrollTo(0,0); };
 
-  // ── Detail view ───────────────────────────────────────────────────────────
+  // ── FIX 2 + 3: Detail view — proper back, HTML description rendered ────────
   window.showDetail = function(id) {
-    var detail = document.getElementById('job-detail');
-    var content = document.getElementById('detail-content');
-    content.innerHTML = '<div class="loading">Loading...</div>';
-    detail.style.display = 'block';
-    detail.classList.add('visible');
-    document.getElementById('job-list').style.display = 'none';
-    document.getElementById('pagination').style.display = 'none';
-    document.querySelector('.controls').style.display = 'none';
+    document.getElementById('list-section').style.display = 'none';
+    document.getElementById('detail-section').style.display = 'block';
+    document.getElementById('detail-content').innerHTML = '<div class="loading">Loading job details...</div>';
+    window.scrollTo(0, 0);
 
     api({ action: 'detail', id: String(id) }).then(function(j) {
-      var skills = (j.skills || []).map(function(s) {
-        return '<span class="skill-tag">' + esc(s) + '</span>';
-      }).join('');
+      var skills = (j.skills||[]).map(function(s){ return '<span class="skill-tag">'+esc(s)+'</span>'; }).join('');
 
-      content.innerHTML =
-        '<div class="detail-header"><h2>' + esc(j.title) + '</h2></div>' +
-        '<div class="detail-meta">' +
-          '🏢 ' + esc(j.company_name || 'Unknown') + ' · ' +
-          '📍 ' + esc(j.location_raw || j.state || 'US') + ' · ' +
-          '🕐 ' + timeAgo(j.posted_at) +
-          (j.salary_min ? ' · 💰 $' + fmt(j.salary_min) + (j.salary_max ? '–$' + fmt(j.salary_max) : '') : '') +
+      // FIX 3: Render description as HTML (sanitized), not escaped text
+      var desc = sanitizeHTML(j.description || 'No description available.');
+
+      document.getElementById('detail-content').innerHTML =
+        '<div class="detail-card">' +
+          '<h2>'+esc(j.title)+'</h2>' +
+          '<div class="detail-meta">' +
+            '🏢 <b>'+esc(j.company_name||'Unknown')+'</b> &nbsp;·&nbsp; ' +
+            '📍 '+esc(j.location_raw||j.state||'US')+'&nbsp;·&nbsp;' +
+            '🕐 '+timeAgo(j.posted_at)+
+            (j.salary_min?' &nbsp;·&nbsp; 💰 $'+fmt(j.salary_min)+(j.salary_max?'–$'+fmt(j.salary_max):''):'') +
+          '</div>' +
+          '<div class="detail-badges">' +
+            h1bBadge(j.h1b_status)+sponsorBadge(j.sponsorship_status)+remoteBadge(j.remote_type)+
+            (j.it_category?'<span class="badge category">'+esc(j.it_category)+'</span>':'')+
+          '</div>' +
+          (j.h1b_evidence?'<div class="evidence-box">✅ H1B evidence: "'+esc(j.h1b_evidence)+'"</div>':'')+
+          (j.sponsorship_evidence?'<div class="evidence-box">✅ Sponsorship: "'+esc(j.sponsorship_evidence)+'"</div>':'')+
+          (skills?'<div class="job-skills" style="margin-bottom:16px">'+skills+'</div>':'')+
         '</div>' +
-        '<div class="detail-badges">' +
-          h1bBadge(j.h1b_status) + sponsorBadge(j.sponsorship_status) + remoteBadge(j.remote_type) +
-          (j.it_category ? '<span class="badge category">' + esc(j.it_category) + '</span>' : '') +
-        '</div>' +
-        (j.h1b_evidence ? '<p style="font-size:12px;color:#059669;margin-bottom:8px">H1B evidence: "' + esc(j.h1b_evidence) + '"</p>' : '') +
-        (j.sponsorship_evidence ? '<p style="font-size:12px;color:#059669;margin-bottom:8px">Sponsorship evidence: "' + esc(j.sponsorship_evidence) + '"</p>' : '') +
-        (skills ? '<div class="job-skills" style="margin-bottom:14px">' + skills + '</div>' : '') +
-        '<div class="detail-desc">' + esc(j.description || 'No description available.') + '</div>' +
-        '<div class="detail-source"><b>Source:</b> ' + esc(j.source) + ' · <b>Classification:</b> ' + esc(j.classification_method || '—') +
-          ' (' + ((j.classification_confidence || 0) * 100).toFixed(0) + '% confidence)</div>' +
-        (j.apply_url ? '<a class="btn-apply" href="' + esc(j.apply_url) + '" target="_blank" rel="noopener" style="display:inline-block;padding:12px 28px;font-size:15px;margin-top:8px">Apply on Original Website ↗</a>' : '');
-    }).catch(function() {
-      content.innerHTML = '<div class="loading">Failed to load job details</div>';
+        '<div class="detail-desc">'+desc+'</div>' +
+        '<div class="detail-source">Source: <b>'+esc(j.source)+'</b> · Classification: <b>'+esc(j.classification_method||'—')+'</b> ('+((j.classification_confidence||0)*100).toFixed(0)+'% confidence)</div>' +
+        (j.apply_url?'<a class="apply-btn-big" href="'+esc(j.apply_url)+'" target="_blank" rel="noopener">Apply on '+esc(j.company_name||'Company')+'s Website ↗</a>':'');
+    }).catch(function(){
+      document.getElementById('detail-content').innerHTML = '<div class="loading">Failed to load job details. Go back and try again.</div>';
     });
   };
 
+  // FIX 2: Back button stays on same page, goes back to job list
   window.hideDetail = function() {
-    document.getElementById('job-detail').style.display = 'none';
-    document.getElementById('job-detail').classList.remove('visible');
-    document.getElementById('job-list').style.display = '';
-    document.getElementById('pagination').style.display = '';
-    document.querySelector('.controls').style.display = '';
+    document.getElementById('detail-section').style.display = 'none';
+    document.getElementById('list-section').style.display = 'block';
+    window.scrollTo(0, 0);
   };
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
+  // FIX 3: Sanitize HTML — allow safe tags, strip scripts/iframes
+  function sanitizeHTML(html) {
+    if (!html) return '';
+    // Remove dangerous tags
+    var clean = html
+      .replace(/<script[\s\S]*?<\/script>/gi, '')
+      .replace(/<iframe[\s\S]*?<\/iframe>/gi, '')
+      .replace(/<style[\s\S]*?<\/style>/gi, '')
+      .replace(/on\w+="[^"]*"/gi, '')
+      .replace(/on\w+='[^']*'/gi, '')
+      .replace(/javascript:/gi, '');
+    return clean;
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
   function esc(s) {
     if (!s) return '';
-    var d = document.createElement('div');
-    d.appendChild(document.createTextNode(String(s)));
-    return d.innerHTML;
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
-
-  function fmt(n) { return Number(n).toLocaleString('en-US', { maximumFractionDigits: 0 }); }
-
+  function fmt(n){ return Number(n).toLocaleString('en-US',{maximumFractionDigits:0}); }
   function timeAgo(iso) {
     if (!iso) return 'Unknown';
-    var diff = (Date.now() - new Date(iso).getTime()) / 1000;
-    if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
-    if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
-    if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+    var diff = (Date.now() - new Date(iso).getTime())/1000;
+    if (diff < 3600) return Math.floor(diff/60)+'m ago';
+    if (diff < 86400) return Math.floor(diff/3600)+'h ago';
+    if (diff < 604800) return Math.floor(diff/86400)+'d ago';
     return new Date(iso).toLocaleDateString();
   }
-
-  function h1bBadge(s) {
-    if (s === 'EXPLICIT') return '<span class="badge h1b-explicit">H1B ✓</span>';
-    if (s === 'NOT_SUPPORTED') return '<span class="badge h1b-not">No H1B</span>';
+  function h1bBadge(s){
+    if (s==='EXPLICIT') return '<span class="badge h1b-explicit">H1B ✓</span>';
+    if (s==='NOT_SUPPORTED') return '<span class="badge h1b-not">No H1B</span>';
     return '<span class="badge h1b-unknown">H1B ?</span>';
   }
-  function sponsorBadge(s) {
-    if (s === 'EXPLICIT') return '<span class="badge sponsor-explicit">Sponsor ✓</span>';
-    if (s === 'NOT_SUPPORTED') return '<span class="badge sponsor-not">No Sponsor</span>';
+  function sponsorBadge(s){
+    if (s==='EXPLICIT') return '<span class="badge sponsor-explicit">Sponsor ✓</span>';
+    if (s==='NOT_SUPPORTED') return '<span class="badge sponsor-not">No Sponsor</span>';
     return '<span class="badge sponsor-unknown">Sponsor ?</span>';
   }
-  function remoteBadge(s) {
-    if (s === 'REMOTE_US') return '<span class="badge remote">Remote US</span>';
-    if (s === 'REMOTE_GLOBAL') return '<span class="badge remote">Remote Global</span>';
-    if (s === 'HYBRID') return '<span class="badge hybrid">Hybrid</span>';
-    if (s === 'ONSITE') return '<span class="badge onsite">Onsite</span>';
+  function remoteBadge(s){
+    if (s==='REMOTE_US') return '<span class="badge remote">Remote US</span>';
+    if (s==='REMOTE_GLOBAL') return '<span class="badge remote">Remote Global</span>';
+    if (s==='HYBRID') return '<span class="badge hybrid">Hybrid</span>';
+    if (s==='ONSITE') return '<span class="badge onsite">Onsite</span>';
     return '';
   }
 
-  // Enter key on search
-  document.getElementById('search-input').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') searchJobs();
-  });
-  document.getElementById('key-input').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') tryAccess();
-  });
+  // FIX 4: Enter key triggers search/login
+  document.getElementById('search-input').addEventListener('keydown', function(e){ if(e.key==='Enter') searchJobs(); });
+  document.getElementById('key-input').addEventListener('keydown', function(e){ if(e.key==='Enter') tryAccess(); });
 
-  // Init
   checkAccess();
 })();
 </script>
