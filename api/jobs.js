@@ -13,6 +13,7 @@ import { fetchUSAJobs } from './_jobs-source.js';
 import { fetchGreenhouseJobs } from './_jobs-greenhouse.js';
 import { fetchLeverJobs } from './_jobs-lever.js';
 import { fetchIndiaGreenhouseJobs } from './_jobs-india.js';
+import { fetchIndeedIndiaJobs } from './_jobs-indeed-india.js';
 import { classifyJob } from './_jobs-rules.js';
 import { classifyWithAI } from './_jobs-ai.js';
 import { upsertJob, existsByHash, queryJobs, getJobById, getStats, getIndiaStats, cleanupOldJobs, logCronRun, getLastCronRun, dbReady } from './_jobs-db.js';
@@ -279,9 +280,24 @@ async function handleIndiaCron(req, res) {
   let fetched = 0, inserted = 0, duplicates = 0, errors = [];
 
   try {
-    log('INFO', 'Starting India jobs fetch');
-    const rawJobs = await fetchIndiaGreenhouseJobs(log);
+    log('INFO', 'Starting India jobs fetch from all sources');
+
+    // Fetch from both sources in parallel
+    const [ghResult, indeedResult] = await Promise.allSettled([
+      fetchIndiaGreenhouseJobs(log),
+      fetchIndeedIndiaJobs(log)
+    ]);
+
+    const rawJobs = [
+      ...(ghResult.status === 'fulfilled' ? ghResult.value : []),
+      ...(indeedResult.status === 'fulfilled' ? indeedResult.value : [])
+    ];
+
+    if (ghResult.status === 'rejected') log('ERROR', 'India GH failed: ' + ghResult.reason?.message);
+    if (indeedResult.status === 'rejected') log('ERROR', 'Indeed failed: ' + indeedResult.reason?.message);
+
     fetched = rawJobs.length;
+    log('INFO', `Total India jobs: ${fetched}`);
 
     for (const job of rawJobs) {
       try {

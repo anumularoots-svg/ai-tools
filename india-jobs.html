@@ -228,8 +228,9 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
     api({ action: 'india-stats' }).then(function(s) {
       document.getElementById('stats-bar').innerHTML =
         '<div class="stat"><b>'+(s.total||0)+'</b><small>Total Jobs</small></div>' +
-        '<div class="stat"><b>'+(s.it_jobs||0)+'</b><small>IT Jobs</small></div>' +
-        '<div class="stat"><b>'+(s.remote||0)+'</b><small>💻 WFH</small></div>' +
+        '<div class="stat" onclick="setFilter(\'remote\')" style="cursor:pointer"><b>'+(s.remote||0)+'</b><small>💻 WFH</small></div>' +
+        '<div class="stat" onclick="setFilter(\'hyd\')" style="cursor:pointer"><b>'+(s.hyderabad||0)+'</b><small>📍 Hyderabad</small></div>' +
+        '<div class="stat" onclick="setFilter(\'bang\')" style="cursor:pointer"><b>'+(s.bangalore||0)+'</b><small>📍 Bangalore</small></div>' +
         '<div class="stat"><b>'+(s.last_24h||0)+'</b><small>🕐 Today</small></div>' +
         '<div class="stat"><b>'+(s.last_3d||0)+'</b><small>Last 3 Days</small></div>';
     }).catch(function(){});
