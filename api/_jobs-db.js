@@ -131,6 +131,12 @@ export async function queryJobs(filters) {
     pi++;
   }
 
+  // H1B holders tab: exclude jobs that explicitly say NO sponsorship
+  // H1B holders don't need sponsorship so they can apply to EXPLICIT + UNKNOWN jobs
+  if (filters.h1b_not === 'exclude') {
+    conditions.push(`h1b_status != 'NOT_SUPPORTED'`);
+  }
+
   if (filters.sponsorship) {
     conditions.push(`sponsorship_status = $${pi}`);
     params.push(filters.sponsorship);
@@ -218,6 +224,7 @@ export async function getStats() {
       COUNT(*)::int as total,
       COUNT(*) FILTER (WHERE is_it_job = true)::int as it_jobs,
       COUNT(*) FILTER (WHERE h1b_status = 'EXPLICIT')::int as h1b_explicit,
+      COUNT(*) FILTER (WHERE h1b_status != 'NOT_SUPPORTED')::int as h1b_holders_ok,
       COUNT(*) FILTER (WHERE sponsorship_status = 'EXPLICIT')::int as sponsorship_explicit,
       COUNT(*) FILTER (WHERE remote_type = 'REMOTE_US')::int as remote_us,
       COUNT(*) FILTER (WHERE remote_type = 'HYBRID')::int as hybrid,

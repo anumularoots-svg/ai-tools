@@ -79,6 +79,7 @@ async function handleList(req, res) {
     location: req.query?.location,
     category: req.query?.category,
     h1b: req.query?.h1b,
+    h1b_not: req.query?.h1b_not,
     sponsorship: req.query?.sponsorship,
     remote: req.query?.remote,
     is_it: req.query?.is_it,

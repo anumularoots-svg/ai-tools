@@ -150,10 +150,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
         <button onclick="searchJobs()">Search</button>
       </div>
       <div class="filter-tabs">
-        <span class="ftab active" data-filter="all" onclick="setFilter('all')">All</span>
-        <span class="ftab" data-filter="h1b" onclick="setFilter('h1b')">H1B Sponsor</span>
-        <span class="ftab" data-filter="sponsorship" onclick="setFilter('sponsorship')">Visa Sponsor</span>
-        <span class="ftab" data-filter="remote" onclick="setFilter('remote')">Remote</span>
+        <span class="ftab active" data-filter="all" onclick="setFilter('all')">🔍 All IT Jobs</span>
+        <span class="ftab" data-filter="h1b" onclick="setFilter('h1b')">✈️ Will Sponsor H1B</span>
+        <span class="ftab" data-filter="h1b_holder" onclick="setFilter('h1b_holder')">🟢 H1B Holders OK</span>
+        <span class="ftab" data-filter="remote" onclick="setFilter('remote')">💻 Remote US</span>
       </div>
       <div class="filter-row">
         <select id="f-posted" onchange="searchJobs()">
@@ -250,20 +250,34 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
   function loadStats() {
     api({ action: 'stats' }).then(function(s) {
       document.getElementById('stats-bar').innerHTML =
-        stat(s.total||0,'Total') + stat(s.it_jobs||0,'IT Jobs') +
-        stat(s.h1b_explicit||0,'H1B') + stat(s.sponsorship_explicit||0,'Sponsor') +
-        stat(s.remote_us||0,'Remote') + stat(s.last_24h||0,'Today');
+        stat(s.total||0,          'Total Jobs',      'all') +
+        stat(s.h1b_explicit||0,   '✈️ Will Sponsor', 'h1b') +
+        stat(s.h1b_holders_ok||0, '🟢 H1B OK',       'h1b_holder') +
+        stat(s.remote_us||0,      '💻 Remote US',    'remote') +
+        stat(s.last_24h||0,       '🕐 Today',        'all');
     }).catch(function(){});
   }
-  function stat(n,l){ return '<div class="stat"><b>'+n+'</b><small>'+l+'</small></div>'; }
+  function stat(n, l, filter) {
+    var clickable = filter !== 'all';
+    return '<div class="stat" '+(clickable ? 'onclick="setFilter(\''+filter+'\')" style="cursor:pointer;transition:box-shadow .15s" onmouseover="this.style.boxShadow=\'0 2px 8px rgba(108,60,225,.2)\'" onmouseout="this.style.boxShadow=\'\'"' : '')+
+      '><b>'+n+'</b><small>'+l+'</small></div>';
+  }
 
   // ── Search / Filter ────────────────────────────────────────────────────────
   window.searchJobs = function() { currentPage = 1; loadJobs(); };
+
+  // FIX: When switching tabs, reset posted filter to "All time" so counts match stats
   window.setFilter = function(f) {
     currentFilter = f;
     document.querySelectorAll('.ftab').forEach(function(el){
       el.classList.toggle('active', el.dataset.filter === f);
     });
+    // Reset posted filter when switching tabs — otherwise H1B/Sponsor shows 0
+    if (f !== 'all') {
+      document.getElementById('f-posted').value = '';
+    } else {
+      document.getElementById('f-posted').value = '24h';
+    }
     searchJobs();
   };
 
@@ -277,9 +291,19 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
     if (cat) params.category = cat;
     var rem = document.getElementById('f-remote').value;
     if (rem) params.remote = rem;
-    if (currentFilter === 'h1b') params.h1b = 'EXPLICIT';
-    if (currentFilter === 'sponsorship') params.sponsorship = 'EXPLICIT';
-    if (currentFilter === 'remote') params.remote = params.remote || 'REMOTE_US';
+
+    // Tab filters
+    if (currentFilter === 'h1b') {
+      // Will sponsor H1B — company explicitly offers H1B sponsorship
+      params.h1b = 'EXPLICIT';
+    } else if (currentFilter === 'h1b_holder') {
+      // H1B holders OK — jobs that are NOT saying "no sponsorship"
+      // meaning existing H1B holders can apply freely
+      params.h1b_not = 'exclude';
+    } else if (currentFilter === 'remote') {
+      if (!rem) params.remote = 'REMOTE_US';
+    }
+
     params.is_it = 'true';
 
     document.getElementById('job-list').innerHTML = '<div class="loading">Loading...</div>';
