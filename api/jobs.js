@@ -12,9 +12,11 @@ import { rateLimit, clientIP } from './_ratelimit.js';
 import { fetchUSAJobs } from './_jobs-source.js';
 import { fetchGreenhouseJobs } from './_jobs-greenhouse.js';
 import { fetchLeverJobs } from './_jobs-lever.js';
+import { fetchIndiaGreenhouseJobs } from './_jobs-india.js';
 import { classifyJob } from './_jobs-rules.js';
 import { classifyWithAI } from './_jobs-ai.js';
-import { upsertJob, existsByHash, queryJobs, getJobById, getStats, cleanupOldJobs, logCronRun, getLastCronRun, dbReady } from './_jobs-db.js';
+import { upsertJob, existsByHash, queryJobs, getJobById, getStats, getIndiaStats, cleanupOldJobs, logCronRun, getLastCronRun, dbReady } from './_jobs-db.js';
+import { RETENTION_DAYS } from './_jobs-config.js';
 import { RETENTION_DAYS } from './_jobs-config.js';
 
 // ── Owner check ─────────────────────────────────────────────────────────────
@@ -54,11 +56,13 @@ export default async function handler(req, res) {
 
   try {
     switch (action) {
-      case 'cron':   return await handleCron(req, res);
-      case 'debug':  return await handleDebug(req, res);
-      case 'detail': return await handleDetail(req, res);
-      case 'stats':  return await handleStats(req, res);
-      default:       return await handleList(req, res);
+      case 'cron':        return await handleCron(req, res);
+      case 'india-cron':  return await handleIndiaCron(req, res);
+      case 'debug':       return await handleDebug(req, res);
+      case 'detail':      return await handleDetail(req, res);
+      case 'stats':       return await handleStats(req, res);
+      case 'india-stats': return await handleIndiaStats(req, res);
+      default:            return await handleList(req, res);
     }
   } catch (e) {
     console.error('Jobs API error:', e.message);
@@ -83,6 +87,7 @@ async function handleList(req, res) {
     sponsorship: req.query?.sponsorship,
     remote: req.query?.remote,
     is_it: req.query?.is_it,
+    country: req.query?.country,
     posted: req.query?.posted,
     page: req.query?.page,
     limit: req.query?.limit
@@ -246,6 +251,69 @@ async function handleCron(req, res) {
       duration_ms: duration
     }).catch(() => {});
 
+    return res.status(500).json({ error: e.message, logs });
+  }
+}
+
+// ── INDIA STATS ──────────────────────────────────────────────────────────────
+async function handleIndiaStats(req, res) {
+  if (!isOwner(req)) return res.status(403).json({ error: 'Access denied' });
+  const stats = await getIndiaStats();
+  return res.status(200).json(stats);
+}
+
+// ── INDIA CRON ───────────────────────────────────────────────────────────────
+async function handleIndiaCron(req, res) {
+  const cronSecret = process.env.CRON_SECRET;
+  const authHeader = req.headers['authorization'];
+  if (cronSecret && authHeader === 'Bearer ' + cronSecret) { /* ok */ }
+  else if (isOwner(req)) { /* ok */ }
+  else { return res.status(403).json({ error: 'Unauthorized' }); }
+
+  const startTime = Date.now();
+  const logs = [];
+  const log = (level, msg) => {
+    logs.push({ time: new Date().toISOString(), level, msg });
+    console.log(`[india-cron] ${level}: ${msg}`);
+  };
+
+  let fetched = 0, inserted = 0, duplicates = 0, errors = [];
+
+  try {
+    log('INFO', 'Starting India jobs fetch');
+    const rawJobs = await fetchIndiaGreenhouseJobs(log);
+    fetched = rawJobs.length;
+
+    for (const job of rawJobs) {
+      try {
+        const exists = await existsByHash(job.job_hash);
+        if (exists) { duplicates++; continue; }
+
+        const classification = classifyJob(job);
+        const fullJob = { ...job, ...classification };
+        delete fullJob.needs_ai;
+        delete fullJob.is_fresher;
+        await upsertJob(fullJob);
+        inserted++;
+      } catch (e) {
+        errors.push(`${job.title}: ${e.message}`);
+        log('ERROR', `Processing failed: ${e.message}`);
+      }
+    }
+
+    const cleaned = await cleanupOldJobs(RETENTION_DAYS, 'IN');
+    if (cleaned > 0) log('INFO', `Cleaned up ${cleaned} old India jobs`);
+
+    const duration = Date.now() - startTime;
+    log('INFO', `India done in ${duration}ms: ${fetched} fetched, ${inserted} inserted, ${duplicates} duplicates`);
+
+    return res.status(200).json({
+      success: true, fetched, inserted, duplicates,
+      errors_count: errors.length, duration_ms: duration, logs
+    });
+
+  } catch (e) {
+    log('ERROR', `India cron failed: ${e.message}`);
     return res.status(500).json({ error: e.message, logs });
   }
 }

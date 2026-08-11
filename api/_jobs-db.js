@@ -153,6 +153,12 @@ export async function queryJobs(filters) {
     conditions.push('is_it_job = true');
   }
 
+  if (filters.country) {
+    conditions.push(`country = $${pi}`);
+    params.push(filters.country);
+    pi++;
+  }
+
   // Posted filter
   if (filters.posted) {
     let hours = 24;
@@ -241,10 +247,28 @@ export async function getStats() {
 
 // ── Cleanup ─────────────────────────────────────────────────────────────────
 
-export async function cleanupOldJobs(days) {
-  const sql = `DELETE FROM jobs WHERE posted_at < NOW() - INTERVAL '${days || 7} days' RETURNING id`;
+export async function cleanupOldJobs(days, country) {
+  let sql = `DELETE FROM jobs WHERE posted_at < NOW() - INTERVAL '${days || 7} days'`;
+  if (country) sql += ` AND country = '${country}'`;
+  sql += ' RETURNING id';
   const rows = await query(sql, []);
   return rows.length;
+}
+
+export async function getIndiaStats() {
+  const sql = `
+    SELECT
+      COUNT(*)::int as total,
+      COUNT(*) FILTER (WHERE is_it_job = true)::int as it_jobs,
+      COUNT(*) FILTER (WHERE remote_type IN ('REMOTE_US','REMOTE_GLOBAL'))::int as remote,
+      COUNT(*) FILTER (WHERE city ILIKE '%Hyderabad%' OR city ILIKE '%Bengaluru%' OR city ILIKE '%Bangalore%')::int as top_cities,
+      COUNT(*) FILTER (WHERE posted_at >= NOW() - INTERVAL '24 hours')::int as last_24h,
+      COUNT(*) FILTER (WHERE posted_at >= NOW() - INTERVAL '3 days')::int as last_3d,
+      MAX(posted_at) as newest
+    FROM jobs WHERE status = 'active' AND country = 'IN'
+  `;
+  const rows = await query(sql, []);
+  return rows[0] || {};
 }
 
 // ── Log cron run ────────────────────────────────────────────────────────────

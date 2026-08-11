@@ -1,0 +1,409 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>ZapKitt India IT Jobs — Fresher Dashboard</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
+<link rel="stylesheet" href="/zapkitt-global.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-webkit-font-smoothing:antialiased}
+#auth-gate{display:flex;align-items:center;justify-content:center;min-height:80vh;text-align:center}
+.hidden{display:none!important}
+
+/* Header — India theme (orange accent) */
+.jobs-header{max-width:1100px;margin:0 auto;padding:32px 20px 0;text-align:center}
+.jobs-header h1{font-size:clamp(24px,4vw,34px);font-weight:800;letter-spacing:-0.03em;color:#111827}
+.jobs-header h1 span{color:#F97316}
+.jobs-header p{color:#6B7280;margin-top:6px;font-size:14px}
+
+/* Stats */
+.stats-bar{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:20px auto;max-width:800px;padding:0 20px}
+.stat{background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:10px 16px;text-align:center;min-width:80px;cursor:pointer;transition:box-shadow .15s}
+.stat:hover{box-shadow:0 2px 8px rgba(249,115,22,.2)}
+.stat b{display:block;font-size:22px;font-weight:800;color:#F97316}
+.stat small{font-size:11px;color:#6B7280;font-weight:500}
+
+/* Controls */
+.controls{max-width:1100px;margin:20px auto;padding:0 20px}
+.search-row{display:flex;gap:10px;margin-bottom:14px}
+.search-row input{flex:1;padding:10px 14px;border:1px solid #D1D5DB;border-radius:8px;font-size:14px;outline:none;transition:border .15s}
+.search-row input:focus{border-color:#F97316}
+.search-row button{padding:10px 20px;background:#F97316;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px}
+.search-row button:hover{background:#EA6B0A}
+.filter-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.ftab{padding:6px 14px;border-radius:20px;border:1px solid #E5E7EB;background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:#6B7280;transition:all .15s}
+.ftab:hover{border-color:#FED7AA;color:#F97316}
+.ftab.active{background:#F97316;color:#fff;border-color:#F97316}
+.filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.filter-row select{padding:7px 10px;border:1px solid #D1D5DB;border-radius:8px;font-size:13px;background:#fff;cursor:pointer}
+
+/* Job cards */
+.job-list{max-width:1100px;margin:0 auto;padding:0 20px 40px}
+.job-card{background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:18px 20px;margin-bottom:12px;transition:all .15s;cursor:pointer}
+.job-card:hover{border-color:#FED7AA;box-shadow:0 2px 12px rgba(249,115,22,.08)}
+.job-card h3{font-size:16px;font-weight:700;color:#111827;margin-bottom:4px}
+.job-meta{font-size:13px;color:#6B7280;margin-bottom:8px}
+.job-meta span{margin-right:14px}
+.job-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.badge{padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.badge.fresher{background:#FEF3C7;color:#92400E}
+.badge.remote{background:#DBEAFE;color:#1E40AF}
+.badge.hybrid{background:#E0E7FF;color:#3730A3}
+.badge.onsite{background:#F3F4F6;color:#4B5563}
+.badge.category{background:#FFEDD5;color:#C2410C}
+.badge.wfh{background:#D1FAE5;color:#065F46}
+.job-skills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.skill-tag{padding:2px 8px;border-radius:6px;font-size:11px;background:#F3F4F6;color:#374151;font-weight:500}
+.job-actions{display:flex;gap:8px}
+.job-actions a,.job-actions button{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;cursor:pointer;border:none}
+.btn-view{background:#F3F4F6;color:#374151}
+.btn-view:hover{background:#E5E7EB}
+.btn-apply{background:#F97316;color:#fff}
+.btn-apply:hover{background:#EA6B0A}
+
+/* Detail */
+#detail-section{display:none;max-width:900px;margin:0 auto;padding:20px 20px 40px}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:#F97316;font-weight:600;font-size:14px;cursor:pointer;margin-bottom:20px;padding:8px 16px;background:#FFEDD5;border-radius:8px;border:none}
+.back-btn:hover{background:#FED7AA}
+.detail-card{background:#fff;border:1px solid #E5E7EB;border-radius:16px;padding:28px;margin-bottom:16px}
+.detail-card h2{font-size:22px;font-weight:800;color:#111827;margin-bottom:8px;line-height:1.3}
+.detail-meta{color:#6B7280;font-size:14px;margin-bottom:14px}
+.detail-desc{border:1px solid #E5E7EB;border-radius:12px;padding:20px;line-height:1.8;font-size:14px;color:#374151;margin-bottom:16px;max-height:600px;overflow-y:auto;background:#FAFAFA}
+.detail-desc p{margin-bottom:10px}
+.detail-desc ul,.detail-desc ol{padding-left:20px;margin-bottom:10px}
+.detail-desc li{margin-bottom:4px}
+.detail-desc strong,.detail-desc b{font-weight:600;color:#111827}
+.apply-btn-big{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:#F97316;color:#fff;border-radius:10px;font-weight:700;font-size:15px;text-decoration:none}
+.apply-btn-big:hover{background:#EA6B0A}
+
+/* Pagination */
+.pagination{display:flex;gap:6px;justify-content:center;padding:20px 0}
+.pagination button{padding:6px 14px;border:1px solid #D1D5DB;border-radius:8px;background:#fff;cursor:pointer;font-size:13px}
+.pagination button.active{background:#F97316;color:#fff;border-color:#F97316}
+.pagination button:disabled{opacity:.4;cursor:default}
+.loading{text-align:center;padding:40px;color:#9CA3AF;font-size:14px}
+
+/* Refresh button */
+.refresh-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#fff;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;font-weight:500;color:#6B7280;cursor:pointer;margin-left:10px}
+.refresh-btn:hover{border-color:#FED7AA;color:#F97316}
+
+@media(max-width:600px){
+  .stats-bar{gap:8px}.stat{min-width:70px;padding:8px 10px}
+  .search-row{flex-direction:column}.filter-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav class="fp-nav"><div class="fp-nav-inner">
+  <a href="/" class="fp-logo"><svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="8" fill="#6C3CE1"/><path d="M8 22L14 10l4 7 2-3 4 8" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Zap<span>Kitt</span></a>
+  <div class="fp-nav-links">
+    <a href="/jobs">🇺🇸 US Jobs</a>
+    <a href="/ai-resume-builder">Resume</a>
+    <a href="/ai-mock-interview">Interview</a>
+  </div>
+</div></nav>
+
+<!-- Auth gate -->
+<div id="auth-gate">
+  <div>
+    <h2>🔒 Private Dashboard</h2>
+    <p style="margin-top:12px;color:#9CA3AF">Enter your access key to continue</p>
+    <div style="margin-top:20px;display:flex;gap:8px;justify-content:center">
+      <input type="password" id="key-input" placeholder="Owner key" style="padding:10px 14px;border:1px solid #D1D5DB;border-radius:8px;font-size:14px;width:220px">
+      <button onclick="tryAccess()" style="padding:10px 20px;background:#F97316;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer">Enter</button>
+    </div>
+    <p id="auth-error" style="color:#DC2626;font-size:13px;margin-top:10px;display:none">Invalid key. Try again.</p>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashboard" class="hidden">
+
+  <div class="jobs-header">
+    <h1>🇮🇳 India IT <span>Jobs</span></h1>
+    <p>Fresh IT positions for freshers · Updated daily · Hyderabad · Bangalore · Chennai · Pune · Remote</p>
+  </div>
+
+  <div class="stats-bar" id="stats-bar"></div>
+
+  <div id="list-section">
+    <div class="controls">
+      <div class="search-row">
+        <input type="text" id="search-input" placeholder="Search: Java, Python, Testing, Support, React...">
+        <button onclick="searchJobs()">Search</button>
+        <button class="refresh-btn" onclick="triggerFetch()" id="refresh-btn">🔄 Fetch Fresh Jobs</button>
+      </div>
+      <div class="filter-tabs">
+        <span class="ftab active" data-filter="all" onclick="setFilter('all')">🔍 All IT Jobs</span>
+        <span class="ftab" data-filter="fresher" onclick="setFilter('fresher')">🎓 Fresher Only</span>
+        <span class="ftab" data-filter="remote" onclick="setFilter('remote')">💻 Work From Home</span>
+        <span class="ftab" data-filter="hyd" onclick="setFilter('hyd')">📍 Hyderabad</span>
+        <span class="ftab" data-filter="bang" onclick="setFilter('bang')">📍 Bangalore</span>
+      </div>
+      <div class="filter-row">
+        <select id="f-posted" onchange="searchJobs()">
+          <option value="24h" selected>Last 24 hours</option>
+          <option value="3d">Last 3 days</option>
+          <option value="7d">Last 7 days</option>
+          <option value="">All time</option>
+        </select>
+        <select id="f-category" onchange="searchJobs()">
+          <option value="">Category: All</option>
+          <option>Software Engineering</option>
+          <option>Java</option><option>Python</option>
+          <option>Frontend</option><option>Backend</option>
+          <option>Full Stack</option><option>DevOps</option>
+          <option>Data Engineering</option><option>QA/Testing</option>
+          <option>IT Support</option><option>Business Analyst</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="job-list" id="job-list">
+      <div class="loading">Loading India IT jobs...</div>
+    </div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+  <!-- Detail section -->
+  <div id="detail-section">
+    <button class="back-btn" onclick="hideDetail()">← Back to Jobs</button>
+    <div id="detail-content"></div>
+  </div>
+
+</div>
+
+<footer class="fp-footer">
+  <p>ZapKitt India Jobs · Private tool · Data from Greenhouse public boards · Not affiliated with listed companies</p>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var OWNER_KEY = '';
+  var currentPage = 1;
+  var currentFilter = 'all';
+
+  window.tryAccess = function() {
+    OWNER_KEY = document.getElementById('key-input').value.trim();
+    if (!OWNER_KEY) return;
+    fetch('/api/jobs?action=india-stats&owner_key=' + encodeURIComponent(OWNER_KEY))
+      .then(function(r) {
+        if (r.status === 403) {
+          document.getElementById('auth-error').style.display = 'block';
+          OWNER_KEY = '';
+          return;
+        }
+        try { localStorage.setItem('zk_owner_key', OWNER_KEY); } catch(e) {}
+        initDashboard();
+      }).catch(function() { initDashboard(); });
+  };
+
+  function checkAccess() {
+    try { OWNER_KEY = localStorage.getItem('zk_owner_key') || ''; } catch(e) {}
+    if (OWNER_KEY) initDashboard();
+  }
+
+  function initDashboard() {
+    document.getElementById('auth-gate').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+    loadStats();
+    searchJobs();
+  }
+
+  function api(params) {
+    var qs = new URLSearchParams(params);
+    qs.set('owner_key', OWNER_KEY);
+    return fetch('/api/jobs?' + qs.toString()).then(function(r) {
+      if (r.status === 403) { localStorage.removeItem('zk_owner_key'); location.reload(); throw new Error('denied'); }
+      return r.json();
+    });
+  }
+
+  function loadStats() {
+    api({ action: 'india-stats' }).then(function(s) {
+      document.getElementById('stats-bar').innerHTML =
+        '<div class="stat"><b>'+(s.total||0)+'</b><small>Total Jobs</small></div>' +
+        '<div class="stat"><b>'+(s.it_jobs||0)+'</b><small>IT Jobs</small></div>' +
+        '<div class="stat"><b>'+(s.remote||0)+'</b><small>💻 WFH</small></div>' +
+        '<div class="stat"><b>'+(s.last_24h||0)+'</b><small>🕐 Today</small></div>' +
+        '<div class="stat"><b>'+(s.last_3d||0)+'</b><small>Last 3 Days</small></div>';
+    }).catch(function(){});
+  }
+
+  window.searchJobs = function() { currentPage = 1; loadJobs(); };
+
+  window.setFilter = function(f) {
+    currentFilter = f;
+    document.querySelectorAll('.ftab').forEach(function(el){
+      el.classList.toggle('active', el.dataset.filter === f);
+    });
+    if (f !== 'all') {
+      document.getElementById('f-posted').value = '';
+    } else {
+      document.getElementById('f-posted').value = '24h';
+    }
+    searchJobs();
+  };
+
+  function loadJobs() {
+    var params = { country: 'IN', is_it: 'true', page: String(currentPage) };
+    var s = document.getElementById('search-input').value.trim();
+    if (s) params.search = s;
+    var posted = document.getElementById('f-posted').value;
+    if (posted) params.posted = posted;
+    var cat = document.getElementById('f-category').value;
+    if (cat) params.category = cat;
+
+    // Tab filters
+    if (currentFilter === 'fresher') {
+      params.search = (params.search ? params.search + ' ' : '') + 'fresher junior trainee';
+    } else if (currentFilter === 'remote') {
+      params.remote = 'REMOTE_GLOBAL';
+    } else if (currentFilter === 'hyd') {
+      params.location = 'Hyderabad';
+    } else if (currentFilter === 'bang') {
+      params.location = 'Bangalore';
+    }
+
+    document.getElementById('job-list').innerHTML = '<div class="loading">Loading...</div>';
+
+    api(params).then(function(data) { renderJobs(data.jobs||[], data.total||0, data.pages||1); })
+      .catch(function() { document.getElementById('job-list').innerHTML = '<div class="loading">Failed to load. Try refreshing.</div>'; });
+  }
+
+  function renderJobs(jobs, total, pages) {
+    var list = document.getElementById('job-list');
+    if (!jobs.length) {
+      list.innerHTML = '<div class="loading">No jobs found. Click "🔄 Fetch Fresh Jobs" to get latest postings, then try again.</div>';
+      document.getElementById('pagination').innerHTML = '';
+      return;
+    }
+    list.innerHTML = jobs.map(function(j) {
+      var skills = (j.skills||[]).slice(0,6).map(function(s){ return '<span class="skill-tag">'+esc(s)+'</span>'; }).join('');
+      var isWFH = j.remote_type === 'REMOTE_GLOBAL' || j.remote_type === 'REMOTE_US';
+      return '<div class="job-card" onclick="showDetail('+j.id+')">' +
+        '<h3>'+esc(j.title)+'</h3>' +
+        '<div class="job-meta">' +
+          '<span>🏢 '+esc(j.company_name||'Unknown')+'</span>' +
+          '<span>📍 '+esc(j.city||j.location_raw||'India')+'</span>' +
+          '<span>🕐 '+timeAgo(j.posted_at)+'</span>' +
+        '</div>' +
+        '<div class="job-badges">' +
+          (j.it_category?'<span class="badge category">'+esc(j.it_category)+'</span>':'')+
+          (isWFH?'<span class="badge wfh">WFH</span>':'')+
+          remoteBadge(j.remote_type)+
+        '</div>' +
+        (skills?'<div class="job-skills">'+skills+'</div>':'')+
+        '<div class="job-actions">' +
+          '<button class="btn-view" onclick="event.stopPropagation();showDetail('+j.id+')">Details</button>' +
+          (j.apply_url?'<a class="btn-apply" href="'+esc(j.apply_url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">Apply ↗</a>':'')+
+        '</div></div>';
+    }).join('');
+
+    var pag = document.getElementById('pagination');
+    if (pages <= 1) { pag.innerHTML = ''; return; }
+    var html = '<button '+(currentPage<=1?'disabled':'onclick="goPage('+(currentPage-1)+')"')+'>← Prev</button>';
+    for (var i=1; i<=Math.min(pages,10); i++){
+      html += '<button class="'+(i===currentPage?'active':'')+'" onclick="goPage('+i+')">'+i+'</button>';
+    }
+    html += '<button '+(currentPage>=pages?'disabled':'onclick="goPage('+(currentPage+1)+')"')+'>Next →</button>';
+    pag.innerHTML = html;
+  }
+
+  window.goPage = function(p){ currentPage=p; loadJobs(); window.scrollTo(0,0); };
+
+  window.showDetail = function(id) {
+    document.getElementById('list-section').style.display = 'none';
+    document.getElementById('detail-section').style.display = 'block';
+    document.getElementById('detail-content').innerHTML = '<div class="loading">Loading...</div>';
+    window.scrollTo(0,0);
+
+    api({ action: 'detail', id: String(id) }).then(function(j) {
+      var skills = (j.skills||[]).map(function(s){ return '<span class="skill-tag">'+esc(s)+'</span>'; }).join('');
+      var desc = sanitizeHTML(j.description || 'No description available.');
+      document.getElementById('detail-content').innerHTML =
+        '<div class="detail-card">' +
+          '<h2>'+esc(j.title)+'</h2>' +
+          '<div class="detail-meta">🏢 <b>'+esc(j.company_name||'Unknown')+'</b> &nbsp;·&nbsp; 📍 '+esc(j.city||j.location_raw||'India')+'&nbsp;·&nbsp; 🕐 '+timeAgo(j.posted_at)+'</div>' +
+          '<div class="job-badges" style="margin-bottom:14px">'+
+            (j.it_category?'<span class="badge category">'+esc(j.it_category)+'</span>':'')+
+            remoteBadge(j.remote_type)+
+          '</div>'+
+          (skills?'<div class="job-skills" style="margin-bottom:0">'+skills+'</div>':'')+
+        '</div>' +
+        '<div class="detail-desc">'+desc+'</div>' +
+        '<div style="font-size:12px;color:#9CA3AF;margin-bottom:16px">Source: <b>'+esc(j.source)+'</b></div>' +
+        (j.apply_url?'<a class="apply-btn-big" href="'+esc(j.apply_url)+'" target="_blank" rel="noopener">Apply on '+esc(j.company_name||'Company')+'s Website ↗</a>':'');
+    }).catch(function(){
+      document.getElementById('detail-content').innerHTML = '<div class="loading">Failed to load. Go back and try again.</div>';
+    });
+  };
+
+  window.hideDetail = function() {
+    document.getElementById('detail-section').style.display = 'none';
+    document.getElementById('list-section').style.display = 'block';
+    window.scrollTo(0,0);
+  };
+
+  // Trigger India job fetch manually
+  window.triggerFetch = function() {
+    var btn = document.getElementById('refresh-btn');
+    btn.textContent = '⏳ Fetching...';
+    btn.disabled = true;
+    fetch('/api/jobs?action=india-cron&owner_key=' + encodeURIComponent(OWNER_KEY))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        btn.textContent = '✅ Done! ' + (data.inserted||0) + ' new jobs';
+        loadStats();
+        searchJobs();
+        setTimeout(function() {
+          btn.textContent = '🔄 Fetch Fresh Jobs';
+          btn.disabled = false;
+        }, 5000);
+      }).catch(function() {
+        btn.textContent = '❌ Failed';
+        setTimeout(function() { btn.textContent = '🔄 Fetch Fresh Jobs'; btn.disabled = false; }, 3000);
+      });
+  };
+
+  function sanitizeHTML(html) {
+    if (!html) return '';
+    return html
+      .replace(/<script[\s\S]*?<\/script>/gi, '')
+      .replace(/<iframe[\s\S]*?<\/iframe>/gi, '')
+      .replace(/<style[\s\S]*?<\/style>/gi, '')
+      .replace(/on\w+="[^"]*"/gi, '')
+      .replace(/javascript:/gi, '');
+  }
+
+  function esc(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function timeAgo(iso) {
+    if (!iso) return 'Unknown';
+    var diff = (Date.now() - new Date(iso).getTime())/1000;
+    if (diff < 3600) return Math.floor(diff/60)+'m ago';
+    if (diff < 86400) return Math.floor(diff/3600)+'h ago';
+    if (diff < 604800) return Math.floor(diff/86400)+'d ago';
+    return new Date(iso).toLocaleDateString();
+  }
+  function remoteBadge(s){
+    if (s==='REMOTE_US'||s==='REMOTE_GLOBAL') return '<span class="badge remote">Work From Home</span>';
+    if (s==='HYBRID') return '<span class="badge hybrid">Hybrid</span>';
+    if (s==='ONSITE') return '<span class="badge onsite">Onsite</span>';
+    return '';
+  }
+
+  document.getElementById('search-input').addEventListener('keydown', function(e){ if(e.key==='Enter') searchJobs(); });
+  document.getElementById('key-input').addEventListener('keydown', function(e){ if(e.key==='Enter') tryAccess(); });
+
+  checkAccess();
+})();
+</script>
+</body></html>
