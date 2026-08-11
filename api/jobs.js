@@ -17,7 +17,6 @@ import { classifyJob } from './_jobs-rules.js';
 import { classifyWithAI } from './_jobs-ai.js';
 import { upsertJob, existsByHash, queryJobs, getJobById, getStats, getIndiaStats, cleanupOldJobs, logCronRun, getLastCronRun, dbReady } from './_jobs-db.js';
 import { RETENTION_DAYS } from './_jobs-config.js';
-import { RETENTION_DAYS } from './_jobs-config.js';
 
 // ── Owner check ─────────────────────────────────────────────────────────────
 function isOwner(req) {
