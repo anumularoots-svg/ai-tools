@@ -14,6 +14,7 @@ import { fetchGreenhouseJobs } from './_jobs-greenhouse.js';
 import { fetchLeverJobs } from './_jobs-lever.js';
 import { fetchIndiaGreenhouseJobs } from './_jobs-india.js';
 import { fetchIndeedIndiaJobs } from './_jobs-indeed-india.js';
+import { fetchAdzunaIndiaJobs } from './_jobs-adzuna-india.js';
 import { classifyJob } from './_jobs-rules.js';
 import { classifyWithAI } from './_jobs-ai.js';
 import { upsertJob, existsByHash, queryJobs, getJobById, getStats, getIndiaStats, cleanupOldJobs, logCronRun, getLastCronRun, dbReady } from './_jobs-db.js';
@@ -129,7 +130,8 @@ async function handleDebug(req, res) {
     env: {
       usajobs_configured: !!(process.env.USAJOBS_API_KEY && process.env.USAJOBS_USER_AGENT_EMAIL),
       neon_configured: !!process.env.NEON_DATABASE_URL,
-      ai_configured: !!(process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY)
+      ai_configured: !!(process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY),
+      adzuna_configured: !!(process.env.ADZUNA_APP_ID && process.env.ADZUNA_APP_KEY)
     }
   });
 }
@@ -282,19 +284,22 @@ async function handleIndiaCron(req, res) {
   try {
     log('INFO', 'Starting India jobs fetch from all sources');
 
-    // Fetch from both sources in parallel
-    const [ghResult, indeedResult] = await Promise.allSettled([
+    // Fetch from all sources in parallel
+    const [ghResult, indeedResult, adzunaResult] = await Promise.allSettled([
       fetchIndiaGreenhouseJobs(log),
-      fetchIndeedIndiaJobs(log)
+      fetchIndeedIndiaJobs(log),
+      fetchAdzunaIndiaJobs(log)
     ]);
 
     const rawJobs = [
       ...(ghResult.status === 'fulfilled' ? ghResult.value : []),
-      ...(indeedResult.status === 'fulfilled' ? indeedResult.value : [])
+      ...(indeedResult.status === 'fulfilled' ? indeedResult.value : []),
+      ...(adzunaResult.status === 'fulfilled' ? adzunaResult.value : [])
     ];
 
     if (ghResult.status === 'rejected') log('ERROR', 'India GH failed: ' + ghResult.reason?.message);
     if (indeedResult.status === 'rejected') log('ERROR', 'Indeed failed: ' + indeedResult.reason?.message);
+    if (adzunaResult.status === 'rejected') log('ERROR', 'Adzuna failed: ' + adzunaResult.reason?.message);
 
     fetched = rawJobs.length;
     log('INFO', `Total India jobs: ${fetched}`);
