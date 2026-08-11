@@ -72,19 +72,6 @@
       "maxDuration": 60
     }
   },
-  "network": {
-    "egressAllowList": [
-      "api.adzuna.com",
-      "api.groq.com",
-      "generativelanguage.googleapis.com",
-      "openrouter.ai",
-      "api.cerebras.ai",
-      "boards-api.greenhouse.io",
-      "api.lever.co",
-      "data.usajobs.gov",
-      "in.indeed.com"
-    ]
-  },
   "crons": [
     {
       "path": "/api/jobs?action=cron",
