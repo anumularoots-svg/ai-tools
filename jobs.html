@@ -146,7 +146,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
   <!-- FIX 1: Clean header — "US IT Jobs" only, no emoji flag causing "us US" -->
   <div class="jobs-header">
     <h1>US IT <span>Jobs</span></h1>
-    <p>Fresh IT positions from top tech companies · Updated daily · H1B &amp; Sponsorship signals</p>
+    <p>🔥 Fresh IT positions from top tech companies · Updated daily · H1B &amp; Sponsorship signals</p>
   </div>
 
   <div class="stats-bar" id="stats-bar"></div>
@@ -166,8 +166,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
       </div>
       <div class="filter-row">
         <select id="f-posted" onchange="searchJobs()">
-          <option value="">All time</option>
-          <option value="24h" selected>Last 24 hours</option>
+          <option value="24h" selected>🕐 Last 24 hours</option>
           <option value="3d">Last 3 days</option>
           <option value="7d">Last 7 days</option>
         </select>
@@ -275,18 +274,14 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F9FAFB;color:#111827;-
   // ── Search / Filter ────────────────────────────────────────────────────────
   window.searchJobs = function() { currentPage = 1; loadJobs(); };
 
-  // FIX: When switching tabs, reset posted filter to "All time" so counts match stats
+  // FIX: When switching tabs, keep Last 24h as default for freshness
   window.setFilter = function(f) {
     currentFilter = f;
     document.querySelectorAll('.ftab').forEach(function(el){
       el.classList.toggle('active', el.dataset.filter === f);
     });
-    // Reset posted filter when switching tabs — otherwise H1B/Sponsor shows 0
-    if (f !== 'all') {
-      document.getElementById('f-posted').value = '';
-    } else {
-      document.getElementById('f-posted').value = '24h';
-    }
+    // Always default to last 24 hours — fresh jobs only
+    document.getElementById('f-posted').value = '24h';
     searchJobs();
   };
 
